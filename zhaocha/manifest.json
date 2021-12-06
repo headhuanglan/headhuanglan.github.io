@@ -1,0 +1,15 @@
+{
+  "short_name": "dajialaizhaocha",
+  "name": "dajialaizhaocha",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/"
+}
