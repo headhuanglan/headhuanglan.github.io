@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-23 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1638839947345">
+<link rel="shortcut icon" href="/favicon.ico?v=1639287283509">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -1521,10 +1521,582 @@ class Solution:
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-25/"" data-c="
-          &lt;!-- more --&gt;
-&lt;h1 id=&#34;221-maximal-square-medium&#34;&gt;221. Maximal Square （Medium）&lt;/h1&gt;
+          &lt;p&gt;感恩节假期中断了刷题，沉迷于半小时漫画系列... 补上月25进度。&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;h1 id=&#34;font-colorred-221-maximal-square-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 221. Maximal Square （Medium）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given an m x n binary matrix filled with 0&#39;s and 1&#39;s, find the largest square containing only 1&#39;s and return its area.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def maximalSquare(self, matrix: List[List[str]]) -&amp;gt; int:
+        rows=len(matrix)
+        cols=len(matrix[0])
+        maxqlen=0
+        for i in range(rows):
+            for j in range(cols):
+                if matrix[i][j]==&#39;1&#39;:
+                    sqlen=1
+                    flag=True
+                    while sqlen+i&amp;lt;rows and sqlen+j&amp;lt; cols and flag:
+                        for k in range(j,sqlen+j+1):
+                            if matrix[i+sqlen][k]==&#39;0&#39;:
+                                flag=False
+                                break
+                        for k in range(i,i+sqlen+1):
+                            if matrix[k][j+sqlen]==&#39;0&#39;:
+                                flag=False
+                                break
+                        if flag:
+                            sqlen+=1
+                    
+                    if maxqlen&amp;lt;sqlen:
+                        maxqlen=sqlen
+                        
+                        
+        return maxqlen**2
+
+class Solution:
+    def maximalSquare(self, matrix: List[List[str]]) -&amp;gt; int:
+        # dp[i][j]  size of box which bottom right in pos[i][j]
+        # if matrix[i][j]==1
+        #    dp[i][j]=   min(dp[i-1][j],dp[i-1][j-1],dp[i][j-1])+1 
+        
+        m = len(matrix)
+        n = len(matrix[0])
+        dp = [[0]*(n+1) for _ in range(m+1)]
+        res=0
+        for i in range(1,m+1):
+            for j in range(1,n+1):
+                if matrix[i-1][j-1]==&#39;1&#39;:
+                    dp[i][j]=min(dp[i-1][j],dp[i-1][j-1],dp[i][j-1])+1
+                    res=max(res,dp[i][j])
+        return res**2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;试着用cumsum去解但失败了， 方法1，暴力解。 每次发现是“1”就以它作为正方形左上角起始点， 检查 row: i，i+sqlen col: j, j+sqlen 是否有‘0’.&lt;br&gt;
+方法2：dp： dp【i】【j】保存右下角位置在i，j的盒子大小。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-222-count-complete-tree-nodes-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 222. Count Complete Tree Nodes （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def countNodes(self, root: Optional[TreeNode]) -&amp;gt; int:
+        if not root:
+            return 0
+        if not root.left and not root.right:
+            return 1
+        if not root.right:
+            return 1+ self.countNodes(root.left)
+        else:
+            return  self.countNodes(root.left)+self.countNodes(root.right)+1
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def countNodes(self, root: Optional[TreeNode]) -&amp;gt; int:
+        
+        def depth(node):
+            d=0
+            while node.left:
+                node=node.left
+                d+=1
+            return d
+        
+        def exists(idx,d,node):
+            left=0
+            right=2**d-1
+            for _ in range(d):
+                pivot = (left+right)//2
+                if idx&amp;lt;=pivot:
+                    node=node.left
+                    right=pivot
+                else:
+                    node=node.right
+                    left=pivot +1
+            return node is not None
+        
+        if not root: return 0
+        d = depth(root)
+        if d==0: return 1
+        
+        l=1
+        r=2**d-1
+        while l&amp;lt;=r:
+            mid = (l+r)//2
+            if exists(mid,d,root):
+                l=mid+1
+            else:
+                r=mid-1
+        
+        return (2**d-1) +l 
+        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;给出了个O（n）解法，但题目要求小于O(n)...&lt;br&gt;
+思路： 完全二叉树，第0层2&lt;sup&gt;0个node，第一层，2&lt;/sup&gt;1个node，第n层2^n个node，所以假设这个树深度为d=n， 不包含最后一层2&lt;sup&gt;0+2&lt;/sup&gt;1+..+2&lt;sup&gt;(n-1)=2&lt;/sup&gt;n  -  1 的所有node总和为2^d-1 ,问题转化成求最后一层有多少node。 范围在1~2^n.  因为d=n所以肯定有第一个node。  可以用binary search 求。&lt;/p&gt;
+&lt;h1 id=&#34;223-rectangle-area-medium&#34;&gt;223. Rectangle Area （Medium）&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def computeArea(self, ax1: int, ay1: int, ax2: int, ay2: int, bx1: int, by1: int, bx2: int, by2: int) -&amp;gt; int:
+        
+        # intersect of 1d line
+        
+        def intersect(a1,a2,b1,b2):
+            if a1&amp;gt;b1:
+                a1,a2,b1,b2=b1,b2,a1,a2
+            
+            #print(a1,a2,b1,b2)
+            #case 1  --
+            #            --
+            if a2&amp;lt;b1:
+                return 0
+            
+            #case 2   a1---a2
+            #            b1---b2
+            if b1&amp;lt;=a2 and a2&amp;lt;=b2:
+                return a2-b1
+            # case 3  a1------a2
+            #            b1-b2
+            if b1&amp;lt;a2 and b2&amp;lt;a2:
+                return b2-b1
+            
+            return &#39;ERROR&#39;
+        
+        width = intersect(ax1,ax2,bx1,bx2)
+        height = intersect(by1,by2,ay1,ay2)
+        print(width,height)
+        return (ay2-ay1)*(ax2-ax1)+ (by2-by1)*(bx2-bx1)    -width*height
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred224-basic-calculator-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;224. Basic Calculator (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def calculate(self, s: str) -&amp;gt; int:
+        
+        #1+1
+        #1 1 +  
+        #2-1+3
+        #2 1 - 3 + 
+        #(1+(4+5+2)-3)+(6-8)
+        
+        s=&#39;(&#39;+s+&#39;)&#39;
+        s_res=[]
+        s_char=[]
+        i=0
+        while i&amp;lt;len(s):
+            e=s[i]
+            if e==&#39; &#39;:
+                i+=1
+                continue
+            elif e==&#39;)&#39;:
+                while s_char[-1]!=&#39;(&#39;:
+                    op=s_char.pop()
+                    s_res.append(op)
+                if s_char and s_char[-1]==&#39;(&#39;:
+                    s_char.pop()
+            elif e in &#39;(&#39;:
+                s_char.append(e)
+                    
+            elif e in &#39;+-&#39;:
+                if e == &amp;quot;-&amp;quot; and (i == 0 or s[i-1] == &amp;quot;(&amp;quot; ):
+                    s_res.append(0)
+                    
+                while s_char[-1] in &#39;+-&#39;:
+                    s_res.append(s_char.pop())
+                s_char.append(e)
+            else:
+                #e is num
+                tmp=int(e)
+                while i+1&amp;lt;len(s) and s[i+1] in &#39;0123456789&#39;:
+                    tmp = tmp*10+ int(s[i+1])
+                    i+=1
+                s_res.append(tmp)
+            
+                
+            i+=1
+        
+                
+        
+        print(s_res)
+        if &#39;+&#39; not in s_res and &#39;-&#39; not in s_res:
+            return int(&#39;&#39;.join(map(str,s_res)))
+        
+        res = []
+        for e in s_res:
+            if e==&#39;+&#39; or e==&#39;-&#39;:
+                b = res.pop() if res else None
+                a = res.pop() if res else None
+                
+                
+                if a is None:
+                    if e==&#39;+&#39;:
+                        res.append(b)
+                    else:
+                        res.append(-b)
+                
+                else:    
+                    if e==&#39;+&#39;:
+                        res.append(a+b) 
+                    else:
+                        res.append(a-b)
+            else:
+                res.append(e)
+        #print(res)
+        return res[0]
+
+#通解
+class Solution:
+    def calculate(self, s: str) -&amp;gt; int:
+        
+        # 转换为 后缀表达式
+        # 运算符优先级
+        prec = {}
+        prec[&amp;quot;*&amp;quot;] = 3
+        prec[&amp;quot;/&amp;quot;] = 3
+        prec[&amp;quot;+&amp;quot;] = 2
+        prec[&amp;quot;-&amp;quot;] = 2
+        prec[&amp;quot;(&amp;quot;] = 1
+
+        res = []
+        stack = []
+        i = 0
+        while i &amp;lt; len(s):
+            # 数字 直接 接到后缀表达式上
+            if s[i] == &amp;quot; &amp;quot;:
+                i += 1
+                
+            elif s[i].isdigit():
+                temp = &amp;quot;&amp;quot;
+                while i &amp;lt; len(s) and s[i].isdigit():
+                    temp += s[i]
+                    i += 1
+                res.append(temp)
+
+            # 左括号直接入栈
+            elif s[i] == &amp;quot;(&amp;quot;:
+                stack.append(s[i])
+                i += 1
+
+            # 右括号，开始弹栈，直达遇到左括号 左括号出栈 但不输出
+            elif s[i] == &amp;quot;)&amp;quot;:
+                while stack and stack[-1] != &amp;quot;(&amp;quot;:
+                    res.append(stack.pop())
+                stack.pop() # 左括号出战， 但是不输出
+                i += 1
+
+            # 遇到运算符
+            elif s[i] in [&amp;quot;+&amp;quot;, &amp;quot;-&amp;quot;, &amp;quot;*&amp;quot;, &amp;quot;/&amp;quot;]:
+                #  对 &amp;quot;-2 + 2&amp;quot; 或者 &amp;quot;1-(-2)&amp;quot; 进行特殊处理
+                if s[i] == &amp;quot;-&amp;quot; and (i == 0 or s[i-1] == &amp;quot;(&amp;quot; ):
+                    res.append(&#39;0&#39;)
+                # 只要栈顶符号不低于当前符号，就一直输出。最后把当前符号入栈
+                while stack and prec[s[i]]&amp;lt;=prec[stack[-1]]:
+                    res.append(stack.pop())
+                stack.append(s[i])
+                i += 1
+        
+        # 最后把栈里面的元素均 放到后缀表达式后面
+        while stack:
+            res.append(stack.pop())
+
+
+        # 计算后缀表达式
+        stack = []
+        
+        for char in res:
+            if char.isdigit():
+                stack.append(int(char))
+            else:
+                x = stack.pop()
+                y = stack.pop() 
+                if char == &amp;quot;+&amp;quot;:
+                    stack.append(x + y)
+                elif char == &amp;quot;-&amp;quot;:
+                    stack.append(y-x)
+                elif char == &amp;quot;*&amp;quot;:
+                    stack.append(y*x)
+                elif char == &amp;quot;/&amp;quot;:
+                    stack.append(x/y)
+
+        return stack.pop()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&amp;quot; 2-1 + 2 &amp;quot; 直接用stack解出现-1时候符号和1是合体的，所以换思路把表达式变成前缀/后坠表达。 又遇到后缀表达如何去括号问题。&lt;br&gt;
+1 + (( 2 + 3)* 4 ) – 5   方法：  当读到数时，立即输出， 若读到操作符，判断符号与栈顶符号的优先级，若该符号优先级高于栈顶元素，则将该操作符入栈，否则就依次把栈中运算符弹出并加到后缀表达式尾端，但又遇到 &amp;quot;1-(-2)&amp;quot; 无法pass。 同理 &amp;quot;- (3 - (- (4 + 5) ) )&amp;quot; 无法pass。 负号不作为减法，作为符号。 需要特殊处理： 方法：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;if e == &amp;quot;-&amp;quot; and (i == 0 or s[i-1] == &amp;quot;(&amp;quot; ):
+    s_res.append(0)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案很简单，问题根源在-号不能互相换 比如(A-B)+C != A-(B+C) , 所以把-看作数字的符号。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def calculate(self, s: str) -&amp;gt; int:
+
+        stack = []
+        operand = 0
+        res = 0 # For the on-going result
+        sign = 1 # 1 means positive, -1 means negative  
+
+        for ch in s:
+            if ch.isdigit():
+                # Forming operand, since it could be more than one digit
+                operand = (operand * 10) + int(ch)
+
+            elif ch == &#39;+&#39;:
+                # Evaluate the expression to the left,
+                # with result, sign, operand
+                res += sign * operand
+
+                # Save the recently encountered &#39;+&#39; sign
+                sign = 1
+                # Reset operand
+                operand = 0
+
+            elif ch == &#39;-&#39;:
+
+                res += sign * operand
+                sign = -1
+                operand = 0
+
+            elif ch == &#39;(&#39;:
+
+                # Push the result and sign on to the stack, for later
+                # We push the result first, then sign
+                stack.append(res)
+                stack.append(sign)
+
+                # Reset operand and result, as if new evaluation begins for the new sub-expression
+                sign = 1
+                res = 0
+
+            elif ch == &#39;)&#39;:
+
+                # Evaluate the expression to the left
+                # with result, sign and operand
+                res += sign * operand
+
+                # &#39;)&#39; marks end of expression within a set of parenthesis
+                # Its result is multiplied with sign on top of stack
+                # as stack.pop() is the sign before the parenthesis
+                res *= stack.pop() # stack pop 1, sign
+
+                # Then add to the next operand on the top.
+                # as stack.pop() is the result calculated before this parenthesis
+                # (operand on stack) + (sign on stack * (result from parenthesis))
+                res += stack.pop() # stack pop 2, operand
+
+                # Reset the operand
+                operand = 0
+
+        return res + sign * operand
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorblue225-implement-stack-using-queues-easy-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;225. Implement Stack using Queues (Easy) &lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MyStack(object):
+    def __init__(self):
+        self._queue = collections.deque()
+
+    def push(self, x):
+        q = self._queue
+        q.append(x)
+        for _ in range(len(q) - 1):
+            q.append(q.popleft())
+ 
+    def pop(self):
+        return self._queue.popleft()
+
+    def top(self):
+        return self._queue[0]
+    
+    def empty(self):
+        return not len(self._queue)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;三种方法&lt;/p&gt;
+&lt;h1 id=&#34;226-invert-binary-tree-easy&#34;&gt;226. Invert Binary Tree （Easy）&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -&amp;gt; Optional[TreeNode]:
+        if not root: return root
+        root.left,root.right = root.right,root.left
+        root.left = self.invertTree(root.left)
+        root.right=self.invertTree(root.right)
+        return root
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorblue227-basic-calculator-ii-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;227. Basic Calculator II (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def calculate(self, s: str) -&amp;gt; int:
+        
+        #convert to 后缀表达
+        priority = {&#39;+&#39;:1,&#39;-&#39;:1,&#39;*&#39;:2,&#39;/&#39;:2,&#39;(&#39;:0}
+        res = [] #保存后缀表达式
+        stack=[] #保存符号
+        i=0
+        while i&amp;lt;len(s):
+            ch=s[i]
+            if ch.isdigit():
+                tmp=ch
+                while i+1&amp;lt;len(s) and s[i+1].isdigit():
+                    tmp+=s[i+1]
+                    i+=1
+                res.append(int(tmp))
+            
+            elif ch==&#39;(&#39;:
+                stack.append(ch)
+            elif ch==&#39;)&#39;:
+                while stack and stack[-1] != &amp;quot;(&amp;quot;:
+                    res.append(stack.pop())
+                stack.pop() 
+            elif ch in  [&amp;quot;+&amp;quot;, &amp;quot;-&amp;quot;, &amp;quot;*&amp;quot;, &amp;quot;/&amp;quot;]:
+                
+                while stack and priority[ch] &amp;lt;= priority[stack[-1]]:
+                    res.append(stack.pop())
+
+                stack.append(ch)
+            
+            i+=1
+                
+        while stack:
+            res.append(stack.pop())
+        
+        # 计算后缀表达式
+        stack = []
+        
+        for char in res:
+            if char not in  [&amp;quot;+&amp;quot;, &amp;quot;-&amp;quot;, &amp;quot;*&amp;quot;, &amp;quot;/&amp;quot;]:
+                #char is number
+                stack.append(char)
+            else:
+                x = stack.pop()
+                y = stack.pop() 
+                if char == &amp;quot;+&amp;quot;:
+                    stack.append(x + y)
+                elif char == &amp;quot;-&amp;quot;:
+                    stack.append(y-x)
+                elif char == &amp;quot;*&amp;quot;:
+                    stack.append(y*x)
+                elif char == &amp;quot;/&amp;quot;:
+                    stack.append(y//x)
+
+        return stack.pop()
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;直接上通杀法。转成后缀表达然后求结果。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue-228-summary-ranges-easy-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 228. Summary Ranges （Easy） &lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def summaryRanges(self, nums: List[int]) -&amp;gt; List[str]:
+        # [0]
+        # [0,1]
+        # [0,2]
+        # [0-2,4]
+        # [0-2,4,5]
+        
+        res = []
+        stack=[]
+        for n in nums:
+            if not stack:
+                stack.append(n)
+            elif len(stack)==1:
+                if n==stack[-1]+1:
+                    stack.append(n)
+                else:
+                    res.append(str(stack[-1]))
+                    stack=[n]
+            else:
+                if n==stack[-1]+1:
+                    stack[-1]=n
+                else:
+                    res.append(str(stack[0])+&#39;-&amp;gt;&#39;+str(stack[1]))
+                    stack=[n]
+ 
+        if len(stack)==1:
+            res.append(str(stack[0]))
+        elif len(stack)==2:
+            res.append(str(stack[0])+&#39;-&amp;gt;&#39;+str(stack[1]))
+        
+        return res
+#answer way of writting
+class Solution:
+    def summaryRanges(self, nums: List[int]) -&amp;gt; List[str]:
+        res = []
+        i=0
+        for j in range(len(nums)):
+            if j+1&amp;lt;len(nums) and nums[j+1]==nums[j]+1:
+                continue
+            if i==j:
+                res.append(str(nums[i]))
+            else:
+                res.append(str(nums[i])+&#39;-&amp;gt;&#39;+str(nums[j]))
+            i=j+1
+        return res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案更简单&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred229-majority-element-ii-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;229. Majority Element II (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def majorityElement(self, nums: List[int]) -&amp;gt; List[int]:
+        
+        maj1=nums[0]
+        maj2=nums[0]
+        c1=0
+        c2=0
+
+        for n in nums:
+            if n==maj1:
+                c1+=1
+            elif n==maj2:
+                c2+=1
+            elif c1==0:
+                c1=1
+                maj1=n
+            elif c2==0:
+                c2=1
+                maj2=n
+            else:
+                c1-=1
+                c2-=1
+        #recalce make sure        
+        c1=c2=0
+        for n in nums:
+            if n==maj1:c1+=1
+            if n==maj2:c2+=1
+        res=[]
+        if c1&amp;gt;len(nums)//3:
+            res.append(maj1)
+        if c2&amp;gt;len(nums)//3 and maj1!=maj2:
+            res.append(maj2)
+        return res
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;经典算法，在做majorelement 1时候写过，需要记住。&lt;/p&gt;
+&lt;h1 id=&#34;230-kth-smallest-element-in-a-bst-medium&#34;&gt;230. Kth Smallest Element in a BST （Medium）&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -&amp;gt; int:
+        ind=0
+        stack=[]
+        while root or stack:
+            while root:
+                stack.append(root)
+                root=root.left
+            
+            node=stack.pop()
+            ind+=1
+            if ind==k:
+                return node.val
+            
+            root=node.right
 &lt;/code&gt;&lt;/pre&gt;
 ">Leetcode 2021-11-25</a>
       </div>
