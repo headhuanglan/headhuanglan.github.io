@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-18 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1639287283509">
+<link rel="shortcut icon" href="/favicon.ico?v=1639724485604">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">29</span>
+        <span class="site-item-stat-count">30</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1562,6 +1562,447 @@ class Solution:
 &lt;a href=&#34;https://drive.google.com/drive/folders/1iFAFtnyGwr5OBYPSWCVVAmCWxlJXSg1K?usp=sharing&#34;&gt;半小时漫画科学史1 2 3全 MOBI&lt;/a&gt;&lt;br&gt;
 &lt;a href=&#34;https://drive.google.com/drive/folders/1iFAFtnyGwr5OBYPSWCVVAmCWxlJXSg1K?usp=sharing&#34;&gt;半小时漫画预防常见病&lt;/a&gt;&lt;/p&gt;
 ">书单</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-26/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;231-power-of-two-easy&#34;&gt;231. Power of Two (Easy)&lt;/h1&gt;
+&lt;p&gt;Given an integer n, return true if it is a power of two. Otherwise, return false.An integer n is a power of two, if there exists an integer x such that n == 2^x.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def isPowerOfTwo(self, n: int) -&amp;gt; bool:
+        if n&amp;lt;0: return False
+        c=0
+        while n:
+            lastbit= n%2
+            if lastbit==1:
+                c+=1
+            n=n&amp;gt;&amp;gt;1
+        return c==1
+
+#answer is great
+class Solution:
+    def isPowerOfTwo(self, n: int) -&amp;gt; bool:
+        if n&amp;lt;=0: return False
+        # 1 000 000 000
+        #    111 111 111
+        return n&amp;amp;(n-1)==0
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;232-implement-queue-using-stacks-easy&#34;&gt;232. Implement Queue using Stacks (Easy)&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MyQueue:
+
+    def __init__(self):
+        self.s1=[]
+        self.s2=[]
+        
+
+    def push(self, x: int) -&amp;gt; None:
+        self.s1.append(x)
+
+    def pop(self) -&amp;gt; int:
+        # 1 2 3
+        # 3 2 1
+        while self.s1:
+            self.s2.append(self.s1.pop())
+        val=self.s2.pop()
+        while self.s2:
+            self.s1.append(self.s2.pop())
+        
+        return val
+
+    def peek(self) -&amp;gt; int:
+        pre=None
+        while self.s1:
+            cur=self.s1.pop()
+            self.s2.append(cur)
+            pre=cur
+        while self.s2:
+            self.s1.append(self.s2.pop())
+        
+        return pre
+        
+
+    def empty(self) -&amp;gt; bool:
+        return len(self.s1)==0
+
+
+# Your MyQueue object will be instantiated and called as such:
+# obj = MyQueue()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.peek()
+# param_4 = obj.empty()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Follow-up: Can you implement the queue such that each operation is amortized O(1) time complexity?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MyQueue:
+
+    def __init__(self):
+        self.s1=[]
+        self.s2=[]
+        self.front=None
+
+    def push(self, x: int) -&amp;gt; None:
+        if self.s1==[]:
+            self.front=x
+        self.s1.append(x)
+
+    def pop(self) -&amp;gt; int:
+        if self.s2==[]:
+            while self.s1:
+                self.s2.append(self.s1.pop())
+        return self.s2.pop()
+
+    def peek(self) -&amp;gt; int:
+        if self.s2:
+            return self.s2[-1]
+        
+        return self.front
+          
+        
+    def empty(self) -&amp;gt; bool:
+        return self.s1==[] and self.s2==[]
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;follow up的思路挺有意思，push: 数字保存在s1，但是当s1为空时候，保存front。  pop：如果s2有元素，pop s2， 否则 把s1 push到s2    peek: 若s2 有元素，peek s2 否则 就是 front。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred233-number-of-digit-one-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;233. Number of Digit One （Hard） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer n, count the total number of digit 1 appearing in all non-negative integers less than or equal to n.&lt;br&gt;
+Example：&lt;br&gt;
+Input: n = 13&lt;br&gt;
+Output: 6&lt;br&gt;
+1，10， 11，12，13&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def countDigitOne(self, n: int) -&amp;gt; int:
+        c=0
+        i=1
+        while i&amp;lt;=n:
+            divider = i*10
+            c += (n//divider)*i + min(max(n%divider -i+1,0),i)
+            i*=10
+        return c
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;完全不是考算法，对于个位来说，存在1的位置有，1，11，21，31，41，51，61，71 ... 基本10个一循环，比如 1到13的个位为1的有1，11，总共2个。 所以是 13//10 + (13%10)!=0。 对于十位来说存在1的有， 10，11，12，。。。19  |   110，111，112，113，。。。119| 210,...，每100个一循环，比如1到113的十位， (113/ 100) * 10 + min(max(113%100-10+1,0),10)   同理千位100,101,...199| 1100,1101....1199|....     千位中1的个数  (n/1000)*100 + min(max(n%1000-100+1,0),100)   具体的循环截断1的个数是在 0到 100之间， 具体多少是n%1000-100+1.&lt;/p&gt;
+&lt;h1 id=&#34;234-palindrome-linked-list-easy&#34;&gt;234. Palindrome Linked List (Easy)&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def isPalindrome(self, head: Optional[ListNode]) -&amp;gt; bool:
+        
+        fast=slow=head
+        
+        while slow and fast and fast.next:
+            slow=slow.next
+            fast=fast.next.next
+        
+        if fast:
+            mid=slow.next
+        else:
+            mid=slow
+            
+        
+        def rev(node):
+            pre=None
+            while node:
+                nodenext=node.next
+                node.next=pre
+                pre=node
+                node=nodenext
+            return pre
+        
+        revmid  = rev(mid)
+        
+        while revmid:
+            if revmid.val!=head.val:
+                return False
+            revmid=revmid.next
+            head=head.next
+        return True
+        #1 2 3 4 5
+        #    s m
+        #        f
+                
+        #1 2 3 4
+        #    s
+        #    m   f  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred235-lowest-common-ancestor-of-a-binary-search-tree-easyfont&#34;&gt;&amp;lt;/font color=&#39;red&#39;&amp;gt;235. Lowest Common Ancestor of a Binary Search Tree （Easy）&lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def lowestCommonAncestor(self, root: &#39;TreeNode&#39;, p: &#39;TreeNode&#39;, q: &#39;TreeNode&#39;) -&amp;gt; &#39;TreeNode&#39;:
+        # 
+        #    all left ,  all right,    p mid q
+        #
+        
+        if root.val &amp;gt; p.val and root.val &amp;gt; q.val:
+            return self.lowestCommonAncestor(root.left, p, q)
+        elif root.val &amp;lt; p.val and root.val &amp;lt; q.val:
+            return self.lowestCommonAncestor(root.right, p, q)
+        else:
+            return root
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;卡在了一道easy题上确实不应该。。。没仔细看题，忽略了这个是个BST，得用BST性质。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue-236-lowest-common-ancestor-of-a-binary-tree-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 236. Lowest Common Ancestor of a Binary Tree （Medium） &lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    dic=dict()
+    def lowestCommonAncestor(self, root: &#39;TreeNode&#39;, p: &#39;TreeNode&#39;, q: &#39;TreeNode&#39;) -&amp;gt; &#39;TreeNode&#39;:
+        
+        def find(root,node):
+            if not root: return False
+            if (root.val,node.val) in self.dic:
+                return self.dic[(root.val,node.val)]
+          
+            if root.val==node.val:
+                self.dic[(root.val,node.val)]=True
+                return True
+            if find(root.left,node):
+                self.dic[(root.left.val,node.val)]=True
+                return True
+            if find(root.right,node):
+                if root.right:
+                    self.dic[(root.right.val,node.val)]=True
+                return True
+            return False
+        
+        if find(root.left,p) and find(root.left,q):
+            return self.lowestCommonAncestor(root.left,p,q)
+        elif find(root.right,p) and find(root.right,q):
+            return self.lowestCommonAncestor(root.right,p,q)
+        else:
+            return root
+#answer way of writting
+class Solution:
+    def lowestCommonAncestor(self, root: &#39;TreeNode&#39;, p: &#39;TreeNode&#39;, q: &#39;TreeNode&#39;) -&amp;gt; &#39;TreeNode&#39;:
+        
+        if root in [p,q,None]: return root
+        
+        left = self.lowestCommonAncestor(root.left,p,q)
+        right = self.lowestCommonAncestor(root.right,p,q)
+        
+        
+        if left and right: 
+            return root
+        if left: 
+            return left
+        if right:
+            return right
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第一次尝试Time limit exceeded...，得找到p，q是在root的同侧还是异侧。 由于是递归调用，find funciton call了太多次，所以用memerization 方法， pass了。答案思路： 如果root 是{p,q,None} 就返回root， left=从root.left找p，q共同祖先， right=从root.right 找p，q共同祖先。&lt;/p&gt;
+&lt;h1 id=&#34;237-delete-node-in-a-linked-list-easy&#34;&gt;237. Delete Node in a Linked List (Easy)&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def deleteNode(self, node):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type node: ListNode
+        :rtype: void Do not return anything, modify node in-place instead.
+        &amp;quot;&amp;quot;&amp;quot;
+        
+      if node.next:
+            node.val=node.next.val
+            node.next=node.next.next
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;把下一位数字覆盖到当前node， 然后跳过这个node。&lt;/p&gt;
+&lt;h1 id=&#34;238-product-of-array-except-self-medium&#34;&gt;238. Product of Array Except Self （Medium）&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].&lt;/p&gt;
+&lt;p&gt;The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.&lt;/p&gt;
+&lt;p&gt;You must write an algorithm that runs in O(n) time and without using the division operation.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def productExceptSelf(self, nums: List[int]) -&amp;gt; List[int]:
+        
+        prefix_left = [1]*len(nums)
+        prefix_right= [1]*len(nums)
+        
+        for i in range(1,len(nums)):
+            prefix_left[i] = prefix_left[i-1]*nums[i-1]
+        for j in range(len(nums)-2,-1,-1):
+            prefix_right[j] = prefix_right[j+1]*nums[j+1]
+        res = []    
+        for (l,r) in zip(prefix_left,prefix_right):
+            res.append(l*r)
+        return res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred239-sliding-window-maximum-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;239. Sliding Window Maximum (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.&lt;/p&gt;
+&lt;p&gt;Return the max sliding window.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -&amp;gt; List[int]:
+        
+        #if k==1: return nums
+        
+        stack_max = []
+        queue = []
+        res = []
+        for n in nums:
+            queue.append(n)
+            
+            
+            while stack_max and n&amp;gt;stack_max[-1]:
+                stack_max.pop()
+            if not stack_max or  n&amp;gt;stack_max[-1]:
+                stack_max.append(n)
+            
+            if len(queue)&amp;gt;k:
+                expired = queue.pop(0)
+                if expired == stack_max[-1]:
+                    stack_max.pop()
+            
+            if len(queue)==k:
+                #print(queue,stack_max)
+                if stack_max:
+                    res.append(stack_max[-1])
+                else:
+                    #the expired one is the max and poped out
+                    newmax=max(queue)
+                    res.append(newmax)
+                    stack_max.append(newmax)
+            
+        return res
+#answer way of writting
+class Solution(object):
+    def maxSlidingWindow(self, nums, k):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type nums: List[int]
+        :type k: int
+        :rtype: List[int]
+        &amp;quot;&amp;quot;&amp;quot;
+        
+        
+        queue = collections.deque()
+        res = []
+        for i, n in enumerate(nums):
+            while queue and n&amp;gt; nums[queue[-1]]:
+                queue.pop()
+            queue.append(i)
+            #expire
+            if queue[0] == i - k:
+                queue.popleft()
+            #can add to result
+            if i &amp;gt;= k - 1:
+                res.append(nums[queue[0]])
+        return res
+    
+#         if not nums:
+#             return []
+#         start=0
+#         r=[]
+#         while start+k&amp;lt;=len(nums):
+#             r.append(max(nums[start:start+k]))
+#             start+=1
+            
+#         return r
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;初次尝试， time limit exceeded。  思路是一致的， 如果过期，踢掉， queue中保存最大值位置。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue240-search-a-2d-matrix-ii-mediumfont&#34;&gt;&lt;font color=&#39;blue&#39;&gt;240. Search a 2D Matrix II （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -&amp;gt; bool:
+        
+        
+        def search(rowl,rowr,coll,colr,target):
+            if rowl==rowr and coll==colr:
+                return matrix[rowl][coll]==target
+            elif rowl==rowr:
+                return target in matrix[rowl]
+            elif coll==colr:
+                return target in [row[coll] for row in matrix]
+            
+            if  rowr-rowl==1 and colr-coll==1:    
+                if matrix[rowl][coll]==target or matrix[rowr][colr]==target or matrix[rowr][coll]==target or matrix[rowl][colr]==target:
+                    return True
+                return False
+            
+            
+            rowmid = (rowl+rowr)//2
+            colmid = (coll+colr)//2
+            if matrix[rowmid][colmid]==target:
+                return True
+            elif target&amp;lt;matrix[rowmid][colmid]:
+                return search(rowl,rowmid,coll,colmid,target) or search(rowl,rowmid,colmid,colr,target) or search(rowmid,rowr,coll,colmid,target)
+            else:
+                return search(rowmid,rowr,colmid,colr,target) or search(rowl,rowmid,colmid,colr,target) or search(rowmid,rowr,coll,colmid,target)
+            
+        
+        return search(0,len(matrix)-1,0,len(matrix[0])-1,target)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用了分治法，虽然写出来了，但感觉写了陀X。 答案分治法&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -&amp;gt; bool:
+        # an empty matrix obviously does not contain `target`
+        if not matrix:
+            return False
+
+        def search_rec(left, up, right, down):
+            # this submatrix has no height or no width.
+            if left &amp;gt; right or up &amp;gt; down:
+                return False
+            # `target` is already larger than the largest element or smaller
+            # than the smallest element in this submatrix.
+            elif target &amp;lt; matrix[up][left] or target &amp;gt; matrix[down][right]:
+                return False
+
+            mid = left + (right-left) // 2
+
+            # Locate `row` such that matrix[row-1][mid] &amp;lt; target &amp;lt; matrix[row][mid]
+            row = up
+            while row &amp;lt;= down and matrix[row][mid] &amp;lt;= target:
+                if matrix[row][mid] == target:
+                    return True
+                row += 1
+            
+            return search_rec(left, row, mid - 1, down) or \
+                   search_rec(mid + 1, up, right, row - 1)
+
+        return search_rec(0, 0, len(matrix[0]) - 1, len(matrix) - 1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最佳答案 思路 ： 从左下角开始，如果target大于cur, 列+1， 如果targe 小于cur，行-1.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -&amp;gt; bool:
+        # an empty matrix obviously does not contain `target` (make this check
+        # because we want to cache `width` for efficiency&#39;s sake)
+        if len(matrix) == 0 or len(matrix[0]) == 0:
+            return False
+
+        # cache these, as they won&#39;t change.
+        height = len(matrix)
+        width = len(matrix[0])
+
+        # start our &amp;quot;pointer&amp;quot; in the bottom-left
+        row = height - 1
+        col = 0
+
+        while col &amp;lt; width and row &amp;gt;= 0:
+            if matrix[row][col] &amp;gt; target:
+                row -= 1
+            elif matrix[row][col] &amp;lt; target:
+                col += 1
+            else: # found it
+                return True
+        
+        return False
+&lt;/code&gt;&lt;/pre&gt;
+">Leetcode 2021-11-26</a>
       </div>
       
       <div class="item">

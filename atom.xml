@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2021-12-12T05:34:52.857Z</updated>
+    <updated>2021-12-17T07:02:10.703Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -33,6 +33,450 @@
 <a href="https://drive.google.com/drive/folders/1iFAFtnyGwr5OBYPSWCVVAmCWxlJXSg1K?usp=sharing">半小时漫画经济学4</a><br>
 <a href="https://drive.google.com/drive/folders/1iFAFtnyGwr5OBYPSWCVVAmCWxlJXSg1K?usp=sharing">半小时漫画科学史1 2 3全 MOBI</a><br>
 <a href="https://drive.google.com/drive/folders/1iFAFtnyGwr5OBYPSWCVVAmCWxlJXSg1K?usp=sharing">半小时漫画预防常见病</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2021-11-26]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-12-26/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-26/">
+        </link>
+        <updated>2021-11-26T14:39:32.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="231-power-of-two-easy">231. Power of Two (Easy)</h1>
+<p>Given an integer n, return true if it is a power of two. Otherwise, return false.An integer n is a power of two, if there exists an integer x such that n == 2^x.</p>
+<pre><code class="language-python">class Solution:
+    def isPowerOfTwo(self, n: int) -&gt; bool:
+        if n&lt;0: return False
+        c=0
+        while n:
+            lastbit= n%2
+            if lastbit==1:
+                c+=1
+            n=n&gt;&gt;1
+        return c==1
+
+#answer is great
+class Solution:
+    def isPowerOfTwo(self, n: int) -&gt; bool:
+        if n&lt;=0: return False
+        # 1 000 000 000
+        #    111 111 111
+        return n&amp;(n-1)==0
+
+</code></pre>
+<h1 id="232-implement-queue-using-stacks-easy">232. Implement Queue using Stacks (Easy)</h1>
+<pre><code class="language-python">class MyQueue:
+
+    def __init__(self):
+        self.s1=[]
+        self.s2=[]
+        
+
+    def push(self, x: int) -&gt; None:
+        self.s1.append(x)
+
+    def pop(self) -&gt; int:
+        # 1 2 3
+        # 3 2 1
+        while self.s1:
+            self.s2.append(self.s1.pop())
+        val=self.s2.pop()
+        while self.s2:
+            self.s1.append(self.s2.pop())
+        
+        return val
+
+    def peek(self) -&gt; int:
+        pre=None
+        while self.s1:
+            cur=self.s1.pop()
+            self.s2.append(cur)
+            pre=cur
+        while self.s2:
+            self.s1.append(self.s2.pop())
+        
+        return pre
+        
+
+    def empty(self) -&gt; bool:
+        return len(self.s1)==0
+
+
+# Your MyQueue object will be instantiated and called as such:
+# obj = MyQueue()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.peek()
+# param_4 = obj.empty()
+</code></pre>
+<p>Follow-up: Can you implement the queue such that each operation is amortized O(1) time complexity?</p>
+<pre><code class="language-python">class MyQueue:
+
+    def __init__(self):
+        self.s1=[]
+        self.s2=[]
+        self.front=None
+
+    def push(self, x: int) -&gt; None:
+        if self.s1==[]:
+            self.front=x
+        self.s1.append(x)
+
+    def pop(self) -&gt; int:
+        if self.s2==[]:
+            while self.s1:
+                self.s2.append(self.s1.pop())
+        return self.s2.pop()
+
+    def peek(self) -&gt; int:
+        if self.s2:
+            return self.s2[-1]
+        
+        return self.front
+          
+        
+    def empty(self) -&gt; bool:
+        return self.s1==[] and self.s2==[]
+
+</code></pre>
+<p>follow up的思路挺有意思，push: 数字保存在s1，但是当s1为空时候，保存front。  pop：如果s2有元素，pop s2， 否则 把s1 push到s2    peek: 若s2 有元素，peek s2 否则 就是 front。</p>
+<h1 id="font-colorred233-number-of-digit-one-hard-font"><font color='red'>233. Number of Digit One （Hard） </font></h1>
+<p>Given an integer n, count the total number of digit 1 appearing in all non-negative integers less than or equal to n.<br>
+Example：<br>
+Input: n = 13<br>
+Output: 6<br>
+1，10， 11，12，13</p>
+<pre><code class="language-python">class Solution:
+    def countDigitOne(self, n: int) -&gt; int:
+        c=0
+        i=1
+        while i&lt;=n:
+            divider = i*10
+            c += (n//divider)*i + min(max(n%divider -i+1,0),i)
+            i*=10
+        return c
+</code></pre>
+<p>完全不是考算法，对于个位来说，存在1的位置有，1，11，21，31，41，51，61，71 ... 基本10个一循环，比如 1到13的个位为1的有1，11，总共2个。 所以是 13//10 + (13%10)!=0。 对于十位来说存在1的有， 10，11，12，。。。19  |   110，111，112，113，。。。119| 210,...，每100个一循环，比如1到113的十位， (113/ 100) * 10 + min(max(113%100-10+1,0),10)   同理千位100,101,...199| 1100,1101....1199|....     千位中1的个数  (n/1000)*100 + min(max(n%1000-100+1,0),100)   具体的循环截断1的个数是在 0到 100之间， 具体多少是n%1000-100+1.</p>
+<h1 id="234-palindrome-linked-list-easy">234. Palindrome Linked List (Easy)</h1>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def isPalindrome(self, head: Optional[ListNode]) -&gt; bool:
+        
+        fast=slow=head
+        
+        while slow and fast and fast.next:
+            slow=slow.next
+            fast=fast.next.next
+        
+        if fast:
+            mid=slow.next
+        else:
+            mid=slow
+            
+        
+        def rev(node):
+            pre=None
+            while node:
+                nodenext=node.next
+                node.next=pre
+                pre=node
+                node=nodenext
+            return pre
+        
+        revmid  = rev(mid)
+        
+        while revmid:
+            if revmid.val!=head.val:
+                return False
+            revmid=revmid.next
+            head=head.next
+        return True
+        #1 2 3 4 5
+        #    s m
+        #        f
+                
+        #1 2 3 4
+        #    s
+        #    m   f  
+</code></pre>
+<h1 id="font-colorred235-lowest-common-ancestor-of-a-binary-search-tree-easyfont">&lt;/font color='red'&gt;235. Lowest Common Ancestor of a Binary Search Tree （Easy）</font></h1>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -&gt; 'TreeNode':
+        # 
+        #    all left ,  all right,    p mid q
+        #
+        
+        if root.val &gt; p.val and root.val &gt; q.val:
+            return self.lowestCommonAncestor(root.left, p, q)
+        elif root.val &lt; p.val and root.val &lt; q.val:
+            return self.lowestCommonAncestor(root.right, p, q)
+        else:
+            return root
+
+</code></pre>
+<p>卡在了一道easy题上确实不应该。。。没仔细看题，忽略了这个是个BST，得用BST性质。</p>
+<h1 id="font-colorblue-236-lowest-common-ancestor-of-a-binary-tree-medium-font"><font color='blue'> 236. Lowest Common Ancestor of a Binary Tree （Medium） </font></h1>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    dic=dict()
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -&gt; 'TreeNode':
+        
+        def find(root,node):
+            if not root: return False
+            if (root.val,node.val) in self.dic:
+                return self.dic[(root.val,node.val)]
+          
+            if root.val==node.val:
+                self.dic[(root.val,node.val)]=True
+                return True
+            if find(root.left,node):
+                self.dic[(root.left.val,node.val)]=True
+                return True
+            if find(root.right,node):
+                if root.right:
+                    self.dic[(root.right.val,node.val)]=True
+                return True
+            return False
+        
+        if find(root.left,p) and find(root.left,q):
+            return self.lowestCommonAncestor(root.left,p,q)
+        elif find(root.right,p) and find(root.right,q):
+            return self.lowestCommonAncestor(root.right,p,q)
+        else:
+            return root
+#answer way of writting
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -&gt; 'TreeNode':
+        
+        if root in [p,q,None]: return root
+        
+        left = self.lowestCommonAncestor(root.left,p,q)
+        right = self.lowestCommonAncestor(root.right,p,q)
+        
+        
+        if left and right: 
+            return root
+        if left: 
+            return left
+        if right:
+            return right
+</code></pre>
+<p>第一次尝试Time limit exceeded...，得找到p，q是在root的同侧还是异侧。 由于是递归调用，find funciton call了太多次，所以用memerization 方法， pass了。答案思路： 如果root 是{p,q,None} 就返回root， left=从root.left找p，q共同祖先， right=从root.right 找p，q共同祖先。</p>
+<h1 id="237-delete-node-in-a-linked-list-easy">237. Delete Node in a Linked List (Easy)</h1>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def deleteNode(self, node):
+        &quot;&quot;&quot;
+        :type node: ListNode
+        :rtype: void Do not return anything, modify node in-place instead.
+        &quot;&quot;&quot;
+        
+      if node.next:
+            node.val=node.next.val
+            node.next=node.next.next
+</code></pre>
+<p>把下一位数字覆盖到当前node， 然后跳过这个node。</p>
+<h1 id="238-product-of-array-except-self-medium">238. Product of Array Except Self （Medium）</h1>
+<p>Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].</p>
+<p>The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.</p>
+<p>You must write an algorithm that runs in O(n) time and without using the division operation.</p>
+<pre><code class="language-python">class Solution:
+    def productExceptSelf(self, nums: List[int]) -&gt; List[int]:
+        
+        prefix_left = [1]*len(nums)
+        prefix_right= [1]*len(nums)
+        
+        for i in range(1,len(nums)):
+            prefix_left[i] = prefix_left[i-1]*nums[i-1]
+        for j in range(len(nums)-2,-1,-1):
+            prefix_right[j] = prefix_right[j+1]*nums[j+1]
+        res = []    
+        for (l,r) in zip(prefix_left,prefix_right):
+            res.append(l*r)
+        return res
+
+</code></pre>
+<h1 id="font-colorred239-sliding-window-maximum-hard-font"><font color='red'>239. Sliding Window Maximum (Hard) </font></h1>
+<p>You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.</p>
+<p>Return the max sliding window.</p>
+<pre><code class="language-python">
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -&gt; List[int]:
+        
+        #if k==1: return nums
+        
+        stack_max = []
+        queue = []
+        res = []
+        for n in nums:
+            queue.append(n)
+            
+            
+            while stack_max and n&gt;stack_max[-1]:
+                stack_max.pop()
+            if not stack_max or  n&gt;stack_max[-1]:
+                stack_max.append(n)
+            
+            if len(queue)&gt;k:
+                expired = queue.pop(0)
+                if expired == stack_max[-1]:
+                    stack_max.pop()
+            
+            if len(queue)==k:
+                #print(queue,stack_max)
+                if stack_max:
+                    res.append(stack_max[-1])
+                else:
+                    #the expired one is the max and poped out
+                    newmax=max(queue)
+                    res.append(newmax)
+                    stack_max.append(newmax)
+            
+        return res
+#answer way of writting
+class Solution(object):
+    def maxSlidingWindow(self, nums, k):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :type k: int
+        :rtype: List[int]
+        &quot;&quot;&quot;
+        
+        
+        queue = collections.deque()
+        res = []
+        for i, n in enumerate(nums):
+            while queue and n&gt; nums[queue[-1]]:
+                queue.pop()
+            queue.append(i)
+            #expire
+            if queue[0] == i - k:
+                queue.popleft()
+            #can add to result
+            if i &gt;= k - 1:
+                res.append(nums[queue[0]])
+        return res
+    
+#         if not nums:
+#             return []
+#         start=0
+#         r=[]
+#         while start+k&lt;=len(nums):
+#             r.append(max(nums[start:start+k]))
+#             start+=1
+            
+#         return r
+</code></pre>
+<p>初次尝试， time limit exceeded。  思路是一致的， 如果过期，踢掉， queue中保存最大值位置。</p>
+<h1 id="font-colorblue240-search-a-2d-matrix-ii-mediumfont"><font color='blue'>240. Search a 2D Matrix II （Medium）</font></h1>
+<pre><code class="language-python">class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -&gt; bool:
+        
+        
+        def search(rowl,rowr,coll,colr,target):
+            if rowl==rowr and coll==colr:
+                return matrix[rowl][coll]==target
+            elif rowl==rowr:
+                return target in matrix[rowl]
+            elif coll==colr:
+                return target in [row[coll] for row in matrix]
+            
+            if  rowr-rowl==1 and colr-coll==1:    
+                if matrix[rowl][coll]==target or matrix[rowr][colr]==target or matrix[rowr][coll]==target or matrix[rowl][colr]==target:
+                    return True
+                return False
+            
+            
+            rowmid = (rowl+rowr)//2
+            colmid = (coll+colr)//2
+            if matrix[rowmid][colmid]==target:
+                return True
+            elif target&lt;matrix[rowmid][colmid]:
+                return search(rowl,rowmid,coll,colmid,target) or search(rowl,rowmid,colmid,colr,target) or search(rowmid,rowr,coll,colmid,target)
+            else:
+                return search(rowmid,rowr,colmid,colr,target) or search(rowl,rowmid,colmid,colr,target) or search(rowmid,rowr,coll,colmid,target)
+            
+        
+        return search(0,len(matrix)-1,0,len(matrix[0])-1,target)
+</code></pre>
+<p>用了分治法，虽然写出来了，但感觉写了陀X。 答案分治法</p>
+<pre><code class="language-python">class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -&gt; bool:
+        # an empty matrix obviously does not contain `target`
+        if not matrix:
+            return False
+
+        def search_rec(left, up, right, down):
+            # this submatrix has no height or no width.
+            if left &gt; right or up &gt; down:
+                return False
+            # `target` is already larger than the largest element or smaller
+            # than the smallest element in this submatrix.
+            elif target &lt; matrix[up][left] or target &gt; matrix[down][right]:
+                return False
+
+            mid = left + (right-left) // 2
+
+            # Locate `row` such that matrix[row-1][mid] &lt; target &lt; matrix[row][mid]
+            row = up
+            while row &lt;= down and matrix[row][mid] &lt;= target:
+                if matrix[row][mid] == target:
+                    return True
+                row += 1
+            
+            return search_rec(left, row, mid - 1, down) or \
+                   search_rec(mid + 1, up, right, row - 1)
+
+        return search_rec(0, 0, len(matrix[0]) - 1, len(matrix) - 1)
+</code></pre>
+<p>最佳答案 思路 ： 从左下角开始，如果target大于cur, 列+1， 如果targe 小于cur，行-1.</p>
+<pre><code class="language-python">class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -&gt; bool:
+        # an empty matrix obviously does not contain `target` (make this check
+        # because we want to cache `width` for efficiency's sake)
+        if len(matrix) == 0 or len(matrix[0]) == 0:
+            return False
+
+        # cache these, as they won't change.
+        height = len(matrix)
+        width = len(matrix[0])
+
+        # start our &quot;pointer&quot; in the bottom-left
+        row = height - 1
+        col = 0
+
+        while col &lt; width and row &gt;= 0:
+            if matrix[row][col] &gt; target:
+                row -= 1
+            elif matrix[row][col] &lt; target:
+                col += 1
+            else: # found it
+                return True
+        
+        return False
+</code></pre>
 ]]></content>
     </entry>
     <entry>
@@ -3005,1018 +3449,6 @@ class Solution:
         return None
         
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-11-17]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-11-17/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-17/">
-        </link>
-        <updated>2021-11-17T02:41:33.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="141-linked-list-cycle-easy">141. Linked List Cycle (Easy)</h1>
-<p>Given head, the head of a linked list, determine if the linked list has a cycle in it.</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
-
-class Solution:
-    def hasCycle(self, head: Optional[ListNode]) -&gt; bool:
-        if not head: return False
-        
-        slow=head
-        fast=head
-        
-        while fast and fast.next:
-            slow=slow.next
-            fast=fast.next.next
-            
-            if slow==fast:
-                return True
-        
-        return False
-</code></pre>
-<h1 id="142-linked-list-cycle-ii-medium">142. Linked List Cycle II (Medium)</h1>
-<p>Given the head of a linked list, return the node where the cycle begins. If there is no cycle, return null.</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
-
-class Solution:
-    def detectCycle(self, head: ListNode) -&gt; ListNode:
-        if not head: return head
-        fast=slow=head
-        while fast and fast.next:
-            slow=slow.next
-            fast=fast.next.next
-            if fast==slow:
-                if fast==head: return head
-                fast = head
-                while fast:
-                    fast=fast.next
-                    slow=slow.next
-                    if fast==slow:
-                        return slow
-        return None
-</code></pre>
-<p>注意  if fast<mark>slow: 时候 if fast</mark>head: return head 情况。</p>
-<h1 id="font-colorred143-reorder-list-medium-font"><font color='red'>143. Reorder List (Medium) </font></h1>
-<p>You are given the head of a singly linked-list. The list can be represented as:0 1 2 3 4 ..n, reorder as 0 n 1 n-1 2 n-2 ...</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def reorderList(self, head: Optional[ListNode]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify head in-place instead.
-        &quot;&quot;&quot;
-        if not head: return None
-        if  head and head.next and not head.next.next   : return head
-        if head and not head.next: return head
-        
-        
-        cur=head
-        
-        tail_pre=None
-        while cur.next:
-            tail_pre=cur
-            cur=cur.next
-        tail=cur
-      
-        
-        headnext = head.next
-        tail_pre.next=None
-        head.next=tail
-        tail.next=self.reorderList(headnext)
-        
-        return head
-# answer 思路 writing
-# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def reorderList(self, head: Optional[ListNode]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify head in-place instead.
-        &quot;&quot;&quot;
- 
-
-        def rev(head):
-            pre=None
-            while head:
-                headnext=head.next
-                head.next=pre
-                pre=head
-                head=headnext
-            return pre
-        
- 
-        slow=fast=head
-        pre_slow=None
-        while fast and fast.next:
-            pre_slow=slow
-            slow=slow.next
-            fast=fast.next.next
-        
-        pre_mid = pre_slow
-        mid=slow
-         
-        odd_head = rev(mid)
-     
-        #merge two
-        first, second = head, odd_head
-        while second.next:
-            tmp=first.next
-            first.next=second
-            first=tmp
-            
-            tmp=second.next
-            second.next=first
-            second=tmp
-            
-</code></pre>
-<p>第一次尝试，time limit exceeded，base case： node为空，2个node，一个node情况。 然后暴力求解即可.T（n）= T（n-2）+1 所以时间复杂度 1+2+3.。。+n = O（n*n）<br>
-第二次尝试放弃了， 思路： 找到mid， rev（mid）， merge 2个list。</p>
-<h1 id="144-binary-tree-preorder-traversal-easy">144. Binary Tree Preorder Traversal （Easy）</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def preorderTraversal(self, root: Optional[TreeNode]) -&gt; List[int]:
-        res=[]
-        def pre(root):
-            if not root: return
-            res.append(root.val)
-            pre(root.left)
-            pre(root.right)
-        pre(root)
-        return res
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def preorderTraversal(self, root: Optional[TreeNode]) -&gt; List[int]:
-        res=[]
-        stack = []
-        while stack or root:
-            while root:
-                res.append(root.val)
-                stack.append(root)
-                root=root.left
-            
-            node=stack.pop()
-            root=node.right
-        return res
-</code></pre>
-<h1 id="145-binary-tree-postorder-traversal-easy">145. Binary Tree Postorder Traversal （Easy）</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def postorderTraversal(self, root: Optional[TreeNode]) -&gt; List[int]:
-        res=[]
-        def post(root):
-            if not root:return
-            post(root.left)
-            post(root.right)
-            res.append(root.val)
-        post(root)
-        return res
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def postorderTraversal(self, root: Optional[TreeNode]) -&gt; List[int]:
-        if not root:
-            return []
-        
-        stack=[]
-        result=[]
-        
-        stack.append(root)
-
-        while stack:
-            
-            cur=stack.pop()
-            result.append(cur.val)
-            
-            if cur.left:
-                stack.append(cur.left)
-                
-            if cur.right:
-                stack.append(cur.right)
-                
-        return result[::-1]
-</code></pre>
-<p>左右子树颠倒的前序遍历取反向就是正常树的后序遍历。</p>
-<h1 id="146-lru-cache-medium">146. LRU Cache （Medium）</h1>
-<pre><code class="language-python">class Node:
-    def __init__(self,key,val,next=None,pre=None):
-        self.key=key
-        self.val=val
-        self.next=next
-        self.pre=pre
-        
-class LRUCache:
-
-    def __init__(self, capacity: int):
-        self.cap = capacity
-        self.n=0
-        self.map_key_node=dict()
-        self.head = Node(key='NULL',val='NULL')
-        self.tail = Node(key='NULL',val='NULL')
-        self.head.next = self.tail
-        self.tail.pre = self.head
-    
-    def debug(self,disable=True):
-        if not disable:
-            cur=self.head
-            tmp=[]
-            while cur:
-                tmp.append('('+str(cur.key)+','+str(cur.val)+')')
-                cur=cur.next
-            print(','.join(tmp))
-            cur=self.tail
-            tmp=[]
-            while cur:
-                tmp.append('('+str(cur.key)+','+str(cur.val)+')')
-                cur=cur.pre
-            print(','.join(tmp[::-1]))
-
-    def get(self, key: int) -&gt; int:
-        print('get',key)
-        if key in self.map_key_node:
-            #pop from linked list
-            node = self.map_key_node[key]
-            node.pre.next=node.next
-            node.next.pre = node.pre
-            #add from head
-            headnext=self.head.next
-            node.pre= self.head
-            self.head.next=node
-            node.next=headnext
-            headnext.pre=node
-            
-            self.debug()
-            return self.map_key_node[key].val
-        else:
-            self.debug()
-            return -1
-        
-
-    def put(self, key: int, value: int) -&gt; None:
-        print('put',key,value)
-        if key in self.map_key_node:
-            #if key in cache, update value &amp; move to top of linked list
-            self.map_key_node[key].val=value
-            
-            self.get(key) 
-            
-        else:
-            #add key-val pair to cache
-            self.map_key_node[key]= Node(key=key,val=value)
-            self.n = self.n+1
-            if self.n &gt; self.cap:
-                # evict least recently used key
-                # pop from tail
-                to_be_del = self.tail.pre
-                to_be_del.pre.next= self.tail
-                self.tail.pre= to_be_del.pre
-                del self.map_key_node[to_be_del.key]
-                #add from head
-                headnext = self.head.next
-                self.head.next=self.map_key_node[key]
-                self.map_key_node[key].pre=self.head
-                headnext.pre=self.map_key_node[key]
-                self.map_key_node[key].next=headnext
-                #update n
-                self.n = self.n-1
-            else:
-                #put &lt;=cap append from head
-                headnext = self.head.next
-                self.head.next=self.map_key_node[key]
-                self.map_key_node[key].pre=self.head
-                
-                headnext.pre = self.map_key_node[key]
-                self.map_key_node[key].next=headnext
-                
-        self.debug()
-                
-        
-        
-        
-
-
-# Your LRUCache object will be instantiated and called as such:
-# obj = LRUCache(capacity)
-# param_1 = obj.get(key)
-# obj.put(key,value)
-
-# double directed linkedlist
-# dict   key-&gt; Node   (put get update value)
-#  put 
-#  &lt;= cap just append to linked from head.     head new old1 old2..
-# &gt; cap pop from tail   put from head
-# get pop() then put to head
-
-
-</code></pre>
-<p>思路： double linked list + map     get：首先pop from linked list 然后 add 到head下一位。   put： 如果小于等于cap，从head开始append，如果大于cap， pop tail 然后add from head。</p>
-<h1 id="147-insertion-sort-list-medium">147. Insertion Sort List （Medium）</h1>
-<p>Given the head of a singly linked list, sort the list using insertion sort, and return the sorted list's head.</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def insertionSortList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
-        
-       
-        
-        def insert(node):
-            
-            pre=None
-            cur=head_sorted.next
-            FLAG=False
-            while cur:
-                #    6 1
-                if (pre and node.val&lt;=cur.val and node.val&gt;=pre.val) or (pre is None and cur.val&gt;=node.val):
-                    #do insert
-                    if pre is None:
-                        #insert after head_sorted
-                        head_sorted_next=head_sorted.next
-                        head_sorted.next=node
-                        node.next= head_sorted_next
-                    else:
-                        #normal insertion
-                        pre.next=node
-                        node.next=cur
-                    #after insertion break
-                    FLAG=True
-                    break
-                
-                pre=cur
-                cur=cur.next
-            
-            if not FLAG:
-                pre.next = node
-            
-        
-        cur=head.next
-        head.next=None
-        head_sorted = ListNode(val='NULL',next=head)
-        while cur:
-            curnext = cur.next
-            cur.next=None
-            insert(cur)
-            cur=curnext
-        
-        return head_sorted.next
-</code></pre>
-<p>没啥难的，就是细心。</p>
-<h1 id="148-sort-list-medium">148. Sort List （Medium）</h1>
-<p>Given the head of a linked list, return the list after sorting it in ascending order.<br>
-Follow up: Can you sort the linked list in O(n logn) time and O(1) memory (i.e. constant space)?</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def sortList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
-        # nlogn compare method
-        # O(1) space
-        # merge sort
-        
-        def merge(l1,l2):
-            #print('l1')
-            #print(l1)
-            #print('l2')
-            #print(l2)
-            dummy_head = ListNode(val='NULL')
-            cur=dummy_head
-            while l1 and l2:
-                if l1.val&lt;l2.val:
-                    cur.next=l1
-                    l1=l1.next if l1 else None
-                else:
-                    cur.next=l2
-                    l2=l2.next if l2 else None
-                
-                cur=cur.next
-                
-            if l1:
-                cur.next=l1
-            if l2:
-                cur.next=l2
-            #print('res')
-            #print(dummy_head.next)
-            return dummy_head.next
-        
-        def sort(head):
-            if (not head) or (not head.next): return head
-            slow=fast=head
-            pre=None
-            while fast and fast.next:
-                pre=slow
-                slow=slow.next
-                fast=fast.next.next
-                
-            
-            pre.next=None
-            mid =slow
-         
-            l1=sort(mid) 
-            l2=sort(head)
-          
-            return merge(l1,l2)
-        
-        return sort(head)
-</code></pre>
-<h1 id="149-max-points-on-a-line-hard">149. Max Points on a Line (Hard)</h1>
-<p>Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane, return the maximum number of points that lie on the same straight line.</p>
-<pre><code class="language-python">class Solution:
-    def maxPoints(self, points: List[List[int]]) -&gt; int:
-        # p1 [x, ax+b]
-        # p2 [x',ax'+b]     
-        # y1=ax1+b
-        # y2=ax2+b
-        #   y1-y2=a(x1-x2)
-        # a = y1-y2/x1-x2
-        # b = y-ax
-        dic = collections.defaultdict(set)
-        n = len(points)
-        if n==1: return 1
-        for i in range(n-1):
-            for j in range(i+1,n):
-                p1=points[i]
-                p2=points[j]
-                a=(p1[1]-p2[1])/(p1[0]-p2[0]) if p1[0]!=p2[0] else None
-                b = p1[1]-a*p1[0] if a is not None else None
-                if a is not None:
-                    key = str(a)+'-'+str(b)
-                else:
-                    key = 'x=constant'+str(p1[0]) 
-                dic[key].add(i)
-                dic[key].add(j)
-        #print(dic)
-        return max(map(len,dic.values()))
-</code></pre>
-<h1 id="150-evaluate-reverse-polish-notation-medium">150. Evaluate Reverse Polish Notation (Medium)</h1>
-<p>Input: tokens = [&quot;2&quot;,&quot;1&quot;,&quot;+&quot;,&quot;3&quot;,&quot;*&quot;]<br>
-Output: 9<br>
-Explanation: ((2 + 1) * 3) = 9</p>
-<pre><code class="language-python">class Solution:
-    def evalRPN(self, tokens: List[str]) -&gt; int:
-        numstack = []
-        for t in tokens:
-            if t in '+-*/':
-                #op
-            
-                num2=numstack.pop()
-                num1=numstack.pop()
-                print(t,num1,num2,end='  # ')
-                if t=='+':
-                    numstack.append(num1+num2)
-                elif t=='-':
-                    numstack.append(num1-num2)
-                elif t=='*':
-                    numstack.append(num1*num2)
-                elif t=='/':
-                    numstack.append(int(num1/num2) )
-                else:
-                    print(error)
-                #print(numstack[-1])
-            else:
-                numstack.append(int(t))
-         
-        #print(numstack)
-        return numstack[0]
-</code></pre>
-<p>注意 int(num1/num2)，  int(1.8)=1 int(-1.8)=-1  但是  -2/1.1=-1.8181818181818181     -2//1.1=-2  取整后会更偏小，但是对负数希望的是偏大。对正数希望的是抹去小数偏小。 所以只能取int。</p>
-<!-- more -->
-<h1 id="141-linked-list-cycle-easy-2">141. Linked List Cycle (Easy)</h1>
-<p>Given head, the head of a linked list, determine if the linked list has a cycle in it.</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
-
-class Solution:
-    def hasCycle(self, head: Optional[ListNode]) -&gt; bool:
-        if not head: return False
-        
-        slow=head
-        fast=head
-        
-        while fast and fast.next:
-            slow=slow.next
-            fast=fast.next.next
-            
-            if slow==fast:
-                return True
-        
-        return False
-</code></pre>
-<h1 id="142-linked-list-cycle-ii-medium-2">142. Linked List Cycle II (Medium)</h1>
-<p>Given the head of a linked list, return the node where the cycle begins. If there is no cycle, return null.</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
-
-class Solution:
-    def detectCycle(self, head: ListNode) -&gt; ListNode:
-        if not head: return head
-        fast=slow=head
-        while fast and fast.next:
-            slow=slow.next
-            fast=fast.next.next
-            if fast==slow:
-                if fast==head: return head
-                fast = head
-                while fast:
-                    fast=fast.next
-                    slow=slow.next
-                    if fast==slow:
-                        return slow
-        return None
-</code></pre>
-<p>注意  if fast<mark>slow: 时候 if fast</mark>head: return head 情况。</p>
-<h1 id="font-colorred143-reorder-list-medium-font-2"><font color='red'>143. Reorder List (Medium) </font></h1>
-<p>You are given the head of a singly linked-list. The list can be represented as:0 1 2 3 4 ..n, reorder as 0 n 1 n-1 2 n-2 ...</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def reorderList(self, head: Optional[ListNode]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify head in-place instead.
-        &quot;&quot;&quot;
-        if not head: return None
-        if  head and head.next and not head.next.next   : return head
-        if head and not head.next: return head
-        
-        
-        cur=head
-        
-        tail_pre=None
-        while cur.next:
-            tail_pre=cur
-            cur=cur.next
-        tail=cur
-      
-        
-        headnext = head.next
-        tail_pre.next=None
-        head.next=tail
-        tail.next=self.reorderList(headnext)
-        
-        return head
-# answer 思路 writing
-# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def reorderList(self, head: Optional[ListNode]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify head in-place instead.
-        &quot;&quot;&quot;
- 
-
-        def rev(head):
-            pre=None
-            while head:
-                headnext=head.next
-                head.next=pre
-                pre=head
-                head=headnext
-            return pre
-        
- 
-        slow=fast=head
-        pre_slow=None
-        while fast and fast.next:
-            pre_slow=slow
-            slow=slow.next
-            fast=fast.next.next
-        
-        pre_mid = pre_slow
-        mid=slow
-         
-        odd_head = rev(mid)
-     
-        #merge two
-        first, second = head, odd_head
-        while second.next:
-            tmp=first.next
-            first.next=second
-            first=tmp
-            
-            tmp=second.next
-            second.next=first
-            second=tmp
-            
-</code></pre>
-<p>第一次尝试，time limit exceeded，base case： node为空，2个node，一个node情况。 然后暴力求解即可.T（n）= T（n-2）+1 所以时间复杂度 1+2+3.。。+n = O（n*n）<br>
-第二次尝试放弃了， 思路： 找到mid， rev（mid）， merge 2个list。</p>
-<h1 id="144-binary-tree-preorder-traversal-easy-2">144. Binary Tree Preorder Traversal （Easy）</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def preorderTraversal(self, root: Optional[TreeNode]) -&gt; List[int]:
-        res=[]
-        def pre(root):
-            if not root: return
-            res.append(root.val)
-            pre(root.left)
-            pre(root.right)
-        pre(root)
-        return res
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def preorderTraversal(self, root: Optional[TreeNode]) -&gt; List[int]:
-        res=[]
-        stack = []
-        while stack or root:
-            while root:
-                res.append(root.val)
-                stack.append(root)
-                root=root.left
-            
-            node=stack.pop()
-            root=node.right
-        return res
-</code></pre>
-<h1 id="145-binary-tree-postorder-traversal-easy-2">145. Binary Tree Postorder Traversal （Easy）</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def postorderTraversal(self, root: Optional[TreeNode]) -&gt; List[int]:
-        res=[]
-        def post(root):
-            if not root:return
-            post(root.left)
-            post(root.right)
-            res.append(root.val)
-        post(root)
-        return res
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def postorderTraversal(self, root: Optional[TreeNode]) -&gt; List[int]:
-        if not root:
-            return []
-        
-        stack=[]
-        result=[]
-        
-        stack.append(root)
-
-        while stack:
-            
-            cur=stack.pop()
-            result.append(cur.val)
-            
-            if cur.left:
-                stack.append(cur.left)
-                
-            if cur.right:
-                stack.append(cur.right)
-                
-        return result[::-1]
-</code></pre>
-<p>左右子树颠倒的前序遍历取反向就是正常树的后序遍历。</p>
-<h1 id="146-lru-cache-medium-2">146. LRU Cache （Medium）</h1>
-<pre><code class="language-python">class Node:
-    def __init__(self,key,val,next=None,pre=None):
-        self.key=key
-        self.val=val
-        self.next=next
-        self.pre=pre
-        
-class LRUCache:
-
-    def __init__(self, capacity: int):
-        self.cap = capacity
-        self.n=0
-        self.map_key_node=dict()
-        self.head = Node(key='NULL',val='NULL')
-        self.tail = Node(key='NULL',val='NULL')
-        self.head.next = self.tail
-        self.tail.pre = self.head
-    
-    def debug(self,disable=True):
-        if not disable:
-            cur=self.head
-            tmp=[]
-            while cur:
-                tmp.append('('+str(cur.key)+','+str(cur.val)+')')
-                cur=cur.next
-            print(','.join(tmp))
-            cur=self.tail
-            tmp=[]
-            while cur:
-                tmp.append('('+str(cur.key)+','+str(cur.val)+')')
-                cur=cur.pre
-            print(','.join(tmp[::-1]))
-
-    def get(self, key: int) -&gt; int:
-        print('get',key)
-        if key in self.map_key_node:
-            #pop from linked list
-            node = self.map_key_node[key]
-            node.pre.next=node.next
-            node.next.pre = node.pre
-            #add from head
-            headnext=self.head.next
-            node.pre= self.head
-            self.head.next=node
-            node.next=headnext
-            headnext.pre=node
-            
-            self.debug()
-            return self.map_key_node[key].val
-        else:
-            self.debug()
-            return -1
-        
-
-    def put(self, key: int, value: int) -&gt; None:
-        print('put',key,value)
-        if key in self.map_key_node:
-            #if key in cache, update value &amp; move to top of linked list
-            self.map_key_node[key].val=value
-            
-            self.get(key) 
-            
-        else:
-            #add key-val pair to cache
-            self.map_key_node[key]= Node(key=key,val=value)
-            self.n = self.n+1
-            if self.n &gt; self.cap:
-                # evict least recently used key
-                # pop from tail
-                to_be_del = self.tail.pre
-                to_be_del.pre.next= self.tail
-                self.tail.pre= to_be_del.pre
-                del self.map_key_node[to_be_del.key]
-                #add from head
-                headnext = self.head.next
-                self.head.next=self.map_key_node[key]
-                self.map_key_node[key].pre=self.head
-                headnext.pre=self.map_key_node[key]
-                self.map_key_node[key].next=headnext
-                #update n
-                self.n = self.n-1
-            else:
-                #put &lt;=cap append from head
-                headnext = self.head.next
-                self.head.next=self.map_key_node[key]
-                self.map_key_node[key].pre=self.head
-                
-                headnext.pre = self.map_key_node[key]
-                self.map_key_node[key].next=headnext
-                
-        self.debug()
-                
-        
-        
-        
-
-
-# Your LRUCache object will be instantiated and called as such:
-# obj = LRUCache(capacity)
-# param_1 = obj.get(key)
-# obj.put(key,value)
-
-# double directed linkedlist
-# dict   key-&gt; Node   (put get update value)
-#  put 
-#  &lt;= cap just append to linked from head.     head new old1 old2..
-# &gt; cap pop from tail   put from head
-# get pop() then put to head
-
-
-</code></pre>
-<p>思路： double linked list + map     get：首先pop from linked list 然后 add 到head下一位。   put： 如果小于等于cap，从head开始append，如果大于cap， pop tail 然后add from head。</p>
-<h1 id="147-insertion-sort-list-medium-2">147. Insertion Sort List （Medium）</h1>
-<p>Given the head of a singly linked list, sort the list using insertion sort, and return the sorted list's head.</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def insertionSortList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
-        
-       
-        
-        def insert(node):
-            
-            pre=None
-            cur=head_sorted.next
-            FLAG=False
-            while cur:
-                #    6 1
-                if (pre and node.val&lt;=cur.val and node.val&gt;=pre.val) or (pre is None and cur.val&gt;=node.val):
-                    #do insert
-                    if pre is None:
-                        #insert after head_sorted
-                        head_sorted_next=head_sorted.next
-                        head_sorted.next=node
-                        node.next= head_sorted_next
-                    else:
-                        #normal insertion
-                        pre.next=node
-                        node.next=cur
-                    #after insertion break
-                    FLAG=True
-                    break
-                
-                pre=cur
-                cur=cur.next
-            
-            if not FLAG:
-                pre.next = node
-            
-        
-        cur=head.next
-        head.next=None
-        head_sorted = ListNode(val='NULL',next=head)
-        while cur:
-            curnext = cur.next
-            cur.next=None
-            insert(cur)
-            cur=curnext
-        
-        return head_sorted.next
-</code></pre>
-<p>没啥难的，就是细心。</p>
-<h1 id="148-sort-list-medium-2">148. Sort List （Medium）</h1>
-<p>Given the head of a linked list, return the list after sorting it in ascending order.<br>
-Follow up: Can you sort the linked list in O(n logn) time and O(1) memory (i.e. constant space)?</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def sortList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
-        # nlogn compare method
-        # O(1) space
-        # merge sort
-        
-        def merge(l1,l2):
-            #print('l1')
-            #print(l1)
-            #print('l2')
-            #print(l2)
-            dummy_head = ListNode(val='NULL')
-            cur=dummy_head
-            while l1 and l2:
-                if l1.val&lt;l2.val:
-                    cur.next=l1
-                    l1=l1.next if l1 else None
-                else:
-                    cur.next=l2
-                    l2=l2.next if l2 else None
-                
-                cur=cur.next
-                
-            if l1:
-                cur.next=l1
-            if l2:
-                cur.next=l2
-            #print('res')
-            #print(dummy_head.next)
-            return dummy_head.next
-        
-        def sort(head):
-            if (not head) or (not head.next): return head
-            slow=fast=head
-            pre=None
-            while fast and fast.next:
-                pre=slow
-                slow=slow.next
-                fast=fast.next.next
-                
-            
-            pre.next=None
-            mid =slow
-         
-            l1=sort(mid) 
-            l2=sort(head)
-          
-            return merge(l1,l2)
-        
-        return sort(head)
-</code></pre>
-<h1 id="149-max-points-on-a-line-hard-2">149. Max Points on a Line (Hard)</h1>
-<p>Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane, return the maximum number of points that lie on the same straight line.</p>
-<pre><code class="language-python">class Solution:
-    def maxPoints(self, points: List[List[int]]) -&gt; int:
-        # p1 [x, ax+b]
-        # p2 [x',ax'+b]     
-        # y1=ax1+b
-        # y2=ax2+b
-        #   y1-y2=a(x1-x2)
-        # a = y1-y2/x1-x2
-        # b = y-ax
-        dic = collections.defaultdict(set)
-        n = len(points)
-        if n==1: return 1
-        for i in range(n-1):
-            for j in range(i+1,n):
-                p1=points[i]
-                p2=points[j]
-                a=(p1[1]-p2[1])/(p1[0]-p2[0]) if p1[0]!=p2[0] else None
-                b = p1[1]-a*p1[0] if a is not None else None
-                if a is not None:
-                    key = str(a)+'-'+str(b)
-                else:
-                    key = 'x=constant'+str(p1[0]) 
-                dic[key].add(i)
-                dic[key].add(j)
-        #print(dic)
-        return max(map(len,dic.values()))
-</code></pre>
-<h1 id="150-evaluate-reverse-polish-notation-medium-2">150. Evaluate Reverse Polish Notation (Medium)</h1>
-<p>Input: tokens = [&quot;2&quot;,&quot;1&quot;,&quot;+&quot;,&quot;3&quot;,&quot;*&quot;]<br>
-Output: 9<br>
-Explanation: ((2 + 1) * 3) = 9</p>
-<pre><code class="language-python">class Solution:
-    def evalRPN(self, tokens: List[str]) -&gt; int:
-        numstack = []
-        for t in tokens:
-            if t in '+-*/':
-                #op
-            
-                num2=numstack.pop()
-                num1=numstack.pop()
-                print(t,num1,num2,end='  # ')
-                if t=='+':
-                    numstack.append(num1+num2)
-                elif t=='-':
-                    numstack.append(num1-num2)
-                elif t=='*':
-                    numstack.append(num1*num2)
-                elif t=='/':
-                    numstack.append(int(num1/num2) )
-                else:
-                    print(error)
-                #print(numstack[-1])
-            else:
-                numstack.append(int(t))
-         
-        #print(numstack)
-        return numstack[0]
-</code></pre>
-<p>注意 int(num1/num2)，  int(1.8)=1 int(-1.8)=-1  但是  -2/1.1=-1.8181818181818181     -2//1.1=-2  取整后会更偏小，但是对负数希望的是偏大。对正数希望的是抹去小数偏小。 所以只能取int。</p>
 ]]></content>
     </entry>
 </feed>
