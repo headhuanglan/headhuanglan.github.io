@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1639724485604">
+<link rel="shortcut icon" href="/favicon.ico?v=1639951693224">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -179,7 +179,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">30</span>
+        <span class="site-item-stat-count">31</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -223,7 +223,7 @@
   <div class="archive-timeline-box">
     <div class="archive-timeline-title">
       
-        <h2 class="language" data-lan="archives" data-count="30">非常好！目前共计30篇文章，继续努力！</h2>
+        <h2 class="language" data-lan="archives" data-count="31">非常好！目前共计31篇文章，继续努力！</h2>
       
     </div>
     
@@ -240,6 +240,19 @@
             <h1>
               11-27
               <small>书单</small>
+            </h1>
+          </div>  
+      </div>
+      </a>
+    
+      
+      
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-12-27/">
+        <div class="motion-warpper tag-archive-node">
+          <div class="tag-node">
+            <h1>
+              11-26
+              <small>Leetcode 2021-12-27</small>
             </h1>
           </div>  
       </div>
@@ -963,6 +976,280 @@
 &lt;a href=&#34;https://drive.google.com/drive/folders/1iFAFtnyGwr5OBYPSWCVVAmCWxlJXSg1K?usp=sharing&#34;&gt;半小时漫画科学史1 2 3全 MOBI&lt;/a&gt;&lt;br&gt;
 &lt;a href=&#34;https://drive.google.com/drive/folders/1iFAFtnyGwr5OBYPSWCVVAmCWxlJXSg1K?usp=sharing&#34;&gt;半小时漫画预防常见病&lt;/a&gt;&lt;/p&gt;
 ">书单</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-27/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;font-colorred-241-different-ways-to-add-parentheses-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 241. Different Ways to Add Parentheses （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a string expression of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. You may return the answer in any order.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def diffWaysToCompute(self, expression: str) -&amp;gt; List[int]:
+        if not expression: return []
+         
+        exp = []
+        start=0
+        i=0
+        while i&amp;lt;len(expression):
+            if expression[i].isdigit():
+                i+=1
+            else:
+                exp.append(expression[start:i])
+                exp.append(expression[i])
+                start=i+1
+                i+=1
+        exp.append(expression[start:])
+        
+        
+        #basecase
+        res = []
+        if len(exp)==1 and (&#39;+&#39; not in exp) and (&#39;-&#39; not in exp) and (&#39;*&#39; not in exp):
+            res=[int(exp[0])]
+        
+        
+        for i, op in enumerate(exp):
+            if not op.isdigit():
+                left = self.diffWaysToCompute(&#39;&#39;.join(exp[:i]))
+                right= self.diffWaysToCompute(&#39;&#39;.join(exp[i+1:]))
+                if op==&#39;+&#39;:
+                    for l in left:
+                        for r in right:
+                            res.append(l+r)
+                elif op==&#39;-&#39;:
+                     for l in left:
+                        for r in right:
+                            res.append(l-r)
+                else:
+                     for l in left:
+                        for r in right:
+                            res.append(l*r)
+                      
+ 
+        return res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;感觉是backtracking但写code出现了问题。。。并不是 a+(b+...)   和 (a+b)+.... 这2种情况， 而是 （left）+ （right）产生不同的组合。  思路错误导致没写出来。。写了个bug。&lt;/p&gt;
+&lt;h1 id=&#34;242-valid-anagram-easy&#34;&gt;242. Valid Anagram （Easy）&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def isAnagram(self, s: str, t: str) -&amp;gt; bool:
+        return collections.Counter(s)==collections.Counter(t)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案用了26个字符的数组存储出现次数，s出现+1，t出现-1. 这样相等时候所有位置都应该是0.&lt;/p&gt;
+&lt;h1 id=&#34;243-shortest-word-distance-easy&#34;&gt;243. Shortest Word Distance (Easy)&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def shortestDistance(self, wordsDict: List[str], word1: str, word2: str) -&amp;gt; int:
+        visited = dict()
+        res=float(&#39;inf&#39;)
+        for i,w in enumerate(wordsDict):
+            if w==word1 and word2 in visited:
+                res=min(res,i-visited[word2])
+            if w==word2 and word1 in visited:
+                res=min(res,i-visited[word1])
+            visited[w]=i
+        return res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;244-shortest-word-distance-ii-medium&#34;&gt;244. Shortest Word Distance II (Medium)&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class WordDistance:
+
+    def __init__(self, wordsDict: List[str]):
+        self.dic = collections.defaultdict(list)
+        for i,w in enumerate(wordsDict):
+            self.dic[w].append(i)
+        
+
+    def shortest(self, word1: str, word2: str) -&amp;gt; int:
+        res=float(&#39;inf&#39;)
+        for pos1 in self.dic[word1]:
+            for pos2 in self.dic[word2]:
+                res=min(res,abs(pos2-pos1))
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;245-shortest-word-distance-iii-medium&#34;&gt;245. Shortest Word Distance III (Medium)&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def shortestWordDistance(self, wordsDict: List[str], word1: str, word2: str) -&amp;gt; int:
+        dic=dict()
+        res = float(&#39;inf&#39;)
+        for i, w in enumerate(wordsDict):
+            if w==word1 and word2 in dic:
+                res=min(res,i-dic[word2])
+            if w==word2 and word1 in dic:
+                res=min(res,i-dic[word1])
+            
+            dic[w]=i
+        return res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;246-strobogrammatic-number-easy&#34;&gt;246. Strobogrammatic Number (Easy)&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def isStrobogrammatic(self, num: str) -&amp;gt; bool:
+        # 1 6 9 8 0
+        if &#39;2&#39; in num or &#39;3&#39; in num or &#39;4&#39; in num or &#39;5&#39; in num or &#39;7&#39; in num:
+            return False
+        dic={&#39;6&#39;:&#39;9&#39;,&#39;9&#39;:&#39;6&#39;,&#39;1&#39;:&#39;1&#39;,&#39;8&#39;:&#39;8&#39;,&#39;0&#39;:&#39;0&#39;}
+        num2= &#39;&#39;.join([dic[e] for e in num][::-1])
+        return num==num2
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred247-strobogrammatic-number-ii-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;247. Strobogrammatic Number II (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findStrobogrammatic(self, n: int) -&amp;gt; List[str]:
+        if n==1: return [&amp;quot;0&amp;quot;,&amp;quot;1&amp;quot;,&amp;quot;8&amp;quot;]
+        nums=[&#39;0&#39;,&#39;1&#39;,&#39;6&#39;,&#39;8&#39;,&#39;9&#39;]
+        
+        def isStrobogrammatic(num: str) -&amp;gt; bool:
+            if &#39;2&#39; in num or &#39;3&#39; in num or &#39;4&#39; in num or &#39;5&#39; in num or &#39;7&#39; in num:
+                return False
+            dic={&#39;6&#39;:&#39;9&#39;,&#39;9&#39;:&#39;6&#39;,&#39;1&#39;:&#39;1&#39;,&#39;8&#39;:&#39;8&#39;,&#39;0&#39;:&#39;0&#39;}
+            num2= &#39;&#39;.join([dic[e] for e in num][::-1])
+            return num==num2
+        
+        res = []
+        def bt(tmp):
+            if len(tmp)==n:
+                sb = &#39;&#39;.join(tmp[:])
+                if isStrobogrammatic(sb) and sb[0]!=&#39;0&#39;:
+                    res.append(sb)
+                return 
+            for cur in nums:
+                tmp.append(cur)
+                bt(tmp)
+                tmp.pop()
+        
+        bt([])
+        return res
+#answer way of writting
+class Solution:
+    def findStrobogrammatic(self, n: int) -&amp;gt; List[str]:
+        evenMidCandidate = [&amp;quot;11&amp;quot;,&amp;quot;69&amp;quot;,&amp;quot;88&amp;quot;,&amp;quot;96&amp;quot;, &amp;quot;00&amp;quot;]
+        oddMidCandidate = [&amp;quot;0&amp;quot;, &amp;quot;1&amp;quot;, &amp;quot;8&amp;quot;]
+        if n == 1:
+            return oddMidCandidate
+        if n == 2:
+            return evenMidCandidate[:-1]
+        if n % 2:
+            pre, midCandidate = self.findStrobogrammatic(n-1), oddMidCandidate
+        else: 
+            pre, midCandidate = self.findStrobogrammatic(n-2), evenMidCandidate
+        premid = (n-1)//2
+        return [p[:premid] + c + p[premid:] for c in midCandidate for p in pre]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;初次尝试， time limit exceeded。。。 backtracking属于暴力求解。 答案思路：&lt;br&gt;
+n == 1: [0, 1, 8]&lt;br&gt;
+n == 2: [11, 88, 69, 96]&lt;br&gt;
+How about n == 3?&lt;br&gt;
+=&amp;gt; it can be retrieved if you insert [0, 1, 8] to the middle of solution of n == 2&lt;br&gt;
+n == 4?&lt;br&gt;
+=&amp;gt; it can be retrieved if you insert [11, 88, 69, 96, 00] to the middle of solution of n == 2&lt;br&gt;
+n == 5?&lt;br&gt;
+=&amp;gt; it can be retrieved if you insert [0, 1, 8] to the middle of solution of n == 4&lt;br&gt;
+the same, for n == 6, it can be retrieved if you insert [11, 88, 69, 96, 00] to the middle of solution of n == 4&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred248-strobogrammatic-number-iii-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;248. Strobogrammatic Number III （Hard） &lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def strobogrammaticInRange(self, low: str, high: str) -&amp;gt; int:
+        
+        
+        dic = {&#39;0&#39;: &#39;0&#39;,&#39;1&#39;: &#39;1&#39;,&#39;6&#39;: &#39;9&#39;,&#39;8&#39;: &#39;8&#39;,&#39;9&#39;: &#39;6&#39;}    
+        count=[0] # count as list can be modifed without return 
+        
+        
+        
+        def dfs(low,high,c,left,right,count):
+            if left&amp;gt;right:
+                s=&#39;&#39;.join(c)
+                if (len(s)==len(low) and s&amp;lt;low) or (len(s)==len(high) and s&amp;gt;high):
+                    return 
+                count[0]+=1
+                return
+            for k,v in dic.items():
+                c[left]=k
+                c[right]=v
+                if len(c)!=1 and c[0]==&#39;0&#39;:
+                    continue
+                if left==right and k!=v:
+                    continue
+                
+                dfs(low,high,c,left+1,right-1,count)
+        
+        
+        for length in range(len(low),len(high)+1):
+   
+            dfs(low, high, [&#39;&#39;]*length, 0, length-1, count);
+        
+        return count[0]
+    
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;give up, 思路 ， 构建length长度的满足条件的string，从两边向中间构建。  做dfs search。&lt;br&gt;
+用247的办法也可以感觉。 然后过滤出low，high之间有多少个。&lt;/p&gt;
+&lt;h1 id=&#34;249-group-shifted-strings-medium&#34;&gt;249. Group Shifted Strings （Medium）&lt;/h1&gt;
+&lt;p&gt;We can shift a string by shifting each of its letters to its successive letter.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;For example, &amp;quot;abc&amp;quot; can be shifted to be &amp;quot;bcd&amp;quot;.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can keep shifting the string to form a sequence.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;For example, we can keep shifting &amp;quot;abc&amp;quot; to form the sequence: &amp;quot;abc&amp;quot; -&amp;gt; &amp;quot;bcd&amp;quot; -&amp;gt; ... -&amp;gt; &amp;quot;xyz&amp;quot;.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Given an array of strings strings, group all strings[i] that belong to the same shifting sequence. You may return the answer in any order.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+class Solution:
+    def groupStrings(self, strings: List[str]) -&amp;gt; List[List[str]]:
+        dic = collections.defaultdict(list)
+        for s in strings:
+            if len(s)==1:
+                dic[&#39;NULL&#39;].append(s)
+            else:
+                key=[]
+                for i in range(1,len(s)):
+                    tmp = str((ord(s[i])-ord(s[i-1]))%26)
+                    key.append(tmp)
+                key=&#39;-&#39;.join(key)
+                dic[key].append(s)
+        return dic.values()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;250-count-univalue-subtrees-medium&#34;&gt;250. Count Univalue Subtrees (Medium)&lt;/h1&gt;
+&lt;p&gt;Given the root of a binary tree, return the number of uni-value subtrees.&lt;br&gt;
+A uni-value subtree means all nodes of the subtree have the same value.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def countUnivalSubtrees(self, root: Optional[TreeNode]) -&amp;gt; int:
+        
+        count = [0]
+        
+        def isUnivalSubtrees(root):
+            if not root:
+                return False
+            if not root.left and not root.right:
+                count[0]+=1
+                return True
+            if not root.left:
+                res = isUnivalSubtrees(root.right) and root.val==root.right.val
+                if res:
+                    count[0]+=1
+                return res
+            if not root.right:
+                res= isUnivalSubtrees(root.left) and root.val==root.left.val
+                if res:
+                    count[0]+=1
+                return res
+            
+            left = isUnivalSubtrees(root.left)
+            right= isUnivalSubtrees(root.right)
+            res=left and right and root.val==root.left.val and root.val==root.right.val
+            if res:
+                count[0]+=1
+            return res
+        
+        isUnivalSubtrees(root)
+        return count[0]
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从上个题目获得的trick这个题目马上用到， count作为list，边run边更新不影响helper function的bool返回值。&lt;/p&gt;
+">Leetcode 2021-12-27</a>
       </div>
       
       <div class="item">

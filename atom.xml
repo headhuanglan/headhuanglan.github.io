@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2021-12-17T07:02:10.703Z</updated>
+    <updated>2021-12-19T22:08:58.792Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -33,6 +33,283 @@
 <a href="https://drive.google.com/drive/folders/1iFAFtnyGwr5OBYPSWCVVAmCWxlJXSg1K?usp=sharing">半小时漫画经济学4</a><br>
 <a href="https://drive.google.com/drive/folders/1iFAFtnyGwr5OBYPSWCVVAmCWxlJXSg1K?usp=sharing">半小时漫画科学史1 2 3全 MOBI</a><br>
 <a href="https://drive.google.com/drive/folders/1iFAFtnyGwr5OBYPSWCVVAmCWxlJXSg1K?usp=sharing">半小时漫画预防常见病</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2021-12-27]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-12-27/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-27/">
+        </link>
+        <updated>2021-11-26T16:05:28.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="font-colorred-241-different-ways-to-add-parentheses-mediumfont"><font color='red'> 241. Different Ways to Add Parentheses （Medium）</font></h1>
+<p>Given a string expression of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. You may return the answer in any order.</p>
+<pre><code class="language-python">class Solution:
+    def diffWaysToCompute(self, expression: str) -&gt; List[int]:
+        if not expression: return []
+         
+        exp = []
+        start=0
+        i=0
+        while i&lt;len(expression):
+            if expression[i].isdigit():
+                i+=1
+            else:
+                exp.append(expression[start:i])
+                exp.append(expression[i])
+                start=i+1
+                i+=1
+        exp.append(expression[start:])
+        
+        
+        #basecase
+        res = []
+        if len(exp)==1 and ('+' not in exp) and ('-' not in exp) and ('*' not in exp):
+            res=[int(exp[0])]
+        
+        
+        for i, op in enumerate(exp):
+            if not op.isdigit():
+                left = self.diffWaysToCompute(''.join(exp[:i]))
+                right= self.diffWaysToCompute(''.join(exp[i+1:]))
+                if op=='+':
+                    for l in left:
+                        for r in right:
+                            res.append(l+r)
+                elif op=='-':
+                     for l in left:
+                        for r in right:
+                            res.append(l-r)
+                else:
+                     for l in left:
+                        for r in right:
+                            res.append(l*r)
+                      
+ 
+        return res
+
+</code></pre>
+<p>感觉是backtracking但写code出现了问题。。。并不是 a+(b+...)   和 (a+b)+.... 这2种情况， 而是 （left）+ （right）产生不同的组合。  思路错误导致没写出来。。写了个bug。</p>
+<h1 id="242-valid-anagram-easy">242. Valid Anagram （Easy）</h1>
+<pre><code class="language-python">class Solution:
+    def isAnagram(self, s: str, t: str) -&gt; bool:
+        return collections.Counter(s)==collections.Counter(t)
+</code></pre>
+<p>答案用了26个字符的数组存储出现次数，s出现+1，t出现-1. 这样相等时候所有位置都应该是0.</p>
+<h1 id="243-shortest-word-distance-easy">243. Shortest Word Distance (Easy)</h1>
+<pre><code class="language-python">class Solution:
+    def shortestDistance(self, wordsDict: List[str], word1: str, word2: str) -&gt; int:
+        visited = dict()
+        res=float('inf')
+        for i,w in enumerate(wordsDict):
+            if w==word1 and word2 in visited:
+                res=min(res,i-visited[word2])
+            if w==word2 and word1 in visited:
+                res=min(res,i-visited[word1])
+            visited[w]=i
+        return res
+
+</code></pre>
+<h1 id="244-shortest-word-distance-ii-medium">244. Shortest Word Distance II (Medium)</h1>
+<pre><code class="language-python">class WordDistance:
+
+    def __init__(self, wordsDict: List[str]):
+        self.dic = collections.defaultdict(list)
+        for i,w in enumerate(wordsDict):
+            self.dic[w].append(i)
+        
+
+    def shortest(self, word1: str, word2: str) -&gt; int:
+        res=float('inf')
+        for pos1 in self.dic[word1]:
+            for pos2 in self.dic[word2]:
+                res=min(res,abs(pos2-pos1))
+        return res
+</code></pre>
+<h1 id="245-shortest-word-distance-iii-medium">245. Shortest Word Distance III (Medium)</h1>
+<pre><code class="language-python">class Solution:
+    def shortestWordDistance(self, wordsDict: List[str], word1: str, word2: str) -&gt; int:
+        dic=dict()
+        res = float('inf')
+        for i, w in enumerate(wordsDict):
+            if w==word1 and word2 in dic:
+                res=min(res,i-dic[word2])
+            if w==word2 and word1 in dic:
+                res=min(res,i-dic[word1])
+            
+            dic[w]=i
+        return res
+
+</code></pre>
+<h1 id="246-strobogrammatic-number-easy">246. Strobogrammatic Number (Easy)</h1>
+<pre><code class="language-python">class Solution:
+    def isStrobogrammatic(self, num: str) -&gt; bool:
+        # 1 6 9 8 0
+        if '2' in num or '3' in num or '4' in num or '5' in num or '7' in num:
+            return False
+        dic={'6':'9','9':'6','1':'1','8':'8','0':'0'}
+        num2= ''.join([dic[e] for e in num][::-1])
+        return num==num2
+
+</code></pre>
+<h1 id="font-colorred247-strobogrammatic-number-ii-medium-font"><font color='red'>247. Strobogrammatic Number II (Medium) </font></h1>
+<pre><code class="language-python">class Solution:
+    def findStrobogrammatic(self, n: int) -&gt; List[str]:
+        if n==1: return [&quot;0&quot;,&quot;1&quot;,&quot;8&quot;]
+        nums=['0','1','6','8','9']
+        
+        def isStrobogrammatic(num: str) -&gt; bool:
+            if '2' in num or '3' in num or '4' in num or '5' in num or '7' in num:
+                return False
+            dic={'6':'9','9':'6','1':'1','8':'8','0':'0'}
+            num2= ''.join([dic[e] for e in num][::-1])
+            return num==num2
+        
+        res = []
+        def bt(tmp):
+            if len(tmp)==n:
+                sb = ''.join(tmp[:])
+                if isStrobogrammatic(sb) and sb[0]!='0':
+                    res.append(sb)
+                return 
+            for cur in nums:
+                tmp.append(cur)
+                bt(tmp)
+                tmp.pop()
+        
+        bt([])
+        return res
+#answer way of writting
+class Solution:
+    def findStrobogrammatic(self, n: int) -&gt; List[str]:
+        evenMidCandidate = [&quot;11&quot;,&quot;69&quot;,&quot;88&quot;,&quot;96&quot;, &quot;00&quot;]
+        oddMidCandidate = [&quot;0&quot;, &quot;1&quot;, &quot;8&quot;]
+        if n == 1:
+            return oddMidCandidate
+        if n == 2:
+            return evenMidCandidate[:-1]
+        if n % 2:
+            pre, midCandidate = self.findStrobogrammatic(n-1), oddMidCandidate
+        else: 
+            pre, midCandidate = self.findStrobogrammatic(n-2), evenMidCandidate
+        premid = (n-1)//2
+        return [p[:premid] + c + p[premid:] for c in midCandidate for p in pre]
+</code></pre>
+<p>初次尝试， time limit exceeded。。。 backtracking属于暴力求解。 答案思路：<br>
+n == 1: [0, 1, 8]<br>
+n == 2: [11, 88, 69, 96]<br>
+How about n == 3?<br>
+=&gt; it can be retrieved if you insert [0, 1, 8] to the middle of solution of n == 2<br>
+n == 4?<br>
+=&gt; it can be retrieved if you insert [11, 88, 69, 96, 00] to the middle of solution of n == 2<br>
+n == 5?<br>
+=&gt; it can be retrieved if you insert [0, 1, 8] to the middle of solution of n == 4<br>
+the same, for n == 6, it can be retrieved if you insert [11, 88, 69, 96, 00] to the middle of solution of n == 4</p>
+<h1 id="font-colorred248-strobogrammatic-number-iii-hard-font"><font color='red'>248. Strobogrammatic Number III （Hard） </font></h1>
+<pre><code class="language-python">class Solution:
+    def strobogrammaticInRange(self, low: str, high: str) -&gt; int:
+        
+        
+        dic = {'0': '0','1': '1','6': '9','8': '8','9': '6'}    
+        count=[0] # count as list can be modifed without return 
+        
+        
+        
+        def dfs(low,high,c,left,right,count):
+            if left&gt;right:
+                s=''.join(c)
+                if (len(s)==len(low) and s&lt;low) or (len(s)==len(high) and s&gt;high):
+                    return 
+                count[0]+=1
+                return
+            for k,v in dic.items():
+                c[left]=k
+                c[right]=v
+                if len(c)!=1 and c[0]=='0':
+                    continue
+                if left==right and k!=v:
+                    continue
+                
+                dfs(low,high,c,left+1,right-1,count)
+        
+        
+        for length in range(len(low),len(high)+1):
+   
+            dfs(low, high, ['']*length, 0, length-1, count);
+        
+        return count[0]
+    
+
+</code></pre>
+<p>give up, 思路 ， 构建length长度的满足条件的string，从两边向中间构建。  做dfs search。<br>
+用247的办法也可以感觉。 然后过滤出low，high之间有多少个。</p>
+<h1 id="249-group-shifted-strings-medium">249. Group Shifted Strings （Medium）</h1>
+<p>We can shift a string by shifting each of its letters to its successive letter.</p>
+<pre><code>For example, &quot;abc&quot; can be shifted to be &quot;bcd&quot;.
+</code></pre>
+<p>We can keep shifting the string to form a sequence.</p>
+<pre><code>For example, we can keep shifting &quot;abc&quot; to form the sequence: &quot;abc&quot; -&gt; &quot;bcd&quot; -&gt; ... -&gt; &quot;xyz&quot;.
+</code></pre>
+<p>Given an array of strings strings, group all strings[i] that belong to the same shifting sequence. You may return the answer in any order.</p>
+<pre><code class="language-python">
+class Solution:
+    def groupStrings(self, strings: List[str]) -&gt; List[List[str]]:
+        dic = collections.defaultdict(list)
+        for s in strings:
+            if len(s)==1:
+                dic['NULL'].append(s)
+            else:
+                key=[]
+                for i in range(1,len(s)):
+                    tmp = str((ord(s[i])-ord(s[i-1]))%26)
+                    key.append(tmp)
+                key='-'.join(key)
+                dic[key].append(s)
+        return dic.values()
+</code></pre>
+<h1 id="250-count-univalue-subtrees-medium">250. Count Univalue Subtrees (Medium)</h1>
+<p>Given the root of a binary tree, return the number of uni-value subtrees.<br>
+A uni-value subtree means all nodes of the subtree have the same value.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def countUnivalSubtrees(self, root: Optional[TreeNode]) -&gt; int:
+        
+        count = [0]
+        
+        def isUnivalSubtrees(root):
+            if not root:
+                return False
+            if not root.left and not root.right:
+                count[0]+=1
+                return True
+            if not root.left:
+                res = isUnivalSubtrees(root.right) and root.val==root.right.val
+                if res:
+                    count[0]+=1
+                return res
+            if not root.right:
+                res= isUnivalSubtrees(root.left) and root.val==root.left.val
+                if res:
+                    count[0]+=1
+                return res
+            
+            left = isUnivalSubtrees(root.left)
+            right= isUnivalSubtrees(root.right)
+            res=left and right and root.val==root.left.val and root.val==root.right.val
+            if res:
+                count[0]+=1
+            return res
+        
+        isUnivalSubtrees(root)
+        return count[0]
+
+</code></pre>
+<p>从上个题目获得的trick这个题目马上用到， count作为list，边run边更新不影响helper function的bool返回值。</p>
 ]]></content>
     </entry>
     <entry>
@@ -3024,430 +3301,6 @@ return res
 # obj = TwoSum()
 # obj.add(number)
 # param_2 = obj.find(value)
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-11-18]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-11-18/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-18/">
-        </link>
-        <updated>2021-11-18T15:20:44.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="151-reverse-words-in-a-string-medium">151. Reverse Words in a String （Medium）</h1>
-<p>Given an input string s, reverse the order of the words.</p>
-<pre><code class="language-python">class Solution:
-    def reverseWords(self, s: str) -&gt; str:
-        if not s: return s
-        #trim space
-        tmp=''
-        while s:
-            if s[0]!=' ':
-                tmp+=s[0]
-            else:
-                if tmp and tmp[-1]!=' ' :
-                    tmp+=' '
-            s=s[1:]
-        
-        while tmp and tmp[-1]==' ':
-            tmp=tmp[:-1]
-        
-                    
-        
-        s = [e for e in tmp]
-        print(s)
-        def rev(s,i,j):
-            while i&lt;=j:
-                s[i],s[j]=s[j],s[i]
-                i+=1
-                j-=1
-            return s
-        #rev all
-        s = rev(s,0,len(s)-1)
-        
-        start=0
-        for i in range(len(s)):
-            if s[i]==' ':
-                s = rev(s,start,i-1)
-                start=i+1
-        s=rev(s,start,len(s)-1)
-        
-        return ''.join(s)
-#quick way using python function
-class Solution:
-    def reverseWords(self, s: str) -&gt; str:
-        def rev(e):
-            w=[i for i in e]
-            return ''.join(w[::-1])
-        s=rev(s)
-        res=[]
-        for e in  s.strip().split():
-            res.append(rev(e))
-        return ' '.join(res)
-</code></pre>
-<h1 id="font-colorblue152-maximum-product-subarray-medium-font"><font color='blue'>152. Maximum Product Subarray (Medium) </font></h1>
-<p>Given an integer array nums, find a contiguous non-empty subarray within the array that has the largest product, and return the product.</p>
-<pre><code class="language-python">class Solution:
-    def maxProduct(self, nums: List[int]) -&gt; int:
-        # dp[i][j] is max subarry product till nums[i].. nums[j]
-        # dp[i][i] = nums[i]
-        #  -2 -3 -4 -5 -6
-        #     -3 -4 -5 -6     
-        #     max_dp[i][j] = max(min_dp[i][j-1]*nums[j], max_dp[i][j-1]*nums[j], nums[j])
-        #     min_dp[i][j] = min(max_dp[i][j-1]*nums[j], min_dp[i][j-1]*nums[j], nums[j])
-        #  j&gt;=i
-        #  
-        l=len(nums)
-        if l==1: return nums[0]
-        res = float('-inf')
-        max_dp = [[float('-inf')]*l for i in range(l)]
-        min_dp = [[float('inf')]*l for i in range(l)]
-        for i in range(l):
-            max_dp[i][i] = nums[i]
-            min_dp[i][i] = nums[i]
-            res = max(res,max_dp[i][i])
-    
-        for i in range(l):
-            for j in range(l):
-                if i&gt;=j:continue
-                max_dp[i][j] = max(min_dp[i][j-1]*nums[j], max_dp[i][j-1]*nums[j], nums[j])
-                min_dp[i][j] = min(max_dp[i][j-1]*nums[j], min_dp[i][j-1]*nums[j], nums[j])
-                res=max(res,max_dp[i][j]) 
-        #for row in max_dp:
-        #    print(row)
-        #for col in min_dp:
-        #    print(col)
-        
-        return res
-# 搞定 O（n）解法
-class Solution:
-    def maxProduct(self, nums: List[int]) -&gt; int:
-        
-        # max_dp[i] = maxProduct up to nums[0] ... nums[i]
-        # min_dp[i] = minProduct up to nums[0] ... nums[i]
-        res = float('-inf')
-        l=len(nums)
-        max_dp = [float('-inf')]*l
-        min_dp = [float('inf')]*l
-        for i in range(l):
-            max_dp[i] = max(nums[i],max_dp[i-1]*nums[i],min_dp[i-1]*nums[i]) if i!=0 else nums[i]
-            res = max(res,max_dp[i])
-            min_dp[i] = min(nums[i],min_dp[i-1]*nums[i],max_dp[i-1]*nums[i]) if i!=0 else nums[i]
-        
-        #print(max_dp)
-        #print(min_dp)
-        return res
-</code></pre>
-<p>想了个dp 但是O(n*n)的 time limit exceeded， 所以应该有O（n）的dp解法。<br>
-思路： 由于nums的正负符号来回变化，所以需要追踪最大乘积和最小乘积。令max_dp[i] 表示用nums【0】到nums【i】所能得到的最大乘积。 min_dp[i]表示用nums【0】到nums【i】所能得到的最大乘积。 则  max_dp[i] = max(nums[i],max_dp[i-1]*nums[i],min_dp[i-1]*nums[i]) min_dp[i] = min(nums[i],min_dp[i-1]*nums[i],max_dp[i-1]*nums[i])  由于dp【i】只与dp【i-1】有关，所以甚至能简化为O（1）space的解。</p>
-<h1 id="154-find-minimum-in-rotated-sorted-array-ii-hard">154. Find Minimum in Rotated Sorted Array II （Hard）</h1>
-<p>Given the sorted rotated array nums that may contain duplicates, return the minimum element of this array.</p>
-<pre><code class="language-python">class Solution:
-    def findMin(self, nums: List[int]) -&gt; int:
-        # nums[l]  &lt; nums[m]
-        
-        nums_without_dup = []
-        pre=None
-        for n in nums:
-            if (pre and n!=pre) or (pre is None):
-                nums_without_dup.append(n)
-            pre=n    
-        nums = nums_without_dup
-        
-        l=0
-        r=len(nums)-1
-        res = float('inf')
-        while l&lt;r:
-            m = (l+r)//2
-            if nums[l] &lt;= nums[m]:
-                # left increse
-                res=min(res,nums[l])
-                l=m+1
-            
-            else:
-                #right increase
-                res=min(res,nums[m])
-                r=m-1
-        
-        return min(res,nums[l])
- # 更正后算法
- class Solution:
-    def findMin(self, nums: List[int]) -&gt; int:
- 
-        
-        l=0
-        r=len(nums)-1
-        res = float('inf')
-        while l&lt;r:
-            m = (l+r)//2
-            while l&lt;r and nums[l]==nums[r] :
-                res=min(res,nums[l])
-                l+=1
-                r-=1
-            
-            if nums[l] &lt;= nums[m]:
-                # left increse
-                res=min(res,nums[l])
-                l=m+1
-            
-            else:
-                #right increase
-                res=min(res,nums[m])
-                r=m-1
-        
-        return min(res,nums[l])
-               
-</code></pre>
-<p>通过比较nums【l】和nums【m】可以知道是左侧单增还是右侧单增， 左侧单增需要查找右侧，但左侧的起始也应该记录下，对右侧情况同理。 注意先去重。但问题是去重会花费O（n）时间。和直接找min一样了，思路不通。在之前思路上多加一行判断，while left==rgiht， left+=1 right-=1. 这样在大部分case下是lg（n）最坏情况是O（n）。</p>
-<h1 id="155-min-stack-easy">155. Min Stack （Easy）</h1>
-<p>Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.</p>
-<pre><code class="language-python">class MinStack:
-
-    def __init__(self):
-        self.stack = []
-        self.min_stack = []
-        
-
-    def push(self, val: int) -&gt; None:
-        self.stack.append(val)
-        if not self.min_stack:
-            self.min_stack.append(val)
-        else:
-            self.min_stack.append(min(self.min_stack[-1],val))
-        
-
-    def pop(self) -&gt; None:
-        self.stack.pop()
-        self.min_stack.pop()
-        
-
-    def top(self) -&gt; int:
-        return self.stack[-1] if self.stack else None
-        
-
-    def getMin(self) -&gt; int:
-        return self.min_stack[-1] if self.min_stack else None
-        
-
-
-# Your MinStack object will be instantiated and called as such:
-# obj = MinStack()
-# obj.push(val)
-# obj.pop()
-# param_3 = obj.top()
-# param_4 = obj.getMin()
-</code></pre>
-<h1 id="156-binary-tree-upside-down-medium">156. Binary Tree Upside Down (Medium)</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def upsideDownBinaryTree(self, root: Optional[TreeNode]) -&gt; Optional[TreeNode]:
-        # 层序遍历
-        if not root: return root
-        res = []
-        queue = [root]
-        while queue:
-            l=len(queue)
-            level = []
-            for i in range(l):
-                cur=queue.pop(0)
-                level.append(cur)
-                if cur.left:
-                    queue.append(cur.left)
-                    cur.left=None
-                if cur.right:
-                    queue.append(cur.right)
-                    cur.right=None
-            res.append(level)
-        
-        result=res[-1][0]
-        
-        for j,row in enumerate(res):
-            for i,node in enumerate(row):
-                if j+1&lt;len(res) and i*2&lt;len(res[j+1]):
-                    res[j+1][i*2].right=node  
-                    res[j+1][i*2].left = res[j+1][i*2+1]  if   i*2+1 &lt;len(res[j+1]) else None
-                
-        return result
-        
-</code></pre>
-<p>思路：层序遍历，然后strip left&amp;right=None光剩下node。 然后重新组建链接关系。</p>
-<h1 id="157-read-n-characters-given-read4-easy">157. Read N Characters Given Read4 （Easy）</h1>
-<p>Given a file and assume that you can only read the file using a given method read4, implement a method to read n characters.</p>
-<pre><code class="language-python">&quot;&quot;&quot;
-The read4 API is already defined for you.
-
-    @param buf4, a list of characters
-    @return an integer
-    def read4(buf4):
-
-# Below is an example of how the read4 API can be called.
-file = File(&quot;abcdefghijk&quot;) # File is &quot;abcdefghijk&quot;, initially file pointer (fp) points to 'a'
-buf4 = [' '] * 4 # Create buffer with enough space to store characters
-read4(buf4) # read4 returns 4. Now buf = ['a','b','c','d'], fp points to 'e'
-read4(buf4) # read4 returns 4. Now buf = ['e','f','g','h'], fp points to 'i'
-read4(buf4) # read4 returns 3. Now buf = ['i','j','k',...], fp points to end of file
-&quot;&quot;&quot;
-
-class Solution:
-    def read(self, buf, n):
-        &quot;&quot;&quot;
-        :type buf: Destination buffer (List[str])
-        :type n: Number of characters to read (int)
-        :rtype: The number of actual characters read (int)
-        &quot;&quot;&quot;
-        buf4 =[' ' for _ in range(4)]
-        c=0
-        start=0
-        while c&lt;n:
-            val=read4(buf4)
-            c+=val
-            if c&lt;=n:
-                buf[start:start+val]=buf4 
-            else:
-                
-                buf[start:n]=buf4[:n-start] 
-                return n
-               
-           
-            start=start+val
-           
-            if val==0:
-                break
-                
-        return c
-</code></pre>
-<h1 id="158-read-n-characters-given-read4-ii-call-multiple-times-hard">158. Read N Characters Given read4 II - Call Multiple Times (Hard)</h1>
-<p>Given a file and assume that you can only read the file using a given method read4, implement a method read to read n characters. Your method read may be called multiple times.</p>
-<pre><code class="language-python"># The read4 API is already defined for you.
-# def read4(buf4: List[str]) -&gt; int:
-
-class Solution:
-    
-   
-    buf4_rem = [' ']*4
-    n_rem=0
-   
-    def read(self, buf: List[str], n: int) -&gt; int:
-         
-        start=0
-        buf4=[' ']*4
-        c=0
-        while c&lt;n:
-            if self.n_rem&gt;0:
-                #have remain
-                if c+self.n_rem&lt;n:
-                    buf[start:start+self.n_rem] = self.buf4_rem[:self.n_rem]
-                    start+=self.n_rem
-                    c+=self.n_rem
-                    self.n_rem=0
-                  
-                else:
-                    #c+n_rem&gt;=n
-                    # char needed =  n-c
-                    buf[start:n] = self.buf4_rem[:n-c]
-                    self.n_rem = self.n_rem - (n-c)
-                    if self.n_rem&gt;0:
-                        self.buf4_rem = self.buf4_rem[n-c:]+[' ']*(4-(n-c))
-                    return n
-            
-            else:
-                 
-                #n_rem==0
-                nread = read4(buf4)
-                if nread==0:break
-                if c+nread&lt;n:
-                    #overwrite nead chars
-                    buf[start:start+nread] = buf4[:nread]
-                    start+=nread
-                    c+=nread
-                else:
-                    #char needed n-c
-                    buf[start:n]=  buf4[:n-c]
-                    self.buf4_rem = buf4[n-c:] + [' ']*(4-(n-c))
-                    self.n_rem = nread-(n-c)
-                    return n
-            
-        
-        return c
-</code></pre>
-<p>尼玛，这hard题目，完全是考细心不是考算法，垃圾题目。</p>
-<h1 id="159-longest-substring-with-at-most-two-distinct-characters-medium">159. Longest Substring with At Most Two Distinct Characters （Medium）</h1>
-<p>Given a string s, return the length of the longest substring that contains at most two distinct characters.</p>
-<pre><code class="language-python">class Solution:
-    def lengthOfLongestSubstringTwoDistinct(self, s: str) -&gt; int:
-        # e c e b a
-        # e c e b a
-        
-        map_2pos = dict()
-        res=1
-        start=0
-        for i,char in enumerate(s):
-            if (char not in map_2pos) and len(map_2pos)==2:
-                #do calculation
-                small_k=None
-                small_v=float('inf')
-                for k,v in map_2pos.items():
-                    if v&lt;small_v:
-                        small_v=v
-                        small_k=k
-                del map_2pos[small_k]
-                start=small_v+1
-                res=max(res,i-start+1)
-            elif char in map_2pos and len(map_2pos)==2:
-                res=max(res,i-start+1)
-            elif len(map_2pos)&lt;2:
-                res=max(res,i-start+1)
-                
-            map_2pos[char]=i
-        
-        return res
-</code></pre>
-<p>思路： sliding window， 用dic保存char最近一次出现位置，dic保持2个元素内。 情况1： 当dic已经有2个元素，要加入不同元素，需要pop位置最小那个。然后计算。 情况2：还是在dic中相同char，只做长度更新。 情况3：dic中元素不到2，只做长度更新。</p>
-<h1 id="160-intersection-of-two-linked-lists-easy">160. Intersection of Two Linked Lists （Easy）</h1>
-<p>Given the heads of two singly linked-lists headA and headB, return the node at which the two lists intersect. If the two linked lists have no intersection at all, return null.</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
-
-class Solution:
-    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -&gt; ListNode:
-        
-        def length(node):
-            c=0
-            while node:
-                c+=1
-                node=node.next
-            return c
-        
-        la=length(headA)
-        lb=length(headB)
-        
-        if la&lt;lb:
-            la,lb=lb,la
-            headA,headB=headB,headA
-        
-        # A always &gt; B
-        
-        diff = la-lb 
-        
-        for i in range(diff):
-            headA = headA.next
-        
- 
-        while headA and headB:
-            if headA==headB:
-                return headA
-            headA=headA.next
-            headB=headB.next
-        return None
-        
 </code></pre>
 ]]></content>
     </entry>

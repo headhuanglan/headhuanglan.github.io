@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>Leetcode 2021-11-19 | Lan&#39;s Blog</title>
+<title>Leetcode 2021-12-27 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1639951693224">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,7 +41,7 @@
 
 
 
-  <meta name="description" content="Leetcode 2021-11-19" />
+  <meta name="description" content="Leetcode 2021-12-27" />
   <meta name="keywords" content="leetcode" />
 </head>
 
@@ -223,16 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#161-one-edit-distance-medium">161. One Edit Distance (Medium)</a></li>
-<li><a href="#font-colorred162-find-peak-element-mediumfont"><font color='red'>162. Find Peak Element （Medium）</font></a></li>
-<li><a href="#font-colorred163-missing-ranges-easyfont"><font color='red'>163. Missing Ranges （Easy）</font></a></li>
-<li><a href="#font-colorred164-maximum-gap-hard-font"><font color='red'>164. Maximum Gap （Hard） </font></a></li>
-<li><a href="#165-compare-version-numbers-medium">165. Compare Version Numbers （Medium）</a></li>
-<li><a href="#166-fraction-to-recurring-decimal-medium">166. Fraction to Recurring Decimal （Medium）</a></li>
-<li><a href="#167-two-sum-ii-input-array-is-sorted-easy">167. Two Sum II - Input Array Is Sorted （Easy）</a></li>
-<li><a href="#font-colorred168-excel-sheet-column-title-easyfont"><font color='red'>168. Excel Sheet Column Title （Easy）</font></a></li>
-<li><a href="#font-colorred169-majority-element-easyfont"><font color='red'>169. Majority Element （Easy）</font></a></li>
-<li><a href="#170-two-sum-iii-data-structure-design-easy">170. Two Sum III - Data structure design (Easy)</a></li>
+<li><a href="#font-colorred-241-different-ways-to-add-parentheses-mediumfont"><font color='red'> 241. Different Ways to Add Parentheses （Medium）</font></a></li>
+<li><a href="#242-valid-anagram-easy">242. Valid Anagram （Easy）</a></li>
+<li><a href="#243-shortest-word-distance-easy">243. Shortest Word Distance (Easy)</a></li>
+<li><a href="#244-shortest-word-distance-ii-medium">244. Shortest Word Distance II (Medium)</a></li>
+<li><a href="#245-shortest-word-distance-iii-medium">245. Shortest Word Distance III (Medium)</a></li>
+<li><a href="#246-strobogrammatic-number-easy">246. Strobogrammatic Number (Easy)</a></li>
+<li><a href="#font-colorred247-strobogrammatic-number-ii-medium-font"><font color='red'>247. Strobogrammatic Number II (Medium) </font></a></li>
+<li><a href="#font-colorred248-strobogrammatic-number-iii-hard-font"><font color='red'>248. Strobogrammatic Number III （Hard） </font></a></li>
+<li><a href="#249-group-shifted-strings-medium">249. Group Shifted Strings （Medium）</a></li>
+<li><a href="#250-count-univalue-subtrees-medium">250. Count Univalue Subtrees (Medium)</a></li>
 </ul>
 
   </div>
@@ -498,14 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-19/"> Leetcode 2021-11-19 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-12-27/"> Leetcode 2021-12-27 </a>
   </h1>
   <div class="post-meta">
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-18 20:20:04">2021-11-18</span>
+      <span class="publish-time" data-t="2021-11-26 11:05:28">2021-11-26</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -523,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >14<span class="language" data-lan="minute"
+        >9<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -532,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >2464<span class="pc-show language" data-lan="words"
+        >1401<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -543,482 +543,274 @@
 
             <div class="post-body next-md-body" id="post_body">
               <!-- more -->
-<h1 id="161-one-edit-distance-medium">161. One Edit Distance (Medium)</h1>
-<p>Given two strings s and t, return true if they are both one edit distance apart, otherwise return false.</p>
+<h1 id="font-colorred-241-different-ways-to-add-parentheses-mediumfont"><font color='red'> 241. Different Ways to Add Parentheses （Medium）</font></h1>
+<p>Given a string expression of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. You may return the answer in any order.</p>
 <pre><code class="language-python">class Solution:
-    def isOneEditDistance(self, s: str, t: str) -&gt; bool:
-        #
-        #      ''  a  b
-        #   '' 0   1  2
-        #    a 1   0  1  
-        #    c 2   1  1
-        #    b 3   2  1
-        #
-        #    dp[i][j] is s[:i]  t[:j]'s editdistance
-        #    dp[i][j] =   min(dp[i][j-1] ,  dp[i-1][j] ,  dp[i-1][j-1]) +1 if s[i]!=t[j]        
-        m = len(s)
-        n = len(t)
-        
-        dp = [[0]*(n+1) for _ in range(m+1)]
-      
-        for i in range(n+1):
-            dp[0][i]=i
-        for i in range(m+1):
-            dp[i][0]=i
-        
-        for i in range(1,m+1):
-            for j in range(1,n+1):
-                if s[i-1]!=t[j-1]:
-                    dp[i][j] = min(dp[i][j-1],dp[i-1][j],dp[i-1][j-1])+1
-                else:
-                    dp[i][j] = dp[i-1][j-1]
-                
-                     
-        
-        return dp[-1][-1]==1
-
- #second way of writting
- class Solution:
-    def isOneEditDistance(self, s: str, t: str) -&gt; bool:
-        
-        # s-&gt;t    insert
-        
-        if len(t)-len(s)==1 and len(set(t))-len(set(s))&lt;=1:
-            #s insert
-            # ssss sss
-            # tttttttt
-           
-            while s and s[0]==t[0]:
-                s=s[1:]
-                t=t[1:]
-            while s and s[-1]==t[-1]:
-                s=s[:len(s)-1]
-                t=t[:len(t)-1]
-            if len(t)==1:
-                return True
-            
-        elif len(s)-len(t)==1 and len(set(s))-len(set(t))&lt;=1:
-            #s del
-            # sssssss
-            # ttt ttt
-             
-            while t and s[0]==t[0]:
-                s=s[1:]
-                t=t[1:]
-            while t and s[-1]==t[-1]:
-                s=s[:len(s)-1]
-                t=t[:len(t)-1]
-            if len(s)==1:
-                return True
-            
-            
-        elif len(s)==len(t)  and len(set(s))-len(set(t))&lt;=1:
-            # replace
-            while t and s[0]==t[0]:
-                s=s[1:]
-                t=t[1:]
-            while t and s[-1]==t[-1]:
-                s=s[:len(s)-1]
-                t=t[:len(t)-1]
-            
-            if len(t)==1 and len(s)==1 and t!=s:
-                return True
-            
-        
-        
-        return False
-               
-</code></pre>
-<p>用dp方法，time limit exceeded。dp是n*n的。所以用定义做。 分3种情况， insert ，del， replace。 头尾之间去除相同的，剩下长度为1 就是可以的。</p>
-<h1 id="font-colorred162-find-peak-element-mediumfont"><font color='red'>162. Find Peak Element （Medium）</font></h1>
-<p>A peak element is an element that is strictly greater than its neighbors.</p>
-<pre><code class="language-python">class Solution:
-    def findPeakElement(self, nums: List[int]) -&gt; int:
-        
-#         for i in range(len(nums)-1):
-#             if nums[i] &gt; nums[i+1]:
-#                 return i
-        
-#         return len(nums)-1
-        
-        
-        return self.search(nums,0,len(nums)-1)
-    
-    def search(self, nums,l,r):
-        if l==r:
-            return l
-        
-        m = (l+r)//2
-        
-        if nums[m] &gt; nums[m+1]:
-            return self.search(nums,l,m)
-        else:
-            return self.search(nums,m+1,r)
-    
-</code></pre>
-<p>一定是考binary search的，但木有思路，答案很精彩。 就是比较 m 和 m+1就搞定了。</p>
-<h1 id="font-colorred163-missing-ranges-easyfont"><font color='red'>163. Missing Ranges （Easy）</font></h1>
-<pre><code class="language-python">class Solution:
-    def findMissingRanges(self, nums: List[int], lower: int, upper: int) -&gt; List[str]:
-        res=[]
-        
-        def helper(x,y):
-            if y-x==2:
-                # y=3 x=1
-                res.append(str(x+1))
-            elif y-x&gt;2:
-                res.append(str(x + 1) + '-&gt;' + str(y - 1))
-            
-        
-        pre = lower-1
-        for num in nums:
-            helper(pre,num)
-            pre=num
-        
-        helper(pre,upper+1)
-            
-        return res
-            
-</code></pre>
-<p>if else 判断太繁杂， 答案很简单，这个是个easy题目？？？ 为了统一 x 到 y之间判断， lower =lower-1，这样lower就包括进去了， upper=upper+1，这样upper就包括进去了。</p>
-<h1 id="font-colorred164-maximum-gap-hard-font"><font color='red'>164. Maximum Gap （Hard） </font></h1>
-<p>Given an integer array nums, return the maximum difference between two successive elements in its sorted form. If the array contains less than two elements, return 0.</p>
-<pre><code class="language-python">class Solution:
-    def maximumGap(self, nums: List[int]) -&gt; int:
-        
-        if not nums or len(nums)&lt;2: return 0
-        
-        maxval = max(nums)
-        exp=1 # 1,10,100,...
-        radix=10 #base 10 system
-        aux = [0]*len(nums)
-        while maxval//exp&gt;0:
-            count = [0]*radix
-            
-            for i,n in enumerate(nums):
-                count[(n//exp)%10] +=1
-            
-            for i,n in enumerate(count):
-                if i==0: continue
-                count[i] += count[i-1]
-            
-            for i in range(len(nums)-1,-1,-1):
-                count[(nums[i]//exp)%10] -= 1
-                aux[ count[(nums[i]//exp)%10] ] = nums[i]
-                
-            nums= aux[:]
-            
-            exp*=10
-        
-        print(nums)
-        
-        maxGap = 0 
-        for   i  in range(len(nums)-1): 
-            maxGap = max(nums[i + 1] - nums[i], maxGap)
-
-        return maxGap
-
-# answer way of writting
-class Solution:
-    def maximumGap(self, nums: List[int]) -&gt; int:
-        ## RC ##
-        ## APPROACH : BUCKET SORT ##
-        ## LOGIC ##
-        ## 1. lets say we have number from 1 to 10 like, 1,1.1,1.2,2.4,3.5,3.7,4,....10 (not in the same order)
-        ## 2. we create n - 1 buckets, why n-1 ? (b1 -&gt; [1-2] b2-&gt; [2-3] b3-&gt;[3-4] ...so on 9 buckets)
-        ## 3. we can say size of each bucket will be (10 - 1) // 9 i.e 1 ==&gt; (maximum - mimimum) // (length - 1)
-        ## 3. Instead of storing all the elements in the buckets, we store minvalue of that bucket and maximum value of that bucket
-        ## 4. Maximum Gap can be Case 1: gap between min and max in the bucket itself (or) Case 2: Gap between bucket1 max and bucket2 and so on..
-        
-		## TIME COMPLEXITY : O(N) ##
-		## SPACE COMPLEXITY : O(N) ##
-        
-        if len(nums) &lt; 2 or min(nums) == max(nums):
-            return 0
-        minimum, maximum = min(nums), max(nums)
-        size = ( maximum - minimum )//(len(nums)-1) or 1
-        buckets = [[None, None] for _ in range(( maximum - minimum )//size+1)]
-        for num in nums:
-            # getting the bucket number in which it falls into
-            bucket = buckets[ ( num - minimum )//size ]
-            bucket[0] = num if bucket[0] is None else min(bucket[0], num)
-            bucket[1] = num if bucket[1] is None else max(bucket[1], num)
-        buckets = [bucket for bucket in buckets if bucket[0] is not None]
-        return max(buckets[i][0]-buckets[i-1][1] for i in range(1, len(buckets)))        
-</code></pre>
-<p>要求O（n）for space and time没思路。答案思路1） Radix Sort 听过，但写不出来。。。2）Buckets 这个思路很好。</p>
-<blockquote>
-<p>知识点 Radix Sort</p>
-</blockquote>
-<pre><code class="language-python">
-     def count_sort(arr,exp):
-           #辅助数组用于返回
-           aux = [0]*len(nums)
-           #0到9是个数字的计数器
-           count=[0]*10
-           #计数
-           for i,n in enumerate(arr):
-               ind= (n//exp)%10
-               count[ind]+=1
-           #计算位置  count【i】 就是 i 这个位，属于的数字所在的位置
-           for i in range(1,10):
-               count[i] += count[i-1]
-            #从后向前遍历数组
-           for i in range(len(arr)-1,-1,-1):
-               #找到index
-               ind = (arr[i]//exp)%10
-               #找到位置 因为位置从0开始所以要-1
-               count[ind] -= 1
-               #赋值
-               aux[count[ind]] = arr[i]
-           return aux 
-
-
-       def Radix_Sort(arr):
-           maxval=max(arr)
-           exp=1
-           while maxval//exp&gt;0:
-               #print('#',exp)
-               arr = count_sort(arr,exp)
-               exp*=10
-           return arr
-       
-       nums = Radix_Sort(nums)
-
-
-</code></pre>
-<h1 id="165-compare-version-numbers-medium">165. Compare Version Numbers （Medium）</h1>
-<pre><code class="language-python">class Solution:
-    def compareVersion(self, version1: str, version2: str) -&gt; int:
-        while version1 or version2:
-            v1=0
-            v2=0
-            while version1 and version1[0]!='.':
-                v1 = v1*10+int(version1[0])
-                version1=version1[1:]
-            while version2 and version2[0]!='.':
-                v2 = v2*10+int(version2[0])
-                version2=version2[1:]
-            
-            if v1&gt;v2: return 1
-            if v1&lt;v2: return -1
-            
-            version1 = version1[1:] if version1 else ''
-            version2 = version2[1:] if version2 else ''
-    
-        return 0
-</code></pre>
-<h1 id="166-fraction-to-recurring-decimal-medium">166. Fraction to Recurring Decimal （Medium）</h1>
-<pre><code class="language-python">class Solution:
-    def fractionToDecimal(self, numerator: int, denominator: int) -&gt; str:
-        negsign = (numerator&gt;0) ^ (denominator&gt;0)
-        numerator= abs(numerator)
-        denominator=abs(denominator)
-        if numerator==0: negsign=False
-        
-        integer = numerator//denominator
-        if integer*denominator==numerator:
-            return str(integer) if not negsign else  '-'+str(integer)
-        res_int = str(integer)
-        
-        numerator -= integer*denominator
-        
-        def loop(res_dec,denominator_len):
-            l=len(res_dec)
-            if l&gt;=2:
-                for lookback in range(1,l//2+1):     
-                    if lookback&gt;=denominator_len and res_dec[l-lookback:l] == res_dec[l-2*lookback :l-lookback] :
-                        return True, l-2*lookback, lookback
-            return False, 0,0
-        res_dec = []
-        while True:
-            numerator *= 10
-            val =numerator//denominator
-            res_dec.append(val)
-            #print(res_dec)
-            flag, start,length =  loop(res_dec,len(str(denominator)))
-            if flag:
-                l=len(res_dec)
-                part1 = res_dec[:start]
-                recur = res_dec[start:start+length]
-                part1=''.join([str(e) for e in part1])
-                recur = '('+''.join([str(e) for e in recur]) +')' if recur else ''
-                decpart=part1+recur
-                result= res_int+'.'+decpart if decpart else res_int
-                return result if not negsign else '-'+result
-            numerator=numerator-val*denominator
-            if numerator==0:
-                break
-        
-        decpart=''.join([str(e) for e in res_dec])
-        result=res_int+'.'+decpart if decpart else res_int
-        return result if not negsign else '-'+result
-
-#answer way of writting
-class Solution(object):
-    def fractionToDecimal(self, numerator, denominator):
-        &quot;&quot;&quot;
-        :type numerator: int
-        :type denominator: int
-        :rtype: str
-        &quot;&quot;&quot;
-       
-        if not numerator: return &quot;0&quot;;
-        res=&quot;&quot;
-        if  (numerator &lt; 0) ^ (denominator &lt; 0):
-            res += '-'
-        
-        numer = numerator * (-1) if numerator &lt; 0 else numerator
-            
-        denom =  denominator * (-1) if denominator &lt; 0 else denominator;
-        integral = numer // denom;
-        res += str(integral);
-        rmd = numer % denom;
-        if  rmd==0: return res
-        res += '.';
-        rmd *= 10
-        mp=dict() 
-        while rmd:
-            quotient = rmd / denom
-            if rmd in mp:
-                #res.insert(mp[rmd], 1, '(');
-                res=res[:mp[rmd]]+'('+res[mp[rmd]:]
-                res += ')'
-                break
-            
-            mp[rmd] = len(res)
-            res += str(quotient);
-            rmd = (rmd % denom) * 10
-        
-        return res;
-</code></pre>
-<p>判断recurring，lookback需要长度大于被除数。不难但细节太多，垃圾题。答案写的很优雅。用了dict去存reminder，如果重复出现reminder说明存在重复。 我的方法是之间判断数组是否循环。答案更优雅。</p>
-<h1 id="167-two-sum-ii-input-array-is-sorted-easy">167. Two Sum II - Input Array Is Sorted （Easy）</h1>
-<pre><code class="language-python">class Solution:
-    def twoSum(self, numbers: List[int], target: int) -&gt; List[int]:
-        length = len(numbers)
-        l=0
-        r=length-1
-        while l&lt;r:
-            if numbers[l]+numbers[r]==target:
-                return [l+1,r+1]
-            elif  numbers[l]+numbers[r]&lt;target:
-                l+=1
+    def diffWaysToCompute(self, expression: str) -&gt; List[int]:
+        if not expression: return []
+         
+        exp = []
+        start=0
+        i=0
+        while i&lt;len(expression):
+            if expression[i].isdigit():
+                i+=1
             else:
-                r-=1
+                exp.append(expression[start:i])
+                exp.append(expression[i])
+                start=i+1
+                i+=1
+        exp.append(expression[start:])
+        
+        
+        #basecase
+        res = []
+        if len(exp)==1 and ('+' not in exp) and ('-' not in exp) and ('*' not in exp):
+            res=[int(exp[0])]
+        
+        
+        for i, op in enumerate(exp):
+            if not op.isdigit():
+                left = self.diffWaysToCompute(''.join(exp[:i]))
+                right= self.diffWaysToCompute(''.join(exp[i+1:]))
+                if op=='+':
+                    for l in left:
+                        for r in right:
+                            res.append(l+r)
+                elif op=='-':
+                     for l in left:
+                        for r in right:
+                            res.append(l-r)
+                else:
+                     for l in left:
+                        for r in right:
+                            res.append(l*r)
+                      
+ 
+        return res
+
 </code></pre>
-<p>sorterd 直接上two pointer了。</p>
-<h1 id="font-colorred168-excel-sheet-column-title-easyfont"><font color='red'>168. Excel Sheet Column Title （Easy）</font></h1>
+<p>感觉是backtracking但写code出现了问题。。。并不是 a+(b+...)   和 (a+b)+.... 这2种情况， 而是 （left）+ （right）产生不同的组合。  思路错误导致没写出来。。写了个bug。</p>
+<h1 id="242-valid-anagram-easy">242. Valid Anagram （Easy）</h1>
 <pre><code class="language-python">class Solution:
-    def convertToTitle(self, columnNumber: int) -&gt; str:
-        # 26 进制数
+    def isAnagram(self, s: str, t: str) -&gt; bool:
+        return collections.Counter(s)==collections.Counter(t)
+</code></pre>
+<p>答案用了26个字符的数组存储出现次数，s出现+1，t出现-1. 这样相等时候所有位置都应该是0.</p>
+<h1 id="243-shortest-word-distance-easy">243. Shortest Word Distance (Easy)</h1>
+<pre><code class="language-python">class Solution:
+    def shortestDistance(self, wordsDict: List[str], word1: str, word2: str) -&gt; int:
+        visited = dict()
+        res=float('inf')
+        for i,w in enumerate(wordsDict):
+            if w==word1 and word2 in visited:
+                res=min(res,i-visited[word2])
+            if w==word2 and word1 in visited:
+                res=min(res,i-visited[word1])
+            visited[w]=i
+        return res
+
+</code></pre>
+<h1 id="244-shortest-word-distance-ii-medium">244. Shortest Word Distance II (Medium)</h1>
+<pre><code class="language-python">class WordDistance:
+
+    def __init__(self, wordsDict: List[str]):
+        self.dic = collections.defaultdict(list)
+        for i,w in enumerate(wordsDict):
+            self.dic[w].append(i)
         
-      
+
+    def shortest(self, word1: str, word2: str) -&gt; int:
+        res=float('inf')
+        for pos1 in self.dic[word1]:
+            for pos2 in self.dic[word2]:
+                res=min(res,abs(pos2-pos1))
+        return res
+</code></pre>
+<h1 id="245-shortest-word-distance-iii-medium">245. Shortest Word Distance III (Medium)</h1>
+<pre><code class="language-python">class Solution:
+    def shortestWordDistance(self, wordsDict: List[str], word1: str, word2: str) -&gt; int:
+        dic=dict()
+        res = float('inf')
+        for i, w in enumerate(wordsDict):
+            if w==word1 and word2 in dic:
+                res=min(res,i-dic[word2])
+            if w==word2 and word1 in dic:
+                res=min(res,i-dic[word1])
+            
+            dic[w]=i
+        return res
+
+</code></pre>
+<h1 id="246-strobogrammatic-number-easy">246. Strobogrammatic Number (Easy)</h1>
+<pre><code class="language-python">class Solution:
+    def isStrobogrammatic(self, num: str) -&gt; bool:
+        # 1 6 9 8 0
+        if '2' in num or '3' in num or '4' in num or '5' in num or '7' in num:
+            return False
+        dic={'6':'9','9':'6','1':'1','8':'8','0':'0'}
+        num2= ''.join([dic[e] for e in num][::-1])
+        return num==num2
+
+</code></pre>
+<h1 id="font-colorred247-strobogrammatic-number-ii-medium-font"><font color='red'>247. Strobogrammatic Number II (Medium) </font></h1>
+<pre><code class="language-python">class Solution:
+    def findStrobogrammatic(self, n: int) -&gt; List[str]:
+        if n==1: return [&quot;0&quot;,&quot;1&quot;,&quot;8&quot;]
+        nums=['0','1','6','8','9']
         
-        
-        chars = 'ZABCDEFGHIJKLMNOPQRSTUVWXY'
-        dic = dict()
-        for i in range(26):
-            dic[i]=chars[i]
+        def isStrobogrammatic(num: str) -&gt; bool:
+            if '2' in num or '3' in num or '4' in num or '5' in num or '7' in num:
+                return False
+            dic={'6':'9','9':'6','1':'1','8':'8','0':'0'}
+            num2= ''.join([dic[e] for e in num][::-1])
+            return num==num2
         
         res = []
-        while columnNumber:
-            
-            reminder = columnNumber%26
-            #print(columnNumber,reminder)
-            res.append(dic[reminder])
-            columnNumber = columnNumber //26
-            if reminder==0:
-                columnNumber-=1
-             
-        return ''.join(res[::-1])
-             
+        def bt(tmp):
+            if len(tmp)==n:
+                sb = ''.join(tmp[:])
+                if isStrobogrammatic(sb) and sb[0]!='0':
+                    res.append(sb)
+                return 
+            for cur in nums:
+                tmp.append(cur)
+                bt(tmp)
+                tmp.pop()
+        
+        bt([])
+        return res
+#answer way of writting
+class Solution:
+    def findStrobogrammatic(self, n: int) -&gt; List[str]:
+        evenMidCandidate = [&quot;11&quot;,&quot;69&quot;,&quot;88&quot;,&quot;96&quot;, &quot;00&quot;]
+        oddMidCandidate = [&quot;0&quot;, &quot;1&quot;, &quot;8&quot;]
+        if n == 1:
+            return oddMidCandidate
+        if n == 2:
+            return evenMidCandidate[:-1]
+        if n % 2:
+            pre, midCandidate = self.findStrobogrammatic(n-1), oddMidCandidate
+        else: 
+            pre, midCandidate = self.findStrobogrammatic(n-2), evenMidCandidate
+        premid = (n-1)//2
+        return [p[:premid] + c + p[premid:] for c in midCandidate for p in pre]
 </code></pre>
-<p>就是个26进制数转换问题，这个也能卡。。。 卡在的点为 if reminder==0:   columnNumber-=1<br>
-如果没有余数恰巧除干净了，说明需要上一位减去一。</p>
-<h1 id="font-colorred169-majority-element-easyfont"><font color='red'>169. Majority Element （Easy）</font></h1>
+<p>初次尝试， time limit exceeded。。。 backtracking属于暴力求解。 答案思路：<br>
+n == 1: [0, 1, 8]<br>
+n == 2: [11, 88, 69, 96]<br>
+How about n == 3?<br>
+=&gt; it can be retrieved if you insert [0, 1, 8] to the middle of solution of n == 2<br>
+n == 4?<br>
+=&gt; it can be retrieved if you insert [11, 88, 69, 96, 00] to the middle of solution of n == 2<br>
+n == 5?<br>
+=&gt; it can be retrieved if you insert [0, 1, 8] to the middle of solution of n == 4<br>
+the same, for n == 6, it can be retrieved if you insert [11, 88, 69, 96, 00] to the middle of solution of n == 4</p>
+<h1 id="font-colorred248-strobogrammatic-number-iii-hard-font"><font color='red'>248. Strobogrammatic Number III （Hard） </font></h1>
 <pre><code class="language-python">class Solution:
-    def majorityElement(self, nums):
-        &quot;&quot;&quot;
-        :type nums: List[int]
-        :rtype: int
-        &quot;&quot;&quot;
+    def strobogrammaticInRange(self, low: str, high: str) -&gt; int:
         
-        maj = nums[0]
-        c = 0
-        for n in nums:
-            if n==maj:
-                c+=1
+        
+        dic = {'0': '0','1': '1','6': '9','8': '8','9': '6'}    
+        count=[0] # count as list can be modifed without return 
+        
+        
+        
+        def dfs(low,high,c,left,right,count):
+            if left&gt;right:
+                s=''.join(c)
+                if (len(s)==len(low) and s&lt;low) or (len(s)==len(high) and s&gt;high):
+                    return 
+                count[0]+=1
+                return
+            for k,v in dic.items():
+                c[left]=k
+                c[right]=v
+                if len(c)!=1 and c[0]=='0':
+                    continue
+                if left==right and k!=v:
+                    continue
+                
+                dfs(low,high,c,left+1,right-1,count)
+        
+        
+        for length in range(len(low),len(high)+1):
+   
+            dfs(low, high, ['']*length, 0, length-1, count);
+        
+        return count[0]
+    
+
+</code></pre>
+<p>give up, 思路 ， 构建length长度的满足条件的string，从两边向中间构建。  做dfs search。<br>
+用247的办法也可以感觉。 然后过滤出low，high之间有多少个。</p>
+<h1 id="249-group-shifted-strings-medium">249. Group Shifted Strings （Medium）</h1>
+<p>We can shift a string by shifting each of its letters to its successive letter.</p>
+<pre><code>For example, &quot;abc&quot; can be shifted to be &quot;bcd&quot;.
+</code></pre>
+<p>We can keep shifting the string to form a sequence.</p>
+<pre><code>For example, we can keep shifting &quot;abc&quot; to form the sequence: &quot;abc&quot; -&gt; &quot;bcd&quot; -&gt; ... -&gt; &quot;xyz&quot;.
+</code></pre>
+<p>Given an array of strings strings, group all strings[i] that belong to the same shifting sequence. You may return the answer in any order.</p>
+<pre><code class="language-python">
+class Solution:
+    def groupStrings(self, strings: List[str]) -&gt; List[List[str]]:
+        dic = collections.defaultdict(list)
+        for s in strings:
+            if len(s)==1:
+                dic['NULL'].append(s)
             else:
-                c-=1
-            
-            if c==0:
-                maj=n
-                c=1
-       
-        
-        return  maj
-
+                key=[]
+                for i in range(1,len(s)):
+                    tmp = str((ord(s[i])-ord(s[i-1]))%26)
+                    key.append(tmp)
+                key='-'.join(key)
+                dic[key].append(s)
+        return dic.values()
 </code></pre>
-<p>这个是个经典算法 摩尔投票算法，需要记住。 思路：遍历过程中不同元素之间两两抵消，由于一个数组中，出现次数超过n/2最多只有一个，那么遍历结束时，未被抵消掉的即是出现次数超过n/2的元素。在数组中maj元素出现一次，count就自加一次，如果出现了和maj不同的元素，说明maj可被抵消一次，count就自减一次，如果count减为0，也就说明maj元素已经被抵消完了， 更新maj。<br>
-如果找超过1/3元素。 最多只有两个元素符合要求。需要设置maj1和count1、maj2和count2来分别记录这两个元素的抵消情况。如果出现了和maj1或maj2相同的元素，那么对应的count1和count2就自加1，如果元素与maj1和maj2都不相同，那么count1和count2就都应当自减1，如果maj1或maj2抵消掉后，就应当更新对应的maj1或maj2。NOTE 注意：  初始值 maj1和maj2、count1和count2相同，所以在判断二者与当前值是否相同时应当使用if else语句，而不是分开的两个if。此外，考虑到可能出现maj1和maj2都同时出现抵消掉的情况，所以也不能同时进行count自减和判断count1或count2是否为0，如果同时判断的话，那么maj1和maj2又会都同时成为当前元素了。</p>
-<pre><code class="language-python">maj1=nums[0]
-maj2=nums[0]
-c1=0
-c2=0
-
-for n in nums:
-   if n==maj1:
-       c1+=1
-   elif n==maj2:
-       c2+=1
-   elif c1==0:
-       c1=1
-       maj1=n
-   elif c2==0:
-       c2=1
-       maj2=n
-   else:
-       c1-=1
-       c2-=1
-#recalce make sure        
-c1=c2=0
-for n in nums:
-   if n==maj1:c1+=1
-   if n==maj2:c2+=1
-res=[]
-if c1&gt;len(nums)//3:
-   res.append(maj1)
-if c2&gt;len(nums//3) and maj1!=maj2:
-   res.append(maj2)
-return res
-</code></pre>
-<h1 id="170-two-sum-iii-data-structure-design-easy">170. Two Sum III - Data structure design (Easy)</h1>
-<pre><code class="language-python">class TwoSum:
-
-    def __init__(self):
-        self.stack = []
+<h1 id="250-count-univalue-subtrees-medium">250. Count Univalue Subtrees (Medium)</h1>
+<p>Given the root of a binary tree, return the number of uni-value subtrees.<br>
+A uni-value subtree means all nodes of the subtree have the same value.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def countUnivalSubtrees(self, root: Optional[TreeNode]) -&gt; int:
         
-
-    def add(self, number: int) -&gt; None:
-        self.stack.append(number)
+        count = [0]
         
-
-    def find(self, value: int) -&gt; bool:
-        dic= dict()
-        for i,n in enumerate(self.stack):
-            if value-n in dic:
+        def isUnivalSubtrees(root):
+            if not root:
+                return False
+            if not root.left and not root.right:
+                count[0]+=1
                 return True
-            dic[n]=i
-        return False
+            if not root.left:
+                res = isUnivalSubtrees(root.right) and root.val==root.right.val
+                if res:
+                    count[0]+=1
+                return res
+            if not root.right:
+                res= isUnivalSubtrees(root.left) and root.val==root.left.val
+                if res:
+                    count[0]+=1
+                return res
+            
+            left = isUnivalSubtrees(root.left)
+            right= isUnivalSubtrees(root.right)
+            res=left and right and root.val==root.left.val and root.val==root.right.val
+            if res:
+                count[0]+=1
+            return res
         
+        isUnivalSubtrees(root)
+        return count[0]
 
-
-# Your TwoSum object will be instantiated and called as such:
-# obj = TwoSum()
-# obj.add(number)
-# param_2 = obj.find(value)
 </code></pre>
+<p>从上个题目获得的trick这个题目马上用到， count作为list，边run边更新不影响helper function的bool返回值。</p>
 
             </div>
             
@@ -1031,7 +823,7 @@ return res
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-19/" title="Leetcode 2021-11-19">https://headhuanglan.github.io/post/leetcode-2021-11-19/</a>
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-12-27/" title="Leetcode 2021-12-27">https://headhuanglan.github.io/post/leetcode-2021-12-27/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -1047,14 +839,14 @@ return res
     <div class="nav-prev">
       
         <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-20" href="https://headhuanglan.github.io/post/leetcode-2021-11-20/">Leetcode 2021-11-20</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-20" href="https://headhuanglan.github.io/post/leetcode-2021-11-20/">上一篇</a>
+        <a class="nav-pc-next" title="书单" href="https://headhuanglan.github.io/post/shu-dan/">书单</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="书单" href="https://headhuanglan.github.io/post/shu-dan/">上一篇</a>
       
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2021-11-18" href="https://headhuanglan.github.io/post/leetcode-2021-11-18/">Leetcode 2021-11-18</a>
-        <a class="nav-mobile-next" title="Leetcode 2021-11-18" href="https://headhuanglan.github.io/post/leetcode-2021-11-18/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2021-11-26" href="https://headhuanglan.github.io/post/leetcode-2021-12-26/">Leetcode 2021-11-26</a>
+        <a class="nav-mobile-next" title="Leetcode 2021-11-26" href="https://headhuanglan.github.io/post/leetcode-2021-12-26/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
