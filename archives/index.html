@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1639951915188">
+<link rel="shortcut icon" href="/favicon.ico?v=1640213173475">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -179,7 +179,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">31</span>
+        <span class="site-item-stat-count">32</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -223,7 +223,7 @@
   <div class="archive-timeline-box">
     <div class="archive-timeline-title">
       
-        <h2 class="language" data-lan="archives" data-count="31">非常好！目前共计31篇文章，继续努力！</h2>
+        <h2 class="language" data-lan="archives" data-count="32">非常好！目前共计32篇文章，继续努力！</h2>
       
     </div>
     
@@ -233,6 +233,19 @@
           <h2 class="tag-year">2021</h2>
         </div>    
         
+      
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-28/">
+        <div class="motion-warpper tag-archive-node">
+          <div class="tag-node">
+            <h1>
+              11-27
+              <small>Leetcode 2021-11-28</small>
+            </h1>
+          </div>  
+      </div>
+      </a>
+    
+      
       
       <a href="https://headhuanglan.github.io/post/shu-dan/">
         <div class="motion-warpper tag-archive-node">
@@ -957,6 +970,308 @@
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-28/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;251-flatten-2d-vector-medium&#34;&gt;251. Flatten 2D Vector (Medium)&lt;/h1&gt;
+&lt;p&gt;Design an iterator to flatten a 2D vector. It should support the next and hasNext operations.&lt;br&gt;
+Implement the Vector2D class:&lt;br&gt;
+Vector2D(int[][] vec) initializes the object with the 2D vector vec.&lt;br&gt;
+next() returns the next element from the 2D vector and moves the pointer one step forward. You may assume that all the calls to next are valid.&lt;br&gt;
+hasNext() returns true if there are still some elements in the vector, and false otherwise.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Vector2D:
+
+    def __init__(self, vec: List[List[int]]):
+        self.stack=[]
+        self.vec=vec
+
+    def next(self) -&amp;gt; int:
+        if self.hasNext():
+            val=self.stack.pop(0)
+        return val
+
+    def hasNext(self) -&amp;gt; bool:
+        if not self.stack:
+            if not self.vec:
+                return False
+            row=self.vec.pop(0)
+            if not row: 
+                if self.hasNext():
+                    return True
+                else:
+                    return False
+            for e in row:
+                self.stack.append(e)
+        return True
+
+
+# Your Vector2D object will be instantiated and called as such:
+# obj = Vector2D(vec)
+# param_1 = obj.next()
+# param_2 = obj.hasNext()
+#answer way of writing
+class Vector2D:
+
+    def __init__(self, v: List[List[int]]):
+        # We need to iterate over the 2D vector, getting all the integers
+        # out of it and putting them into the nums list.
+         
+        self.nums = []
+        for inner_list in v:
+            for num in inner_list:
+                self.nums.append(num)
+        # We&#39;ll keep position 1 behind the next number to return.
+        self.position = -1
+
+    def next(self) -&amp;gt; int:
+        # Move up to the current element and return it.
+        self.position += 1
+        return self.nums[self.position]
+
+    def hasNext(self) -&amp;gt; bool:
+        # If the next position is a valid index of nums, return True.
+        return self.position + 1 &amp;lt; len(self.nums)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;自己写的这个递归调用比较tricky。。。答案很简答。&lt;/p&gt;
+&lt;h1 id=&#34;252-meeting-rooms-easy&#34;&gt;252. Meeting Rooms （Easy）&lt;/h1&gt;
+&lt;p&gt;Given an array of meeting time intervals where intervals[i] = [starti, endi], determine if a person could attend all meetings.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def canAttendMeetings(self, intervals: List[List[int]]) -&amp;gt; bool:
+        intervals=sorted(intervals,key=lambda x:x[0])
+        pre_end = None
+        for interval in intervals:
+            if pre_end is not None and interval[0]&amp;lt;pre_end:
+                return False
+            pre_end = interval[1]
+        return True
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorblue253-meeting-rooms-ii-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;253. Meeting Rooms II (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an array of meeting time intervals intervals where intervals[i] = [starti, endi], return the minimum number of conference rooms required.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def minMeetingRooms(self, intervals: List[List[int]]) -&amp;gt; int:
+        #find max overlapping interval num
+        res=1
+        c=0
+        #at start +=1 at end -=1
+        dic=dict()
+        for interval in intervals:
+            start,end=interval[0],interval[1]
+            if start in dic:
+                dic[start]+=1
+            else:
+                dic[start]=1
+            
+            if end in dic:
+                dic[end]-=1
+            else:
+                dic[end]=-1
+        
+        for k in sorted(dic.keys()):
+            c+=dic[k]
+            res=max(res,c)
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;虽然做出来了，感觉下次再做可能会忘记怎么做的， 思路： 把所有时节节点从小到大排序，如果是start， counter+=1 如果是end， counter-=1， 找出counter变化过程中最大值。 答案做的感觉没自己的思路简单。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-254-factor-combinations-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 254. Factor Combinations （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Numbers can be regarded as the product of their factors.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;For example, 8 = 2 x 2 x 2 = 2 x 4.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Given an integer n, return all possible combinations of its factors. You may return the answer in any order.&lt;/p&gt;
+&lt;p&gt;Note that the factors should be in the range [2, n - 1].&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#Iterative:
+
+def getFactors(self, n):
+    todo, combis = [(n, 2, [])], []
+    while todo:
+        n, i, combi = todo.pop()
+        while i * i &amp;lt;= n:
+            if n % i == 0:
+                combis += combi + [i, n/i],
+                todo += (n/i, i, combi+[i]),
+            i += 1
+    return combis
+
+#Recursive:
+
+class Solution:
+    def getFactors(self, n: int) -&amp;gt; List[List[int]]:
+        
+        res=[]
+        def factor(n, i, tmp):
+            while i * i &amp;lt;= n:
+                if n % i == 0:
+                    res.append(tmp + [i, n//i])
+                    factor(n//i, i, tmp+[i])
+                i += 1
+        factor(n, 2, [])
+        return res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;思路类似，但是还是没写粗来，这个不应该， res 先append  tmp+[i,n//i],然后再factor（n//i， i，tmp+【i】，res）&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred255-verify-preorder-sequence-in-binary-search-tree-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;255. Verify Preorder Sequence in Binary Search Tree （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def verifyPreorder(self, preorder):
+    stack = []
+    low = float(&#39;-inf&#39;)
+    for p in preorder:
+        if p &amp;lt; low:
+            return False
+        while stack and p &amp;gt; stack[-1]:
+            low = stack.pop()
+        stack.append(p)
+    return True
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;没思路，答案思路： 模拟traversal，stack是左子树的栈。 如果下一个数小于栈顶，说明还在左子树，所以append。  如果当前preorder值大于栈顶，所有小于当前值元素出栈。说明当前元素跳到了右子树。low=stack.pop() 很巧妙， lower bound是满足小于当前值的最后一个pop出去的元素。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred256-paint-house-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;256. Paint House （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Input: costs = [[17,2,17],[16,16,5],[14,3,19]]&lt;br&gt;
+Output: 10&lt;br&gt;
+Explanation: Paint house 0 into blue, paint house 1 into green, paint house 2 into blue.&lt;br&gt;
+Minimum cost: 2 + 5 + 3 = 10.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def minCost(self, costs: List[List[int]]) -&amp;gt; int:
+        mem=dict()
+        def paint(n,color):
+            if (n,color) in mem:
+                return mem[(n,color)]
+            res = costs[n][color]
+            
+            if n!=len(costs)-1:
+                if color==0:
+                    res+=min(paint(n+1,1),paint(n+1,2))
+                elif color==1:
+                    res+=min(paint(n+1,0),paint(n+1,2))
+                else:
+                    res+=min(paint(n+1,0),paint(n+1,1))
+            mem[(n,color)]=res
+            return res
+       
+        return min([paint(0,0),paint(0,1),paint(0,2)])
+
+#
+class Solution:
+    def minCost(self, costs: List[List[int]]) -&amp;gt; int:
+        if not costs:return 0
+        for n in range(len(costs)-2,-1,-1):
+            costs[n][0]+=min(costs[n+1][1],costs[n+1][2])
+            costs[n][1]+=min(costs[n+1][0],costs[n+1][2])
+            costs[n][2]+=min(costs[n+1][0],costs[n+1][1])
+        return min(costs[0])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个应该是递归mem的经典题和dp的经典题。用dynamic programming，但是写出来一版是错的。。。应该定义dp=【#costs】【#color】。从最后一个房子开始， 倒数第二个 cost红=最后一个min（绿，蓝），。。。&lt;/p&gt;
+&lt;h1 id=&#34;257-binary-tree-paths-easy&#34;&gt;257. Binary Tree Paths （Easy）&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def binaryTreePaths(self, root: Optional[TreeNode]) -&amp;gt; List[str]:
+        res=[]
+        def bt(tmp,node):
+            if not node: return
+            if not node.left and not node.right:
+                tmp.append(str(node.val))
+                res.append(&#39;-&amp;gt;&#39;.join(tmp))
+                return
+            tmp.append(str(node.val))
+            bt(tmp[:],node.left)
+            bt(tmp[:],node.right)
+        bt([],root)
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;258-add-digits-easy&#34;&gt;258. Add Digits (Easy)&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def addDigits(self, num: int) -&amp;gt; int:
+        res = 0
+        while num:
+            #
+            tmp=0
+            while num:
+                lastdig = num%10
+                num=num//10
+                tmp+=lastdig
+            num=tmp
+            if num&amp;gt;=0 and num&amp;lt;=9:
+                return num
+        
+        return res 
+# answer way of writing
+class Solution:
+    def addDigits(self, num: int) -&amp;gt; int:
+        if num == 0:
+            return 0
+        if num % 9 == 0:
+            return 9
+        return num % 9
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案用了一个数能被九整除，那么他们所有位数和能被9整除。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue259-3sum-smaller-mediumfont&#34;&gt;&lt;font color=&#39;blue&#39;&gt;259. 3Sum Smaller （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an array of n integers nums and an integer target, find the number of index triplets i, j, k with 0 &amp;lt;= i &amp;lt; j &amp;lt; k &amp;lt; n that satisfy the condition nums[i] + nums[j] + nums[k] &amp;lt; target.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def threeSumSmaller(self, nums: List[int], target: int) -&amp;gt; int:
+        nums.sort()
+        res=0
+        for start in range(len(nums)-2):
+            for left in range(start+1,len(nums)-1):
+                right=left+1
+                if nums[start]+nums[left]+nums[right]&amp;gt;target:continue
+                
+                while  right&amp;lt;len(nums) and nums[start]+nums[left]+nums[right]&amp;lt;target:
+                    res+=1
+                    right+=1
+                
+               
+        return res
+
+#answer
+class Solution:
+    def threeSumSmaller(self, nums: List[int], target: int) -&amp;gt; int:
+        nums.sort()
+        res=0
+        for start in range(len(nums)-2):
+            tar = target-nums[start]
+            #become two sum question
+            left=start+1
+            right=len(nums)-1
+            while left&amp;lt;right:
+                #print(&#39;@&#39;,left,right,tar)
+                if nums[left]+nums[right]&amp;lt;tar:
+                    #print(left,right)
+                    res+=right-left
+                    left+=1
+                else:
+                    right-=1
+            
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;写出来个暴力解。。。 几乎是O(n^3)....  O（n^2）思路, 选出一个数字，把3sum转成2sum，然后定义left=start+1，right=len（nums）-1， 若left +right 值小于target 说明 left 到right所有都满足条件，这样left+1求解下一步， 若left +right 值大于target说明right太大得减1.&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred260-single-number-iii-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;260. Single Number III （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once. You can return the answer in any order.&lt;/p&gt;
+&lt;p&gt;You must write an algorithm that runs in linear runtime complexity and uses only constant extra space.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def singleNumber(self, nums: List[int]) -&amp;gt; List[int]:
+        xor=0
+        for n in nums:
+            xor = xor^n
+        
+        # rightmost 1-bit diff between a and b
+        diff = xor &amp;amp; -xor
+        
+        a=0
+        for n in nums:
+            if n&amp;amp;diff:
+                # diff means a&#39;s last bit is diff then b&#39;s last bit
+                # by using this filter we could get a 
+                a= a^n
+        return [a,xor^a]
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;没思路， one pass 只能找出xor=a^b  但不能确定出a，b具体值。&lt;br&gt;
+答案思路：用了一个不知道的trick， x &amp;amp; (-x) 保留x中最右边bit，设置其他bit为0.   这样就能用a，b 的diff bit把所有数字过滤一次，只有a可以被过滤出来，因为a的diff bit是1 其余diff bit是1的都出现了2次抵消了。。&lt;/p&gt;
+">Leetcode 2021-11-28</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/shu-dan/"" data-c="

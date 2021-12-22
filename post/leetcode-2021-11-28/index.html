@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>Leetcode 2021-11-04 | Lan&#39;s Blog</title>
+<title>Leetcode 2021-11-28 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1640213173475">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,7 +41,7 @@
 
 
 
-  <meta name="description" content="Leetcode 2021-11-04" />
+  <meta name="description" content="Leetcode 2021-11-28" />
   <meta name="keywords" content="leetcode" />
 </head>
 
@@ -223,16 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#31-next-permutation-medium">31. Next Permutation （Medium）</a></li>
-<li><a href="#font-colorred32-longest-valid-parentheses-hardfont"><font color='red'>32. Longest Valid Parentheses （Hard）</font></a></li>
-<li><a href="#font-colorred-33-search-in-rotated-sorted-array-medium-font"><font color='red'> 33. Search in Rotated Sorted Array (Medium) </font></a></li>
-<li><a href="#34-find-first-and-last-position-of-element-in-sorted-array-medium">34. Find First and Last Position of Element in Sorted Array （Medium）</a></li>
-<li><a href="#35-search-insert-position-easy">35. Search Insert Position (Easy)</a></li>
-<li><a href="#36-valid-sudoku-medium">36. Valid Sudoku （Medium）</a></li>
-<li><a href="#37-font-colorred-sudoku-solver-hard-font">37. <font color='red'> Sudoku Solver (hard) </font></a></li>
-<li><a href="#38-count-and-say-medium">38. Count and Say （Medium）</a></li>
-<li><a href="#39-combination-sum-medium">39. Combination Sum (Medium)</a></li>
-<li><a href="#40-combination-sum-ii-medium">40. Combination Sum II （Medium）</a></li>
+<li><a href="#251-flatten-2d-vector-medium">251. Flatten 2D Vector (Medium)</a></li>
+<li><a href="#252-meeting-rooms-easy">252. Meeting Rooms （Easy）</a></li>
+<li><a href="#font-colorblue253-meeting-rooms-ii-medium-font"><font color='blue'>253. Meeting Rooms II (Medium) </font></a></li>
+<li><a href="#font-colorred-254-factor-combinations-mediumfont"><font color='red'> 254. Factor Combinations （Medium）</font></a></li>
+<li><a href="#font-colorred255-verify-preorder-sequence-in-binary-search-tree-mediumfont"><font color='red'>255. Verify Preorder Sequence in Binary Search Tree （Medium）</font></a></li>
+<li><a href="#font-colorred256-paint-house-mediumfont"><font color='red'>256. Paint House （Medium）</font></a></li>
+<li><a href="#257-binary-tree-paths-easy">257. Binary Tree Paths （Easy）</a></li>
+<li><a href="#258-add-digits-easy">258. Add Digits (Easy)</a></li>
+<li><a href="#font-colorblue259-3sum-smaller-mediumfont"><font color='blue'>259. 3Sum Smaller （Medium）</font></a></li>
+<li><a href="#font-colorred260-single-number-iii-mediumfont"><font color='red'>260. Single Number III （Medium）</font></a></li>
 </ul>
 
   </div>
@@ -498,14 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-04/"> Leetcode 2021-11-04 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-28/"> Leetcode 2021-11-28 </a>
   </h1>
   <div class="post-meta">
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-03 01:28:32">2021-11-03</span>
+      <span class="publish-time" data-t="2021-11-27 15:14:09">2021-11-27</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -523,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >9<span class="language" data-lan="minute"
+        >10<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -532,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >1453<span class="pc-show language" data-lan="words"
+        >1773<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -543,316 +543,302 @@
 
             <div class="post-body next-md-body" id="post_body">
               <!-- more -->
-<h1 id="31-next-permutation-medium">31. Next Permutation （Medium）</h1>
-<p>Implement next permutation, which rearranges numbers into the lexicographically next greater permutation of numbers.<br>
-If such an arrangement is not possible, it must rearrange it as the lowest possible order (i.e., sorted in ascending order).<br>
-The replacement must be in place and use only constant extra memory.</p>
-<pre><code class="language-python">class Solution:
-    def nextPermutation(self, nums: List[int]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify nums in-place instead.
-        &quot;&quot;&quot;
-        #                     peak  &lt;--      
-        # 9  6  8   7  1  |2|  5  4  3 1
-        #                     find first greater than 2 swap &lt;-
-        #                 |3|  5  4  2 1
-        #                     rest just rev
-        #                  3   1  4  2 5
-        
-        def rev(nums):
-            l=0
-            r=len(nums)-1
-            while l&lt;r:
-                nums[l],nums[r]=nums[r],nums[l]
-                l+=1
-                r-=1
-        
-        l = len(nums)
-        pos_a = None
-        pos_b = None
-        for i in range(l-1,-1,-1):
-            if i-1&gt;=0 and nums[i-1] &lt; nums[i]:
-                a = nums[i-1]
-                pos_a = i-1
-                break
-         
-        if  pos_a is None: 
-            rev(nums)  
-        else:
-            for i in range(l-1,pos_a,-1):
-                if nums[i]&gt;nums[pos_a]:
-                    pos_b = i
-                    break
-            print(pos_a,pos_b)
-            nums[pos_a],nums[pos_b] = nums[pos_b],nums[pos_a]
-            nums[pos_a+1:] =  nums[pos_a+1:][::-1 ]
-</code></pre>
-<p>思路， 从最后一位开始，找到第一次drop位置标记为pos_a, 再从后向前找到第一个比num【pos_a】大的位置计为pos_b, swap value of pos_a, pos_b, 对于pos_a之后的，rev。<br>
-what if 是 下一个更小的位置？？ drop=&gt;increase,   大=&gt;小</p>
-<h1 id="font-colorred32-longest-valid-parentheses-hardfont"><font color='red'>32. Longest Valid Parentheses （Hard）</font></h1>
-<p>Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.</p>
-<pre><code class="language-python">class Solution:
-    def longestValidParentheses(self, s: str) -&gt; int:
-        
-        #&quot;))))())()()(()&quot;
-        stack=[-1]
-        res=0
-        for i,n in enumerate(s):
-            if n=='(':
-                stack.append(i)
-            else:
-                #n==')'
-                if stack:
-                    stack.pop()
-                
-                if stack:
-                    res=max(res,i-stack[-1])
+<h1 id="251-flatten-2d-vector-medium">251. Flatten 2D Vector (Medium)</h1>
+<p>Design an iterator to flatten a 2D vector. It should support the next and hasNext operations.<br>
+Implement the Vector2D class:<br>
+Vector2D(int[][] vec) initializes the object with the 2D vector vec.<br>
+next() returns the next element from the 2D vector and moves the pointer one step forward. You may assume that all the calls to next are valid.<br>
+hasNext() returns true if there are still some elements in the vector, and false otherwise.</p>
+<pre><code class="language-python">class Vector2D:
+
+    def __init__(self, vec: List[List[int]]):
+        self.stack=[]
+        self.vec=vec
+
+    def next(self) -&gt; int:
+        if self.hasNext():
+            val=self.stack.pop(0)
+        return val
+
+    def hasNext(self) -&gt; bool:
+        if not self.stack:
+            if not self.vec:
+                return False
+            row=self.vec.pop(0)
+            if not row: 
+                if self.hasNext():
+                    return True
                 else:
-                    stack.append(i)
-        
-        return res
+                    return False
+            for e in row:
+                self.stack.append(e)
+        return True
+
+
+# Your Vector2D object will be instantiated and called as such:
+# obj = Vector2D(vec)
+# param_1 = obj.next()
+# param_2 = obj.hasNext()
+#answer way of writing
+class Vector2D:
+
+    def __init__(self, v: List[List[int]]):
+        # We need to iterate over the 2D vector, getting all the integers
+        # out of it and putting them into the nums list.
+         
+        self.nums = []
+        for inner_list in v:
+            for num in inner_list:
+                self.nums.append(num)
+        # We'll keep position 1 behind the next number to return.
+        self.position = -1
+
+    def next(self) -&gt; int:
+        # Move up to the current element and return it.
+        self.position += 1
+        return self.nums[self.position]
+
+    def hasNext(self) -&gt; bool:
+        # If the next position is a valid index of nums, return True.
+        return self.position + 1 &lt; len(self.nums)
 
 </code></pre>
-<p>题目有坑，如果直接用判断是否是valid parentheses方法计算长度，就掉坑里了。。。<br>
-方法依旧是用stack， 但stack里面存的是（括号的位置，如果是（入栈， 否则出栈，出栈时候因为是），所以开始计算长度，“当前位置-stack【-1】” stack【-1】是已经pop后的位置了，所以是起始点，如果栈pop后为空，继续入栈，此为新起始点。（其实为起始点的前一位，算长度避免 j-i+1，直接j-i）</p>
-<h1 id="font-colorred-33-search-in-rotated-sorted-array-medium-font"><font color='red'> 33. Search in Rotated Sorted Array (Medium) </font></h1>
-<pre><code class="language-python">        l = 0
-        r = len(nums)-1
-        
-        while l&lt;=r:
-            m = (l+r)//2
-            if nums[m] == target: return m
-            
-            #@stuck here
-            if nums[l] &gt; nums[m]:
-                #increasing at right
-                if nums[m] &lt;= target and target&lt;=nums[r]:
-                    l = m+1
-                else:
-                    r = m-1
-            
-            else:
-                #increasing at left
-                if nums[l] &lt;= target and target&lt;=nums[m]:
-                    r = m-1
-                else:
-                    l = m+1
-        return -1
-</code></pre>
-<p>这个必须会的题目，binary search 判断单增区间用mid 和 left 比 （mid he right比是错误的）。根据单调区间缩小搜索范围。</p>
-<h1 id="34-find-first-and-last-position-of-element-in-sorted-array-medium">34. Find First and Last Position of Element in Sorted Array （Medium）</h1>
+<p>自己写的这个递归调用比较tricky。。。答案很简答。</p>
+<h1 id="252-meeting-rooms-easy">252. Meeting Rooms （Easy）</h1>
+<p>Given an array of meeting time intervals where intervals[i] = [starti, endi], determine if a person could attend all meetings.</p>
 <pre><code class="language-python">class Solution:
-    def searchRange(self, nums: List[int], target: int) -&gt; List[int]:
-        
-        def bsl(nums,target):
-            l=0
-            r=len(nums)-1
-            while l&lt;=r:
-                m = (l+r)//2
-                
-                if nums[m] &gt;= target:
-                    r = m-1
-                else:
-                    l = m+1
-            return l
-        
-        def bsr(nums,target):
-            l=0
-            r=len(nums)-1
-            while l&lt;=r:
-                m = (l+r)//2
-                
-                if nums[m] &lt;= target:
-                    l = m+1
-                else:
-                    r = m-1
-            return r
-        
-        return [bsl(nums,target),bsr(nums,target)] if bsl(nums,target) &lt;= bsr(nums,target) else [-1,-1]
-</code></pre>
-<h1 id="35-search-insert-position-easy">35. Search Insert Position (Easy)</h1>
-<pre><code class="language-python">class Solution:
-    def searchInsert(self, nums: List[int], target: int) -&gt; int:
-        
-        l=0
-        r=len(nums)-1
-        
-        while l&lt;=r:
-            m=(l+r)//2
-            if nums[m]==target:
-                return m
-            elif nums[m]&lt;target:
-                l=m+1
-            else:
-                r=m-1
-        return l
-</code></pre>
-<p>target 大于 mid值 说明是插入位置，l位置刚好更新为插入位置， 返回left。</p>
-<h1 id="36-valid-sudoku-medium">36. Valid Sudoku （Medium）</h1>
-<pre><code class="language-python">class Solution:
-    def isValidSudoku(self, board: List[List[str]]) -&gt; bool:
-        for row in board:
-            row = [e for e in row if e!='.']
-            if len(set(row))!=len(row):
+    def canAttendMeetings(self, intervals: List[List[int]]) -&gt; bool:
+        intervals=sorted(intervals,key=lambda x:x[0])
+        pre_end = None
+        for interval in intervals:
+            if pre_end is not None and interval[0]&lt;pre_end:
                 return False
-        
-        for col in zip(*board):
-            print(col)
-            col = [e for e in col if e!='.']
-            if len(set(col))!=len(col):
-                return False
-        dic={k:[] for k in range(9)}    
-        for i in range(9):
-            for j in range(9):
-                ind = (i//3)*3 + j//3
-                dic[ind].append(board[i][j])
-        
-        for k,v in dic.items():
-            row = [e for e in v if e!='.']
-            if len(set(row))!=len(row):
-                return False        
+            pre_end = interval[1]
         return True
 </code></pre>
-<p>box index boxid = (i//3)*3+j//3 or key=(i//3,j//3)</p>
-<h1 id="37-font-colorred-sudoku-solver-hard-font">37. <font color='red'> Sudoku Solver (hard) </font></h1>
+<h1 id="font-colorblue253-meeting-rooms-ii-medium-font"><font color='blue'>253. Meeting Rooms II (Medium) </font></h1>
+<p>Given an array of meeting time intervals intervals where intervals[i] = [starti, endi], return the minimum number of conference rooms required.</p>
 <pre><code class="language-python">class Solution:
-    def solveSudoku(self, board: List[List[str]]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify board in-place instead.
-        &quot;&quot;&quot;
-        
-        row  = {i:set() for i in range(9)}
-        col = {j:set() for j in range(9)}
-        box = {boxid:set() for boxid in range(9)}
-        
-        def canplace(num,i,j):
-            boxid = (i//3)*3+j//3
-            if (num in row[i]) or (num in col[j]) or (num in box[boxid]):
-                return False
-            return True
-        
-        def place(num,i,j):
-            boxid = (i//3)*3+j//3
-            board[i][j] = num
-            row[i].add(num)
-            col[j].add(num)
-            box[boxid].add(num)
-        
-        def remove(num,i,j):
-            board[i][j] = '.'
-            boxid = (i//3)*3+j//3
-            row[i].remove(num)
-            col[j].remove(num)
-            box[boxid].remove(num)
-        
-        solved = False
-        def placenext(i,j):
-            if i==8 and j==8:
-                nonlocal solved
-                solved=True
-            
-            elif j==8:
-                bt(i+1,0)
+    def minMeetingRooms(self, intervals: List[List[int]]) -&gt; int:
+        #find max overlapping interval num
+        res=1
+        c=0
+        #at start +=1 at end -=1
+        dic=dict()
+        for interval in intervals:
+            start,end=interval[0],interval[1]
+            if start in dic:
+                dic[start]+=1
             else:
-                bt(i,j+1)
-        
-        #@stuck place step ignored
-        for i in range(9):
-            for j in range(9):
-                if board[i][j]!='.':
-                    place(board[i][j],i,j)
-                    
-        
-        def bt(i,j):
+                dic[start]=1
             
-            if board[i][j]=='.':
-                for d in range(1,10):
-                    d = str(d)
-                    if canplace(d,i,j):
-                        place(d,i,j)
-                        placenext(i,j)
+            if end in dic:
+                dic[end]-=1
+            else:
+                dic[end]=-1
+        
+        for k in sorted(dic.keys()):
+            c+=dic[k]
+            res=max(res,c)
+        return res
+</code></pre>
+<p>虽然做出来了，感觉下次再做可能会忘记怎么做的， 思路： 把所有时节节点从小到大排序，如果是start， counter+=1 如果是end， counter-=1， 找出counter变化过程中最大值。 答案做的感觉没自己的思路简单。</p>
+<h1 id="font-colorred-254-factor-combinations-mediumfont"><font color='red'> 254. Factor Combinations （Medium）</font></h1>
+<p>Numbers can be regarded as the product of their factors.</p>
+<pre><code>For example, 8 = 2 x 2 x 2 = 2 x 4.
+</code></pre>
+<p>Given an integer n, return all possible combinations of its factors. You may return the answer in any order.</p>
+<p>Note that the factors should be in the range [2, n - 1].</p>
+<pre><code class="language-python">#Iterative:
 
-                        if not solved:
-                            remove(d,i,j)
-            else:
-                placenext(i,j)
-                            
+def getFactors(self, n):
+    todo, combis = [(n, 2, [])], []
+    while todo:
+        n, i, combi = todo.pop()
+        while i * i &lt;= n:
+            if n % i == 0:
+                combis += combi + [i, n/i],
+                todo += (n/i, i, combi+[i]),
+            i += 1
+    return combis
+
+#Recursive:
+
+class Solution:
+    def getFactors(self, n: int) -&gt; List[List[int]]:
         
-        bt(0,0)
-</code></pre>
-<p>主要function， canplace、 remove、 placenext。 backtracking逻辑，如果要填， scan1到9，如果能填入，填入，填入下一个， 如果没有solve，去除填入值。 如果当前空不填，填入下一个。<br>
-思路简单，但构建出思路难。</p>
-<h1 id="38-count-and-say-medium">38. Count and Say （Medium）</h1>
-<pre><code class="language-python">class Solution:
-    def countAndSay(self, n: int) -&gt; str:
-        
-        if n==1: return '1'
-        prev = '1'
-        
-        for i in range(n-1):
-            cur = ''    
-            pre_char = None
-            c=0
-            #print('in',prev)
-            while prev:
-                cur_char = prev[0]
-                if pre_char and cur_char!=pre_char:
-                    #output
-                    cur+= str(c)+pre_char
-                    c=1
-                else:
-                    c+=1
-                
-                pre_char = cur_char
-                prev=prev[1:]
-            if c:
-                cur+= str(c)+pre_char
-            #print('out',cur)
-            prev=cur
-        
-        return prev
-                
-</code></pre>
-<p>not hard,but need to pay attention to details.</p>
-<h1 id="39-combination-sum-medium">39. Combination Sum (Medium)</h1>
-<pre><code class="language-python">class Solution:
-    def combinationSum(self, candidates: List[int], target: int) -&gt; List[List[int]]:
-        
-        res = []
-        def bt(tmp,val,start):
-            if val&lt;0: return
-            if val==0:
-                res.append(tmp[:])
-                
-            for i in range(start,len(candidates)):
-                tmp.append(candidates[i])
-                bt(tmp,val-candidates[i],i)
-                tmp.pop()
-                
-        bt([],target,0)
+        res=[]
+        def factor(n, i, tmp):
+            while i * i &lt;= n:
+                if n % i == 0:
+                    res.append(tmp + [i, n//i])
+                    factor(n//i, i, tmp+[i])
+                i += 1
+        factor(n, 2, [])
         return res
+
 </code></pre>
-<p>典型的backtracking，可以重复利用元素，所以内循环中 start=i</p>
-<h1 id="40-combination-sum-ii-medium">40. Combination Sum II （Medium）</h1>
+<p>思路类似，但是还是没写粗来，这个不应该， res 先append  tmp+[i,n//i],然后再factor（n//i， i，tmp+【i】，res）</p>
+<h1 id="font-colorred255-verify-preorder-sequence-in-binary-search-tree-mediumfont"><font color='red'>255. Verify Preorder Sequence in Binary Search Tree （Medium）</font></h1>
+<pre><code class="language-python">def verifyPreorder(self, preorder):
+    stack = []
+    low = float('-inf')
+    for p in preorder:
+        if p &lt; low:
+            return False
+        while stack and p &gt; stack[-1]:
+            low = stack.pop()
+        stack.append(p)
+    return True
+</code></pre>
+<p>没思路，答案思路： 模拟traversal，stack是左子树的栈。 如果下一个数小于栈顶，说明还在左子树，所以append。  如果当前preorder值大于栈顶，所有小于当前值元素出栈。说明当前元素跳到了右子树。low=stack.pop() 很巧妙， lower bound是满足小于当前值的最后一个pop出去的元素。</p>
+<h1 id="font-colorred256-paint-house-mediumfont"><font color='red'>256. Paint House （Medium）</font></h1>
+<p>Input: costs = [[17,2,17],[16,16,5],[14,3,19]]<br>
+Output: 10<br>
+Explanation: Paint house 0 into blue, paint house 1 into green, paint house 2 into blue.<br>
+Minimum cost: 2 + 5 + 3 = 10.</p>
 <pre><code class="language-python">class Solution:
-    def combinationSum2(self, candidates: List[int], target: int) -&gt; List[List[int]]:
-        res = []
-        candidates.sort()
-        def bt(tmp,val,start):
-            if val&lt;0:
-                return
-            if val==0:
-                res.append(tmp[:])
+    def minCost(self, costs: List[List[int]]) -&gt; int:
+        mem=dict()
+        def paint(n,color):
+            if (n,color) in mem:
+                return mem[(n,color)]
+            res = costs[n][color]
             
-            for i in range(start,len(candidates)):
-                if i&gt;start and candidates[i]==candidates[i-1]:continue
-                tmp.append(candidates[i])
-                bt(tmp,val-candidates[i],i+1)
-                tmp.pop()
-        bt([],target,0)
+            if n!=len(costs)-1:
+                if color==0:
+                    res+=min(paint(n+1,1),paint(n+1,2))
+                elif color==1:
+                    res+=min(paint(n+1,0),paint(n+1,2))
+                else:
+                    res+=min(paint(n+1,0),paint(n+1,1))
+            mem[(n,color)]=res
+            return res
+       
+        return min([paint(0,0),paint(0,1),paint(0,2)])
+
+#
+class Solution:
+    def minCost(self, costs: List[List[int]]) -&gt; int:
+        if not costs:return 0
+        for n in range(len(costs)-2,-1,-1):
+            costs[n][0]+=min(costs[n+1][1],costs[n+1][2])
+            costs[n][1]+=min(costs[n+1][0],costs[n+1][2])
+            costs[n][2]+=min(costs[n+1][0],costs[n+1][1])
+        return min(costs[0])
+</code></pre>
+<p>这个应该是递归mem的经典题和dp的经典题。用dynamic programming，但是写出来一版是错的。。。应该定义dp=【#costs】【#color】。从最后一个房子开始， 倒数第二个 cost红=最后一个min（绿，蓝），。。。</p>
+<h1 id="257-binary-tree-paths-easy">257. Binary Tree Paths （Easy）</h1>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def binaryTreePaths(self, root: Optional[TreeNode]) -&gt; List[str]:
+        res=[]
+        def bt(tmp,node):
+            if not node: return
+            if not node.left and not node.right:
+                tmp.append(str(node.val))
+                res.append('-&gt;'.join(tmp))
+                return
+            tmp.append(str(node.val))
+            bt(tmp[:],node.left)
+            bt(tmp[:],node.right)
+        bt([],root)
         return res
 </code></pre>
-<p>注意去重复，也许得写个backtracking模板总结。</p>
+<h1 id="258-add-digits-easy">258. Add Digits (Easy)</h1>
+<pre><code class="language-python">class Solution:
+    def addDigits(self, num: int) -&gt; int:
+        res = 0
+        while num:
+            #
+            tmp=0
+            while num:
+                lastdig = num%10
+                num=num//10
+                tmp+=lastdig
+            num=tmp
+            if num&gt;=0 and num&lt;=9:
+                return num
+        
+        return res 
+# answer way of writing
+class Solution:
+    def addDigits(self, num: int) -&gt; int:
+        if num == 0:
+            return 0
+        if num % 9 == 0:
+            return 9
+        return num % 9
+</code></pre>
+<p>答案用了一个数能被九整除，那么他们所有位数和能被9整除。</p>
+<h1 id="font-colorblue259-3sum-smaller-mediumfont"><font color='blue'>259. 3Sum Smaller （Medium）</font></h1>
+<p>Given an array of n integers nums and an integer target, find the number of index triplets i, j, k with 0 &lt;= i &lt; j &lt; k &lt; n that satisfy the condition nums[i] + nums[j] + nums[k] &lt; target.</p>
+<pre><code class="language-python">class Solution:
+    def threeSumSmaller(self, nums: List[int], target: int) -&gt; int:
+        nums.sort()
+        res=0
+        for start in range(len(nums)-2):
+            for left in range(start+1,len(nums)-1):
+                right=left+1
+                if nums[start]+nums[left]+nums[right]&gt;target:continue
+                
+                while  right&lt;len(nums) and nums[start]+nums[left]+nums[right]&lt;target:
+                    res+=1
+                    right+=1
+                
+               
+        return res
+
+#answer
+class Solution:
+    def threeSumSmaller(self, nums: List[int], target: int) -&gt; int:
+        nums.sort()
+        res=0
+        for start in range(len(nums)-2):
+            tar = target-nums[start]
+            #become two sum question
+            left=start+1
+            right=len(nums)-1
+            while left&lt;right:
+                #print('@',left,right,tar)
+                if nums[left]+nums[right]&lt;tar:
+                    #print(left,right)
+                    res+=right-left
+                    left+=1
+                else:
+                    right-=1
+            
+        return res
+</code></pre>
+<p>写出来个暴力解。。。 几乎是O(n^3)....  O（n^2）思路, 选出一个数字，把3sum转成2sum，然后定义left=start+1，right=len（nums）-1， 若left +right 值小于target 说明 left 到right所有都满足条件，这样left+1求解下一步， 若left +right 值大于target说明right太大得减1.</p>
+<h1 id="font-colorred260-single-number-iii-mediumfont"><font color='red'>260. Single Number III （Medium）</font></h1>
+<p>Given an integer array nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once. You can return the answer in any order.</p>
+<p>You must write an algorithm that runs in linear runtime complexity and uses only constant extra space.</p>
+<pre><code class="language-python">class Solution:
+    def singleNumber(self, nums: List[int]) -&gt; List[int]:
+        xor=0
+        for n in nums:
+            xor = xor^n
+        
+        # rightmost 1-bit diff between a and b
+        diff = xor &amp; -xor
+        
+        a=0
+        for n in nums:
+            if n&amp;diff:
+                # diff means a's last bit is diff then b's last bit
+                # by using this filter we could get a 
+                a= a^n
+        return [a,xor^a]
+
+</code></pre>
+<p>没思路， one pass 只能找出xor=a^b  但不能确定出a，b具体值。<br>
+答案思路：用了一个不知道的trick， x &amp; (-x) 保留x中最右边bit，设置其他bit为0.   这样就能用a，b 的diff bit把所有数字过滤一次，只有a可以被过滤出来，因为a的diff bit是1 其余diff bit是1的都出现了2次抵消了。。</p>
 
             </div>
             
@@ -865,7 +851,7 @@ what if 是 下一个更小的位置？？ drop=&gt;increase,   大=&gt;小</p>
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-04/" title="Leetcode 2021-11-04">https://headhuanglan.github.io/post/leetcode-2021-11-04/</a>
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-28/" title="Leetcode 2021-11-28">https://headhuanglan.github.io/post/leetcode-2021-11-28/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -880,15 +866,11 @@ what if 是 下一个更小的位置？？ drop=&gt;increase,   大=&gt;小</p>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-05" href="https://headhuanglan.github.io/post/leetcode-2021-11-05/">Leetcode 2021-11-05</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-05" href="https://headhuanglan.github.io/post/leetcode-2021-11-05/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2021-11-03" href="https://headhuanglan.github.io/post/leetcode-2021-11-03/">Leetcode 2021-11-03</a>
-        <a class="nav-mobile-next" title="Leetcode 2021-11-03" href="https://headhuanglan.github.io/post/leetcode-2021-11-03/">下一篇</a>
+        <a class="nav-pc-next" title="书单" href="https://headhuanglan.github.io/post/shu-dan/">书单</a>
+        <a class="nav-mobile-next" title="书单" href="https://headhuanglan.github.io/post/shu-dan/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>

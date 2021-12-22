@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2021-12-19T22:11:59.686Z</updated>
+    <updated>2021-12-22T22:46:44.216Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,6 +10,311 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Lan&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2021-11-28]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-11-28/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-28/">
+        </link>
+        <updated>2021-11-27T20:14:09.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="251-flatten-2d-vector-medium">251. Flatten 2D Vector (Medium)</h1>
+<p>Design an iterator to flatten a 2D vector. It should support the next and hasNext operations.<br>
+Implement the Vector2D class:<br>
+Vector2D(int[][] vec) initializes the object with the 2D vector vec.<br>
+next() returns the next element from the 2D vector and moves the pointer one step forward. You may assume that all the calls to next are valid.<br>
+hasNext() returns true if there are still some elements in the vector, and false otherwise.</p>
+<pre><code class="language-python">class Vector2D:
+
+    def __init__(self, vec: List[List[int]]):
+        self.stack=[]
+        self.vec=vec
+
+    def next(self) -&gt; int:
+        if self.hasNext():
+            val=self.stack.pop(0)
+        return val
+
+    def hasNext(self) -&gt; bool:
+        if not self.stack:
+            if not self.vec:
+                return False
+            row=self.vec.pop(0)
+            if not row: 
+                if self.hasNext():
+                    return True
+                else:
+                    return False
+            for e in row:
+                self.stack.append(e)
+        return True
+
+
+# Your Vector2D object will be instantiated and called as such:
+# obj = Vector2D(vec)
+# param_1 = obj.next()
+# param_2 = obj.hasNext()
+#answer way of writing
+class Vector2D:
+
+    def __init__(self, v: List[List[int]]):
+        # We need to iterate over the 2D vector, getting all the integers
+        # out of it and putting them into the nums list.
+         
+        self.nums = []
+        for inner_list in v:
+            for num in inner_list:
+                self.nums.append(num)
+        # We'll keep position 1 behind the next number to return.
+        self.position = -1
+
+    def next(self) -&gt; int:
+        # Move up to the current element and return it.
+        self.position += 1
+        return self.nums[self.position]
+
+    def hasNext(self) -&gt; bool:
+        # If the next position is a valid index of nums, return True.
+        return self.position + 1 &lt; len(self.nums)
+
+</code></pre>
+<p>自己写的这个递归调用比较tricky。。。答案很简答。</p>
+<h1 id="252-meeting-rooms-easy">252. Meeting Rooms （Easy）</h1>
+<p>Given an array of meeting time intervals where intervals[i] = [starti, endi], determine if a person could attend all meetings.</p>
+<pre><code class="language-python">class Solution:
+    def canAttendMeetings(self, intervals: List[List[int]]) -&gt; bool:
+        intervals=sorted(intervals,key=lambda x:x[0])
+        pre_end = None
+        for interval in intervals:
+            if pre_end is not None and interval[0]&lt;pre_end:
+                return False
+            pre_end = interval[1]
+        return True
+</code></pre>
+<h1 id="font-colorblue253-meeting-rooms-ii-medium-font"><font color='blue'>253. Meeting Rooms II (Medium) </font></h1>
+<p>Given an array of meeting time intervals intervals where intervals[i] = [starti, endi], return the minimum number of conference rooms required.</p>
+<pre><code class="language-python">class Solution:
+    def minMeetingRooms(self, intervals: List[List[int]]) -&gt; int:
+        #find max overlapping interval num
+        res=1
+        c=0
+        #at start +=1 at end -=1
+        dic=dict()
+        for interval in intervals:
+            start,end=interval[0],interval[1]
+            if start in dic:
+                dic[start]+=1
+            else:
+                dic[start]=1
+            
+            if end in dic:
+                dic[end]-=1
+            else:
+                dic[end]=-1
+        
+        for k in sorted(dic.keys()):
+            c+=dic[k]
+            res=max(res,c)
+        return res
+</code></pre>
+<p>虽然做出来了，感觉下次再做可能会忘记怎么做的， 思路： 把所有时节节点从小到大排序，如果是start， counter+=1 如果是end， counter-=1， 找出counter变化过程中最大值。 答案做的感觉没自己的思路简单。</p>
+<h1 id="font-colorred-254-factor-combinations-mediumfont"><font color='red'> 254. Factor Combinations （Medium）</font></h1>
+<p>Numbers can be regarded as the product of their factors.</p>
+<pre><code>For example, 8 = 2 x 2 x 2 = 2 x 4.
+</code></pre>
+<p>Given an integer n, return all possible combinations of its factors. You may return the answer in any order.</p>
+<p>Note that the factors should be in the range [2, n - 1].</p>
+<pre><code class="language-python">#Iterative:
+
+def getFactors(self, n):
+    todo, combis = [(n, 2, [])], []
+    while todo:
+        n, i, combi = todo.pop()
+        while i * i &lt;= n:
+            if n % i == 0:
+                combis += combi + [i, n/i],
+                todo += (n/i, i, combi+[i]),
+            i += 1
+    return combis
+
+#Recursive:
+
+class Solution:
+    def getFactors(self, n: int) -&gt; List[List[int]]:
+        
+        res=[]
+        def factor(n, i, tmp):
+            while i * i &lt;= n:
+                if n % i == 0:
+                    res.append(tmp + [i, n//i])
+                    factor(n//i, i, tmp+[i])
+                i += 1
+        factor(n, 2, [])
+        return res
+
+</code></pre>
+<p>思路类似，但是还是没写粗来，这个不应该， res 先append  tmp+[i,n//i],然后再factor（n//i， i，tmp+【i】，res）</p>
+<h1 id="font-colorred255-verify-preorder-sequence-in-binary-search-tree-mediumfont"><font color='red'>255. Verify Preorder Sequence in Binary Search Tree （Medium）</font></h1>
+<pre><code class="language-python">def verifyPreorder(self, preorder):
+    stack = []
+    low = float('-inf')
+    for p in preorder:
+        if p &lt; low:
+            return False
+        while stack and p &gt; stack[-1]:
+            low = stack.pop()
+        stack.append(p)
+    return True
+</code></pre>
+<p>没思路，答案思路： 模拟traversal，stack是左子树的栈。 如果下一个数小于栈顶，说明还在左子树，所以append。  如果当前preorder值大于栈顶，所有小于当前值元素出栈。说明当前元素跳到了右子树。low=stack.pop() 很巧妙， lower bound是满足小于当前值的最后一个pop出去的元素。</p>
+<h1 id="font-colorred256-paint-house-mediumfont"><font color='red'>256. Paint House （Medium）</font></h1>
+<p>Input: costs = [[17,2,17],[16,16,5],[14,3,19]]<br>
+Output: 10<br>
+Explanation: Paint house 0 into blue, paint house 1 into green, paint house 2 into blue.<br>
+Minimum cost: 2 + 5 + 3 = 10.</p>
+<pre><code class="language-python">class Solution:
+    def minCost(self, costs: List[List[int]]) -&gt; int:
+        mem=dict()
+        def paint(n,color):
+            if (n,color) in mem:
+                return mem[(n,color)]
+            res = costs[n][color]
+            
+            if n!=len(costs)-1:
+                if color==0:
+                    res+=min(paint(n+1,1),paint(n+1,2))
+                elif color==1:
+                    res+=min(paint(n+1,0),paint(n+1,2))
+                else:
+                    res+=min(paint(n+1,0),paint(n+1,1))
+            mem[(n,color)]=res
+            return res
+       
+        return min([paint(0,0),paint(0,1),paint(0,2)])
+
+#
+class Solution:
+    def minCost(self, costs: List[List[int]]) -&gt; int:
+        if not costs:return 0
+        for n in range(len(costs)-2,-1,-1):
+            costs[n][0]+=min(costs[n+1][1],costs[n+1][2])
+            costs[n][1]+=min(costs[n+1][0],costs[n+1][2])
+            costs[n][2]+=min(costs[n+1][0],costs[n+1][1])
+        return min(costs[0])
+</code></pre>
+<p>这个应该是递归mem的经典题和dp的经典题。用dynamic programming，但是写出来一版是错的。。。应该定义dp=【#costs】【#color】。从最后一个房子开始， 倒数第二个 cost红=最后一个min（绿，蓝），。。。</p>
+<h1 id="257-binary-tree-paths-easy">257. Binary Tree Paths （Easy）</h1>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def binaryTreePaths(self, root: Optional[TreeNode]) -&gt; List[str]:
+        res=[]
+        def bt(tmp,node):
+            if not node: return
+            if not node.left and not node.right:
+                tmp.append(str(node.val))
+                res.append('-&gt;'.join(tmp))
+                return
+            tmp.append(str(node.val))
+            bt(tmp[:],node.left)
+            bt(tmp[:],node.right)
+        bt([],root)
+        return res
+</code></pre>
+<h1 id="258-add-digits-easy">258. Add Digits (Easy)</h1>
+<pre><code class="language-python">class Solution:
+    def addDigits(self, num: int) -&gt; int:
+        res = 0
+        while num:
+            #
+            tmp=0
+            while num:
+                lastdig = num%10
+                num=num//10
+                tmp+=lastdig
+            num=tmp
+            if num&gt;=0 and num&lt;=9:
+                return num
+        
+        return res 
+# answer way of writing
+class Solution:
+    def addDigits(self, num: int) -&gt; int:
+        if num == 0:
+            return 0
+        if num % 9 == 0:
+            return 9
+        return num % 9
+</code></pre>
+<p>答案用了一个数能被九整除，那么他们所有位数和能被9整除。</p>
+<h1 id="font-colorblue259-3sum-smaller-mediumfont"><font color='blue'>259. 3Sum Smaller （Medium）</font></h1>
+<p>Given an array of n integers nums and an integer target, find the number of index triplets i, j, k with 0 &lt;= i &lt; j &lt; k &lt; n that satisfy the condition nums[i] + nums[j] + nums[k] &lt; target.</p>
+<pre><code class="language-python">class Solution:
+    def threeSumSmaller(self, nums: List[int], target: int) -&gt; int:
+        nums.sort()
+        res=0
+        for start in range(len(nums)-2):
+            for left in range(start+1,len(nums)-1):
+                right=left+1
+                if nums[start]+nums[left]+nums[right]&gt;target:continue
+                
+                while  right&lt;len(nums) and nums[start]+nums[left]+nums[right]&lt;target:
+                    res+=1
+                    right+=1
+                
+               
+        return res
+
+#answer
+class Solution:
+    def threeSumSmaller(self, nums: List[int], target: int) -&gt; int:
+        nums.sort()
+        res=0
+        for start in range(len(nums)-2):
+            tar = target-nums[start]
+            #become two sum question
+            left=start+1
+            right=len(nums)-1
+            while left&lt;right:
+                #print('@',left,right,tar)
+                if nums[left]+nums[right]&lt;tar:
+                    #print(left,right)
+                    res+=right-left
+                    left+=1
+                else:
+                    right-=1
+            
+        return res
+</code></pre>
+<p>写出来个暴力解。。。 几乎是O(n^3)....  O（n^2）思路, 选出一个数字，把3sum转成2sum，然后定义left=start+1，right=len（nums）-1， 若left +right 值小于target 说明 left 到right所有都满足条件，这样left+1求解下一步， 若left +right 值大于target说明right太大得减1.</p>
+<h1 id="font-colorred260-single-number-iii-mediumfont"><font color='red'>260. Single Number III （Medium）</font></h1>
+<p>Given an integer array nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once. You can return the answer in any order.</p>
+<p>You must write an algorithm that runs in linear runtime complexity and uses only constant extra space.</p>
+<pre><code class="language-python">class Solution:
+    def singleNumber(self, nums: List[int]) -&gt; List[int]:
+        xor=0
+        for n in nums:
+            xor = xor^n
+        
+        # rightmost 1-bit diff between a and b
+        diff = xor &amp; -xor
+        
+        a=0
+        for n in nums:
+            if n&amp;diff:
+                # diff means a's last bit is diff then b's last bit
+                # by using this filter we could get a 
+                a= a^n
+        return [a,xor^a]
+
+</code></pre>
+<p>没思路， one pass 只能找出xor=a^b  但不能确定出a，b具体值。<br>
+答案思路：用了一个不知道的trick， x &amp; (-x) 保留x中最右边bit，设置其他bit为0.   这样就能用a，b 的diff bit把所有数字过滤一次，只有a可以被过滤出来，因为a的diff bit是1 其余diff bit是1的都出现了2次抵消了。。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[书单]]></title>
         <id>https://headhuanglan.github.io/post/shu-dan/</id>
@@ -2816,491 +3121,6 @@ WHERE
     AND l2.Num = l3.Num
 ;
 
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-11-19]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-11-19/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-19/">
-        </link>
-        <updated>2021-11-19T01:20:04.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="161-one-edit-distance-medium">161. One Edit Distance (Medium)</h1>
-<p>Given two strings s and t, return true if they are both one edit distance apart, otherwise return false.</p>
-<pre><code class="language-python">class Solution:
-    def isOneEditDistance(self, s: str, t: str) -&gt; bool:
-        #
-        #      ''  a  b
-        #   '' 0   1  2
-        #    a 1   0  1  
-        #    c 2   1  1
-        #    b 3   2  1
-        #
-        #    dp[i][j] is s[:i]  t[:j]'s editdistance
-        #    dp[i][j] =   min(dp[i][j-1] ,  dp[i-1][j] ,  dp[i-1][j-1]) +1 if s[i]!=t[j]        
-        m = len(s)
-        n = len(t)
-        
-        dp = [[0]*(n+1) for _ in range(m+1)]
-      
-        for i in range(n+1):
-            dp[0][i]=i
-        for i in range(m+1):
-            dp[i][0]=i
-        
-        for i in range(1,m+1):
-            for j in range(1,n+1):
-                if s[i-1]!=t[j-1]:
-                    dp[i][j] = min(dp[i][j-1],dp[i-1][j],dp[i-1][j-1])+1
-                else:
-                    dp[i][j] = dp[i-1][j-1]
-                
-                     
-        
-        return dp[-1][-1]==1
-
- #second way of writting
- class Solution:
-    def isOneEditDistance(self, s: str, t: str) -&gt; bool:
-        
-        # s-&gt;t    insert
-        
-        if len(t)-len(s)==1 and len(set(t))-len(set(s))&lt;=1:
-            #s insert
-            # ssss sss
-            # tttttttt
-           
-            while s and s[0]==t[0]:
-                s=s[1:]
-                t=t[1:]
-            while s and s[-1]==t[-1]:
-                s=s[:len(s)-1]
-                t=t[:len(t)-1]
-            if len(t)==1:
-                return True
-            
-        elif len(s)-len(t)==1 and len(set(s))-len(set(t))&lt;=1:
-            #s del
-            # sssssss
-            # ttt ttt
-             
-            while t and s[0]==t[0]:
-                s=s[1:]
-                t=t[1:]
-            while t and s[-1]==t[-1]:
-                s=s[:len(s)-1]
-                t=t[:len(t)-1]
-            if len(s)==1:
-                return True
-            
-            
-        elif len(s)==len(t)  and len(set(s))-len(set(t))&lt;=1:
-            # replace
-            while t and s[0]==t[0]:
-                s=s[1:]
-                t=t[1:]
-            while t and s[-1]==t[-1]:
-                s=s[:len(s)-1]
-                t=t[:len(t)-1]
-            
-            if len(t)==1 and len(s)==1 and t!=s:
-                return True
-            
-        
-        
-        return False
-               
-</code></pre>
-<p>用dp方法，time limit exceeded。dp是n*n的。所以用定义做。 分3种情况， insert ，del， replace。 头尾之间去除相同的，剩下长度为1 就是可以的。</p>
-<h1 id="font-colorred162-find-peak-element-mediumfont"><font color='red'>162. Find Peak Element （Medium）</font></h1>
-<p>A peak element is an element that is strictly greater than its neighbors.</p>
-<pre><code class="language-python">class Solution:
-    def findPeakElement(self, nums: List[int]) -&gt; int:
-        
-#         for i in range(len(nums)-1):
-#             if nums[i] &gt; nums[i+1]:
-#                 return i
-        
-#         return len(nums)-1
-        
-        
-        return self.search(nums,0,len(nums)-1)
-    
-    def search(self, nums,l,r):
-        if l==r:
-            return l
-        
-        m = (l+r)//2
-        
-        if nums[m] &gt; nums[m+1]:
-            return self.search(nums,l,m)
-        else:
-            return self.search(nums,m+1,r)
-    
-</code></pre>
-<p>一定是考binary search的，但木有思路，答案很精彩。 就是比较 m 和 m+1就搞定了。</p>
-<h1 id="font-colorred163-missing-ranges-easyfont"><font color='red'>163. Missing Ranges （Easy）</font></h1>
-<pre><code class="language-python">class Solution:
-    def findMissingRanges(self, nums: List[int], lower: int, upper: int) -&gt; List[str]:
-        res=[]
-        
-        def helper(x,y):
-            if y-x==2:
-                # y=3 x=1
-                res.append(str(x+1))
-            elif y-x&gt;2:
-                res.append(str(x + 1) + '-&gt;' + str(y - 1))
-            
-        
-        pre = lower-1
-        for num in nums:
-            helper(pre,num)
-            pre=num
-        
-        helper(pre,upper+1)
-            
-        return res
-            
-</code></pre>
-<p>if else 判断太繁杂， 答案很简单，这个是个easy题目？？？ 为了统一 x 到 y之间判断， lower =lower-1，这样lower就包括进去了， upper=upper+1，这样upper就包括进去了。</p>
-<h1 id="font-colorred164-maximum-gap-hard-font"><font color='red'>164. Maximum Gap （Hard） </font></h1>
-<p>Given an integer array nums, return the maximum difference between two successive elements in its sorted form. If the array contains less than two elements, return 0.</p>
-<pre><code class="language-python">class Solution:
-    def maximumGap(self, nums: List[int]) -&gt; int:
-        
-        if not nums or len(nums)&lt;2: return 0
-        
-        maxval = max(nums)
-        exp=1 # 1,10,100,...
-        radix=10 #base 10 system
-        aux = [0]*len(nums)
-        while maxval//exp&gt;0:
-            count = [0]*radix
-            
-            for i,n in enumerate(nums):
-                count[(n//exp)%10] +=1
-            
-            for i,n in enumerate(count):
-                if i==0: continue
-                count[i] += count[i-1]
-            
-            for i in range(len(nums)-1,-1,-1):
-                count[(nums[i]//exp)%10] -= 1
-                aux[ count[(nums[i]//exp)%10] ] = nums[i]
-                
-            nums= aux[:]
-            
-            exp*=10
-        
-        print(nums)
-        
-        maxGap = 0 
-        for   i  in range(len(nums)-1): 
-            maxGap = max(nums[i + 1] - nums[i], maxGap)
-
-        return maxGap
-
-# answer way of writting
-class Solution:
-    def maximumGap(self, nums: List[int]) -&gt; int:
-        ## RC ##
-        ## APPROACH : BUCKET SORT ##
-        ## LOGIC ##
-        ## 1. lets say we have number from 1 to 10 like, 1,1.1,1.2,2.4,3.5,3.7,4,....10 (not in the same order)
-        ## 2. we create n - 1 buckets, why n-1 ? (b1 -&gt; [1-2] b2-&gt; [2-3] b3-&gt;[3-4] ...so on 9 buckets)
-        ## 3. we can say size of each bucket will be (10 - 1) // 9 i.e 1 ==&gt; (maximum - mimimum) // (length - 1)
-        ## 3. Instead of storing all the elements in the buckets, we store minvalue of that bucket and maximum value of that bucket
-        ## 4. Maximum Gap can be Case 1: gap between min and max in the bucket itself (or) Case 2: Gap between bucket1 max and bucket2 and so on..
-        
-		## TIME COMPLEXITY : O(N) ##
-		## SPACE COMPLEXITY : O(N) ##
-        
-        if len(nums) &lt; 2 or min(nums) == max(nums):
-            return 0
-        minimum, maximum = min(nums), max(nums)
-        size = ( maximum - minimum )//(len(nums)-1) or 1
-        buckets = [[None, None] for _ in range(( maximum - minimum )//size+1)]
-        for num in nums:
-            # getting the bucket number in which it falls into
-            bucket = buckets[ ( num - minimum )//size ]
-            bucket[0] = num if bucket[0] is None else min(bucket[0], num)
-            bucket[1] = num if bucket[1] is None else max(bucket[1], num)
-        buckets = [bucket for bucket in buckets if bucket[0] is not None]
-        return max(buckets[i][0]-buckets[i-1][1] for i in range(1, len(buckets)))        
-</code></pre>
-<p>要求O（n）for space and time没思路。答案思路1） Radix Sort 听过，但写不出来。。。2）Buckets 这个思路很好。</p>
-<blockquote>
-<p>知识点 Radix Sort</p>
-</blockquote>
-<pre><code class="language-python">
-     def count_sort(arr,exp):
-           #辅助数组用于返回
-           aux = [0]*len(nums)
-           #0到9是个数字的计数器
-           count=[0]*10
-           #计数
-           for i,n in enumerate(arr):
-               ind= (n//exp)%10
-               count[ind]+=1
-           #计算位置  count【i】 就是 i 这个位，属于的数字所在的位置
-           for i in range(1,10):
-               count[i] += count[i-1]
-            #从后向前遍历数组
-           for i in range(len(arr)-1,-1,-1):
-               #找到index
-               ind = (arr[i]//exp)%10
-               #找到位置 因为位置从0开始所以要-1
-               count[ind] -= 1
-               #赋值
-               aux[count[ind]] = arr[i]
-           return aux 
-
-
-       def Radix_Sort(arr):
-           maxval=max(arr)
-           exp=1
-           while maxval//exp&gt;0:
-               #print('#',exp)
-               arr = count_sort(arr,exp)
-               exp*=10
-           return arr
-       
-       nums = Radix_Sort(nums)
-
-
-</code></pre>
-<h1 id="165-compare-version-numbers-medium">165. Compare Version Numbers （Medium）</h1>
-<pre><code class="language-python">class Solution:
-    def compareVersion(self, version1: str, version2: str) -&gt; int:
-        while version1 or version2:
-            v1=0
-            v2=0
-            while version1 and version1[0]!='.':
-                v1 = v1*10+int(version1[0])
-                version1=version1[1:]
-            while version2 and version2[0]!='.':
-                v2 = v2*10+int(version2[0])
-                version2=version2[1:]
-            
-            if v1&gt;v2: return 1
-            if v1&lt;v2: return -1
-            
-            version1 = version1[1:] if version1 else ''
-            version2 = version2[1:] if version2 else ''
-    
-        return 0
-</code></pre>
-<h1 id="166-fraction-to-recurring-decimal-medium">166. Fraction to Recurring Decimal （Medium）</h1>
-<pre><code class="language-python">class Solution:
-    def fractionToDecimal(self, numerator: int, denominator: int) -&gt; str:
-        negsign = (numerator&gt;0) ^ (denominator&gt;0)
-        numerator= abs(numerator)
-        denominator=abs(denominator)
-        if numerator==0: negsign=False
-        
-        integer = numerator//denominator
-        if integer*denominator==numerator:
-            return str(integer) if not negsign else  '-'+str(integer)
-        res_int = str(integer)
-        
-        numerator -= integer*denominator
-        
-        def loop(res_dec,denominator_len):
-            l=len(res_dec)
-            if l&gt;=2:
-                for lookback in range(1,l//2+1):     
-                    if lookback&gt;=denominator_len and res_dec[l-lookback:l] == res_dec[l-2*lookback :l-lookback] :
-                        return True, l-2*lookback, lookback
-            return False, 0,0
-        res_dec = []
-        while True:
-            numerator *= 10
-            val =numerator//denominator
-            res_dec.append(val)
-            #print(res_dec)
-            flag, start,length =  loop(res_dec,len(str(denominator)))
-            if flag:
-                l=len(res_dec)
-                part1 = res_dec[:start]
-                recur = res_dec[start:start+length]
-                part1=''.join([str(e) for e in part1])
-                recur = '('+''.join([str(e) for e in recur]) +')' if recur else ''
-                decpart=part1+recur
-                result= res_int+'.'+decpart if decpart else res_int
-                return result if not negsign else '-'+result
-            numerator=numerator-val*denominator
-            if numerator==0:
-                break
-        
-        decpart=''.join([str(e) for e in res_dec])
-        result=res_int+'.'+decpart if decpart else res_int
-        return result if not negsign else '-'+result
-
-#answer way of writting
-class Solution(object):
-    def fractionToDecimal(self, numerator, denominator):
-        &quot;&quot;&quot;
-        :type numerator: int
-        :type denominator: int
-        :rtype: str
-        &quot;&quot;&quot;
-       
-        if not numerator: return &quot;0&quot;;
-        res=&quot;&quot;
-        if  (numerator &lt; 0) ^ (denominator &lt; 0):
-            res += '-'
-        
-        numer = numerator * (-1) if numerator &lt; 0 else numerator
-            
-        denom =  denominator * (-1) if denominator &lt; 0 else denominator;
-        integral = numer // denom;
-        res += str(integral);
-        rmd = numer % denom;
-        if  rmd==0: return res
-        res += '.';
-        rmd *= 10
-        mp=dict() 
-        while rmd:
-            quotient = rmd / denom
-            if rmd in mp:
-                #res.insert(mp[rmd], 1, '(');
-                res=res[:mp[rmd]]+'('+res[mp[rmd]:]
-                res += ')'
-                break
-            
-            mp[rmd] = len(res)
-            res += str(quotient);
-            rmd = (rmd % denom) * 10
-        
-        return res;
-</code></pre>
-<p>判断recurring，lookback需要长度大于被除数。不难但细节太多，垃圾题。答案写的很优雅。用了dict去存reminder，如果重复出现reminder说明存在重复。 我的方法是之间判断数组是否循环。答案更优雅。</p>
-<h1 id="167-two-sum-ii-input-array-is-sorted-easy">167. Two Sum II - Input Array Is Sorted （Easy）</h1>
-<pre><code class="language-python">class Solution:
-    def twoSum(self, numbers: List[int], target: int) -&gt; List[int]:
-        length = len(numbers)
-        l=0
-        r=length-1
-        while l&lt;r:
-            if numbers[l]+numbers[r]==target:
-                return [l+1,r+1]
-            elif  numbers[l]+numbers[r]&lt;target:
-                l+=1
-            else:
-                r-=1
-</code></pre>
-<p>sorterd 直接上two pointer了。</p>
-<h1 id="font-colorred168-excel-sheet-column-title-easyfont"><font color='red'>168. Excel Sheet Column Title （Easy）</font></h1>
-<pre><code class="language-python">class Solution:
-    def convertToTitle(self, columnNumber: int) -&gt; str:
-        # 26 进制数
-        
-      
-        
-        
-        chars = 'ZABCDEFGHIJKLMNOPQRSTUVWXY'
-        dic = dict()
-        for i in range(26):
-            dic[i]=chars[i]
-        
-        res = []
-        while columnNumber:
-            
-            reminder = columnNumber%26
-            #print(columnNumber,reminder)
-            res.append(dic[reminder])
-            columnNumber = columnNumber //26
-            if reminder==0:
-                columnNumber-=1
-             
-        return ''.join(res[::-1])
-             
-</code></pre>
-<p>就是个26进制数转换问题，这个也能卡。。。 卡在的点为 if reminder==0:   columnNumber-=1<br>
-如果没有余数恰巧除干净了，说明需要上一位减去一。</p>
-<h1 id="font-colorred169-majority-element-easyfont"><font color='red'>169. Majority Element （Easy）</font></h1>
-<pre><code class="language-python">class Solution:
-    def majorityElement(self, nums):
-        &quot;&quot;&quot;
-        :type nums: List[int]
-        :rtype: int
-        &quot;&quot;&quot;
-        
-        maj = nums[0]
-        c = 0
-        for n in nums:
-            if n==maj:
-                c+=1
-            else:
-                c-=1
-            
-            if c==0:
-                maj=n
-                c=1
-       
-        
-        return  maj
-
-</code></pre>
-<p>这个是个经典算法 摩尔投票算法，需要记住。 思路：遍历过程中不同元素之间两两抵消，由于一个数组中，出现次数超过n/2最多只有一个，那么遍历结束时，未被抵消掉的即是出现次数超过n/2的元素。在数组中maj元素出现一次，count就自加一次，如果出现了和maj不同的元素，说明maj可被抵消一次，count就自减一次，如果count减为0，也就说明maj元素已经被抵消完了， 更新maj。<br>
-如果找超过1/3元素。 最多只有两个元素符合要求。需要设置maj1和count1、maj2和count2来分别记录这两个元素的抵消情况。如果出现了和maj1或maj2相同的元素，那么对应的count1和count2就自加1，如果元素与maj1和maj2都不相同，那么count1和count2就都应当自减1，如果maj1或maj2抵消掉后，就应当更新对应的maj1或maj2。NOTE 注意：  初始值 maj1和maj2、count1和count2相同，所以在判断二者与当前值是否相同时应当使用if else语句，而不是分开的两个if。此外，考虑到可能出现maj1和maj2都同时出现抵消掉的情况，所以也不能同时进行count自减和判断count1或count2是否为0，如果同时判断的话，那么maj1和maj2又会都同时成为当前元素了。</p>
-<pre><code class="language-python">maj1=nums[0]
-maj2=nums[0]
-c1=0
-c2=0
-
-for n in nums:
-   if n==maj1:
-       c1+=1
-   elif n==maj2:
-       c2+=1
-   elif c1==0:
-       c1=1
-       maj1=n
-   elif c2==0:
-       c2=1
-       maj2=n
-   else:
-       c1-=1
-       c2-=1
-#recalce make sure        
-c1=c2=0
-for n in nums:
-   if n==maj1:c1+=1
-   if n==maj2:c2+=1
-res=[]
-if c1&gt;len(nums)//3:
-   res.append(maj1)
-if c2&gt;len(nums//3) and maj1!=maj2:
-   res.append(maj2)
-return res
-</code></pre>
-<h1 id="170-two-sum-iii-data-structure-design-easy">170. Two Sum III - Data structure design (Easy)</h1>
-<pre><code class="language-python">class TwoSum:
-
-    def __init__(self):
-        self.stack = []
-        
-
-    def add(self, number: int) -&gt; None:
-        self.stack.append(number)
-        
-
-    def find(self, value: int) -&gt; bool:
-        dic= dict()
-        for i,n in enumerate(self.stack):
-            if value-n in dic:
-                return True
-            dic[n]=i
-        return False
-        
-
-
-# Your TwoSum object will be instantiated and called as such:
-# obj = TwoSum()
-# obj.add(number)
-# param_2 = obj.find(value)
 </code></pre>
 ]]></content>
     </entry>
