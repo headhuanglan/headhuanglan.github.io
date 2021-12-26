@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>Lan&#39;s Blog</title>
+<title>Leetcode 2021-11-29 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1640497828449">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,6 +41,8 @@
 
 
 
+  <meta name="description" content="Leetcode 2021-11-29" />
+  <meta name="keywords" content="leetcode" />
 </head>
 
 <body>
@@ -155,10 +157,26 @@
   <div class="main-continer">
     
     <div
-      class="section-layout  gemini">
+      class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -199,464 +217,791 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper  auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li><a href="#font-colorblue261-graph-valid-tree-mediumfont"><font color='blue'>261. Graph Valid Tree （Medium）</font></a></li>
+<li><a href="#262-trips-and-users-hard">262. Trips and Users （Hard）</a></li>
+<li><a href="#263-ugly-number-easy">263. Ugly Number (Easy)</a></li>
+<li><a href="#font-colorred264-ugly-number-ii-medium-font"><font color='red'>264. Ugly Number II (Medium) </font></a></li>
+<li><a href="#265-paint-house-ii-hard">265. Paint House II （Hard）</a></li>
+<li><a href="#266-palindrome-permutation-easy">266. Palindrome Permutation (Easy)</a></li>
+<li><a href="#267-palindrome-permutation-ii-medium">267. Palindrome Permutation II (Medium)</a></li>
+<li><a href="#268-missing-number-easy">268. Missing Number （Easy）</a></li>
+<li><a href="#font-colorred269-alien-dictionary-hard-font"><font color='red'>269. Alien Dictionary (Hard) </font></a></li>
+<li><a href="#270-closest-binary-search-tree-value-easy">270. Closest Binary Search Tree Value （Easy）</a></li>
+</ul>
+
+  </div>
 </div>
+
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
       }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0] && elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
     });
   }
-  </script>
-        <div class="section-box tag-line box-shadow-wrapper">
-          <section class="section tags-section posts-expand bg-color">
-            <div class="padding-wrapper">
-  <div class="tag-timeline-box">
-    <div class="tag-timeline-wrapper">
-      <div class="tag-timeline-title">
-        <h2>
-          leetcode
-          <small class="language" data-lan="tag">标签</small>
-        </h2>
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
+          
+        
       </div>
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-29/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-29
-              <small>Leetcode 2021-11-29</small>
-            </h1>
-          </div>
-        </div>
+    </div>
+  
+</div>
+<script>
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    jQuery.Velocity(hideElement, 'stop');
+    jQuery.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        jQuery.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
+      }
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
+  }
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <section class="post-header">
+  <h1 class="post-title">
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-29/"> Leetcode 2021-11-29 </a>
+  </h1>
+  <div class="post-meta">
+    
+    <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+      <span class="publish-time" data-t="2021-11-29 06:15:49">2021-11-29</span>
+      <span class="post-meta-divider pc-show">|</span>
+    </span>
+    
+    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">标签:</span>
+       
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/">
+        <span>leetcode</span>
       </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-28/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-27
-              <small>Leetcode 2021-11-28</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-12-27/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-26
-              <small>Leetcode 2021-12-27</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-12-26/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-26
-              <small>Leetcode 2021-11-26</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-25/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-25
-              <small>Leetcode 2021-11-25</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-24/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-24
-              <small>Leetcode 2021-11-24</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-23/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-22
-              <small>Leetcode 2021-11-23</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-22/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-20
-              <small>Leetcode 2021-11-22</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-21/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-19
-              <small>Leetcode 2021-11-21</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-20/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-19
-              <small>Leetcode 2021-11-20</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-19/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-18
-              <small>Leetcode 2021-11-19</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-18/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-18
-              <small>Leetcode 2021-11-18</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-17/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-16
-              <small>Leetcode 2021-11-17</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-16/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-16
-              <small>Leetcode 2021-11-16</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-15/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-14
-              <small>Leetcode 2021-11-15</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-13/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-12
-              <small>Leetcode 2021-11-13</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-12/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-11
-              <small>Leetcode 2021-11-12</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-11/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-11
-              <small>Leetcode 2021-11-11</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-10/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-10
-              <small>Leetcode 2021-11-10</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-09/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-09
-              <small>Leetcode 2021-11-09</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-07/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-07
-              <small>Leetcode 2021-11-08</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-06/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-06
-              <small>Leetcode 2021-11-06</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-05/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-03
-              <small>Leetcode 2021-11-05</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-04/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-03
-              <small>Leetcode 2021-11-04</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-03/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-02
-              <small>Leetcode 2021-11-03</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-02/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              11-02
-              <small>Leetcode 2021-11-02</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-01/">
-        <div class="motion-warpper">
-          <div class="tag-post-node">
-            <h1>
-              10-31
-              <small>Leetcode 2021-11-01</small>
-            </h1>
-          </div>
-        </div>
-      </a>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+       
+    </span>
+    <span class="post-meta-divider">|</span>
+    
+    <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span
+        >14<span class="language" data-lan="minute"
+          >分钟</span
+        ></span
+      >
+    </span>
+    <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-file-word-o"></i>
+      <span
+        >2346<span class="pc-show language" data-lan="words"
+          >字数</span
+        ></span
+      >
+    </span>
+    
+  </div>
+</section>
+
+            <div class="post-body next-md-body" id="post_body">
+              <!-- more -->
+<h1 id="font-colorblue261-graph-valid-tree-mediumfont"><font color='blue'>261. Graph Valid Tree （Medium）</font></h1>
+<p>You have a graph of n nodes labeled from 0 to n - 1. You are given an integer n and a list of edges where edges[i] = [ai, bi] indicates that there is an undirected edge between nodes ai and bi in the graph.<br>
+Return true if the edges of the given graph make up a valid tree, and false otherwise.</p>
+<pre><code class="language-python">class Solution:
+    
+    class UnionFind:
+        def __init__(self,n):
+            self.parent = [None]*n
+            self.rank = [0]*n
+            for i in range(n):
+                self.parent[i]=i
+                
+        def find(self,i):
+            if self.parent[i]!=i:
+                self.parent[i]=self.find(self.parent[i])
+            return self.parent[i]
+        
+        def union(self,x,y):
+            rootx=self.find(x)
+            rooty=self.find(y)
+            if rootx!=rooty:
+                if self.rank[rootx]&gt;self.rank[rooty]:
+                    self.parent[rooty]=rootx
+                elif self.rank[rootx]&lt;self.rank[rooty]:
+                    self.parent[rootx]=rooty
+                else:
+                    self.parent[rooty]=rootx
+                    self.rank[rootx]+=1
+                
+    
+        
+    def validTree(self, n: int, edges: List[List[int]]) -&gt; bool:
+        #UNIONFIND
+        uf =self.UnionFind(n)
+        for (a,b) in edges:
+            uf.union(a,b)
+        
+        if len(set( [uf.find(i) for i in range(n)]))!=1:
+            return False
+    
+        return len(edges)==n-1
+
+#answer DFS
+def validTree(self, n: int, edges: List[List[int]]) -&gt; bool:
+    
+    if len(edges) != n - 1: return False
+    
+    # Create an adjacency list.
+    adj_list = [[] for _ in range(n)]
+    for A, B in edges:
+        adj_list[A].append(B)
+        adj_list[B].append(A)
+    
+    # We still need a seen set to prevent our code from infinite
+    # looping if there *is* cycles (and on the trivial cycles!)
+    seen = {0}
+    stack = [0]
+    
+    while stack:
+        node = stack.pop()
+        for neighbour in adj_list[node]:
+            if neighbour in seen:
+                continue
+            seen.add(neighbour)
+            stack.append(neighbour)
+    
+    return len(seen) == n
+#answer 
+def validTree(self, n: int, edges: List[List[int]]) -&gt; bool:
+    
+    if len(edges) != n - 1: return False
+    
+    # Create an adjacency list.
+    adj_list = [[] for _ in range(n)]
+    for A, B in edges:
+        adj_list[A].append(B)
+        adj_list[B].append(A)
+    
+    # We still need a seen set to prevent our code from infinite
+    # looping if there *is* cycles (and on the trivial cycles!)
+    seen = set()
+
+    def dfs(node):
+        if node in seen: return
+        seen.add(node)
+        for neighbour in adj_list[node]:
+            dfs(neighbour)
+
+    dfs(0)
+    return len(seen) == n
+
+#answer
+def validTree(self, n: int, edges: List[List[int]]) -&gt; bool:
+    
+    if len(edges) != n - 1: return False
+    
+    # Create an adjacency list.
+    adj_list = [[] for _ in range(n)]
+    for A, B in edges:
+        adj_list[A].append(B)
+        adj_list[B].append(A)
+    
+    # We still need a seen set to prevent our code from infinite
+    # looping if there *is* cycles (and on the trivial cycles!)
+    seen = {0}
+    queue = collections.deque([0])
+    
+    while queue:
+        node = queue.popleft()
+        for neighbour in adj_list[node]:
+            if neighbour in seen:
+                continue
+            seen.add(neighbour)
+            queue.append(neighbour)
+    
+    return len(seen) == n
+</code></pre>
+<p>猜到了使用UnionFind做，但是还是copy了UnionFind Class 代码，还没熟练到自己写出来。 思路很简单，union后同一个parent，#edges+1=#node      答案思路：DFS或者BFS  判断是树1）n-1 edges， 2）graph fully connected。</p>
+<h1 id="262-trips-and-users-hard">262. Trips and Users （Hard）</h1>
+<pre><code class="language-SQL"># Write your MySQL query statement below
+select   request_at as 'Day', round(sum(counter)/sum(total),2) as 'Cancellation Rate' from (
+select CASE WHEN Trips.status='completed' THEN 0 else 1 END as counter, 1 as total, Trips.request_at  from
+Trips left join Users c on Trips.client_id=c.users_id left join Users d on Trips.driver_id=d.users_id where c.banned!='Yes' and d.banned!='Yes'
+) tmp  where Request_at&gt;=&quot;2013-10-01&quot; AND Request_at&lt;=&quot;2013-10-03&quot; group by request_at
+
+#ANSWER 
+SELECT Request_at as Day,
+ROUND(SUM(CASE WHEN Status!=&quot;completed&quot; THEN 1 ELSE 0 END)/COUNT(*),2) as &quot;Cancellation Rate&quot; 
+FROM Trips
+WHERE Client_Id NOT IN
+(
+    SELECT Users_Id FROM Users
+    WHERE Banned=&quot;Yes&quot;
+)
+AND Request_at&gt;=&quot;2013-10-01&quot; AND Request_at&lt;=&quot;2013-10-03&quot;
+GROUP BY Request_at;
+</code></pre>
+<h1 id="263-ugly-number-easy">263. Ugly Number (Easy)</h1>
+<p>An ugly number is a positive integer whose prime factors are limited to 2, 3, and 5.<br>
+Given an integer n, return true if n is an ugly number.</p>
+<pre><code class="language-python">class Solution:
+    def isUgly(self, n: int) -&gt; bool:
+        if n==0: return False
+        if n==1: return True
+        
+        while n%2==0:
+            n//=2
+        if n==1: return True
+        while n%3==0:
+            n//=3
+        if n==1: return True
+        while n%5==0:
+            n//=5
+        if n==1: return True
+        
+        return False
+
+</code></pre>
+<h1 id="font-colorred264-ugly-number-ii-medium-font"><font color='red'>264. Ugly Number II (Medium) </font></h1>
+<p>An ugly number is a positive integer whose prime factors are limited to 2, 3, and 5.<br>
+Given an integer n, return the nth ugly number.</p>
+<pre><code class="language-python">class Solution:
+    def nthUglyNumber(self, n: int) -&gt; int:
+        dp = [0] * n
+        t2 = t3 = t5 = 0
+        dp[0] = 1
+        for i in range(1,n):
+            dp[i] = min(dp[t2]*2,dp[t3]*3,dp[t5]*5)
+            if(dp[i] == dp[t2]*2): t2 += 1
+            if(dp[i] == dp[t3]*3): t3 += 1
+            if(dp[i] == dp[t5]*5): t5 += 1
+        return dp[-1]
+
+</code></pre>
+<p>没思路 。。。或者知道思路但写不出代码。  要是添加2倍，3倍，4倍，5倍还是会有空隙当n很大时候。 答案，用了dynamic programming。 思路是多个pointer。 t2，t3，t5记录已经遍历的数字里2，3，5都有多少个。 关键点是找到下一个最小的ugly number当乘以2，3，5时候。 又因为已经存在的数字只能被2，3，5乘1次，所以可以用pointer保持下次2，3，5要乘以的位置。</p>
+<h1 id="265-paint-house-ii-hard">265. Paint House II （Hard）</h1>
+<p>There are a row of n houses, each house can be painted with one of the k colors. The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color.<br>
+The cost of painting each house with a certain color is represented by an n x k cost matrix costs.</p>
+<pre><code class="language-python">class Solution:
+    def minCostII(self, costs: List[List[int]]) -&gt; int:
+        #  cost last =     [a1,a2,a3,a4]
+        #  cost last-1 =   [a1'+min(a2,a3,a4),a2'+min(a1,a3,a4),...]
+        #  ...
+        #  cost  0     =    [a1''',a2'''....]
+        # ans= min(cost0)
+        for i in range(len(costs)-2,-1,-1):
+            for ii in range(len(costs[0])):
+                costs[i][ii] = costs[i][ii]+min([costs[i+1][jj] for jj in range(len(costs[0])) if jj!=ii])
+        
+        return min(costs[0])
+</code></pre>
+<h1 id="266-palindrome-permutation-easy">266. Palindrome Permutation (Easy)</h1>
+<p>Given a string s, return true if a permutation of the string could form a palindrome.</p>
+<pre><code class="language-python">class Solution:
+    def canPermutePalindrome(self, s: str) -&gt; bool:
+        #odd occurance can not &gt;1
+        dic = collections.Counter(s)
+        c=0
+        for k,v in dic.items():
+            if v%2==1:
+                c+=1
+            if c&gt;1:
+                return False
+        return True
+</code></pre>
+<h1 id="267-palindrome-permutation-ii-medium">267. Palindrome Permutation II (Medium)</h1>
+<pre><code class="language-python">class Solution:
+    def generatePalindromes(self, s: str) -&gt; List[str]:
+        dic = collections.Counter(s)
+        c = 0
+        odd_char = ''
+        odd_c = 0
+        for k,v in dic.items():
+            if v%2==1:
+                c+=1
+                odd_char = k
+                odd_c = v
+        if c&gt;1: return []
+        if len(dic)==1:
+            return [list(dic.keys())[0]*dic[list(dic.keys())[0]]]
+        if odd_char:
+            tmp=odd_char
+            dic[odd_char]-=1
+            if dic[odd_char]&lt;=0:
+                del dic[odd_char]
+                 
+        res = []
+        def bt(dic,tmp):
+            if len(tmp)==len(s):
+                res.append(tmp)
+                return
+            
+            for k,v in dic.items():
+                dic_copy = dic.copy()
+                tmp = k+tmp+k
+                dic_copy[k]-=2
+                if dic_copy[k]==0:
+                    del dic_copy[k]
+                #print(tmp,dic_copy)
+                bt(dic_copy,tmp)
+                tmp=tmp[1:-1]
+
+            
+        bt(dic,odd_char)
+        return  res
+</code></pre>
+<p>backtracking 分为odd 元素存在时候，中间位置只能是odd元素，然后从中间向两边扩展。</p>
+<h1 id="268-missing-number-easy">268. Missing Number （Easy）</h1>
+<p>Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.</p>
+<pre><code class="language-python">class Solution:
+    def missingNumber(self, nums: List[int]) -&gt; int:
+        n=len(nums)
+        return (0+n)*(n+1)//2 - sum(nums)
+</code></pre>
+<h1 id="font-colorred269-alien-dictionary-hard-font"><font color='red'>269. Alien Dictionary (Hard) </font></h1>
+<p>There is a new alien language that uses the English alphabet. However, the order among the letters is unknown to you.<br>
+You are given a list of strings words from the alien language's dictionary, where the strings in words are sorted lexicographically by the rules of this new language.<br>
+Return a string of the unique letters in the new alien language sorted in lexicographically increasing order by the new language's rules. If there is no solution, return &quot;&quot;. If there are multiple solutions, return any of them.<br>
+A string s is lexicographically smaller than a string t if at the first letter where they differ, the letter in s comes before the letter in t in the alien language. If the first min(s.length, t.length) letters are the same, then s is smaller if and only if s.length &lt; t.length.<br>
+Input: words = [&quot;wrt&quot;,&quot;wrf&quot;,&quot;er&quot;,&quot;ett&quot;,&quot;rftt&quot;]<br>
+Output: &quot;wertf&quot;</p>
+<pre><code class="language-python">class Solution:
+     
+    
+    from collections import defaultdict, Counter, deque
+
+    def alienOrder(self, words: List[str]) -&gt; str:
+
+        # Step 0: create data structures + the in_degree of each unique letter to 0.
+        adj_list = defaultdict(set)
+        in_degree = Counter({c : 0 for word in words for c in word})
+
+        # Step 1: We need to populate adj_list and in_degree.
+        # For each pair of adjacent words...
+        for first_word, second_word in zip(words, words[1:]):
+            for c, d in zip(first_word, second_word):
+                if c != d:
+                    if d not in adj_list[c]:
+                        adj_list[c].add(d)
+                        in_degree[d] += 1
+                    break
+            else: # Check that second word isn't a prefix of first word.
+                if len(second_word) &lt; len(first_word): return &quot;&quot;
+
+        # Step 2: We need to repeatedly pick off nodes with an indegree of 0.
+        output = []
+        queue = deque([c for c in in_degree if in_degree[c] == 0])
+        while queue:
+            c = queue.popleft()
+            output.append(c)
+            for d in adj_list[c]:
+                in_degree[d] -= 1
+                if in_degree[d] == 0:
+                    queue.append(d)
+
+        # If not all letters are in output, that means there was a cycle and so
+        # no valid ordering. Return &quot;&quot; as per the problem description.
+        if len(output) &lt; len(in_degree):
+            return &quot;&quot;
+        # Otherwise, convert the ordering we found into a string and return it.
+        return &quot;&quot;.join(output)
+
+#DFS topo sorter reverse adj list and using grey black for node color
+
+class Solution:
+    def alienOrder(self, words: List[str]) -&gt; str:
+
+        # Step 0: Put all unique letters into the adj list.
+        reverse_adj_list = {c : [] for word in words for c in word}
+
+        # Step 1: Find all edges and put them in reverse_adj_list.
+        for first_word, second_word in zip(words, words[1:]):
+            for c, d in zip(first_word, second_word):
+                if c != d: 
+                    reverse_adj_list[d].append(c)
+                    break
+            else: # Check that second word isn't a prefix of first word.
+                if len(second_word) &lt; len(first_word): 
+                    return &quot;&quot;
+
+        # Step 2: Depth-first search.
+        seen = {} # False = grey, True = black.
+        output = []
+        def visit(node):  # Return True iff there are no cycles.
+            if node in seen:
+                return seen[node] # If this node was grey (False), a cycle was detected.
+            seen[node] = False # Mark node as grey.
+            for next_node in reverse_adj_list[node]:
+                result = visit(next_node)
+                if not result: 
+                    return False # Cycle was detected lower down.
+            seen[node] = True # Mark node as black.
+            output.append(node)
+            return True
+
+        if not all(visit(node) for node in reverse_adj_list):
+            return &quot;&quot;
+
+        return &quot;&quot;.join(output)
+
+
+</code></pre>
+<p>很明显图论相关的题，没复习到还，看答案。思路：1）找到dependence rules， 2）topological sort。用queue来存indegree=0的node，然后遍历neighbors。或者DFS，revse adj list 然后为了防止有环，需要标注node color white grey black。</p>
+<pre><code class="language-python">for item in container:
+    if search_something(item):
+        # Found it!
+        process(item)
+        break
+else:
+    # Didn't find anything..
+    not_found_in_container()
+
+</code></pre>
+<p>这个语法从来没见过，for后面可以带一个else表明for loop中没有break的条件，else 来执行后续操作。</p>
+<h1 id="270-closest-binary-search-tree-value-easy">270. Closest Binary Search Tree Value （Easy）</h1>
+<p>Given the root of a binary search tree and a target value, return the value in the BST that is closest to the target.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def closestValue(self, root: Optional[TreeNode], target: float) -&gt; int:
+        if not root.left and not root.right: return root.val
+        if not root.right:
+            if target&lt;root.val:
+                res=self.closestValue(root.left,target)
+                return res if abs(target-res)&lt;abs(root.val-target) else root.val
+            else:
+                return root.val
+        if not root.left:
+            if target&gt;root.val:
+                res = self.closestValue(root.right,target)
+                return res if abs(target-res)&lt;abs(root.val-target) else root.val
+            else:
+                return root.val
+        
+        if target==root.val:
+            return root.val
+        elif target&lt;root.val:
+            res = self.closestValue(root.left,target)
+            return res if abs(target-res)&lt;abs(root.val-target) else root.val
+        else:
+            res= self.closestValue(root.right,target)
+            return res if abs(target-res)&lt;abs(root.val-target) else root.val
+
+#ANSWER
+class Solution:
+    def closestValue(self, root: TreeNode, target: float) -&gt; int:
+        closest = root.val
+        while root:
+            closest = min(root.val, closest, key = lambda x: abs(target - x))
+            root = root.left if target &lt; root.val else root.right
+        return closest
+</code></pre>
+
+            </div>
+            
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      Lan
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-29/" title="Leetcode 2021-11-29">https://headhuanglan.github.io/post/leetcode-2021-11-29/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/"># leetcode</a>
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="Leetcode 2021-11-28" href="https://headhuanglan.github.io/post/leetcode-2021-11-28/">Leetcode 2021-11-28</a>
+        <a class="nav-mobile-next" title="Leetcode 2021-11-28" href="https://headhuanglan.github.io/post/leetcode-2021-11-28/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
       
     </div>
   </div>
 </div>
-          </section>
+            
+            
+  
+    
+      <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '05c2f6d6143b092d473b',
+    clientSecret: '002d0d8f99a25af450995ef32a26c1eef0041d0d',
+    repo: 'headhuanglan.github.io',
+    owner: 'headhuanglan',
+    admin: ['headhuanglan'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+  gitalk.render('gitalk-container')
+</script>
+    
+    
+  
+
+          </div>
         </div>
       </div>
     </div>
@@ -942,6 +1287,223 @@
     parent.insertBefore(aelem, next);
   });
 </script>
+    <div class="reward-mask" style="display: none;">
+  <div class="reward-relative">
+    <span class="close" aria-hidden="true">x</span>
+    <div class="reward-body">
+      <h2>感谢您的支持，我会继续努力的!</h2>
+      <div class="reward-img-box">
+        <div style="position: relative; width: 140px; height: 140px;">
+          
+          
+          
+        </div>
+      </div>
+      <p class="reward-word">扫码打赏，你说多少就多少</p>
+      <p class="reward-tip"> </p>
+    </div>
+    <div class="bottom">
+      
+      
+    </div>
+  </div>
+</div>
+<style>
+  .reward-mask {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #00000054;
+  }
+
+  .reward-relative {
+    position: relative;
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #fff;
+    top: 50%;
+    margin-top: -205px;
+  }
+
+  .reward-relative .close {
+    position: absolute;
+    right: 10px;
+    font-weight: normal;
+    font-size: 16px;
+    color: #929292;
+  }
+
+  .reward-body {
+    padding: 40px 20px 20px;
+  }
+
+  .bottom {
+    display: flex;
+  }
+
+  .reward-btn {
+    text-align: center;
+  }
+
+  .reward-btn-text {
+    display: inline-block;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    background-color: #ff9734;
+    color: #FFF;
+    margin-top: 20px;
+  }
+
+  .pay-text {
+    margin-top: 10px;
+    padding: 10px;
+    flex: 1;
+    transition: all .2s linear;
+  }
+
+  .pay-text:hover {
+    background-color: #a5a5a536;
+  }
+
+  .reward-body h2 {
+    padding-top: 10px;
+    text-align: center;
+    color: #a3a3a3;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 0 20px;
+  }
+
+  .reward-body h2:after,
+  .reward-body h2:before {
+    font-family: Arial, Helvetica, sans-serif;
+    background: 0 0;
+    width: 0;
+    height: 0;
+    font-style: normal;
+    color: #eee;
+    font-size: 80px;
+    position: absolute;
+    top: 20px;
+  }
+
+  .reward-body h2:before {
+    content: '\201c';
+    left: 50px;
+  }
+
+  .reward-body h2:after {
+    content: '\201d';
+    right: 80px;
+  }
+
+  .reward-img-box {
+    display: inline-block;
+    padding: 10px;
+    border: 6px solid #ea5f00;
+    margin: 0 auto;
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .reward-img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .reward-relative {
+      height: 100%;
+      top: 0px;
+      margin-top: 0;
+      width: auto;
+    }
+
+    .reward-relative .bottom {
+      flex-direction: column;
+    }
+
+    .reward-relative .pay-text {
+      width: 80%;
+      margin: 5px auto;
+      border: 1px solid silver;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .reward-body h2:after {
+      right: 40px;
+    }
+
+    .reward-body h2:after,
+    .reward-body h2:before {
+      font-size: 60px;
+    }
+
+    .reward-body h2:before {
+      left: 20px;
+    }
+  }
+</style>
+<script>
+  !function () {
+    var mask = document.querySelector('.reward-mask');
+    let close = document.querySelector('.reward-relative .close');
+    let rewardBtn = document.querySelector('.reward-btn');
+
+    let zfb = document.querySelector('#zfb'),
+      wx = document.querySelector('#wx'),
+      zfbBtn = document.querySelector('#zfbBtn'),
+      wxBtn = document.querySelector('#wxBtn');
+
+    if (zfbBtn && wxBtn) {
+      zfbBtn.addEventListener('click', () => {
+        jQuery.Velocity(zfb, 'transition.slideLeftIn', {
+          duration: 400
+        });
+        jQuery.Velocity(wx, 'transition.slideRightOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+
+      wxBtn.addEventListener('click', () => {
+        jQuery.Velocity(wx, 'transition.slideRightIn', {
+          duration: 400
+        });
+        jQuery.Velocity(zfb, 'transition.slideLeftOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+    }
+
+    rewardBtn.addEventListener('click', (e) => {
+      jQuery.Velocity(mask, 'transition.slideDownIn', {
+        duration: 400
+      })
+    });
+
+    close.addEventListener('click', (e) => {
+      e.preventDefault();
+      jQuery.Velocity(mask, 'transition.slideUpOut', {
+        duration: 400
+      })
+    })
+  }()
+</script>
+
   </div>
 </body>
 
@@ -12258,5 +12820,4 @@ if __name__ == &#39;__main__&#39;:
             
 
                 
-
 </html>
