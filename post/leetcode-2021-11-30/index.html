@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>Lan&#39;s Blog</title>
+<title>Leetcode 2021-11-30 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1640590213489">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,6 +41,8 @@
 
 
 
+  <meta name="description" content="Leetcode 2021-11-30" />
+  <meta name="keywords" content="leetcode" />
 </head>
 
 <body>
@@ -74,7 +76,7 @@
           
             
             
-            <li class="nav-item nav-item-active">
+            <li class="nav-item ">
               
               
                 <a href="/" target="_self">
@@ -157,8 +159,24 @@
     <div
       class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -199,359 +217,956 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper  auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li><a href="#271-encode-and-decode-strings-medium">271. Encode and Decode Strings (Medium)</a></li>
+<li><a href="#font-colorblue272-closest-binary-search-tree-value-ii-hard-font"><font color='blue'>272. Closest Binary Search Tree Value II (Hard) </font></a></li>
+<li><a href="#273-integer-to-english-words-hard">273. Integer to English Words （Hard）</a></li>
+<li><a href="#274-h-index-medium">274. H-Index （Medium）</a></li>
+<li><a href="#font-colorblue275-h-index-ii-medium-font"><font color='blue'>275. H-Index II (Medium) </font></a></li>
+<li><a href="#font-colorred276-paint-fence-medium-font"><font color='red'>276. Paint Fence (Medium) </font></a></li>
+<li><a href="#font-colorred-277-find-the-celebrity-mediumfont"><font color='red'> 277. Find the Celebrity （Medium）</font></a></li>
+<li><a href="#278-first-bad-version-easy">278. First Bad Version （Easy）</a></li>
+<li><a href="#font-colorred279-perfect-squares-medium-font"><font color='red'>279. Perfect Squares (Medium) </font></a></li>
+<li><a href="#font-colorred280-wiggle-sort-mediumfont"><font color='red'>280. Wiggle Sort （Medium）</font></a></li>
+</ul>
+
+  </div>
 </div>
+
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
       }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0] && elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
     });
   }
-  </script>
-        <div class="section-box gemini">
-          <section class="section  posts-expand slide-down-in">
-            
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <section class="post-header">
-  <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-02/"> Leetcode 2021-11-02 </a>
-  </h1>
-  <div class="post-meta">
-    
-    <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-02 08:50:12">2021-11-02</span>
-      <span class="post-meta-divider pc-show">|</span>
-    </span>
-    
-    <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">标签:</span>
-       
-      <a href="https://headhuanglan.github.io/tag/8v2np0s07/">
-        <span>leetcode</span>
-      </a>
-       
-    </span>
-    <span class="post-meta-divider">|</span>
-    
-    <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span
-        >9<span class="language" data-lan="minute"
-          >分钟</span
-        ></span
-      >
-    </span>
-    <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-      <i class="fa fa-file-word-o"></i>
-      <span
-        >1481<span class="pc-show language" data-lan="words"
-          >字数</span
-        ></span
-      >
-    </span>
-    
-  </div>
-</section>
 
-      <div class="post-body">
-        
-        
-          
-            <!-- 没有手动摘要切开启了自动摘要,则根据配置筛除摘要内容 -->
-            
-            
-              
-              
-              
-            
-              
-              
-              
-            
-              
-              
-              
-            
-            
-              <p><!-- more -->
-<h1 id="11-container-with-most-water-medium">11. Container With Most Water (Medium)</h1>
-<p>Given n non-negative integers a1, a2, ..., an , where each represents a point at coordinate (i, ai). n vertical lines are drawn such that the two endpoints of the line i is at (i, ai) and (i, 0). Find two lines, which, together with the x-axis forms a container, such that the container contains the most water.</p>
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
 
-                
-              <p>
-            
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
           
-        
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="https://headhuanglan.github.io/post/leetcode-2021-11-02/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
         
       </div>
-      
     </div>
-  </article>
-
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <section class="post-header">
-  <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-01/"> Leetcode 2021-11-01 </a>
-  </h1>
-  <div class="post-meta">
-    
-    <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-10-31 13:39:41">2021-10-31</span>
-      <span class="post-meta-divider pc-show">|</span>
-    </span>
-    
-    <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">标签:</span>
-       
-      <a href="https://headhuanglan.github.io/tag/8v2np0s07/">
-        <span>leetcode</span>
-      </a>
-       
-    </span>
-    <span class="post-meta-divider">|</span>
-    
-    <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span
-        >11<span class="language" data-lan="minute"
-          >分钟</span
-        ></span
-      >
-    </span>
-    <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-      <i class="fa fa-file-word-o"></i>
-      <span
-        >1897<span class="pc-show language" data-lan="words"
-          >字数</span
-        ></span
-      >
-    </span>
-    
-  </div>
-</section>
-
-      <div class="post-body">
-        
-        
-          
-            <!-- 没有手动摘要切开启了自动摘要,则根据配置筛除摘要内容 -->
-            
-            
-              
-              
-              
-            
-              
-              
-              
-            
-              
-              
-              
-            
-            
-              <p><!-- more -->
-<h1 id="1-two-sum-easy">1. Two Sum （Easy）</h1>
-<p>Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.</p>
-
-                
-              <p>
-            
-          
-        
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="https://headhuanglan.github.io/post/leetcode-2021-11-01/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
-        
-      </div>
-      
-    </div>
-  </article>
-
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <section class="post-header">
-  <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/er-fen-fa-mo-ban/"> 二分法模板 </a>
-  </h1>
-  <div class="post-meta">
-    
-    <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-10-30 07:47:51">2021-10-30</span>
-      <span class="post-meta-divider pc-show">|</span>
-    </span>
-    
-    <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">标签:</span>
-       
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/">
-        <span>算法总结</span>
-      </a>
-       
-    </span>
-    <span class="post-meta-divider">|</span>
-    
-    <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span
-        >2<span class="language" data-lan="minute"
-          >分钟</span
-        ></span
-      >
-    </span>
-    <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-      <i class="fa fa-file-word-o"></i>
-      <span
-        >223<span class="pc-show language" data-lan="words"
-          >字数</span
-        ></span
-      >
-    </span>
-    
-  </div>
-</section>
-
-      <div class="post-body">
-        
-        
-          
-            <p>Binary Search 模板总结</p>
-
-          
-        
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="https://headhuanglan.github.io/post/er-fen-fa-mo-ban/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
-        
-      </div>
-      
-    </div>
-  </article>
-
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <section class="post-header">
-  <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/about/"> 关于 </a>
-  </h1>
-  <div class="post-meta">
-    
-    <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-10-28 13:38:25">2021-10-28</span>
-      <span class="post-meta-divider pc-show">|</span>
-    </span>
-    
-    <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span
-        >1<span class="language" data-lan="minute"
-          >分钟</span
-        ></span
-      >
-    </span>
-    <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-      <i class="fa fa-file-word-o"></i>
-      <span
-        >15<span class="pc-show language" data-lan="words"
-          >字数</span
-        ></span
-      >
-    </span>
-    
-  </div>
-</section>
-
-      <div class="post-body">
-        
-        
-          
-            <p>记录下刷题过程以及一些随机想法~~</p>
-
-          
-        
-        
-      </div>
-      
-    </div>
-  </article>
   
-            
-            
-<div class="page bg-color">
-  <ul class="pagination-ul">
-    
-      <li class="pagination-dir">
-        <a href="https://headhuanglan.github.io/page/3/">
-          <i class="fa fa-angle-left"></i>
-        </a>
-      </li>
-    
-    
-      
-        <li class="pagination-li ">
-            <a href="/page/../">
-              1
-            </a>
-        </li>
-      
-        <li class="pagination-li ">
-            <a href="/page/2">
-              2
-            </a>
-        </li>
-      
-        <li class="pagination-li ">
-            <a href="/page/3">
-              3
-            </a>
-        </li>
-      
-        <li class="pagination-li pagination-active">
-            <a href="/page/4">
-              4
-            </a>
-        </li>
-      
-    
-    
-  </ul>
 </div>
-          </section>
+<script>
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    jQuery.Velocity(hideElement, 'stop');
+    jQuery.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        jQuery.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
+      }
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
+  }
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <section class="post-header">
+  <h1 class="post-title">
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-30/"> Leetcode 2021-11-30 </a>
+  </h1>
+  <div class="post-meta">
+    
+    <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+      <span class="publish-time" data-t="2021-11-29 22:53:48">2021-11-29</span>
+      <span class="post-meta-divider pc-show">|</span>
+    </span>
+    
+    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">标签:</span>
+       
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/">
+        <span>leetcode</span>
+      </a>
+       
+    </span>
+    <span class="post-meta-divider">|</span>
+    
+    <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span
+        >15<span class="language" data-lan="minute"
+          >分钟</span
+        ></span
+      >
+    </span>
+    <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-file-word-o"></i>
+      <span
+        >2409<span class="pc-show language" data-lan="words"
+          >字数</span
+        ></span
+      >
+    </span>
+    
+  </div>
+</section>
+
+            <div class="post-body next-md-body" id="post_body">
+              <!-- more -->
+<h1 id="271-encode-and-decode-strings-medium">271. Encode and Decode Strings (Medium)</h1>
+<p>Design an algorithm to encode a list of strings to a string. The encoded string is then sent over the network and is decoded back to the original list of strings.</p>
+<pre><code class="language-python">class Codec:
+    def encode(self, strs: [str]) -&gt; str:
+        &quot;&quot;&quot;Encodes a list of strings to a single string.
+        &quot;&quot;&quot;
+        candidate='a'
+        set_ = set()
+        for str in strs:
+            for s in str:
+                set_.add(s)
+        while candidate in set_:
+            candidate = chr(ord(candidate)+1)
+        return candidate + candidate.join(strs)
+        
+
+    def decode(self, s: str) -&gt; [str]:
+        &quot;&quot;&quot;Decodes a single string to a list of strings.
+        &quot;&quot;&quot;
+        candidate = s[0]
+        s = s[1:]
+        return s.split(candidate)
+        
+
+
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.decode(codec.encode(strs))
+</code></pre>
+<h1 id="font-colorblue272-closest-binary-search-tree-value-ii-hard-font"><font color='blue'>272. Closest Binary Search Tree Value II (Hard) </font></h1>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def closestKValues(self, root: Optional[TreeNode], target: float, k: int) -&gt; List[int]:
+        stack  = []
+        s  =[]
+        while stack or root:
+            while root:
+                stack.append(root)
+                root=root.left
+            
+            root=stack.pop()
+            diff = abs(root.val-target)
+            if len(s)&lt;k:
+                s.append((diff,root.val))
+            else:
+                s.sort(key=lambda x:x[0])
+                if s and s[-1][0]&gt;diff:
+                    s.pop()
+                    s.append((diff,root.val))
+                    s.sort(key=lambda x:x[0])
+            
+            root=root.right
+        
+        return [e[1] for e in s]
+
+#ANSWER 1 Recursive Inorder + Sort, O(N log N) time
+class Solution:
+    def closestKValues(self, root: TreeNode, target: float, k: int) -&gt; List[int]:
+        def inorder(r: TreeNode):
+            return inorder(r.left) + [r.val] + inorder(r.right) if r else []
+        
+        nums = inorder(root)
+        nums.sort(key = lambda x: abs(x - target))
+        return nums[:k]
+
+#ANSWER 2 
+from heapq import heappush, heappop
+class Solution:
+    def closestKValues(self, root: TreeNode, target: float, k: int) -&gt; List[int]:
+        def inorder(r: TreeNode):
+            if not r:
+                return
+            
+            inorder(r.left)
+            heappush(heap, (- abs(r.val - target), r.val))
+            if len(heap) &gt; k:
+                heappop(heap)
+            inorder(r.right) 
+    
+        heap = []
+        inorder(root)
+        return [x for _, x in heap]
+
+#ANSWER 3 QuickSelect, O(N) time.
+class Solution:
+    def closestKValues(self, root: TreeNode, target: float, k: int) -&gt; List[int]:
+        def inorder(r: TreeNode):
+            return inorder(r.left) + [r.val] + inorder(r.right) if r else []
+        
+        def partition(pivot_idx, left, right):
+            pivot_dist = dist(pivot_idx)
+            
+            # 1. move pivot to end
+            nums[right], nums[pivot_idx] = nums[pivot_idx], nums[right]
+            store_idx = left
+            
+            # 2. move more close elements to the left
+            for i in range(left, right):
+                if dist(i) &lt; pivot_dist:
+                    nums[i], nums[store_idx] = nums[store_idx], nums[i]
+                    store_idx += 1
+                    
+            # 3. move pivot to its final place
+            nums[right], nums[store_idx] = nums[store_idx], nums[right]
+            
+            return store_idx
+            
+        def quickselect(left, right):
+            &quot;&quot;&quot;
+            Sort a list within left..right till kth less close element
+            takes its place.
+            &quot;&quot;&quot;
+            # base case: the list contains only one element
+            if left == right:
+                return 
+            
+            # select a random pivot_index
+            pivot_idx = randint(left, right)
+            
+            # find the pivot position in a sorted list
+            true_idx = partition(pivot_idx, left, right)
+            
+            # if the pivot is in its final sorted position
+            if true_idx == k:
+                return
+            
+            if true_idx &lt; k:
+                # go left
+                quickselect(true_idx, right)
+            else:
+                # go right
+                quickselect(left, true_idx)
+        
+        nums = inorder(root)
+        dist = lambda idx : abs(nums[idx] - target)
+        quickselect(0, len(nums) - 1)
+        return nums[:k]
+</code></pre>
+<p>虽然做出来了，但是感觉用minheap会更好。我的方法得一直sort，时间复杂度太高。  需要记住 from heapq import heappush，heappop 用法 heappush（heap，val） heappop（heap） 每次pop出来的是最小的元素。  O（n）方法用到了快排。</p>
+<h1 id="273-integer-to-english-words-hard">273. Integer to English Words （Hard）</h1>
+<p>Convert a non-negative integer num to its English words representation.</p>
+<pre><code class="language-python">class Solution:
+    def numberToWords(self, num: int) -&gt; str:
+      
+        nums = []
+      
+        if num==0: nums.append(0)
+        while num:
+            nums.append(num%1000)
+            num//=1000
+        
+    
+        res = []
+        l=len(nums)
+        dic = {0:'',1:'Thousand',2:'Million',3:'Billion',4:'Trillion'}
+        def helper(n):
+            if type(n)==str: return ''
+            s  = ''
+            dic = {0:'Zero',1:'One',2:'Two',3:'Three',4:'Four',5:'Five',6:'Six',7:'Seven',8:'Eight',9:'Nine',10:'Ten',11:'Eleven',12:'Twelve',13:'Thirteen',14:'Fourteen',15:'Fifteen',16:'Sixteen',17:'Seventeen',18:'Eighteen',19:'Nineteen',20:'Twenty',30:'Thirty',40:'Forty',50:'Fifty',60:'Sixty',70:'Seventy',80:'Eighty',90:'Ninety'}
+            
+            if n&lt;10: return dic[n]
+            if n&gt;99:
+                s+= dic[n//100]+' Hundred'
+            n = n%100
+            if n==0: return s
+            if n in dic:
+                s+= ' '+dic[n]
+                return s
+            else:
+                s+=' '+dic[10*(n//10)]
+                n=n%10
+                if n==0:
+                    return s
+                else:
+                    s+= ' '+ dic[n]
+                    return s
+       
+        tmp=[]
+        while nums:
+            if nums[0]==0:
+                nums.pop(0)
+                tmp.append('#')
+            else:
+                tmp.append(nums.pop(0))
+
+        nums=tmp
+        if nums==['#']:
+            nums=[0]
+        for i,number in enumerate(nums):
+            if number!='#':
+                res.append(helper(number)+ ' ' + dic[i])
+        return ' '.join([ e.strip() for e in res[::-1] if e.strip()])
+#ANSWER
+class Solution:
+    def numberToWords(self, num):
+        &quot;&quot;&quot;
+        :type num: int
+        :rtype: str
+        &quot;&quot;&quot;
+        def one(num):
+            switcher = {
+                1: 'One',
+                2: 'Two',
+                3: 'Three',
+                4: 'Four',
+                5: 'Five',
+                6: 'Six',
+                7: 'Seven',
+                8: 'Eight',
+                9: 'Nine'
+            }
+            return switcher.get(num)
+
+        def two_less_20(num):
+            switcher = {
+                10: 'Ten',
+                11: 'Eleven',
+                12: 'Twelve',
+                13: 'Thirteen',
+                14: 'Fourteen',
+                15: 'Fifteen',
+                16: 'Sixteen',
+                17: 'Seventeen',
+                18: 'Eighteen',
+                19: 'Nineteen'
+            }
+            return switcher.get(num)
+        
+        def ten(num):
+            switcher = {
+                2: 'Twenty',
+                3: 'Thirty',
+                4: 'Forty',
+                5: 'Fifty',
+                6: 'Sixty',
+                7: 'Seventy',
+                8: 'Eighty',
+                9: 'Ninety'
+            }
+            return switcher.get(num)
+        
+
+        def two(num):
+            if not num:
+                return ''
+            elif num &lt; 10:
+                return one(num)
+            elif num &lt; 20:
+                return two_less_20(num)
+            else:
+                tenner = num // 10
+                rest = num - tenner * 10
+                return ten(tenner) + ' ' + one(rest) if rest else ten(tenner)
+        
+        def three(num):
+            hundred = num // 100
+            rest = num - hundred * 100
+            if hundred and rest:
+                return one(hundred) + ' Hundred ' + two(rest) 
+            elif not hundred and rest: 
+                return two(rest)
+            elif hundred and not rest:
+                return one(hundred) + ' Hundred'
+        
+        billion = num // 1000000000
+        million = (num - billion * 1000000000) // 1000000
+        thousand = (num - billion * 1000000000 - million * 1000000) // 1000
+        rest = num - billion * 1000000000 - million * 1000000 - thousand * 1000
+        
+        if not num:
+            return 'Zero'
+        
+        result = ''
+        if billion:        
+            result = three(billion) + ' Billion'
+        if million:
+            result += ' ' if result else ''    
+            result += three(million) + ' Million'
+        if thousand:
+            result += ' ' if result else ''
+            result += three(thousand) + ' Thousand'
+        if rest:
+            result += ' ' if result else ''
+            result += three(rest)
+        return result
+
+</code></pre>
+<p>corner case 有点太多了。。。写出来是写出来了。</p>
+<h1 id="274-h-index-medium">274. H-Index （Medium）</h1>
+<p>Given an array of integers citations where citations[i] is the number of citations a researcher received for their ith paper, return compute the researcher's h-index.</p>
+<pre><code class="language-python">class Solution:
+    def hIndex(self, citations: List[int]) -&gt; int:
+        # [1,3,1]
+        # 
+        #  0 1 2 3
+        # []
+        
+        dp = [0]*(len(citations)+1)
+        for c in citations:
+            if c&gt;len(citations):
+                c=len(citations)
+            dp[c]+=1
+        
+        for i in range(len(dp)-2,-1,-1):
+            dp[i]=dp[i]+dp[i+1]
+        
+        hindex=[]
+        print(dp)
+        for ind, n in enumerate(dp):
+            if n&gt;=ind:
+                hindex.append(ind)
+        
+        return max(hindex)
+
+#ANSWER reverse SORT
+class Solution:
+    def hIndex(self, citations: List[int]) -&gt; int:
+    
+        citations.sort(reverse=True)
+        print(citations)
+        hindex=0
+        for ind, cit in enumerate(citations):
+            hindex_candidate = ind+1
+            if cit&gt;=hindex_candidate:
+                hindex = hindex_candidate
+                
+        return hindex
+
+</code></pre>
+<h1 id="font-colorblue275-h-index-ii-medium-font"><font color='blue'>275. H-Index II (Medium) </font></h1>
+<p>sorted citations O(lgn) time to solve</p>
+<pre><code class="language-python">class Solution:
+    def hIndex(self, citations: List[int]) -&gt; int:
+        # already sorterd so binary search
+        
+        #hindex=0
+        #for idx in range(len(citations)-1,-1,-1):
+        #    cit = citations[idx]
+        #    hidx =  len(citations)-idx 
+        #    if cit&gt;=hidx:
+        #        hindex=hidx
+        # 
+        #return hindex
+        
+        l=0
+        r=len(citations)-1
+        res = [0]
+        while l&lt;=r:
+            m=(l+r)//2
+            
+            cit=citations[m]
+            hidx=len(citations)-m
+            if cit&gt;=hidx:
+                res.append(hidx)
+                r=m-1
+            else:
+                l=m+1
+        
+        return max(res)
+
+#ANSWER
+class Solution:
+    def hIndex(self, citations):
+        &quot;&quot;&quot;
+        :type citations: List[int]
+        :rtype: int
+        &quot;&quot;&quot;
+        n = len(citations)
+        for idx, c in enumerate(citations):
+            if c &gt;= n - idx:
+                return n - idx
+        return 0
+#binary serach
+class Solution:
+    def hIndex(self, citations):
+        &quot;&quot;&quot;
+        :type citations: List[int]
+        :rtype: int
+        &quot;&quot;&quot;
+        n = len(citations)
+        left, right = 0, n - 1
+
+        # We need to find the rightmost 'index' such that: (citations[index] &lt;= n - index)
+        while left &lt;= right:
+            mid = left + (right - left) // 2
+
+            # There's (n - mid) papers with an equal or higher citation count than citations[mid]
+            # If (citations[mid] == n - mid) it's the optimal result and can be returned right away
+            if citations[mid] == n - mid:
+                return n - mid
+
+            # If citations[mid] is less than (n - mid), narrow down on the right half to look for a paper
+            # at a future index that meets the h-index criteria. Otherwise, narrow down on the left half
+            if citations[mid] &lt; n - mid:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        # We didn't find an exact match, so there's exactly (n - left) papers that have citations
+        # greater than or equal to citations[left] and that is our answer
+        return n - left
+</code></pre>
+<p>虽然做出来了，但是还是不熟。</p>
+<h1 id="font-colorred276-paint-fence-medium-font"><font color='red'>276. Paint Fence (Medium) </font></h1>
+<p>You are painting a fence of n posts with k different colors. You must paint the posts following these rules:<br>
+Every post must be painted exactly one color.<br>
+There cannot be three or more consecutive posts with the same color.<br>
+Given the two integers n and k, return the number of ways you can paint the fence.</p>
+<pre><code class="language-python">class Solution:
+    def numWays(self, n: int, k: int) -&gt; int:
+        # dp    
+        # n = 0    0  
+        # n = 1    k
+        # n = 2    k*k    
+        # n = 3    diff color  (k-1)*dp[i-1]   same color 1*  (k-1)*dp[i-2]  
+        # so, dp[i] = (k-1)dp[i-1]+(k-1)*dp[i-2]
+        
+        if n==1:
+            return k
+        if n==2:
+            return k*k
+        dp=[0]*(n+1)
+        dp[1]=k
+        dp[2]=k*k
+        for i in range(3,n+1):
+            dp[i] = (k-1)*(dp[i-1]+dp[i-2])
+        
+        return dp[n]
+</code></pre>
+<p>感觉是DP，递推关系是？ 已经想到了，但是没仔细去想。 当前颜色和前一个相同， 当前颜色和前一个不同。</p>
+<h1 id="font-colorred-277-find-the-celebrity-mediumfont"><font color='red'> 277. Find the Celebrity （Medium）</font></h1>
+<pre><code class="language-python">
+class Solution:
+    def findCelebrity(self, n: int) -&gt; int:
+        self.n = n
+        celebrity_candidate = 0
+        for i in range(1, n):
+            if knows(celebrity_candidate, i):
+                celebrity_candidate = i
+        if self.is_celebrity(celebrity_candidate):
+            return celebrity_candidate
+        return -1
+
+    def is_celebrity(self, i):
+        for j in range(self.n):
+            if i == j: continue
+            if knows(i, j) or not knows(j, i):
+                return False
+        return True
+</code></pre>
+<p>答案找possible candidate O（n）时间的方法第一次没想出来。。。</p>
+<h1 id="278-first-bad-version-easy">278. First Bad Version （Easy）</h1>
+<p>Suppose you have n versions [1, 2, ..., n] and you want to find out the first bad one, which causes all the following ones to be bad.</p>
+<p>You are given an API bool isBadVersion(version) which returns whether version is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.</p>
+<pre><code class="language-python"># The isBadVersion API is already defined for you.
+# @param version, an integer
+# @return an integer
+# def isBadVersion(version):
+
+class Solution:
+    def firstBadVersion(self, n):
+        &quot;&quot;&quot;
+        :type n: int
+        :rtype: int
+        &quot;&quot;&quot;
+        
+        l=1
+        r=n
+        while l&lt;=r:
+            m=(l+r)//2
+            if isBadVersion(m):
+                r=m-1
+            else:
+                l=m+1
+        return l
+
+</code></pre>
+<h1 id="font-colorred279-perfect-squares-medium-font"><font color='red'>279. Perfect Squares (Medium) </font></h1>
+<p>Given an integer n, return the least number of perfect square numbers that sum to n.</p>
+<pre><code class="language-python">class Solution:
+    def numSquares(self, n: int) -&gt; int:
+        #dp   1 2  3  4  5  6  7  8
+        #     1 2  3  1  2  3  4  2
+        if n&lt;=3: return n
+        def is_sqrt(num):
+            for i in range(1,num//2+1):
+                if i*i==num:
+                    return True
+            return False
+        dp = [float('inf')]*(n+1)
+        dp[0]=0
+        dp[1]=1
+        dp[2]=2
+        dp[3]=3
+        for i in range(4,n+1):
+            if is_sqrt(i):
+                dp[i]=1
+            else:
+                for ii in range(1,i//2+1):
+                    dp[i]=min(dp[i],dp[ii]+dp[i-ii])
+        
+        print(dp)
+        return dp[n]
+
+#ANSWER O（n*sqrt（n））
+class Solution(object):
+    def numSquares(self, n):
+        &quot;&quot;&quot;
+        :type n: int
+        :rtype: int
+        &quot;&quot;&quot;
+        square_nums = [i**2 for i in range(0, int(math.sqrt(n))+1)]
+        
+        dp = [float('inf')] * (n+1)
+        # bottom case
+        dp[0] = 0
+        
+        for i in range(1, n+1):
+            for square in square_nums:
+                if i &lt; square:
+                    break
+                dp[i] = min(dp[i], dp[i-square] + 1)
+        
+        return dp[-1]
+</code></pre>
+<p>第一次整了个time limit exceeded。 思路类似,答案pre calculate square_nums  省了很多时间也不用判断是否为完全平方数。</p>
+<h1 id="font-colorred280-wiggle-sort-mediumfont"><font color='red'>280. Wiggle Sort （Medium）</font></h1>
+<p>Given an integer array nums, reorder it such that nums[0] &lt;= nums[1] &gt;= nums[2] &lt;= nums[3]....<br>
+You may assume the input array always has a valid answer.</p>
+<pre><code class="language-python">class Solution:
+    def wiggleSort(self, nums: List[int]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify nums in-place instead.
+        &quot;&quot;&quot;
+        nums.sort()
+        for i in range(1,len(nums)-1,2):
+            nums[i],nums[i+1]=nums[i+1],nums[i]
+
+#ANSWER
+class Solution:
+    def wiggleSort(self, nums: List[int]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify nums in-place instead.
+        &quot;&quot;&quot;
+        less=True
+        for i in range(len(nums)-1):
+            if less:
+                if nums[i]&gt;nums[i+1]:
+                    nums[i],nums[i+1]=nums[i+1],nums[i]
+            else:
+                if nums[i]&lt;nums[i+1]:
+                    nums[i],nums[i+1]=nums[i+1],nums[i]
+            
+            less=not less
+</code></pre>
+<p>too late today。  思路1  sort first， 从第二个元素开始swap。 思路2，如果顺序不正确就纠正。</p>
+
+            </div>
+            
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      Lan
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-30/" title="Leetcode 2021-11-30">https://headhuanglan.github.io/post/leetcode-2021-11-30/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/"># leetcode</a>
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="Leetcode 2021-11-29" href="https://headhuanglan.github.io/post/leetcode-2021-11-29/">Leetcode 2021-11-29</a>
+        <a class="nav-mobile-next" title="Leetcode 2021-11-29" href="https://headhuanglan.github.io/post/leetcode-2021-11-29/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
+      
+    </div>
+  </div>
+</div>
+            
+            
+  
+    
+      <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '05c2f6d6143b092d473b',
+    clientSecret: '002d0d8f99a25af450995ef32a26c1eef0041d0d',
+    repo: 'headhuanglan.github.io',
+    owner: 'headhuanglan',
+    admin: ['headhuanglan'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+  gitalk.render('gitalk-container')
+</script>
+    
+    
+  
+
+          </div>
         </div>
       </div>
     </div>
@@ -837,6 +1452,223 @@
     parent.insertBefore(aelem, next);
   });
 </script>
+    <div class="reward-mask" style="display: none;">
+  <div class="reward-relative">
+    <span class="close" aria-hidden="true">x</span>
+    <div class="reward-body">
+      <h2>感谢您的支持，我会继续努力的!</h2>
+      <div class="reward-img-box">
+        <div style="position: relative; width: 140px; height: 140px;">
+          
+          
+          
+        </div>
+      </div>
+      <p class="reward-word">扫码打赏，你说多少就多少</p>
+      <p class="reward-tip"> </p>
+    </div>
+    <div class="bottom">
+      
+      
+    </div>
+  </div>
+</div>
+<style>
+  .reward-mask {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #00000054;
+  }
+
+  .reward-relative {
+    position: relative;
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #fff;
+    top: 50%;
+    margin-top: -205px;
+  }
+
+  .reward-relative .close {
+    position: absolute;
+    right: 10px;
+    font-weight: normal;
+    font-size: 16px;
+    color: #929292;
+  }
+
+  .reward-body {
+    padding: 40px 20px 20px;
+  }
+
+  .bottom {
+    display: flex;
+  }
+
+  .reward-btn {
+    text-align: center;
+  }
+
+  .reward-btn-text {
+    display: inline-block;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    background-color: #ff9734;
+    color: #FFF;
+    margin-top: 20px;
+  }
+
+  .pay-text {
+    margin-top: 10px;
+    padding: 10px;
+    flex: 1;
+    transition: all .2s linear;
+  }
+
+  .pay-text:hover {
+    background-color: #a5a5a536;
+  }
+
+  .reward-body h2 {
+    padding-top: 10px;
+    text-align: center;
+    color: #a3a3a3;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 0 20px;
+  }
+
+  .reward-body h2:after,
+  .reward-body h2:before {
+    font-family: Arial, Helvetica, sans-serif;
+    background: 0 0;
+    width: 0;
+    height: 0;
+    font-style: normal;
+    color: #eee;
+    font-size: 80px;
+    position: absolute;
+    top: 20px;
+  }
+
+  .reward-body h2:before {
+    content: '\201c';
+    left: 50px;
+  }
+
+  .reward-body h2:after {
+    content: '\201d';
+    right: 80px;
+  }
+
+  .reward-img-box {
+    display: inline-block;
+    padding: 10px;
+    border: 6px solid #ea5f00;
+    margin: 0 auto;
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .reward-img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .reward-relative {
+      height: 100%;
+      top: 0px;
+      margin-top: 0;
+      width: auto;
+    }
+
+    .reward-relative .bottom {
+      flex-direction: column;
+    }
+
+    .reward-relative .pay-text {
+      width: 80%;
+      margin: 5px auto;
+      border: 1px solid silver;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .reward-body h2:after {
+      right: 40px;
+    }
+
+    .reward-body h2:after,
+    .reward-body h2:before {
+      font-size: 60px;
+    }
+
+    .reward-body h2:before {
+      left: 20px;
+    }
+  }
+</style>
+<script>
+  !function () {
+    var mask = document.querySelector('.reward-mask');
+    let close = document.querySelector('.reward-relative .close');
+    let rewardBtn = document.querySelector('.reward-btn');
+
+    let zfb = document.querySelector('#zfb'),
+      wx = document.querySelector('#wx'),
+      zfbBtn = document.querySelector('#zfbBtn'),
+      wxBtn = document.querySelector('#wxBtn');
+
+    if (zfbBtn && wxBtn) {
+      zfbBtn.addEventListener('click', () => {
+        jQuery.Velocity(zfb, 'transition.slideLeftIn', {
+          duration: 400
+        });
+        jQuery.Velocity(wx, 'transition.slideRightOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+
+      wxBtn.addEventListener('click', () => {
+        jQuery.Velocity(wx, 'transition.slideRightIn', {
+          duration: 400
+        });
+        jQuery.Velocity(zfb, 'transition.slideLeftOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+    }
+
+    rewardBtn.addEventListener('click', (e) => {
+      jQuery.Velocity(mask, 'transition.slideDownIn', {
+        duration: 400
+      })
+    });
+
+    close.addEventListener('click', (e) => {
+      e.preventDefault();
+      jQuery.Velocity(mask, 'transition.slideUpOut', {
+        duration: 400
+      })
+    })
+  }()
+</script>
+
   </div>
 </body>
 
@@ -12720,5 +13552,4 @@ if __name__ == &#39;__main__&#39;:
             
 
                 
-
 </html>

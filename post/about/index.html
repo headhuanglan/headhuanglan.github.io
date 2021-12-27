@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>关于 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1640497828449">
+<link rel="shortcut icon" href="/favicon.ico?v=1640590213489">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -195,7 +195,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">33</span>
+        <span class="site-item-stat-count">34</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -886,6 +886,573 @@
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-30/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;271-encode-and-decode-strings-medium&#34;&gt;271. Encode and Decode Strings (Medium)&lt;/h1&gt;
+&lt;p&gt;Design an algorithm to encode a list of strings to a string. The encoded string is then sent over the network and is decoded back to the original list of strings.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Codec:
+    def encode(self, strs: [str]) -&amp;gt; str:
+        &amp;quot;&amp;quot;&amp;quot;Encodes a list of strings to a single string.
+        &amp;quot;&amp;quot;&amp;quot;
+        candidate=&#39;a&#39;
+        set_ = set()
+        for str in strs:
+            for s in str:
+                set_.add(s)
+        while candidate in set_:
+            candidate = chr(ord(candidate)+1)
+        return candidate + candidate.join(strs)
+        
+
+    def decode(self, s: str) -&amp;gt; [str]:
+        &amp;quot;&amp;quot;&amp;quot;Decodes a single string to a list of strings.
+        &amp;quot;&amp;quot;&amp;quot;
+        candidate = s[0]
+        s = s[1:]
+        return s.split(candidate)
+        
+
+
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.decode(codec.encode(strs))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorblue272-closest-binary-search-tree-value-ii-hard-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;272. Closest Binary Search Tree Value II (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def closestKValues(self, root: Optional[TreeNode], target: float, k: int) -&amp;gt; List[int]:
+        stack  = []
+        s  =[]
+        while stack or root:
+            while root:
+                stack.append(root)
+                root=root.left
+            
+            root=stack.pop()
+            diff = abs(root.val-target)
+            if len(s)&amp;lt;k:
+                s.append((diff,root.val))
+            else:
+                s.sort(key=lambda x:x[0])
+                if s and s[-1][0]&amp;gt;diff:
+                    s.pop()
+                    s.append((diff,root.val))
+                    s.sort(key=lambda x:x[0])
+            
+            root=root.right
+        
+        return [e[1] for e in s]
+
+#ANSWER 1 Recursive Inorder + Sort, O(N log N) time
+class Solution:
+    def closestKValues(self, root: TreeNode, target: float, k: int) -&amp;gt; List[int]:
+        def inorder(r: TreeNode):
+            return inorder(r.left) + [r.val] + inorder(r.right) if r else []
+        
+        nums = inorder(root)
+        nums.sort(key = lambda x: abs(x - target))
+        return nums[:k]
+
+#ANSWER 2 
+from heapq import heappush, heappop
+class Solution:
+    def closestKValues(self, root: TreeNode, target: float, k: int) -&amp;gt; List[int]:
+        def inorder(r: TreeNode):
+            if not r:
+                return
+            
+            inorder(r.left)
+            heappush(heap, (- abs(r.val - target), r.val))
+            if len(heap) &amp;gt; k:
+                heappop(heap)
+            inorder(r.right) 
+    
+        heap = []
+        inorder(root)
+        return [x for _, x in heap]
+
+#ANSWER 3 QuickSelect, O(N) time.
+class Solution:
+    def closestKValues(self, root: TreeNode, target: float, k: int) -&amp;gt; List[int]:
+        def inorder(r: TreeNode):
+            return inorder(r.left) + [r.val] + inorder(r.right) if r else []
+        
+        def partition(pivot_idx, left, right):
+            pivot_dist = dist(pivot_idx)
+            
+            # 1. move pivot to end
+            nums[right], nums[pivot_idx] = nums[pivot_idx], nums[right]
+            store_idx = left
+            
+            # 2. move more close elements to the left
+            for i in range(left, right):
+                if dist(i) &amp;lt; pivot_dist:
+                    nums[i], nums[store_idx] = nums[store_idx], nums[i]
+                    store_idx += 1
+                    
+            # 3. move pivot to its final place
+            nums[right], nums[store_idx] = nums[store_idx], nums[right]
+            
+            return store_idx
+            
+        def quickselect(left, right):
+            &amp;quot;&amp;quot;&amp;quot;
+            Sort a list within left..right till kth less close element
+            takes its place.
+            &amp;quot;&amp;quot;&amp;quot;
+            # base case: the list contains only one element
+            if left == right:
+                return 
+            
+            # select a random pivot_index
+            pivot_idx = randint(left, right)
+            
+            # find the pivot position in a sorted list
+            true_idx = partition(pivot_idx, left, right)
+            
+            # if the pivot is in its final sorted position
+            if true_idx == k:
+                return
+            
+            if true_idx &amp;lt; k:
+                # go left
+                quickselect(true_idx, right)
+            else:
+                # go right
+                quickselect(left, true_idx)
+        
+        nums = inorder(root)
+        dist = lambda idx : abs(nums[idx] - target)
+        quickselect(0, len(nums) - 1)
+        return nums[:k]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;虽然做出来了，但是感觉用minheap会更好。我的方法得一直sort，时间复杂度太高。  需要记住 from heapq import heappush，heappop 用法 heappush（heap，val） heappop（heap） 每次pop出来的是最小的元素。  O（n）方法用到了快排。&lt;/p&gt;
+&lt;h1 id=&#34;273-integer-to-english-words-hard&#34;&gt;273. Integer to English Words （Hard）&lt;/h1&gt;
+&lt;p&gt;Convert a non-negative integer num to its English words representation.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def numberToWords(self, num: int) -&amp;gt; str:
+      
+        nums = []
+      
+        if num==0: nums.append(0)
+        while num:
+            nums.append(num%1000)
+            num//=1000
+        
+    
+        res = []
+        l=len(nums)
+        dic = {0:&#39;&#39;,1:&#39;Thousand&#39;,2:&#39;Million&#39;,3:&#39;Billion&#39;,4:&#39;Trillion&#39;}
+        def helper(n):
+            if type(n)==str: return &#39;&#39;
+            s  = &#39;&#39;
+            dic = {0:&#39;Zero&#39;,1:&#39;One&#39;,2:&#39;Two&#39;,3:&#39;Three&#39;,4:&#39;Four&#39;,5:&#39;Five&#39;,6:&#39;Six&#39;,7:&#39;Seven&#39;,8:&#39;Eight&#39;,9:&#39;Nine&#39;,10:&#39;Ten&#39;,11:&#39;Eleven&#39;,12:&#39;Twelve&#39;,13:&#39;Thirteen&#39;,14:&#39;Fourteen&#39;,15:&#39;Fifteen&#39;,16:&#39;Sixteen&#39;,17:&#39;Seventeen&#39;,18:&#39;Eighteen&#39;,19:&#39;Nineteen&#39;,20:&#39;Twenty&#39;,30:&#39;Thirty&#39;,40:&#39;Forty&#39;,50:&#39;Fifty&#39;,60:&#39;Sixty&#39;,70:&#39;Seventy&#39;,80:&#39;Eighty&#39;,90:&#39;Ninety&#39;}
+            
+            if n&amp;lt;10: return dic[n]
+            if n&amp;gt;99:
+                s+= dic[n//100]+&#39; Hundred&#39;
+            n = n%100
+            if n==0: return s
+            if n in dic:
+                s+= &#39; &#39;+dic[n]
+                return s
+            else:
+                s+=&#39; &#39;+dic[10*(n//10)]
+                n=n%10
+                if n==0:
+                    return s
+                else:
+                    s+= &#39; &#39;+ dic[n]
+                    return s
+       
+        tmp=[]
+        while nums:
+            if nums[0]==0:
+                nums.pop(0)
+                tmp.append(&#39;#&#39;)
+            else:
+                tmp.append(nums.pop(0))
+
+        nums=tmp
+        if nums==[&#39;#&#39;]:
+            nums=[0]
+        for i,number in enumerate(nums):
+            if number!=&#39;#&#39;:
+                res.append(helper(number)+ &#39; &#39; + dic[i])
+        return &#39; &#39;.join([ e.strip() for e in res[::-1] if e.strip()])
+#ANSWER
+class Solution:
+    def numberToWords(self, num):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type num: int
+        :rtype: str
+        &amp;quot;&amp;quot;&amp;quot;
+        def one(num):
+            switcher = {
+                1: &#39;One&#39;,
+                2: &#39;Two&#39;,
+                3: &#39;Three&#39;,
+                4: &#39;Four&#39;,
+                5: &#39;Five&#39;,
+                6: &#39;Six&#39;,
+                7: &#39;Seven&#39;,
+                8: &#39;Eight&#39;,
+                9: &#39;Nine&#39;
+            }
+            return switcher.get(num)
+
+        def two_less_20(num):
+            switcher = {
+                10: &#39;Ten&#39;,
+                11: &#39;Eleven&#39;,
+                12: &#39;Twelve&#39;,
+                13: &#39;Thirteen&#39;,
+                14: &#39;Fourteen&#39;,
+                15: &#39;Fifteen&#39;,
+                16: &#39;Sixteen&#39;,
+                17: &#39;Seventeen&#39;,
+                18: &#39;Eighteen&#39;,
+                19: &#39;Nineteen&#39;
+            }
+            return switcher.get(num)
+        
+        def ten(num):
+            switcher = {
+                2: &#39;Twenty&#39;,
+                3: &#39;Thirty&#39;,
+                4: &#39;Forty&#39;,
+                5: &#39;Fifty&#39;,
+                6: &#39;Sixty&#39;,
+                7: &#39;Seventy&#39;,
+                8: &#39;Eighty&#39;,
+                9: &#39;Ninety&#39;
+            }
+            return switcher.get(num)
+        
+
+        def two(num):
+            if not num:
+                return &#39;&#39;
+            elif num &amp;lt; 10:
+                return one(num)
+            elif num &amp;lt; 20:
+                return two_less_20(num)
+            else:
+                tenner = num // 10
+                rest = num - tenner * 10
+                return ten(tenner) + &#39; &#39; + one(rest) if rest else ten(tenner)
+        
+        def three(num):
+            hundred = num // 100
+            rest = num - hundred * 100
+            if hundred and rest:
+                return one(hundred) + &#39; Hundred &#39; + two(rest) 
+            elif not hundred and rest: 
+                return two(rest)
+            elif hundred and not rest:
+                return one(hundred) + &#39; Hundred&#39;
+        
+        billion = num // 1000000000
+        million = (num - billion * 1000000000) // 1000000
+        thousand = (num - billion * 1000000000 - million * 1000000) // 1000
+        rest = num - billion * 1000000000 - million * 1000000 - thousand * 1000
+        
+        if not num:
+            return &#39;Zero&#39;
+        
+        result = &#39;&#39;
+        if billion:        
+            result = three(billion) + &#39; Billion&#39;
+        if million:
+            result += &#39; &#39; if result else &#39;&#39;    
+            result += three(million) + &#39; Million&#39;
+        if thousand:
+            result += &#39; &#39; if result else &#39;&#39;
+            result += three(thousand) + &#39; Thousand&#39;
+        if rest:
+            result += &#39; &#39; if result else &#39;&#39;
+            result += three(rest)
+        return result
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;corner case 有点太多了。。。写出来是写出来了。&lt;/p&gt;
+&lt;h1 id=&#34;274-h-index-medium&#34;&gt;274. H-Index （Medium）&lt;/h1&gt;
+&lt;p&gt;Given an array of integers citations where citations[i] is the number of citations a researcher received for their ith paper, return compute the researcher&#39;s h-index.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def hIndex(self, citations: List[int]) -&amp;gt; int:
+        # [1,3,1]
+        # 
+        #  0 1 2 3
+        # []
+        
+        dp = [0]*(len(citations)+1)
+        for c in citations:
+            if c&amp;gt;len(citations):
+                c=len(citations)
+            dp[c]+=1
+        
+        for i in range(len(dp)-2,-1,-1):
+            dp[i]=dp[i]+dp[i+1]
+        
+        hindex=[]
+        print(dp)
+        for ind, n in enumerate(dp):
+            if n&amp;gt;=ind:
+                hindex.append(ind)
+        
+        return max(hindex)
+
+#ANSWER reverse SORT
+class Solution:
+    def hIndex(self, citations: List[int]) -&amp;gt; int:
+    
+        citations.sort(reverse=True)
+        print(citations)
+        hindex=0
+        for ind, cit in enumerate(citations):
+            hindex_candidate = ind+1
+            if cit&amp;gt;=hindex_candidate:
+                hindex = hindex_candidate
+                
+        return hindex
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorblue275-h-index-ii-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;275. H-Index II (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;sorted citations O(lgn) time to solve&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def hIndex(self, citations: List[int]) -&amp;gt; int:
+        # already sorterd so binary search
+        
+        #hindex=0
+        #for idx in range(len(citations)-1,-1,-1):
+        #    cit = citations[idx]
+        #    hidx =  len(citations)-idx 
+        #    if cit&amp;gt;=hidx:
+        #        hindex=hidx
+        # 
+        #return hindex
+        
+        l=0
+        r=len(citations)-1
+        res = [0]
+        while l&amp;lt;=r:
+            m=(l+r)//2
+            
+            cit=citations[m]
+            hidx=len(citations)-m
+            if cit&amp;gt;=hidx:
+                res.append(hidx)
+                r=m-1
+            else:
+                l=m+1
+        
+        return max(res)
+
+#ANSWER
+class Solution:
+    def hIndex(self, citations):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type citations: List[int]
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        n = len(citations)
+        for idx, c in enumerate(citations):
+            if c &amp;gt;= n - idx:
+                return n - idx
+        return 0
+#binary serach
+class Solution:
+    def hIndex(self, citations):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type citations: List[int]
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        n = len(citations)
+        left, right = 0, n - 1
+
+        # We need to find the rightmost &#39;index&#39; such that: (citations[index] &amp;lt;= n - index)
+        while left &amp;lt;= right:
+            mid = left + (right - left) // 2
+
+            # There&#39;s (n - mid) papers with an equal or higher citation count than citations[mid]
+            # If (citations[mid] == n - mid) it&#39;s the optimal result and can be returned right away
+            if citations[mid] == n - mid:
+                return n - mid
+
+            # If citations[mid] is less than (n - mid), narrow down on the right half to look for a paper
+            # at a future index that meets the h-index criteria. Otherwise, narrow down on the left half
+            if citations[mid] &amp;lt; n - mid:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        # We didn&#39;t find an exact match, so there&#39;s exactly (n - left) papers that have citations
+        # greater than or equal to citations[left] and that is our answer
+        return n - left
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;虽然做出来了，但是还是不熟。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred276-paint-fence-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;276. Paint Fence (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are painting a fence of n posts with k different colors. You must paint the posts following these rules:&lt;br&gt;
+Every post must be painted exactly one color.&lt;br&gt;
+There cannot be three or more consecutive posts with the same color.&lt;br&gt;
+Given the two integers n and k, return the number of ways you can paint the fence.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def numWays(self, n: int, k: int) -&amp;gt; int:
+        # dp    
+        # n = 0    0  
+        # n = 1    k
+        # n = 2    k*k    
+        # n = 3    diff color  (k-1)*dp[i-1]   same color 1*  (k-1)*dp[i-2]  
+        # so, dp[i] = (k-1)dp[i-1]+(k-1)*dp[i-2]
+        
+        if n==1:
+            return k
+        if n==2:
+            return k*k
+        dp=[0]*(n+1)
+        dp[1]=k
+        dp[2]=k*k
+        for i in range(3,n+1):
+            dp[i] = (k-1)*(dp[i-1]+dp[i-2])
+        
+        return dp[n]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;感觉是DP，递推关系是？ 已经想到了，但是没仔细去想。 当前颜色和前一个相同， 当前颜色和前一个不同。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-277-find-the-celebrity-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 277. Find the Celebrity （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+class Solution:
+    def findCelebrity(self, n: int) -&amp;gt; int:
+        self.n = n
+        celebrity_candidate = 0
+        for i in range(1, n):
+            if knows(celebrity_candidate, i):
+                celebrity_candidate = i
+        if self.is_celebrity(celebrity_candidate):
+            return celebrity_candidate
+        return -1
+
+    def is_celebrity(self, i):
+        for j in range(self.n):
+            if i == j: continue
+            if knows(i, j) or not knows(j, i):
+                return False
+        return True
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案找possible candidate O（n）时间的方法第一次没想出来。。。&lt;/p&gt;
+&lt;h1 id=&#34;278-first-bad-version-easy&#34;&gt;278. First Bad Version （Easy）&lt;/h1&gt;
+&lt;p&gt;Suppose you have n versions [1, 2, ..., n] and you want to find out the first bad one, which causes all the following ones to be bad.&lt;/p&gt;
+&lt;p&gt;You are given an API bool isBadVersion(version) which returns whether version is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# The isBadVersion API is already defined for you.
+# @param version, an integer
+# @return an integer
+# def isBadVersion(version):
+
+class Solution:
+    def firstBadVersion(self, n):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type n: int
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        
+        l=1
+        r=n
+        while l&amp;lt;=r:
+            m=(l+r)//2
+            if isBadVersion(m):
+                r=m-1
+            else:
+                l=m+1
+        return l
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred279-perfect-squares-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;279. Perfect Squares (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer n, return the least number of perfect square numbers that sum to n.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def numSquares(self, n: int) -&amp;gt; int:
+        #dp   1 2  3  4  5  6  7  8
+        #     1 2  3  1  2  3  4  2
+        if n&amp;lt;=3: return n
+        def is_sqrt(num):
+            for i in range(1,num//2+1):
+                if i*i==num:
+                    return True
+            return False
+        dp = [float(&#39;inf&#39;)]*(n+1)
+        dp[0]=0
+        dp[1]=1
+        dp[2]=2
+        dp[3]=3
+        for i in range(4,n+1):
+            if is_sqrt(i):
+                dp[i]=1
+            else:
+                for ii in range(1,i//2+1):
+                    dp[i]=min(dp[i],dp[ii]+dp[i-ii])
+        
+        print(dp)
+        return dp[n]
+
+#ANSWER O（n*sqrt（n））
+class Solution(object):
+    def numSquares(self, n):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type n: int
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        square_nums = [i**2 for i in range(0, int(math.sqrt(n))+1)]
+        
+        dp = [float(&#39;inf&#39;)] * (n+1)
+        # bottom case
+        dp[0] = 0
+        
+        for i in range(1, n+1):
+            for square in square_nums:
+                if i &amp;lt; square:
+                    break
+                dp[i] = min(dp[i], dp[i-square] + 1)
+        
+        return dp[-1]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第一次整了个time limit exceeded。 思路类似,答案pre calculate square_nums  省了很多时间也不用判断是否为完全平方数。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred280-wiggle-sort-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;280. Wiggle Sort （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums, reorder it such that nums[0] &amp;lt;= nums[1] &amp;gt;= nums[2] &amp;lt;= nums[3]....&lt;br&gt;
+You may assume the input array always has a valid answer.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def wiggleSort(self, nums: List[int]) -&amp;gt; None:
+        &amp;quot;&amp;quot;&amp;quot;
+        Do not return anything, modify nums in-place instead.
+        &amp;quot;&amp;quot;&amp;quot;
+        nums.sort()
+        for i in range(1,len(nums)-1,2):
+            nums[i],nums[i+1]=nums[i+1],nums[i]
+
+#ANSWER
+class Solution:
+    def wiggleSort(self, nums: List[int]) -&amp;gt; None:
+        &amp;quot;&amp;quot;&amp;quot;
+        Do not return anything, modify nums in-place instead.
+        &amp;quot;&amp;quot;&amp;quot;
+        less=True
+        for i in range(len(nums)-1):
+            if less:
+                if nums[i]&amp;gt;nums[i+1]:
+                    nums[i],nums[i+1]=nums[i+1],nums[i]
+            else:
+                if nums[i]&amp;lt;nums[i+1]:
+                    nums[i],nums[i+1]=nums[i+1],nums[i]
+            
+            less=not less
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;too late today。  思路1  sort first， 从第二个元素开始swap。 思路2，如果顺序不正确就纠正。&lt;/p&gt;
+">Leetcode 2021-11-30</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-29/"" data-c="
