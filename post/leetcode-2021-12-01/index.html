@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>大家来找茬(文字版) | Lan&#39;s Blog</title>
+<title>Leetcode 2021-12-01 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1640977169430">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,8 @@
 
 
 
-  <meta name="description" content="大家来找茬(文字版)" />
-  <meta name="keywords" content="游戏" />
+  <meta name="description" content="Leetcode 2021-12-01" />
+  <meta name="keywords" content="leetcode" />
 </head>
 
 <body>
@@ -223,12 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
-</ul>
-</li>
+<li><a href="#281-zigzag-iterator-medium">281. Zigzag Iterator （Medium）</a></li>
+<li><a href="#282-expression-add-operators-hard">282. Expression Add Operators (Hard)</a></li>
+<li><a href="#283-move-zeroes-easy">283. Move Zeroes （Easy）</a></li>
+<li><a href="#284-peeking-iterator-medium">284. Peeking Iterator (Medium)</a></li>
+<li><a href="#285-inorder-successor-in-bst-medium">285. Inorder Successor in BST (Medium)</a></li>
+<li><a href="#286-walls-and-gates-medium">286. Walls and Gates （Medium）</a></li>
+<li><a href="#font-colorred-287-find-the-duplicate-number-mediumfont"><font color='red'> 287. Find the Duplicate Number （Medium）</font></a></li>
+<li><a href="#288-unique-word-abbreviation-medium">288. Unique Word Abbreviation （Medium）</a></li>
+<li><a href="#289-game-of-life-medium">289. Game of Life (Medium)</a></li>
+<li><a href="#290-word-pattern-easy">290. Word Pattern （Easy）</a></li>
 </ul>
 
   </div>
@@ -494,20 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/da-jia-lai-zhao-chi-wen-zi-ban/"> 大家来找茬(文字版) </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-12-01/"> Leetcode 2021-12-01 </a>
   </h1>
   <div class="post-meta">
-    
-    <span class="meta-item">
-      <i class="fa fa-thumb-tack"></i>
-      <span class="language" data-lan="top">置顶</span>
-      <span class="post-meta-divider">|</span>
-    </span>
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-10-29 13:45:41">2021-10-29</span>
+      <span class="publish-time" data-t="2021-11-30 00:36:09">2021-11-30</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -515,8 +513,8 @@
       <i class="fa fa-folder-o"></i>
       <span class="pc-show language" data-lan="category-in">标签:</span>
        
-      <a href="https://headhuanglan.github.io/tag/sbk4gR8dj/">
-        <span>游戏</span>
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/">
+        <span>leetcode</span>
       </a>
        
     </span>
@@ -525,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >2<span class="language" data-lan="minute"
+        >16<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -534,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >329<span class="pc-show language" data-lan="words"
+        >2570<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -544,68 +542,540 @@
 </section>
 
             <div class="post-body next-md-body" id="post_body">
-              <p><a href="/zhaocha">点击PLAY大家来找茬</a></p>
+              <p>依然在补进度，而且没有复习之前刷的题目， 12月底补12月初进度。 立个flag，明年一月结束要刷到900. 二月全面复习二刷。</p>
 <!-- more -->
-<figure data-type="image" tabindex="1"><img src="https://headhuanglan.github.io/post-images/1635790537514.PNG" alt="" loading="lazy"></figure>
-<h2 id="思路">思路</h2>
-<p>准备写个大家来找茬的文字版，需要找出所有中文的形状相似字符对，已知GBK下33088-65278为中文编码。找个字库文件比如FZLanTingHei-R-GBK.TTF，把字符黑白矩阵转成一个向量，然后算所有文字对的COS相似度就可以了，算法很简单。 开搞！</p>
-<h2 id="代码">代码</h2>
-<pre><code class="language-python">
-import string
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw
-import numpy as np
-
-fobidden_chars = {'■','●','︱', '｜','▉' ,'▼','▊','█', '▇','▇'}.union(set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'))
-
-def char_to_pixels(text, path='font.ttf', fontsize=80):
-    font = ImageFont.truetype(path, fontsize) 
-    #getsize lead to w, h change for diffrent chars 
-    #w, h = font.getsize(text)  
-    w, h = fontsize+5, fontsize+5 
-    #print(w,h)
-    h *= 2
-    image = Image.new('L', (w, h), 1)  
-    draw = ImageDraw.Draw(image)
-    draw.text((0, 0), text, font=font) 
-    arr = np.asarray(image)
-    arr = np.where(arr, 0, 1)
-    #arr = arr[(arr != 0).any(axis=1)]
-    return arr
+<h1 id="281-zigzag-iterator-medium">281. Zigzag Iterator （Medium）</h1>
+<p>Given two vectors of integers v1 and v2, implement an iterator to return their elements alternately.</p>
+<pre><code class="language-python">class ZigzagIterator:
+    def __init__(self, v1: List[int], v2: List[int]):
+        li=[v1,v2]
+        self.li = [[v,len(v)] for v in li if v]
+        self.select = 0
     
-def display(arr):
-    result = np.where(arr, '1', '0')
-    print('\n'.join([''.join(row) for row in result]))
+    def next(self) -&gt; int:
+        if self.li[self.select][1]&gt;0:
+            self.li[self.select][1]-=1
+            val= self.li[self.select][0].pop(0)
+            if self.li[self.select][1]==0:
+                self.li.pop(self.select)
+            self.select=(self.select+1)%len(self.li) if self.li else 0
+            return val
+         
+    def hasNext(self) -&gt; bool:
+        return sum([e[1] for e in self.li])&gt;0
+        
+        
 
-def get_distance(vecs,me):
-    #calculate the cos distance of me with other vecs
-    dst = (np.dot(vecs, me) / np.linalg.norm(vecs, axis=1) / np.linalg.norm(me))
-    return dst
-    
-def get_closest_chars (li_arrs, vec,li_gbk_chars, number=6):
-    dst = get_distance(li_arrs, vec)
-    gbk_char_ids = np.argsort(-dst)
-    return [li_gbk_chars[ind] for ind in gbk_char_ids[:number] ]
-    
-if __name__ == '__main__':
-	li_gbk_chars = []
-	li_arrs = []
-	#GBK 33088-65278
-	for ind in range(33088,65278+1):
-		try:
-		  gbk_char =  bytes.fromhex(str(hex(ind))[2:]).decode(&quot;GBK&quot;)
-		  if gbk_char in fobidden_chars: continue
-		  arr = char_to_pixels(gbk_char,'./FZLanTingHei-R-GBK.TTF')
-		  #print(gbk_char)
-		  #display(arr)
-		  li_gbk_chars.append(gbk_char) 
-		  #print(gbk_char, arr)
-		  li_arrs.append(arr.reshape(-1)) 	
-		  #print(arr.reshape(-1).shape)	  	
-		except:
-			pass
+# Your ZigzagIterator object will be instantiated and called as such:
+# i, v = ZigzagIterator(v1, v2), []
+# while i.hasNext(): v.append(i.next())
 </code></pre>
+<h1 id="282-expression-add-operators-hard">282. Expression Add Operators (Hard)</h1>
+<p>Given a string num that contains only digits and an integer target, return all possibilities to insert the binary operators '+', '-', and/or '*' between the digits of num so that the resultant expression evaluates to the target value.Note that operands in the returned expressions should not contain leading zeros.</p>
+<pre><code class="language-python">class Solution:
+    def addOperators(self, num: 'str', target: 'int') -&gt; 'List[str]':
+
+        N = len(num)
+        answers = []
+        def recurse(index, prev_operand, current_operand, value, string):
+
+            # Done processing all the digits in num
+            if index == N:
+
+                # If the final value == target expected AND
+                # no operand is left unprocessed
+                if value == target and current_operand == 0:
+                    answers.append(&quot;&quot;.join(string[1:]))
+                return
+
+            # Extending the current operand by one digit
+            current_operand = current_operand*10 + int(num[index])
+            str_op = str(current_operand)
+
+            # To avoid cases where we have 1 + 05 or 1 * 05 since 05 won't be a
+            # valid operand. Hence this check
+            if current_operand &gt; 0:
+
+                # NO OP recursion
+                recurse(index + 1, prev_operand, current_operand, value, string)
+
+            # ADDITION
+            string.append('+'); string.append(str_op)
+            recurse(index + 1, current_operand, 0, value + current_operand, string)
+            string.pop();string.pop()
+
+            # Can subtract or multiply only if there are some previous operands
+            if string:
+
+                # SUBTRACTION
+                string.append('-'); string.append(str_op)
+                recurse(index + 1, -current_operand, 0, value - current_operand, string)
+                string.pop();string.pop()
+
+                # MULTIPLICATION
+                string.append('*'); string.append(str_op)
+                recurse(index + 1, current_operand * prev_operand, 0, value - prev_operand + (current_operand * prev_operand), string)
+                string.pop();string.pop()
+        recurse(0, 0, 0, 0, [])    
+        return answers
+</code></pre>
+<p>第一眼感觉是用backtracking，写出了第一版，但是没考虑1） number 可以是1位可以是2位，3位 etc， 2）乘法的优先级高于加减，所以需要tracking operator是什么。 3）不可以backtracking到最后eval结果，太费时间。 直接看答案了。。。答案： 关键在于除了加减乘以外，增加一个不操作operator， 12--&gt;123  是 12乘以10+3     extending 当前值12 by one digit， 12乘以10。  看了答案还是懵逼。细节太多但都符合逻辑。</p>
+<h1 id="283-move-zeroes-easy">283. Move Zeroes （Easy）</h1>
+<p>Given an integer array nums, move all 0's to the end of it while maintaining the relative order of the non-zero elements.</p>
+<pre><code class="language-python">class Solution:
+    def moveZeroes(self, nums: List[int]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify nums in-place instead.
+        &quot;&quot;&quot;
+    
+        pos=0
+        for i,n in enumerate(nums):
+            if n!=0:
+                nums[pos]=n
+                pos+=1
+        while pos&lt;len(nums):
+            nums[pos]=0
+            pos+=1
+
+#SWAP is a better solution
+class Solution:
+    def moveZeroes(self, nums: List[int]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify nums in-place instead.
+        &quot;&quot;&quot;
+    
+        pos=0
+        for i,n in enumerate(nums):
+            if n!=0:
+                nums[pos],nums[i] = nums[i],nums[pos]
+                pos+=1
+     
+</code></pre>
+<h1 id="284-peeking-iterator-medium">284. Peeking Iterator (Medium)</h1>
+<pre><code class="language-python"># Below is the interface for Iterator, which is already defined for you.
+#
+# class Iterator:
+#     def __init__(self, nums):
+#         &quot;&quot;&quot;
+#         Initializes an iterator object to the beginning of a list.
+#         :type nums: List[int]
+#         &quot;&quot;&quot;
+#
+#     def hasNext(self):
+#         &quot;&quot;&quot;
+#         Returns true if the iteration has more elements.
+#         :rtype: bool
+#         &quot;&quot;&quot;
+#
+#     def next(self):
+#         &quot;&quot;&quot;
+#         Returns the next element in the iteration.
+#         :rtype: int
+#         &quot;&quot;&quot;
+
+class PeekingIterator:
+    def __init__(self, iterator):
+        &quot;&quot;&quot;
+        Initialize your data structure here.
+        :type iterator: Iterator
+        &quot;&quot;&quot;
+        self.iterator=iterator
+        self.peekval=None
+
+    def peek(self):
+        &quot;&quot;&quot;
+        Returns the next element in the iteration without advancing the iterator.
+        :rtype: int
+        &quot;&quot;&quot;
+        if self.peekval:
+            return self.peekval
+        else:
+            self.peekval=self.iterator.next()
+            return self.peekval
+        
+
+    def next(self):
+        &quot;&quot;&quot;
+        :rtype: int
+        &quot;&quot;&quot;
+        if self.peekval is not None:
+            peekval=self.peekval
+            self.peekval=None
+            return peekval
+        else:
+            return self.iterator.next()
+        
+
+    def hasNext(self):
+        &quot;&quot;&quot;
+        :rtype: bool
+        &quot;&quot;&quot;
+        return self.iterator.hasNext() or self.peekval is not None
+        
+
+# Your PeekingIterator object will be instantiated and called as such:
+# iter = PeekingIterator(Iterator(nums))
+# while iter.hasNext():
+#     val = iter.peek()   # Get the next element but not advance the iterator.
+#     iter.next()         # Should return the same value as [val].
+
+</code></pre>
+<h1 id="285-inorder-successor-in-bst-medium">285. Inorder Successor in BST (Medium)</h1>
+<p>Given the root of a binary search tree and a node p in it, return the in-order successor of that node in the BST. If the given node has no in-order successor in the tree, return null.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def inorderSuccessor(self, root: 'TreeNode', p: 'TreeNode') -&gt; 'Optional[TreeNode]':
+        stack = []
+        while root and root.val!=p.val:
+            stack.append(root)
+            if p.val&lt;root.val:
+                root=root.left
+            else:
+                root=root.right
+        
+        if p.right:
+            node=p.right
+            while node.left:
+                node=node.left
+            return node
+                
+        else:
+            while stack:
+                node=stack.pop()
+                if node.val&gt;p.val:
+                    return node
+            return None
+
+
+#ANSWER
+class Solution:
+    
+    def inorderSuccessor(self, root: 'TreeNode', p: 'TreeNode') -&gt; 'TreeNode':
+        
+        successor = None
+        
+        while root:
+            
+            if p.val &gt;= root.val:
+                root = root.right
+            else:
+                successor = root
+                root = root.left
+                
+        return successor
+
+</code></pre>
+<p>答案更巧妙。</p>
+<h1 id="286-walls-and-gates-medium">286. Walls and Gates （Medium）</h1>
+<p>You are given an m x n grid rooms initialized with these three possible values.</p>
+<pre><code>-1 A wall or an obstacle.
+0 A gate.
+INF Infinity means an empty room. We use the value 231 - 1 = 2147483647 to represent INF as you may assume that the distance to a gate is less than 2147483647.
+</code></pre>
+<p>Fill each empty room with the distance to its nearest gate. If it is impossible to reach a gate, it should be filled with INF.</p>
+<pre><code class="language-python">class Solution:
+    def wallsAndGates(self, rooms: List[List[int]]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify rooms in-place instead.
+        &quot;&quot;&quot;
+        from collections import deque
+        m=len(rooms)
+        n=len(rooms[0])
+        INF=2**31-1
+        q = deque()
+        for i in range(m):
+            for j in range(n):
+                if rooms[i][j]==0:
+                    q.append((i,j))
+        level=0
+        visited = set()
+        while q:
+            level+=1
+            for _ in range(len(q)):
+                i,j = q.popleft()
+                visited.add((i,j))
+                for ii,jj in [(i+1,j),(i-1,j),(i,j+1),(i,j-1)]:
+                    if ii&gt;=0 and ii&lt;m and jj&gt;=0 and jj&lt;n and (ii,jj) not in visited:
+                        if rooms[ii][jj]!=0 and rooms[ii][jj]!=-1:
+                            rooms[ii][jj] = level
+                            q.append((ii,jj))
+                            visited.add((ii,jj))
+
+#ANSWER
+class Solution:
+    def wallsAndGates(self, rooms: List[List[int]]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify rooms in-place instead.
+        &quot;&quot;&quot;
+        from collections import deque
+        m=len(rooms)
+        n=len(rooms[0])
+        INF=2**31-1
+        q = deque()
+        for i in range(m):
+            for j in range(n):
+                if rooms[i][j]==0:
+                    q.append((i,j))
+        level=0
+        while q:
+            for _ in range(len(q)):
+                i,j = q.popleft()
+                for ii,jj in [(i+1,j),(i-1,j),(i,j+1),(i,j-1)]:
+                    if ii&gt;=0 and ii&lt;m and jj&gt;=0 and jj&lt;n and  rooms[ii][jj]==INF :
+                        rooms[ii][jj] = rooms[i][j]+1
+                        q.append((ii,jj))
+                           
+</code></pre>
+<p>第一眼感觉用bfs做，从gates 处扫不是墙和gate的rooms距离。 差点忘了bfs 要for _ in range(len(queue))  .....   答案不用visited level 解决， 因为BFS所以只要INF 变成距离就是最短距离， 从什么地方变得距离？就是rooms[ii][jj] = rooms[i][j]+1</p>
+<h1 id="font-colorred-287-find-the-duplicate-number-mediumfont"><font color='red'> 287. Find the Duplicate Number （Medium）</font></h1>
+<p>Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive.<br>
+There is only one repeated number in nums, return this repeated number.<br>
+You must solve the problem without modifying the array nums and uses only constant extra space.</p>
+<pre><code class="language-python">class Solution:
+    def findDuplicate(self, nums: List[int]) -&gt; int:
+        for num in nums:
+            cur = abs(num)
+            if nums[cur] &lt; 0:
+                duplicate = cur
+                break
+            nums[cur] = -nums[cur]
+
+        # Restore numbers
+        for i in range(len(nums)):
+            nums[i] = abs(nums[i])
+
+        return duplicate
+
+#ANSWER
+class Solution:
+    def findDuplicate(self, nums: List[int]) -&gt; int:
+        duplicate = 0
+        n = len(nums)
+        bits = n.bit_length()
+        for bit in range(bits):
+            mask = 1 &lt;&lt; bit
+            base_count = 0
+            nums_count = 0
+            for i in range(n):
+                # If bit is set in number (i) then add 1 to base_count
+                if i &amp; mask:
+                    base_count += 1
+                    
+                # If bit is set in nums[i] then add 1 to nums_count
+                if nums[i] &amp; mask:
+                    nums_count += 1
+                    
+            # If the current bit is more frequently set in nums than it is in 
+            # the range [1, 2, ..., n] then it must also be set in the duplicate number.
+            if nums_count - base_count &gt; 0:
+                duplicate |= mask
+                
+        return duplicate
+
+#ANSWER
+class Solution:
+    def findDuplicate(self, nums: 'List[int]') -&gt; 'int':
+        
+        low = 1
+        high = len(nums)-1
+        
+        while low &lt; high:
+            mid = low+(high-low)//2
+            count = 0
+            for i in nums:
+                if i &lt;= mid:
+                    count+=1
+            if count &lt;= mid:
+                low = mid+1
+            else:
+                high = mid
+        return low
+
+#ANSWER
+class Solution:
+    def findDuplicate(self, nums: List[int]) -&gt; int:
+        
+        #who can think it as cycled two pointer problem?
+        
+        slow = nums[0]
+        fast = nums[0]
+        
+        while True:
+            slow =  nums[slow]
+            fast = nums[nums[fast]]
+            if slow==fast:
+                break
+        
+        fast = nums[0]
+        while slow!=fast:
+            slow=nums[slow]
+            fast=nums[fast]
+        return slow
+</code></pre>
+<p>一堆double数中找single容易，用xor就可以， 但一堆single中找double。。。 答案思路： 思路1）标负。符号所在位置表示数出现过没。 nums[cur]小于0表示 cur这个数出现过。 2）bitmask 3）binary search 4）Cycle Detection，这个方法最妙。</p>
+<h1 id="288-unique-word-abbreviation-medium">288. Unique Word Abbreviation （Medium）</h1>
+<p>The abbreviation of a word is a concatenation of its first letter, the number of characters between the first and last letter, and its last letter. If a word has only two characters, then it is an abbreviation of itself.</p>
+<pre><code class="language-python">class ValidWordAbbr:
+    
+    
+    def __init__(self, dictionary: List[str]):
+        import collections 
+        self.dic= collections.defaultdict(set)
+        for w in dictionary:
+            key=self.sort(w)
+            self.dic[key].add(w)
+        #print(self.dic)
+        
+    def sort(self,w):
+        if len(w)&lt;=2:
+            key=w
+        else:
+            key=w[0]+str(len(w[1:-1])) +w[-1]
+        return key
+    
+    def isUnique(self, word: str) -&gt; bool:
+        key=self.sort(word)
+        if key not in self.dic or (len(self.dic[key])==1 and list(self.dic[key])[0]==word):
+            return True
+        return False
+
+
+# Your ValidWordAbbr object will be instantiated and called as such:
+# obj = ValidWordAbbr(dictionary)
+# param_1 = obj.isUnique(word)
+
+#Better solution
+class ValidWordAbbr(object):
+    
+    def getkey(self,word):
+        if len(word)&lt;=2: 
+            return word
+        else:
+            return word[0]+str(len(word[1:-1]))+word[-1]
+        
+    
+    def __init__(self, dictionary):
+        &quot;&quot;&quot;
+        :type dictionary: List[str]
+        &quot;&quot;&quot;
+         
+        self.dic=dict()
+        for word in dictionary:
+            key=self.getkey(word)
+            if key in self.dic and word!=self.dic[key]:
+                self.dic[key]='#'
+            else:
+                self.dic[key]=word
+        
+
+    def isUnique(self, word):
+        &quot;&quot;&quot;
+        :type word: str
+        :rtype: bool
+        &quot;&quot;&quot;
+
+        key=self.getkey(word)
+        
+        if key in self.dic and self.dic[key]==word:
+            return True
+        elif key not in self.dic:
+            return True
+        return False
+</code></pre>
+<h1 id="289-game-of-life-medium">289. Game of Life (Medium)</h1>
+<pre><code class="language-python">class Solution:
+    def gameOfLife(self, board: List[List[int]]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify board in-place instead.
+        &quot;&quot;&quot;
+        m=len(board)
+        n=len(board[0])
+        #solve it in-place
+        #rule
+        #  live cell =1
+        #            #nei &lt;2      die
+        #            #nei 2 or 3  live
+        #            #nei &gt;3      die
+        #  dead cell = 0
+        #            #nei 3       live
+        #
+        #  save live die in next round with (X//10)%2   if live save as 10+old
+        #                                               if die  save as 20+old
+        #  when get old value   old = old%10
+        
+        for i in range(m):
+            for j in range(n):
+                live=0
+                old=board[i][j]%10
+                if old==1:
+                    livecell=True
+                else:
+                    livecell=False
+                    
+                for nei in [(i+1,j),(i-1,j),(i,j+1),(i,j-1),(i+1,j+1),(i+1,j-1),(i-1,j+1),(i-1,j-1)]:
+                    ii,jj=nei
+                    if ii&lt;m and ii&gt;=0 and jj&lt;n and jj&gt;=0:
+                        live+=board[ii][jj]%10
+                
+                if livecell:
+                    if live==2 or live==3:
+                        board[i][j]= 10+old
+                    else:
+                        board[i][j]= 20+old
+                else:
+                    if live==3:
+                        board[i][j] = 10+old
+                        
+        for i in range(m):
+            for j in range(n):
+                board[i][j] = (board[i][j]//10)%2
+        
+#INF CASE
+def gameOfLifeInfinite(self, live):
+    ctr = collections.Counter((I, J)
+                              for i, j in live
+                              for I in range(i-1, i+2)
+                              for J in range(j-1, j+2)
+                              if I != i or J != j)
+    return {ij
+            for ij in ctr
+            if ctr[ij] == 3 or ctr[ij] == 2 and ij in live}
+
+def gameOfLife(self, board):
+    live = {(i, j) for i, row in enumerate(board) for j, live in enumerate(row) if live}
+    live = self.gameOfLifeInfinite(live)
+    for i, row in enumerate(board):
+        for j in range(len(row)):
+            row[j] = int((i, j) in live)
+</code></pre>
+<h1 id="290-word-pattern-easy">290. Word Pattern （Easy）</h1>
+<pre><code class="language-python">class Solution:
+    def wordPattern(self, pattern: str, s: str) -&gt; bool:
+        
+        dic1=dict()
+        dic2=dict()
+        if len(pattern)!=len(s.split()): return False
+        for k,v in zip(s.split(),pattern):
+            if k not in dic1:
+                dic1[k]=v
+            else:
+                if dic1[k]!=v:
+                    return False
+            
+            if v not in dic2:
+                dic2[v]=k
+            else:
+                if dic2[v]!=k:
+                    return False
+        return True
+</code></pre>
+<p>注意是一一映射，所以需要2个dict检查， 注意corner case。</p>
 
             </div>
             
@@ -618,7 +1088,7 @@ if __name__ == '__main__':
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/da-jia-lai-zhao-chi-wen-zi-ban/" title="大家来找茬(文字版)">https://headhuanglan.github.io/post/da-jia-lai-zhao-chi-wen-zi-ban/</a>
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-12-01/" title="Leetcode 2021-12-01">https://headhuanglan.github.io/post/leetcode-2021-12-01/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -627,21 +1097,17 @@ if __name__ == '__main__':
   </ul>
   <div class="tags">
     
-      <a href="https://headhuanglan.github.io/tag/sbk4gR8dj/"># 游戏</a>
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/"># leetcode</a>
     
   </div>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="二分法模板" href="https://headhuanglan.github.io/post/er-fen-fa-mo-ban/">二分法模板</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="二分法模板" href="https://headhuanglan.github.io/post/er-fen-fa-mo-ban/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="关于" href="https://headhuanglan.github.io/post/about/">关于</a>
-        <a class="nav-mobile-next" title="关于" href="https://headhuanglan.github.io/post/about/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2021-11-30" href="https://headhuanglan.github.io/post/leetcode-2021-11-30/">Leetcode 2021-11-30</a>
+        <a class="nav-mobile-next" title="Leetcode 2021-11-30" href="https://headhuanglan.github.io/post/leetcode-2021-11-30/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>

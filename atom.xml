@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2021-12-27T07:30:19.187Z</updated>
+    <updated>2021-12-31T18:59:40.955Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,6 +10,550 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Lan&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2021-12-01]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-12-01/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-01/">
+        </link>
+        <updated>2021-11-30T05:36:09.000Z</updated>
+        <summary type="html"><![CDATA[<p>依然在补进度，而且没有复习之前刷的题目， 12月底补12月初进度。 立个flag，明年一月结束要刷到900. 二月全面复习二刷。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>依然在补进度，而且没有复习之前刷的题目， 12月底补12月初进度。 立个flag，明年一月结束要刷到900. 二月全面复习二刷。</p>
+<!-- more -->
+<h1 id="281-zigzag-iterator-medium">281. Zigzag Iterator （Medium）</h1>
+<p>Given two vectors of integers v1 and v2, implement an iterator to return their elements alternately.</p>
+<pre><code class="language-python">class ZigzagIterator:
+    def __init__(self, v1: List[int], v2: List[int]):
+        li=[v1,v2]
+        self.li = [[v,len(v)] for v in li if v]
+        self.select = 0
+    
+    def next(self) -&gt; int:
+        if self.li[self.select][1]&gt;0:
+            self.li[self.select][1]-=1
+            val= self.li[self.select][0].pop(0)
+            if self.li[self.select][1]==0:
+                self.li.pop(self.select)
+            self.select=(self.select+1)%len(self.li) if self.li else 0
+            return val
+         
+    def hasNext(self) -&gt; bool:
+        return sum([e[1] for e in self.li])&gt;0
+        
+        
+
+# Your ZigzagIterator object will be instantiated and called as such:
+# i, v = ZigzagIterator(v1, v2), []
+# while i.hasNext(): v.append(i.next())
+</code></pre>
+<h1 id="282-expression-add-operators-hard">282. Expression Add Operators (Hard)</h1>
+<p>Given a string num that contains only digits and an integer target, return all possibilities to insert the binary operators '+', '-', and/or '*' between the digits of num so that the resultant expression evaluates to the target value.Note that operands in the returned expressions should not contain leading zeros.</p>
+<pre><code class="language-python">class Solution:
+    def addOperators(self, num: 'str', target: 'int') -&gt; 'List[str]':
+
+        N = len(num)
+        answers = []
+        def recurse(index, prev_operand, current_operand, value, string):
+
+            # Done processing all the digits in num
+            if index == N:
+
+                # If the final value == target expected AND
+                # no operand is left unprocessed
+                if value == target and current_operand == 0:
+                    answers.append(&quot;&quot;.join(string[1:]))
+                return
+
+            # Extending the current operand by one digit
+            current_operand = current_operand*10 + int(num[index])
+            str_op = str(current_operand)
+
+            # To avoid cases where we have 1 + 05 or 1 * 05 since 05 won't be a
+            # valid operand. Hence this check
+            if current_operand &gt; 0:
+
+                # NO OP recursion
+                recurse(index + 1, prev_operand, current_operand, value, string)
+
+            # ADDITION
+            string.append('+'); string.append(str_op)
+            recurse(index + 1, current_operand, 0, value + current_operand, string)
+            string.pop();string.pop()
+
+            # Can subtract or multiply only if there are some previous operands
+            if string:
+
+                # SUBTRACTION
+                string.append('-'); string.append(str_op)
+                recurse(index + 1, -current_operand, 0, value - current_operand, string)
+                string.pop();string.pop()
+
+                # MULTIPLICATION
+                string.append('*'); string.append(str_op)
+                recurse(index + 1, current_operand * prev_operand, 0, value - prev_operand + (current_operand * prev_operand), string)
+                string.pop();string.pop()
+        recurse(0, 0, 0, 0, [])    
+        return answers
+</code></pre>
+<p>第一眼感觉是用backtracking，写出了第一版，但是没考虑1） number 可以是1位可以是2位，3位 etc， 2）乘法的优先级高于加减，所以需要tracking operator是什么。 3）不可以backtracking到最后eval结果，太费时间。 直接看答案了。。。答案： 关键在于除了加减乘以外，增加一个不操作operator， 12--&gt;123  是 12乘以10+3     extending 当前值12 by one digit， 12乘以10。  看了答案还是懵逼。细节太多但都符合逻辑。</p>
+<h1 id="283-move-zeroes-easy">283. Move Zeroes （Easy）</h1>
+<p>Given an integer array nums, move all 0's to the end of it while maintaining the relative order of the non-zero elements.</p>
+<pre><code class="language-python">class Solution:
+    def moveZeroes(self, nums: List[int]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify nums in-place instead.
+        &quot;&quot;&quot;
+    
+        pos=0
+        for i,n in enumerate(nums):
+            if n!=0:
+                nums[pos]=n
+                pos+=1
+        while pos&lt;len(nums):
+            nums[pos]=0
+            pos+=1
+
+#SWAP is a better solution
+class Solution:
+    def moveZeroes(self, nums: List[int]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify nums in-place instead.
+        &quot;&quot;&quot;
+    
+        pos=0
+        for i,n in enumerate(nums):
+            if n!=0:
+                nums[pos],nums[i] = nums[i],nums[pos]
+                pos+=1
+     
+</code></pre>
+<h1 id="284-peeking-iterator-medium">284. Peeking Iterator (Medium)</h1>
+<pre><code class="language-python"># Below is the interface for Iterator, which is already defined for you.
+#
+# class Iterator:
+#     def __init__(self, nums):
+#         &quot;&quot;&quot;
+#         Initializes an iterator object to the beginning of a list.
+#         :type nums: List[int]
+#         &quot;&quot;&quot;
+#
+#     def hasNext(self):
+#         &quot;&quot;&quot;
+#         Returns true if the iteration has more elements.
+#         :rtype: bool
+#         &quot;&quot;&quot;
+#
+#     def next(self):
+#         &quot;&quot;&quot;
+#         Returns the next element in the iteration.
+#         :rtype: int
+#         &quot;&quot;&quot;
+
+class PeekingIterator:
+    def __init__(self, iterator):
+        &quot;&quot;&quot;
+        Initialize your data structure here.
+        :type iterator: Iterator
+        &quot;&quot;&quot;
+        self.iterator=iterator
+        self.peekval=None
+
+    def peek(self):
+        &quot;&quot;&quot;
+        Returns the next element in the iteration without advancing the iterator.
+        :rtype: int
+        &quot;&quot;&quot;
+        if self.peekval:
+            return self.peekval
+        else:
+            self.peekval=self.iterator.next()
+            return self.peekval
+        
+
+    def next(self):
+        &quot;&quot;&quot;
+        :rtype: int
+        &quot;&quot;&quot;
+        if self.peekval is not None:
+            peekval=self.peekval
+            self.peekval=None
+            return peekval
+        else:
+            return self.iterator.next()
+        
+
+    def hasNext(self):
+        &quot;&quot;&quot;
+        :rtype: bool
+        &quot;&quot;&quot;
+        return self.iterator.hasNext() or self.peekval is not None
+        
+
+# Your PeekingIterator object will be instantiated and called as such:
+# iter = PeekingIterator(Iterator(nums))
+# while iter.hasNext():
+#     val = iter.peek()   # Get the next element but not advance the iterator.
+#     iter.next()         # Should return the same value as [val].
+
+</code></pre>
+<h1 id="285-inorder-successor-in-bst-medium">285. Inorder Successor in BST (Medium)</h1>
+<p>Given the root of a binary search tree and a node p in it, return the in-order successor of that node in the BST. If the given node has no in-order successor in the tree, return null.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def inorderSuccessor(self, root: 'TreeNode', p: 'TreeNode') -&gt; 'Optional[TreeNode]':
+        stack = []
+        while root and root.val!=p.val:
+            stack.append(root)
+            if p.val&lt;root.val:
+                root=root.left
+            else:
+                root=root.right
+        
+        if p.right:
+            node=p.right
+            while node.left:
+                node=node.left
+            return node
+                
+        else:
+            while stack:
+                node=stack.pop()
+                if node.val&gt;p.val:
+                    return node
+            return None
+
+
+#ANSWER
+class Solution:
+    
+    def inorderSuccessor(self, root: 'TreeNode', p: 'TreeNode') -&gt; 'TreeNode':
+        
+        successor = None
+        
+        while root:
+            
+            if p.val &gt;= root.val:
+                root = root.right
+            else:
+                successor = root
+                root = root.left
+                
+        return successor
+
+</code></pre>
+<p>答案更巧妙。</p>
+<h1 id="286-walls-and-gates-medium">286. Walls and Gates （Medium）</h1>
+<p>You are given an m x n grid rooms initialized with these three possible values.</p>
+<pre><code>-1 A wall or an obstacle.
+0 A gate.
+INF Infinity means an empty room. We use the value 231 - 1 = 2147483647 to represent INF as you may assume that the distance to a gate is less than 2147483647.
+</code></pre>
+<p>Fill each empty room with the distance to its nearest gate. If it is impossible to reach a gate, it should be filled with INF.</p>
+<pre><code class="language-python">class Solution:
+    def wallsAndGates(self, rooms: List[List[int]]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify rooms in-place instead.
+        &quot;&quot;&quot;
+        from collections import deque
+        m=len(rooms)
+        n=len(rooms[0])
+        INF=2**31-1
+        q = deque()
+        for i in range(m):
+            for j in range(n):
+                if rooms[i][j]==0:
+                    q.append((i,j))
+        level=0
+        visited = set()
+        while q:
+            level+=1
+            for _ in range(len(q)):
+                i,j = q.popleft()
+                visited.add((i,j))
+                for ii,jj in [(i+1,j),(i-1,j),(i,j+1),(i,j-1)]:
+                    if ii&gt;=0 and ii&lt;m and jj&gt;=0 and jj&lt;n and (ii,jj) not in visited:
+                        if rooms[ii][jj]!=0 and rooms[ii][jj]!=-1:
+                            rooms[ii][jj] = level
+                            q.append((ii,jj))
+                            visited.add((ii,jj))
+
+#ANSWER
+class Solution:
+    def wallsAndGates(self, rooms: List[List[int]]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify rooms in-place instead.
+        &quot;&quot;&quot;
+        from collections import deque
+        m=len(rooms)
+        n=len(rooms[0])
+        INF=2**31-1
+        q = deque()
+        for i in range(m):
+            for j in range(n):
+                if rooms[i][j]==0:
+                    q.append((i,j))
+        level=0
+        while q:
+            for _ in range(len(q)):
+                i,j = q.popleft()
+                for ii,jj in [(i+1,j),(i-1,j),(i,j+1),(i,j-1)]:
+                    if ii&gt;=0 and ii&lt;m and jj&gt;=0 and jj&lt;n and  rooms[ii][jj]==INF :
+                        rooms[ii][jj] = rooms[i][j]+1
+                        q.append((ii,jj))
+                           
+</code></pre>
+<p>第一眼感觉用bfs做，从gates 处扫不是墙和gate的rooms距离。 差点忘了bfs 要for _ in range(len(queue))  .....   答案不用visited level 解决， 因为BFS所以只要INF 变成距离就是最短距离， 从什么地方变得距离？就是rooms[ii][jj] = rooms[i][j]+1</p>
+<h1 id="font-colorred-287-find-the-duplicate-number-mediumfont"><font color='red'> 287. Find the Duplicate Number （Medium）</font></h1>
+<p>Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive.<br>
+There is only one repeated number in nums, return this repeated number.<br>
+You must solve the problem without modifying the array nums and uses only constant extra space.</p>
+<pre><code class="language-python">class Solution:
+    def findDuplicate(self, nums: List[int]) -&gt; int:
+        for num in nums:
+            cur = abs(num)
+            if nums[cur] &lt; 0:
+                duplicate = cur
+                break
+            nums[cur] = -nums[cur]
+
+        # Restore numbers
+        for i in range(len(nums)):
+            nums[i] = abs(nums[i])
+
+        return duplicate
+
+#ANSWER
+class Solution:
+    def findDuplicate(self, nums: List[int]) -&gt; int:
+        duplicate = 0
+        n = len(nums)
+        bits = n.bit_length()
+        for bit in range(bits):
+            mask = 1 &lt;&lt; bit
+            base_count = 0
+            nums_count = 0
+            for i in range(n):
+                # If bit is set in number (i) then add 1 to base_count
+                if i &amp; mask:
+                    base_count += 1
+                    
+                # If bit is set in nums[i] then add 1 to nums_count
+                if nums[i] &amp; mask:
+                    nums_count += 1
+                    
+            # If the current bit is more frequently set in nums than it is in 
+            # the range [1, 2, ..., n] then it must also be set in the duplicate number.
+            if nums_count - base_count &gt; 0:
+                duplicate |= mask
+                
+        return duplicate
+
+#ANSWER
+class Solution:
+    def findDuplicate(self, nums: 'List[int]') -&gt; 'int':
+        
+        low = 1
+        high = len(nums)-1
+        
+        while low &lt; high:
+            mid = low+(high-low)//2
+            count = 0
+            for i in nums:
+                if i &lt;= mid:
+                    count+=1
+            if count &lt;= mid:
+                low = mid+1
+            else:
+                high = mid
+        return low
+
+#ANSWER
+class Solution:
+    def findDuplicate(self, nums: List[int]) -&gt; int:
+        
+        #who can think it as cycled two pointer problem?
+        
+        slow = nums[0]
+        fast = nums[0]
+        
+        while True:
+            slow =  nums[slow]
+            fast = nums[nums[fast]]
+            if slow==fast:
+                break
+        
+        fast = nums[0]
+        while slow!=fast:
+            slow=nums[slow]
+            fast=nums[fast]
+        return slow
+</code></pre>
+<p>一堆double数中找single容易，用xor就可以， 但一堆single中找double。。。 答案思路： 思路1）标负。符号所在位置表示数出现过没。 nums[cur]小于0表示 cur这个数出现过。 2）bitmask 3）binary search 4）Cycle Detection，这个方法最妙。</p>
+<h1 id="288-unique-word-abbreviation-medium">288. Unique Word Abbreviation （Medium）</h1>
+<p>The abbreviation of a word is a concatenation of its first letter, the number of characters between the first and last letter, and its last letter. If a word has only two characters, then it is an abbreviation of itself.</p>
+<pre><code class="language-python">class ValidWordAbbr:
+    
+    
+    def __init__(self, dictionary: List[str]):
+        import collections 
+        self.dic= collections.defaultdict(set)
+        for w in dictionary:
+            key=self.sort(w)
+            self.dic[key].add(w)
+        #print(self.dic)
+        
+    def sort(self,w):
+        if len(w)&lt;=2:
+            key=w
+        else:
+            key=w[0]+str(len(w[1:-1])) +w[-1]
+        return key
+    
+    def isUnique(self, word: str) -&gt; bool:
+        key=self.sort(word)
+        if key not in self.dic or (len(self.dic[key])==1 and list(self.dic[key])[0]==word):
+            return True
+        return False
+
+
+# Your ValidWordAbbr object will be instantiated and called as such:
+# obj = ValidWordAbbr(dictionary)
+# param_1 = obj.isUnique(word)
+
+#Better solution
+class ValidWordAbbr(object):
+    
+    def getkey(self,word):
+        if len(word)&lt;=2: 
+            return word
+        else:
+            return word[0]+str(len(word[1:-1]))+word[-1]
+        
+    
+    def __init__(self, dictionary):
+        &quot;&quot;&quot;
+        :type dictionary: List[str]
+        &quot;&quot;&quot;
+         
+        self.dic=dict()
+        for word in dictionary:
+            key=self.getkey(word)
+            if key in self.dic and word!=self.dic[key]:
+                self.dic[key]='#'
+            else:
+                self.dic[key]=word
+        
+
+    def isUnique(self, word):
+        &quot;&quot;&quot;
+        :type word: str
+        :rtype: bool
+        &quot;&quot;&quot;
+
+        key=self.getkey(word)
+        
+        if key in self.dic and self.dic[key]==word:
+            return True
+        elif key not in self.dic:
+            return True
+        return False
+</code></pre>
+<h1 id="289-game-of-life-medium">289. Game of Life (Medium)</h1>
+<pre><code class="language-python">class Solution:
+    def gameOfLife(self, board: List[List[int]]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify board in-place instead.
+        &quot;&quot;&quot;
+        m=len(board)
+        n=len(board[0])
+        #solve it in-place
+        #rule
+        #  live cell =1
+        #            #nei &lt;2      die
+        #            #nei 2 or 3  live
+        #            #nei &gt;3      die
+        #  dead cell = 0
+        #            #nei 3       live
+        #
+        #  save live die in next round with (X//10)%2   if live save as 10+old
+        #                                               if die  save as 20+old
+        #  when get old value   old = old%10
+        
+        for i in range(m):
+            for j in range(n):
+                live=0
+                old=board[i][j]%10
+                if old==1:
+                    livecell=True
+                else:
+                    livecell=False
+                    
+                for nei in [(i+1,j),(i-1,j),(i,j+1),(i,j-1),(i+1,j+1),(i+1,j-1),(i-1,j+1),(i-1,j-1)]:
+                    ii,jj=nei
+                    if ii&lt;m and ii&gt;=0 and jj&lt;n and jj&gt;=0:
+                        live+=board[ii][jj]%10
+                
+                if livecell:
+                    if live==2 or live==3:
+                        board[i][j]= 10+old
+                    else:
+                        board[i][j]= 20+old
+                else:
+                    if live==3:
+                        board[i][j] = 10+old
+                        
+        for i in range(m):
+            for j in range(n):
+                board[i][j] = (board[i][j]//10)%2
+        
+#INF CASE
+def gameOfLifeInfinite(self, live):
+    ctr = collections.Counter((I, J)
+                              for i, j in live
+                              for I in range(i-1, i+2)
+                              for J in range(j-1, j+2)
+                              if I != i or J != j)
+    return {ij
+            for ij in ctr
+            if ctr[ij] == 3 or ctr[ij] == 2 and ij in live}
+
+def gameOfLife(self, board):
+    live = {(i, j) for i, row in enumerate(board) for j, live in enumerate(row) if live}
+    live = self.gameOfLifeInfinite(live)
+    for i, row in enumerate(board):
+        for j in range(len(row)):
+            row[j] = int((i, j) in live)
+</code></pre>
+<h1 id="290-word-pattern-easy">290. Word Pattern （Easy）</h1>
+<pre><code class="language-python">class Solution:
+    def wordPattern(self, pattern: str, s: str) -&gt; bool:
+        
+        dic1=dict()
+        dic2=dict()
+        if len(pattern)!=len(s.split()): return False
+        for k,v in zip(s.split(),pattern):
+            if k not in dic1:
+                dic1[k]=v
+            else:
+                if dic1[k]!=v:
+                    return False
+            
+            if v not in dic2:
+                dic2[v]=k
+            else:
+                if dic2[v]!=k:
+                    return False
+        return True
+</code></pre>
+<p>注意是一一映射，所以需要2个dict检查， 注意corner case。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Leetcode 2021-11-30]]></title>
         <id>https://headhuanglan.github.io/post/leetcode-2021-11-30/</id>
@@ -1316,11 +1860,11 @@ class Solution:
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Leetcode 2021-12-27]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-12-27/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-27/">
+        <title type="html"><![CDATA[Leetcode 2021-11-27]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-11-27/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-27/">
         </link>
-        <updated>2021-11-27T03:05:28.000Z</updated>
+        <updated>2021-11-27T01:05:28.000Z</updated>
         <content type="html"><![CDATA[<!-- more -->
 <h1 id="font-colorred-241-different-ways-to-add-parentheses-mediumfont"><font color='red'> 241. Different Ways to Add Parentheses （Medium）</font></h1>
 <p>Given a string expression of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. You may return the answer in any order.</p>
@@ -1594,10 +2138,10 @@ class Solution:
     </entry>
     <entry>
         <title type="html"><![CDATA[Leetcode 2021-11-26]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-12-26/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-26/">
+        <id>https://headhuanglan.github.io/post/leetcode-2021-11-26/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-26/">
         </link>
-        <updated>2021-11-26T14:39:32.000Z</updated>
+        <updated>2021-11-26T01:39:32.000Z</updated>
         <content type="html"><![CDATA[<!-- more -->
 <h1 id="231-power-of-two-easy">231. Power of Two (Easy)</h1>
 <p>Given an integer n, return true if it is a power of two. Otherwise, return false.An integer n is a power of two, if there exists an integer x such that n == 2^x.</p>
@@ -3475,196 +4019,6 @@ class Solution:
         
 </code></pre>
 <p>BFS 拓扑排序，找出indegree==0的node output。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-11-22]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-11-22/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-22/">
-        </link>
-        <updated>2021-11-21T04:01:05.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="191-number-of-1-bits-easy">191. Number of 1 Bits (Easy)</h1>
-<p>Write a function that takes an unsigned integer and returns the number of '1' bits it has (also known as the Hamming weight).</p>
-<pre><code class="language-python">class Solution:
-    def hammingWeight(self, n: int) -&gt; int:
-        res = 0 
-        for _ in range(32):
-            lastbit = n &amp; 1
-            n = n &gt;&gt;1
-            res += 1&amp;lastbit
-        return res
-</code></pre>
-<h1 id="192-word-frequency-medium-bash">192. Word Frequency (Medium) BASH</h1>
-<p>Write a bash script to calculate the frequency of each word in a text file words.txt.</p>
-<pre><code class="language-BASH">for word in $(cat words.txt);   do echo $word;  done | sort | uniq -c | sort -r | awk '{ print $2 &quot; &quot;$1}'
-</code></pre>
-<p>Just ignore ....</p>
-<h1 id="193-valid-phone-numbers-easy-bash">193. Valid Phone Numbers (Easy) BASH</h1>
-<p>Given a text file file.txt that contains a list of phone numbers (one per line), write a one-liner bash script to print all valid phone numbers.</p>
-<pre><code class="language-BASH">grep -e '^[0-9]\{3\}-[0-9]\{3\}-[0-9]\{4\}$' -e '^([0-9]\{3\}) [0-9]\{3\}-[0-9]\{4\}$' file.txt
-</code></pre>
-<p>Just ignore ....</p>
-<h1 id="194-transpose-file-medium-bash">194. Transpose File (Medium) BASH</h1>
-<p>Given a text file file.txt, transpose its content.</p>
-<pre><code class="language-BASH">cat file.txt | awk '{for(i=0;++i&lt;=NF;)a[i]=a[i]?a[i] FS $i:$i}END{for(i=0;i++&lt;NF;)print a[i]}'
-</code></pre>
-<p>Just ignore ....</p>
-<h1 id="195-tenth-line-easy-bash">195. Tenth Line (Easy) BASH</h1>
-<p>Given a text file file.txt, print just the 10th line of the file.</p>
-<pre><code class="language-BASH">sed -n &quot;10p&quot; file.txt
-</code></pre>
-<p>Just ignore ....</p>
-<h1 id="196-delete-duplicate-emails-easy-sql">196. Delete Duplicate Emails (Easy) SQL</h1>
-<pre><code class="language-SQL">DELETE p1 FROM Person p1,
-    Person p2
-WHERE
-    p1.Email = p2.Email AND p1.Id &gt; p2.Id
-</code></pre>
-<h1 id="197-rising-temperature-easy-sql">197. Rising Temperature (Easy) SQL</h1>
-<pre><code class="language-SQL">select w1.id as Id from Weather w1 left join Weather w2 on datediff(w1.RecordDate,w2.RecordDate)=1 where w2.Temperature&lt;w1.Temperature
-
-# answer way of writting
-SELECT
-    weather.id AS 'Id'
-FROM
-    weather
-        JOIN
-    weather w ON DATEDIFF(weather.recordDate, w.recordDate) = 1
-        AND weather.Temperature &gt; w.Temperature
-;
-</code></pre>
-<h1 id="198-house-robber-medium">198. House Robber (Medium)</h1>
-<p>You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and it will automatically contact the police if two adjacent houses were broken into on the same night.</p>
-<pre><code class="language-python">class Solution:
-    def rob(self, nums: List[int]) -&gt; int:
-        # dp[i] = tthe max amount can rob at house i
-        # dp[i] = max(dp[i-1],dp[i-2]+nums[i])
-        # dp[0] = nums[0]
-        # dp[1] = max(nums[0],nums[1])
-        if not nums:return 0
-        if len(nums)==1: return nums[0]
-        if len(nums)==2: return max(nums)
-        dp = [float('-inf')]*len(nums)
-        dp[0]=nums[0]
-        dp[1]=max(nums[:2])
-        for i in range(2,len(nums)):
-            dp[i] = max(dp[i-1],dp[i-2]+nums[i])
-        return dp[-1]
-</code></pre>
-<h1 id="199-binary-tree-right-side-view-medium">199. Binary Tree Right Side View (Medium)</h1>
-<p>Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def rightSideView(self, root: Optional[TreeNode]) -&gt; List[int]:
-        if not root: return root
-        queue = [root]
-        res = []
-        
-        while queue:
-            level =[]
-            l=len(queue)
-            for i in range(l):
-                cur = queue.pop(0)
-                level.append(cur.val)
-                if cur.right:
-                    queue.append(cur.right)
-                if cur.left:
-                    queue.append(cur.left)
-            res.append(level[0])
-        
-        return res
-</code></pre>
-<p>level order tresversal.</p>
-<h1 id="font-colorblue200-number-of-islands-medium-font"><font color='blue'>200. Number of Islands (Medium) </font></h1>
-<p>Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.</p>
-<pre><code class="language-python">class Solution:
-    def numIslands(self, grid: List[List[str]]) -&gt; int:
-        
-        
-        def dfs(grid,i,j):
-            m=len(grid)
-            n=len(grid[0])
-            if i&lt;0 or j&lt;0 or i&gt;=m or j&gt;=n: return 
-            if grid[i][j]=='1':
-                grid[i][j]='#'
-                dfs(grid,i+1,j)
-                dfs(grid,i-1,j)
-                dfs(grid,i,j+1)
-                dfs(grid,i,j-1)
-        r=0
-        for i in range(len(grid)):
-            for j in range(len(grid[0])):
-                if grid[i][j]=='1':
-                    dfs(grid,i,j)
-                    r+=1
-        
-        return r
-
-#UNION FIND
-class Solution:
-    class UnionFind:
-        def __init__(self,grid):
-            self.count=0
-            self.m=len(grid)
-            self.n=len(grid[0])
-            self.parent = [None]*(self.m*self.n)
-            self.rank = [0]*(self.m*self.n)
-            for i in range(self.m):
-                for j in range(self.n):
-                    if grid[i][j]=='1':
-                        self.parent[i*self.n+j]=i*self.n+j
-                        self.count+=1
-        def find(self,i):
-            if self.parent[i]!=i:
-                self.parent[i]=self.find(self.parent[i])
-            return self.parent[i]
-        
-        def union(self,x,y):
-            rootx=self.find(x)
-            rooty=self.find(y)
-            if rootx!=rooty:
-                if self.rank[rootx]&gt;self.rank[rooty]:
-                    self.parent[rooty]=rootx
-                elif self.rank[rootx]&lt;self.rank[rooty]:
-                    self.parent[rootx]=rooty
-                else:
-                    self.parent[rooty]=rootx
-                    self.rank[rootx]+=1
-                
-                self.count-=1
-        
-        def getCount(self):
-            return self.count
-    
-    def numIslands(self, grid: List[List[str]]) -&gt; int:
-        nr=len(grid)
-        nc=len(grid[0])
-        uf = self.UnionFind(grid)
-        for r in range(nr):
-            for c in range(nc):
-                if grid[r][c]=='1':
-                    grid[r][c]='0'
-                    if (r-1&gt;=0 and grid[r-1][c]=='1'):
-                        uf.union(r*nc+c,(r-1)*nc+c)
-                    if (r + 1 &lt; nr and grid[r+1][c] == '1'):
-                        uf.union(r * nc + c, (r+1) * nc + c) 
-                    if (c - 1 &gt;= 0 and grid[r][c-1] == '1'):
-                        uf.union(r * nc + c, r * nc + c - 1) 
-                    if   (c + 1 &lt; nc and grid[r][c+1] == '1'):
-                        uf.union(r * nc + c, r * nc + c + 1) 
-                    
-    
-        return uf.getCount() 
-        
-
-</code></pre>
-<p>答案玩了个新东西，叫UnionFind， 挺有意思。 就是找爸爸的爸爸，然后谁rank高就作为最终父亲。 这样union时候只是pointer在移动， 刚开始所有1 都是自己的爸爸， 然后逐渐union周围的1， 每union一次counter -=1 这样最终counter就是所有独立的岛数目。DFS也很简单， BFS同理。</p>
 ]]></content>
     </entry>
 </feed>

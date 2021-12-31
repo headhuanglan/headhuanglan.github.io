@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>大家来找茬(文字版) | Lan&#39;s Blog</title>
+<title>Leetcode 2021-11-27 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1640977169430">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,8 @@
 
 
 
-  <meta name="description" content="大家来找茬(文字版)" />
-  <meta name="keywords" content="游戏" />
+  <meta name="description" content="Leetcode 2021-11-27" />
+  <meta name="keywords" content="leetcode" />
 </head>
 
 <body>
@@ -223,12 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
-</ul>
-</li>
+<li><a href="#font-colorred-241-different-ways-to-add-parentheses-mediumfont"><font color='red'> 241. Different Ways to Add Parentheses （Medium）</font></a></li>
+<li><a href="#242-valid-anagram-easy">242. Valid Anagram （Easy）</a></li>
+<li><a href="#243-shortest-word-distance-easy">243. Shortest Word Distance (Easy)</a></li>
+<li><a href="#244-shortest-word-distance-ii-medium">244. Shortest Word Distance II (Medium)</a></li>
+<li><a href="#245-shortest-word-distance-iii-medium">245. Shortest Word Distance III (Medium)</a></li>
+<li><a href="#246-strobogrammatic-number-easy">246. Strobogrammatic Number (Easy)</a></li>
+<li><a href="#font-colorred247-strobogrammatic-number-ii-medium-font"><font color='red'>247. Strobogrammatic Number II (Medium) </font></a></li>
+<li><a href="#font-colorred248-strobogrammatic-number-iii-hard-font"><font color='red'>248. Strobogrammatic Number III （Hard） </font></a></li>
+<li><a href="#249-group-shifted-strings-medium">249. Group Shifted Strings （Medium）</a></li>
+<li><a href="#250-count-univalue-subtrees-medium">250. Count Univalue Subtrees (Medium)</a></li>
 </ul>
 
   </div>
@@ -494,20 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/da-jia-lai-zhao-chi-wen-zi-ban/"> 大家来找茬(文字版) </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-27/"> Leetcode 2021-11-27 </a>
   </h1>
   <div class="post-meta">
-    
-    <span class="meta-item">
-      <i class="fa fa-thumb-tack"></i>
-      <span class="language" data-lan="top">置顶</span>
-      <span class="post-meta-divider">|</span>
-    </span>
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-10-29 13:45:41">2021-10-29</span>
+      <span class="publish-time" data-t="2021-11-26 20:05:28">2021-11-26</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -515,8 +513,8 @@
       <i class="fa fa-folder-o"></i>
       <span class="pc-show language" data-lan="category-in">标签:</span>
        
-      <a href="https://headhuanglan.github.io/tag/sbk4gR8dj/">
-        <span>游戏</span>
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/">
+        <span>leetcode</span>
       </a>
        
     </span>
@@ -525,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >2<span class="language" data-lan="minute"
+        >9<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -534,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >329<span class="pc-show language" data-lan="words"
+        >1401<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -544,68 +542,275 @@
 </section>
 
             <div class="post-body next-md-body" id="post_body">
-              <p><a href="/zhaocha">点击PLAY大家来找茬</a></p>
-<!-- more -->
-<figure data-type="image" tabindex="1"><img src="https://headhuanglan.github.io/post-images/1635790537514.PNG" alt="" loading="lazy"></figure>
-<h2 id="思路">思路</h2>
-<p>准备写个大家来找茬的文字版，需要找出所有中文的形状相似字符对，已知GBK下33088-65278为中文编码。找个字库文件比如FZLanTingHei-R-GBK.TTF，把字符黑白矩阵转成一个向量，然后算所有文字对的COS相似度就可以了，算法很简单。 开搞！</p>
-<h2 id="代码">代码</h2>
-<pre><code class="language-python">
-import string
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw
-import numpy as np
+              <!-- more -->
+<h1 id="font-colorred-241-different-ways-to-add-parentheses-mediumfont"><font color='red'> 241. Different Ways to Add Parentheses （Medium）</font></h1>
+<p>Given a string expression of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. You may return the answer in any order.</p>
+<pre><code class="language-python">class Solution:
+    def diffWaysToCompute(self, expression: str) -&gt; List[int]:
+        if not expression: return []
+         
+        exp = []
+        start=0
+        i=0
+        while i&lt;len(expression):
+            if expression[i].isdigit():
+                i+=1
+            else:
+                exp.append(expression[start:i])
+                exp.append(expression[i])
+                start=i+1
+                i+=1
+        exp.append(expression[start:])
+        
+        
+        #basecase
+        res = []
+        if len(exp)==1 and ('+' not in exp) and ('-' not in exp) and ('*' not in exp):
+            res=[int(exp[0])]
+        
+        
+        for i, op in enumerate(exp):
+            if not op.isdigit():
+                left = self.diffWaysToCompute(''.join(exp[:i]))
+                right= self.diffWaysToCompute(''.join(exp[i+1:]))
+                if op=='+':
+                    for l in left:
+                        for r in right:
+                            res.append(l+r)
+                elif op=='-':
+                     for l in left:
+                        for r in right:
+                            res.append(l-r)
+                else:
+                     for l in left:
+                        for r in right:
+                            res.append(l*r)
+                      
+ 
+        return res
 
-fobidden_chars = {'■','●','︱', '｜','▉' ,'▼','▊','█', '▇','▇'}.union(set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'))
-
-def char_to_pixels(text, path='font.ttf', fontsize=80):
-    font = ImageFont.truetype(path, fontsize) 
-    #getsize lead to w, h change for diffrent chars 
-    #w, h = font.getsize(text)  
-    w, h = fontsize+5, fontsize+5 
-    #print(w,h)
-    h *= 2
-    image = Image.new('L', (w, h), 1)  
-    draw = ImageDraw.Draw(image)
-    draw.text((0, 0), text, font=font) 
-    arr = np.asarray(image)
-    arr = np.where(arr, 0, 1)
-    #arr = arr[(arr != 0).any(axis=1)]
-    return arr
-    
-def display(arr):
-    result = np.where(arr, '1', '0')
-    print('\n'.join([''.join(row) for row in result]))
-
-def get_distance(vecs,me):
-    #calculate the cos distance of me with other vecs
-    dst = (np.dot(vecs, me) / np.linalg.norm(vecs, axis=1) / np.linalg.norm(me))
-    return dst
-    
-def get_closest_chars (li_arrs, vec,li_gbk_chars, number=6):
-    dst = get_distance(li_arrs, vec)
-    gbk_char_ids = np.argsort(-dst)
-    return [li_gbk_chars[ind] for ind in gbk_char_ids[:number] ]
-    
-if __name__ == '__main__':
-	li_gbk_chars = []
-	li_arrs = []
-	#GBK 33088-65278
-	for ind in range(33088,65278+1):
-		try:
-		  gbk_char =  bytes.fromhex(str(hex(ind))[2:]).decode(&quot;GBK&quot;)
-		  if gbk_char in fobidden_chars: continue
-		  arr = char_to_pixels(gbk_char,'./FZLanTingHei-R-GBK.TTF')
-		  #print(gbk_char)
-		  #display(arr)
-		  li_gbk_chars.append(gbk_char) 
-		  #print(gbk_char, arr)
-		  li_arrs.append(arr.reshape(-1)) 	
-		  #print(arr.reshape(-1).shape)	  	
-		except:
-			pass
 </code></pre>
+<p>感觉是backtracking但写code出现了问题。。。并不是 a+(b+...)   和 (a+b)+.... 这2种情况， 而是 （left）+ （right）产生不同的组合。  思路错误导致没写出来。。写了个bug。</p>
+<h1 id="242-valid-anagram-easy">242. Valid Anagram （Easy）</h1>
+<pre><code class="language-python">class Solution:
+    def isAnagram(self, s: str, t: str) -&gt; bool:
+        return collections.Counter(s)==collections.Counter(t)
+</code></pre>
+<p>答案用了26个字符的数组存储出现次数，s出现+1，t出现-1. 这样相等时候所有位置都应该是0.</p>
+<h1 id="243-shortest-word-distance-easy">243. Shortest Word Distance (Easy)</h1>
+<pre><code class="language-python">class Solution:
+    def shortestDistance(self, wordsDict: List[str], word1: str, word2: str) -&gt; int:
+        visited = dict()
+        res=float('inf')
+        for i,w in enumerate(wordsDict):
+            if w==word1 and word2 in visited:
+                res=min(res,i-visited[word2])
+            if w==word2 and word1 in visited:
+                res=min(res,i-visited[word1])
+            visited[w]=i
+        return res
+
+</code></pre>
+<h1 id="244-shortest-word-distance-ii-medium">244. Shortest Word Distance II (Medium)</h1>
+<pre><code class="language-python">class WordDistance:
+
+    def __init__(self, wordsDict: List[str]):
+        self.dic = collections.defaultdict(list)
+        for i,w in enumerate(wordsDict):
+            self.dic[w].append(i)
+        
+
+    def shortest(self, word1: str, word2: str) -&gt; int:
+        res=float('inf')
+        for pos1 in self.dic[word1]:
+            for pos2 in self.dic[word2]:
+                res=min(res,abs(pos2-pos1))
+        return res
+</code></pre>
+<h1 id="245-shortest-word-distance-iii-medium">245. Shortest Word Distance III (Medium)</h1>
+<pre><code class="language-python">class Solution:
+    def shortestWordDistance(self, wordsDict: List[str], word1: str, word2: str) -&gt; int:
+        dic=dict()
+        res = float('inf')
+        for i, w in enumerate(wordsDict):
+            if w==word1 and word2 in dic:
+                res=min(res,i-dic[word2])
+            if w==word2 and word1 in dic:
+                res=min(res,i-dic[word1])
+            
+            dic[w]=i
+        return res
+
+</code></pre>
+<h1 id="246-strobogrammatic-number-easy">246. Strobogrammatic Number (Easy)</h1>
+<pre><code class="language-python">class Solution:
+    def isStrobogrammatic(self, num: str) -&gt; bool:
+        # 1 6 9 8 0
+        if '2' in num or '3' in num or '4' in num or '5' in num or '7' in num:
+            return False
+        dic={'6':'9','9':'6','1':'1','8':'8','0':'0'}
+        num2= ''.join([dic[e] for e in num][::-1])
+        return num==num2
+
+</code></pre>
+<h1 id="font-colorred247-strobogrammatic-number-ii-medium-font"><font color='red'>247. Strobogrammatic Number II (Medium) </font></h1>
+<pre><code class="language-python">class Solution:
+    def findStrobogrammatic(self, n: int) -&gt; List[str]:
+        if n==1: return [&quot;0&quot;,&quot;1&quot;,&quot;8&quot;]
+        nums=['0','1','6','8','9']
+        
+        def isStrobogrammatic(num: str) -&gt; bool:
+            if '2' in num or '3' in num or '4' in num or '5' in num or '7' in num:
+                return False
+            dic={'6':'9','9':'6','1':'1','8':'8','0':'0'}
+            num2= ''.join([dic[e] for e in num][::-1])
+            return num==num2
+        
+        res = []
+        def bt(tmp):
+            if len(tmp)==n:
+                sb = ''.join(tmp[:])
+                if isStrobogrammatic(sb) and sb[0]!='0':
+                    res.append(sb)
+                return 
+            for cur in nums:
+                tmp.append(cur)
+                bt(tmp)
+                tmp.pop()
+        
+        bt([])
+        return res
+#answer way of writting
+class Solution:
+    def findStrobogrammatic(self, n: int) -&gt; List[str]:
+        evenMidCandidate = [&quot;11&quot;,&quot;69&quot;,&quot;88&quot;,&quot;96&quot;, &quot;00&quot;]
+        oddMidCandidate = [&quot;0&quot;, &quot;1&quot;, &quot;8&quot;]
+        if n == 1:
+            return oddMidCandidate
+        if n == 2:
+            return evenMidCandidate[:-1]
+        if n % 2:
+            pre, midCandidate = self.findStrobogrammatic(n-1), oddMidCandidate
+        else: 
+            pre, midCandidate = self.findStrobogrammatic(n-2), evenMidCandidate
+        premid = (n-1)//2
+        return [p[:premid] + c + p[premid:] for c in midCandidate for p in pre]
+</code></pre>
+<p>初次尝试， time limit exceeded。。。 backtracking属于暴力求解。 答案思路：<br>
+n == 1: [0, 1, 8]<br>
+n == 2: [11, 88, 69, 96]<br>
+How about n == 3?<br>
+=&gt; it can be retrieved if you insert [0, 1, 8] to the middle of solution of n == 2<br>
+n == 4?<br>
+=&gt; it can be retrieved if you insert [11, 88, 69, 96, 00] to the middle of solution of n == 2<br>
+n == 5?<br>
+=&gt; it can be retrieved if you insert [0, 1, 8] to the middle of solution of n == 4<br>
+the same, for n == 6, it can be retrieved if you insert [11, 88, 69, 96, 00] to the middle of solution of n == 4</p>
+<h1 id="font-colorred248-strobogrammatic-number-iii-hard-font"><font color='red'>248. Strobogrammatic Number III （Hard） </font></h1>
+<pre><code class="language-python">class Solution:
+    def strobogrammaticInRange(self, low: str, high: str) -&gt; int:
+        
+        
+        dic = {'0': '0','1': '1','6': '9','8': '8','9': '6'}    
+        count=[0] # count as list can be modifed without return 
+        
+        
+        
+        def dfs(low,high,c,left,right,count):
+            if left&gt;right:
+                s=''.join(c)
+                if (len(s)==len(low) and s&lt;low) or (len(s)==len(high) and s&gt;high):
+                    return 
+                count[0]+=1
+                return
+            for k,v in dic.items():
+                c[left]=k
+                c[right]=v
+                if len(c)!=1 and c[0]=='0':
+                    continue
+                if left==right and k!=v:
+                    continue
+                
+                dfs(low,high,c,left+1,right-1,count)
+        
+        
+        for length in range(len(low),len(high)+1):
+   
+            dfs(low, high, ['']*length, 0, length-1, count);
+        
+        return count[0]
+    
+
+</code></pre>
+<p>give up, 思路 ， 构建length长度的满足条件的string，从两边向中间构建。  做dfs search。<br>
+用247的办法也可以感觉。 然后过滤出low，high之间有多少个。</p>
+<h1 id="249-group-shifted-strings-medium">249. Group Shifted Strings （Medium）</h1>
+<p>We can shift a string by shifting each of its letters to its successive letter.</p>
+<pre><code>For example, &quot;abc&quot; can be shifted to be &quot;bcd&quot;.
+</code></pre>
+<p>We can keep shifting the string to form a sequence.</p>
+<pre><code>For example, we can keep shifting &quot;abc&quot; to form the sequence: &quot;abc&quot; -&gt; &quot;bcd&quot; -&gt; ... -&gt; &quot;xyz&quot;.
+</code></pre>
+<p>Given an array of strings strings, group all strings[i] that belong to the same shifting sequence. You may return the answer in any order.</p>
+<pre><code class="language-python">
+class Solution:
+    def groupStrings(self, strings: List[str]) -&gt; List[List[str]]:
+        dic = collections.defaultdict(list)
+        for s in strings:
+            if len(s)==1:
+                dic['NULL'].append(s)
+            else:
+                key=[]
+                for i in range(1,len(s)):
+                    tmp = str((ord(s[i])-ord(s[i-1]))%26)
+                    key.append(tmp)
+                key='-'.join(key)
+                dic[key].append(s)
+        return dic.values()
+</code></pre>
+<h1 id="250-count-univalue-subtrees-medium">250. Count Univalue Subtrees (Medium)</h1>
+<p>Given the root of a binary tree, return the number of uni-value subtrees.<br>
+A uni-value subtree means all nodes of the subtree have the same value.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def countUnivalSubtrees(self, root: Optional[TreeNode]) -&gt; int:
+        
+        count = [0]
+        
+        def isUnivalSubtrees(root):
+            if not root:
+                return False
+            if not root.left and not root.right:
+                count[0]+=1
+                return True
+            if not root.left:
+                res = isUnivalSubtrees(root.right) and root.val==root.right.val
+                if res:
+                    count[0]+=1
+                return res
+            if not root.right:
+                res= isUnivalSubtrees(root.left) and root.val==root.left.val
+                if res:
+                    count[0]+=1
+                return res
+            
+            left = isUnivalSubtrees(root.left)
+            right= isUnivalSubtrees(root.right)
+            res=left and right and root.val==root.left.val and root.val==root.right.val
+            if res:
+                count[0]+=1
+            return res
+        
+        isUnivalSubtrees(root)
+        return count[0]
+
+</code></pre>
+<p>从上个题目获得的trick这个题目马上用到， count作为list，边run边更新不影响helper function的bool返回值。</p>
 
             </div>
             
@@ -618,7 +823,7 @@ if __name__ == '__main__':
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/da-jia-lai-zhao-chi-wen-zi-ban/" title="大家来找茬(文字版)">https://headhuanglan.github.io/post/da-jia-lai-zhao-chi-wen-zi-ban/</a>
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-27/" title="Leetcode 2021-11-27">https://headhuanglan.github.io/post/leetcode-2021-11-27/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -627,21 +832,21 @@ if __name__ == '__main__':
   </ul>
   <div class="tags">
     
-      <a href="https://headhuanglan.github.io/tag/sbk4gR8dj/"># 游戏</a>
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/"># leetcode</a>
     
   </div>
   <div class="nav">
     <div class="nav-prev">
       
         <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="二分法模板" href="https://headhuanglan.github.io/post/er-fen-fa-mo-ban/">二分法模板</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="二分法模板" href="https://headhuanglan.github.io/post/er-fen-fa-mo-ban/">上一篇</a>
+        <a class="nav-pc-next" title="书单" href="https://headhuanglan.github.io/post/shu-dan/">书单</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="书单" href="https://headhuanglan.github.io/post/shu-dan/">上一篇</a>
       
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="关于" href="https://headhuanglan.github.io/post/about/">关于</a>
-        <a class="nav-mobile-next" title="关于" href="https://headhuanglan.github.io/post/about/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2021-11-26" href="https://headhuanglan.github.io/post/leetcode-2021-11-26/">Leetcode 2021-11-26</a>
+        <a class="nav-mobile-next" title="Leetcode 2021-11-26" href="https://headhuanglan.github.io/post/leetcode-2021-11-26/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
