@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-08 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1641013145110">
+<link rel="shortcut icon" href="/favicon.ico?v=1641013300965">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -9226,109 +9226,6 @@ class Solution(object):
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-14/"" data-c="
-          &lt;!-- more --&gt;
-&lt;h1 id=&#34;bfs-template&#34;&gt;BFS - Template&lt;/h1&gt;
-&lt;h2 id=&#34;template-i&#34;&gt;template I&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/**
- * Return the length of the shortest path between root and target node.
- */
-int BFS(Node root, Node target) {
-    Queue&amp;lt;Node&amp;gt; queue;  // store all nodes which are waiting to be processed
-    int step = 0;       // number of steps neeeded from root to current node
-    // initialize
-    add root to queue;
-    // BFS
-    while (queue is not empty) {
-        step = step + 1;
-        // iterate the nodes which are already in the queue
-        int size = queue.size();
-        for (int i = 0; i &amp;lt; size; ++i) {
-            Node cur = the first node in queue;
-            return step if cur is target;
-            for (Node next : the neighbors of cur) {
-                add next to queue;
-            }
-            remove the first node from queue;
-        }
-    }
-    return -1;          // there is no path from root to target
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;template-ii&#34;&gt;template II&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/**
- * Return the length of the shortest path between root and target node.
- */
-int BFS(Node root, Node target) {
-    Queue&amp;lt;Node&amp;gt; queue;  // store all nodes which are waiting to be processed
-    Set&amp;lt;Node&amp;gt; visited;  // store all the nodes that we&#39;ve visited
-    int step = 0;       // number of steps neeeded from root to current node
-    // initialize
-    add root to queue;
-    add root to visited;
-    // BFS
-    while (queue is not empty) {
-        step = step + 1;
-        // iterate the nodes which are already in the queue
-        int size = queue.size();
-        for (int i = 0; i &amp;lt; size; ++i) {
-            Node cur = the first node in queue;
-            return step if cur is target;
-            for (Node next : the neighbors of cur) {
-                if (next is not in used) {
-                    add next to queue;
-                    add next to visited;
-                }
-            }
-            remove the first node from queue;
-        }
-    }
-    return -1;          // there is no path from root to target
-}
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;dfs-template&#34;&gt;DFS - Template&lt;/h1&gt;
-&lt;h2 id=&#34;template-i-2&#34;&gt;template I&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/*
- * Return true if there is a path from cur to target.
- */
-boolean DFS(Node cur, Node target, Set&amp;lt;Node&amp;gt; visited) {
-    return true if cur is target;
-    for (next : each neighbor of cur) {
-        if (next is not in visited) {
-            add next to visted;
-            return true if DFS(next, target, visited) == true;
-        }
-    }
-    return false;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;template-ii-2&#34;&gt;template II&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/*
- * Return true if there is a path from cur to target.
- */
-boolean DFS(int root, int target) {
-    Set&amp;lt;Node&amp;gt; visited;
-    Stack&amp;lt;Node&amp;gt; stack;
-    add root to stack;
-    while (stack is not empty) {
-        Node cur = the top element in stack;
-        remove the cur from the stack;
-        return true if cur is target;
-        for (Node next : the neighbors of cur) {
-            if (next is not in visited) {
-                add next to visited;
-                add next to stack;
-            }
-        }
-    }
-    return false;
-}
-&lt;/code&gt;&lt;/pre&gt;
-">BFS DFS 模板总结</a>
-      </div>
-      
-      <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-13/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;111-minimum-depth-of-binary-tree-easy&#34;&gt;111. Minimum Depth of Binary Tree (Easy)&lt;/h1&gt;
@@ -9631,6 +9528,110 @@ class Solution:
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;first try, time limit exceeded.  add mem, nailed it. 答案用DP方法也很巧妙，因为最后一行就是所有可能性，慢慢回溯去求结果。root是 minlen[0].&lt;/p&gt;
 ">Leetcode 2021-11-13</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-14/"" data-c="
+          &lt;p&gt;BFS DFS 模板总结&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;h1 id=&#34;bfs-template&#34;&gt;BFS - Template&lt;/h1&gt;
+&lt;h2 id=&#34;template-i&#34;&gt;template I&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/**
+ * Return the length of the shortest path between root and target node.
+ */
+int BFS(Node root, Node target) {
+    Queue&amp;lt;Node&amp;gt; queue;  // store all nodes which are waiting to be processed
+    int step = 0;       // number of steps neeeded from root to current node
+    // initialize
+    add root to queue;
+    // BFS
+    while (queue is not empty) {
+        step = step + 1;
+        // iterate the nodes which are already in the queue
+        int size = queue.size();
+        for (int i = 0; i &amp;lt; size; ++i) {
+            Node cur = the first node in queue;
+            return step if cur is target;
+            for (Node next : the neighbors of cur) {
+                add next to queue;
+            }
+            remove the first node from queue;
+        }
+    }
+    return -1;          // there is no path from root to target
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;template-ii&#34;&gt;template II&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/**
+ * Return the length of the shortest path between root and target node.
+ */
+int BFS(Node root, Node target) {
+    Queue&amp;lt;Node&amp;gt; queue;  // store all nodes which are waiting to be processed
+    Set&amp;lt;Node&amp;gt; visited;  // store all the nodes that we&#39;ve visited
+    int step = 0;       // number of steps neeeded from root to current node
+    // initialize
+    add root to queue;
+    add root to visited;
+    // BFS
+    while (queue is not empty) {
+        step = step + 1;
+        // iterate the nodes which are already in the queue
+        int size = queue.size();
+        for (int i = 0; i &amp;lt; size; ++i) {
+            Node cur = the first node in queue;
+            return step if cur is target;
+            for (Node next : the neighbors of cur) {
+                if (next is not in used) {
+                    add next to queue;
+                    add next to visited;
+                }
+            }
+            remove the first node from queue;
+        }
+    }
+    return -1;          // there is no path from root to target
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;dfs-template&#34;&gt;DFS - Template&lt;/h1&gt;
+&lt;h2 id=&#34;template-i-2&#34;&gt;template I&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/*
+ * Return true if there is a path from cur to target.
+ */
+boolean DFS(Node cur, Node target, Set&amp;lt;Node&amp;gt; visited) {
+    return true if cur is target;
+    for (next : each neighbor of cur) {
+        if (next is not in visited) {
+            add next to visted;
+            return true if DFS(next, target, visited) == true;
+        }
+    }
+    return false;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;template-ii-2&#34;&gt;template II&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/*
+ * Return true if there is a path from cur to target.
+ */
+boolean DFS(int root, int target) {
+    Set&amp;lt;Node&amp;gt; visited;
+    Stack&amp;lt;Node&amp;gt; stack;
+    add root to stack;
+    while (stack is not empty) {
+        Node cur = the top element in stack;
+        remove the cur from the stack;
+        return true if cur is target;
+        for (Node next : the neighbors of cur) {
+            if (next is not in visited) {
+                add next to visited;
+                add next to stack;
+            }
+        }
+    }
+    return false;
+}
+&lt;/code&gt;&lt;/pre&gt;
+">BFS DFS 模板总结</a>
       </div>
       
       <div class="item">
