@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2021-12-31T18:59:40.955Z</updated>
+    <updated>2022-01-01T04:51:41.251Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,6 +10,317 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Lan&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2021-12-02]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-12-02/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-02/">
+        </link>
+        <updated>2021-12-02T06:05:58.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="291-word-pattern-ii-medium">291. Word Pattern II （Medium）</h1>
+<p>Given a pattern and a string s, return true if s matches the pattern.<br>
+A string s matches a pattern if there is some bijective mapping of single characters to strings such that if each character in pattern is replaced by the string it maps to, then the resulting string is s. A bijective mapping means that no two characters map to the same string, and no character maps to two different strings.</p>
+<pre><code class="language-python">class Solution:
+    def wordPatternMatch(self, pattern: str, s: str) -&gt; bool:
+        
+        
+        
+        def helper(pattern,s,dic1,dic2):
+            if not s: return not pattern
+            if not pattern: return not s
+            key = pattern[0]
+            res=False
+            for i in range(1,len(s)+1):
+                dic1_copy=dic1.copy() 
+                dic2_copy=dic2.copy()
+                s_val = s[:i]
+                
+                #print(key,s_val)
+                if key in dic1_copy and dic1_copy[key]!=s_val: 
+                    res=res or False
+                    continue
+                else:
+                    dic1_copy[key]=s_val
+                
+                if s_val in dic2_copy and dic2_copy[s_val]!=key: 
+                    res=res or False
+                    continue
+                else:
+                    dic2_copy[s_val]=key
+                    
+                s_rest = s[i:]
+                res = res or helper(pattern[1:],s_rest,dic1_copy,dic2_copy)
+            #if res:
+            #    print(pattern,s)
+            return res
+        
+        return helper(pattern,s,dict(),dict())
+</code></pre>
+<p>知道使用backtracking，但是得小心 dic1 dic2 copy问题，以及res = res or False， 既然当前s[:i] 已经是False了就skip，所以用cotinue。</p>
+<h1 id="292-nim-game-easy">292. Nim Game （Easy）</h1>
+<p>You are playing the following Nim Game with your friend:<br>
+Initially, there is a heap of stones on the table.<br>
+You and your friend will alternate taking turns, and you go first.<br>
+On each turn, the person whose turn it is will remove 1 to 3 stones from the heap.<br>
+The one who removes the last stone is the winner.</p>
+<pre><code class="language-python">class Solution:
+    def canWinNim(self, n: int) -&gt; bool:
+        # dp [0]   [1]     [2]   [3]    [4]     [5]
+        #    True   True   True  True   False  
+        
+        dp = [False] * (n+1)
+        if n&lt;=3: return True
+        dp[0]=True
+        dp[1]=True
+        dp[2]=True
+        dp[3]=True
+        for nn in range(2,n+1):
+            for i_select in [1,2,3]:
+                dp[nn] = dp[nn] or  (not dp[nn-i_select])
+        
+        #print(dp)
+        return dp[n]
+    
+class Solution:
+    def canWinNim(self, n: int) -&gt; bool:
+        # 只要对方等于4个 对方必然输。
+        # 我先开始，如何让对方等于4个
+        # n=4 我输
+        # n=5 我选1
+        # n=6 我选2
+        # n=7 我选3
+        # n=8 我选1 不行 我选2 不行 我选3 还是不行
+        # n=9 选1
+        # n=10 选2
+        # n=11 选3
+        # n=12 都不行
+        
+        return  not n%4==0
+
+</code></pre>
+<p>用dp写了一个答案，但time limit exceeded。 逐渐发现规律。。。就是是否被4整除。</p>
+<h1 id="293-flip-game-easy">293. Flip Game （Easy）</h1>
+<p>You are playing a Flip Game with your friend.<br>
+You are given a string currentState that contains only '+' and '-'. You and your friend take turns to flip two consecutive &quot;++&quot; into &quot;--&quot;. The game ends when a person can no longer make a move, and therefore the other person will be the winner.<br>
+Return all possible states of the string currentState after one valid move. You may return the answer in any order. If there is no valid move, return an empty list [].</p>
+<pre><code class="language-python">class Solution:
+    def generatePossibleNextMoves(self, currentState: str) -&gt; List[str]:
+        res= []
+        for i in range(len(currentState)-1):
+            if currentState[i]=='+' and currentState[i+1]=='+':
+                res.append(currentState[:i]+'--'+currentState[i+2:])
+        return res
+</code></pre>
+<h1 id="font-colorred294-flip-game-ii-medium-font"><font color='red'>294. Flip Game II (Medium) </font></h1>
+<p>You are playing a Flip Game with your friend.<br>
+You are given a string currentState that contains only '+' and '-'. You and your friend take turns to flip two consecutive &quot;++&quot; into &quot;--&quot;. The game ends when a person can no longer make a move, and therefore the other person will be the winner.<br>
+Return true if the starting player can guarantee a win, and false otherwise.</p>
+<pre><code class="language-python">class Solution:
+    def canWin(self, currentState: str) -&gt; bool:
+            return any(currentState[i:i+2] == '++' and not self.canWin(currentState[:i] + '--' + currentState[i+2:])  for i in range(len(currentState)))
+#ANSWER
+class Solution(object):
+    _memo = {}
+    def canWin(self, s):
+        memo = self._memo
+        if s not in memo:
+            memo[s] = any(s[i:i+2] == '++' and not self.canWin(s[:i] + '--' + s[i+2:])
+                          for i in range(len(s)))
+        return memo[s]
+
+#ANSWER
+class Solution(object):
+    def canWin(self, s):
+        memo = {}
+        def can(s):
+            if s not in memo:
+                memo[s] = any(s[i:i+2] == '++' and not can(s[:i] + '--' + s[i+2:])
+                              for i in range(len(s)))
+            return memo[s]
+        return can(s)
+
+</code></pre>
+<p>没思路。。 。。。backtracking with mem。。。。</p>
+<h1 id="font-colorred295-find-median-from-data-stream-hardfont"><font color='red'>295. Find Median from Data Stream （Hard）</font></h1>
+<pre><code class="language-python">from heapq import *
+
+
+class MedianFinder:
+    def __init__(self):
+        self.small = []  # the smaller half of the list, max heap (invert min-heap)
+        self.large = []  # the larger half of the list, min heap
+
+    def addNum(self, num):
+        if len(self.small) == len(self.large):
+            heappush(self.large, -heappushpop(self.small, -num))
+        else:
+            heappush(self.small, -heappushpop(self.large, num))
+
+    def findMedian(self):
+        if len(self.small) == len(self.large):
+            return float(self.large[0] - self.small[0]) / 2.0
+        else:
+            return float(self.large[0])
+
+</code></pre>
+<p>最简单方法的是sort， 复杂点的比如答案，用了min heap。 思路： small 保存较小的，large保存较大的， 由于需要small的最大元素，minheap头是最小元素，所以push到small要反向。  large能最多比small多存一个元素。 heappushpop同时 push一个元素取出一个元素。TimeCoplex O(logn).</p>
+<h1 id="296-best-meeting-point-hard">296. Best Meeting Point （Hard）</h1>
+<p>Given an m x n binary grid grid where each 1 marks the home of one friend, return the minimal total travel distance.<br>
+The total travel distance is the sum of the distances between the houses of the friends and the meeting point.<br>
+The distance is calculated using Manhattan Distance</p>
+<pre><code class="language-python">class Solution:
+    def minTotalDistance(self, grid: List[List[int]]) -&gt; int:
+        
+        m=len(grid)
+        n=len(grid[0])
+        rows=[]
+        cols=[]
+        for row in range(m):
+            for col in range(n):
+                if grid[row][col]==1:
+                    rows.append(row)
+                    cols.append(col)
+        
+        rows = sorted(rows)
+        cols = sorted(cols)
+        row=rows[len(rows)//2]
+        col=cols[len(cols)//2]
+        
+        def mindis1d(points,origin):
+            distance=0
+            for point in points:
+                distance += abs(point-origin)
+            return distance
+        
+        return mindis1d(rows,row)+mindis1d(cols,col)
+                    
+
+</code></pre>
+<p>第一想法多次BFS。。。一次cost mn   最差情况有mn个1， 所以最差有O（mmnn）。 不可行。 答案思路：1）分解成2个1d的问题，最小值点出现在median位置。  O(mnlog⁡mn)    2）只要不sort，时间复杂度还能降低到O(mn) 。 拉出来行和列分别遍历即可。</p>
+<h1 id="font-colorred-297-serialize-and-deserialize-binary-tree-hard-font"><font color='red'> 297. Serialize and Deserialize Binary Tree （Hard） </font></h1>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Codec:
+
+    def serialize(self, root):
+        &quot;&quot;&quot;Encodes a tree to a single string.
+        
+        :type root: TreeNode
+        :rtype: str
+        &quot;&quot;&quot;
+        res = []
+        def pre(root):
+            if not root:
+                res.append('#')
+                return  
+            res.append(str(root.val))
+            pre(root.left)
+            pre(root.right)
+        pre(root)
+         
+        return '@'.join(res)
+        
+
+    def deserialize(self, data):
+        &quot;&quot;&quot;Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: TreeNode
+        &quot;&quot;&quot;
+        
+        data = [ e.strip() for e in data.split('@')  ]
+        
+        def deser(data):
+            if not data: return None
+            if data[0]=='#':
+                data.pop(0)
+                return None
+            
+            root=TreeNode(int(data.pop(0))) 
+            root.left=deser(data)
+            root.right=deser(data)
+            return root
+        
+        return deser(data)
+        
+        
+
+# Your Codec object will be instantiated and called as such:
+# ser = Codec()
+# deser = Codec()
+# ans = deser.deserialize(ser.serialize(root))
+
+</code></pre>
+<p>有个什么儿子兄弟表示法，但忘记了。。。这个题目只用了preorder。 但要注意递归时候，传入data必须是list，这样随着递归list本身会变化，要是str会出错。</p>
+<h1 id="font-colorred298-binary-tree-longest-consecutive-sequence-mediumfont"><font color='red'>298. Binary Tree Longest Consecutive Sequence （Medium）</font></h1>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def longestConsecutive(self, root: Optional[TreeNode]) -&gt; int:
+        res=[0]
+        def pre(root,parent, length):
+            if not root:
+                return 
+            if parent and root.val==parent.val+1:
+                length+=1
+            else:
+                length=1
+            res[0]=max(res[0],length)
+            pre(root.left,root,length)
+            pre(root.right,root,length)
+        pre(root,None,0)
+        
+        return res[0]
+         
+</code></pre>
+<p>太晚了，应该能做出来，直接看答案改写。 pre order， 如果 parent+1=current ， length+=1 else length=1</p>
+<h1 id="299-bulls-and-cows-medium">299. Bulls and Cows （Medium）</h1>
+<pre><code class="language-python">class Solution:
+    def getHint(self, secret: str, guess: str) -&gt; str:
+        aaa=0
+        dic1=dict()
+        dic2=dict()
+        for a,b in zip(secret,guess):
+            if a==b:
+                aaa+=1
+            dic1[a]=dic1.get(a,0)+1
+            dic2[b]=dic2.get(b,0)+1
+        bbb=0
+        for k in dic1:
+            if k in dic2:
+                bbb+=min(dic1[k],dic2[k])
+        
+        bbb=bbb-aaa
+        
+        return str(aaa)+'A'+str(bbb)+'B'
+</code></pre>
+<h1 id="font-colorblue300-longest-increasing-subsequence-medium-font"><font color='blue'>300. Longest Increasing Subsequence (Medium) </font></h1>
+<pre><code class="language-python">class Solution:
+    def lengthOfLIS(self, nums: List[int]) -&gt; int:
+        # dp[i] means the LIS till ith number including i
+        # dp[i] =  max(dp[i],dp[j]+1)   j&lt;i and nums[j]&lt;nums[i]
+        if not nums: return 0
+        if len(nums)==1: return 1
+        dp = [1]*len(nums)
+        for i in range(1,len(nums)):
+            for j in range(i):
+                if nums[j]&lt;nums[i]:
+                    dp[i]=max(dp[i],dp[j]+1)
+        
+        return max(dp)
+</code></pre>
+<p>classical DP problem O(n^2)</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Leetcode 2021-12-01]]></title>
         <id>https://headhuanglan.github.io/post/leetcode-2021-12-01/</id>
@@ -3641,384 +3952,6 @@ class Solution:
         return False
 </code></pre>
 <p>用过期del dict key方法会time limit exceeded。竟然是用bukets。检查当前buket 和上一个或者下一个buket。 这题应该是个hard。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-11-23]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-11-23/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-23/">
-        </link>
-        <updated>2021-11-22T05:20:40.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="font-colorred201-bitwise-and-of-numbers-range-mediumfont"><font color='red'>201. Bitwise AND of Numbers Range （Medium）</font></h1>
-<p>Given two integers left and right that represent the range [left, right], return the bitwise AND of all numbers in this range, inclusive.</p>
-<pre><code class="language-python">class Solution:
-    def rangeBitwiseAnd(self, left: int, right: int) -&gt; int:
-        if left==right: return left
-        res = 0
-        for pos in range(32):
-            res |= 1 &lt;&lt; pos
-            for n in range(left,right+1):
-                if (n &amp; 1&lt;&lt;pos) &gt;&gt; pos ==0:
-                    res ^= 1 &lt;&lt; pos
-                    break
-        return res
-
-#answer way of writing
-class Solution:
-    def rangeBitwiseAnd(self, m: int, n: int) -&gt; int:
-        shift = 0   
-        # find the common 1-bits
-        while m &lt; n:
-            m = m &gt;&gt; 1
-            n = n &gt;&gt; 1
-            shift += 1
-        return m &lt;&lt; shift
-#
-class Solution:
-    def rangeBitwiseAnd(self, m: int, n: int) -&gt; int:
-        while m &lt; n:
-            # turn off rightmost 1-bit
-            n = n &amp; (n - 1)
-        return m &amp; n
-</code></pre>
-<p>初次尝试，time limit exceeded， 32位过一次，一旦发现在pos位上为0，就break。 还是速度慢，  after the AND operation on all the numbers, the remaining part of bit strings is the common prefix of all these bit strings.As a result, we then can reformulate the problem as &quot;given two integer numbers, we are asked to find the common prefix of their binary strings.&quot; 思路： shift 直到m n相等，然后再 shift back。 这样就找到了common prefix。另一解法，思路：关闭右侧最后是1的位，然后和左侧求&amp;。</p>
-<blockquote>
-<p>When we do AND bit operation between number and number-1, the rightmost bit of one in the original number would be turned off (from one to zero).</p>
-</blockquote>
-<h1 id="202-happy-number-easy">202. Happy Number （Easy）</h1>
-<p>Write an algorithm to determine if a number n is happy.<br>
-Input: n = 19<br>
-Output: true<br>
-Explanation:<br>
-12 + 92 = 82<br>
-82 + 22 = 68<br>
-62 + 82 = 100<br>
-12 + 02 + 02 = 1</p>
-<pre><code class="language-python">class Solution:
-    def isHappy(self, n: int) -&gt; bool:
-        visited =set()
-        
-        while n!=1:
-            if n in visited: return False
-            visited.add(n)
-            new_n =0
-            while n:
-                lastdig = n%10
-                new_n += lastdig*lastdig
-                n //= 10
-            n=new_n
-        
-        return True
-</code></pre>
-<h1 id="203-remove-linked-list-elements-easy">203. Remove Linked List Elements （Easy）</h1>
-<p>Given the head of a linked list and an integer val, remove all the nodes of the linked list that has Node.val == val, and return the new head.</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def removeElements(self, head: Optional[ListNode], val: int) -&gt; Optional[ListNode]:
-        if not head: return head
-        dummyhead = ListNode(val='NULL',next=head)
-        cur=dummyhead
-        while cur and cur.next:
-            while cur.next and cur.next.val==val:
-                cur.next=cur.next.next
-            cur=cur.next
-        return dummyhead.next
-</code></pre>
-<h1 id="font-colorred204-count-primes-medium-font"><font color='red'>204. Count Primes (Medium) </font></h1>
-<pre><code class="language-python">class Solution:
-    def countPrimes(self, n: int) -&gt; int:
- 
-        if n &lt;=2:
-            return 0
-        primes = [True] * n
-        primes[0] = primes[1] = False
-        for i in range(2, int(n ** 0.5) + 1):
-            if primes[i]:
-                primes[i * i: n: i] = [False] * len(primes[i * i: n: i])
-        #如果i是pime 比如i=2  那么 i的倍数肯定不是prime 从i**2 开始。 
-        return sum(primes)
-</code></pre>
-<p>直接用判断是否位质数方法会time limit exceeded。 思路：如果i是pime 比如i=2  那么 i的倍数肯定不是prime 从i**2 开始。</p>
-<pre><code class="language-python">     def isP(num):
-            for i in range(2,num//2+1):
-                if num%i==0:
-                    return False
-            return True
-</code></pre>
-<h1 id="205-isomorphic-strings-easy">205. Isomorphic Strings （Easy）</h1>
-<p>Given two strings s and t, determine if they are isomorphic.<br>
-Two strings s and t are isomorphic if the characters in s can be replaced to get t.</p>
-<pre><code class="language-python">class Solution:
-    def isIsomorphic(self, s: str, t: str) -&gt; bool:
-        if len(s)!=len(t): return False
-        l=len(s)
-        dic1 = dict()
-        dic2 = dict()
-        for i in range(l):
-            a = s[i]
-            b = t[i]
-            if a in dic1:
-                if dic1[a]!=b:
-                    return False
-            if b in dic2:
-                if dic2[b]!=a:
-                    return False
-            dic1[a] = b
-            dic2[b] = a
-        return True
-</code></pre>
-<h1 id="206-reverse-linked-list-easy">206. Reverse Linked List (Easy)</h1>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def reverseList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
-        pre = None
-        while head:
-            headnext=head.next
-            head.next = pre
-            pre = head
-            head=headnext
-        return pre
-</code></pre>
-<h1 id="font-colorred207-course-schedule-medium-font"><font color='red'>207. Course Schedule (Medium) </font></h1>
-<pre><code class="language-python">class Solution:
-    class Node:
-        def __init__(self,val=None):
-            self.val = val
-            self.nei = []
-            self.ind = 0 #indegree
-            self.status = -1  # -1 not visited, 0 visiting, 1 visited
-    
-    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -&gt; bool:
-        #  DAG 判断
-        #
-        # 建立graph
-        nodes = [self.Node(val=i) for i in range(numCourses)]
-        for row in prerequisites:
-            a,b =  row
-            nodes[b].nei.append(nodes[a])
-            nodes[a].ind+=1
-        
-        #DFS 法    
-        def dfs(node):
-            # return True 无环 False 有环
-            node.status=0
-            for nei in node.nei:
-                if nei.status==-1:
-                    if not dfs(nei):
-                        return False
-                elif nei.status == 0:
-                    return False
-            
-            node.status=1
-            return True
-        
-        for node in nodes:
-            if node.status==-1:
-                if not dfs(node):
-                    return False
-        
-        return True
-
-# upper DFS lower BFS
-class Solution:
-    class Node:
-        def __init__(self,val=None):
-            self.val = val
-            self.nei = []
-            self.ind = 0 #indegree
-            self.status = -1  # -1 not visited, 0 visiting, 1 visited
-    
-    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -&gt; bool:
-        #  DAG 判断
-        #
-        # 建立graph
-        nodes = [self.Node(val=i) for i in range(numCourses)]
-        for row in prerequisites:
-            a,b =  row
-            nodes[b].nei.append(nodes[a])
-            nodes[a].ind+=1
-        
-        #bfs 法
-        queue=[]
-        cnt=0
-        for node in nodes:
-            if node.ind==0:
-                queue.append(node)
-        while queue:
-            v=queue.pop(0)
-            cnt+=1
-            for nei in v.nei:
-                nei.ind-=1
-                if nei.ind==0:
-                    queue.append(nei)
-        
-        return cnt==numCourses
-</code></pre>
-<p>感觉是图的算法，判断是否为DAG。BFS找入度为0的。  DFS时候，如果正在搜索某V，但又回到了V。证明有环路。注意需要3个状态来表示node状态， 【visited，visiting，not visited】<br>
-需要补充拓扑排序算法解决变种题。</p>
-<pre><code class="language-python"># TopoSort sudo
-queue = []
-for 图中每个顶点V:
-    if indegree(V)==0:
-        queue.append(V)
-while queue:
-    V=queue.pop(0)
-    输出V，记录V的输出序号cnt++
-    for V的每个邻居 W:
-        indegree(W) -= 1
-        if indegree(W)==0:
-            queue.append(W)
-
-if cnt!=|V|:
-    ERROR(图中有回路)
-</code></pre>
-<h1 id="208-implement-trie-prefix-tree">208. Implement Trie (Prefix Tree)</h1>
-<pre><code class="language-python">class Trie:
-
-    def __init__(self):
-        self.next= dict()
-        self.isword=False
- 
-
-    def insert(self, word: str) -&gt; None:
-        if word:
-            char = word[0]
-            rest = word[1:]
-            if char not in self.next:
-                self.next[char] = Trie()
-            self.next[char].insert(rest)
-        else:
-            self.isword=True
-             
-
-    def search(self, word: str) -&gt; bool:
-       
-        if not word:
-            return self.isword
-        
-        char = word[0]
-        rest = word[1:]
-        if char in self.next:
-            if not self.next[char].search(rest):
-                return False
-        else:
-            return False
-        return True
-        
-
-    def startsWith(self, prefix: str) -&gt; bool:
-        if not prefix:
-            return True
-        
-        char=prefix[0]
-        rest=prefix[1:]
-        if char in self.next:
-            if not self.next[char].startsWith(rest):
-                return False
-        else:
-            return False
-        
-        return True
-        
-</code></pre>
-<h1 id="font-colorblue209-minimum-size-subarray-sum-medium-font"><font color='blue'>209. Minimum Size Subarray Sum (Medium) </font></h1>
-<pre><code class="language-python">class Solution:
-    def minSubArrayLen(self, target: int, nums: List[int]) -&gt; int:
-        # two pointer
-        
-        l=0
-        r=-1
-        val=0
-        res = float('inf')
-        while val&lt;target:
-            r+=1
-            if r&gt;=len(nums):
-                break
-            val+=nums[r]  
-        if val&gt;=target:
-            res=min(res,r-l+1)
-        else:
-            return 0
-        while l&lt;r:
-            if val&gt;=target:
-                #drop left
-                #print('dropleft',l)
-                val-=nums[l]
-                l+=1
-                if val&gt;=target: 
-                    #print(l,r)
-                    res=min(res,r-l+1)
-                
-            else:
-                #print('expandright',r+1)
-                r+=1
-                if r&gt;=len(nums):
-                    break
-                val+=nums[r] 
-        
-        return res
-# answer way of writting
-class Solution:
-    def minSubArrayLen(self, target: int, nums: List[int]) -&gt; int:
-        # two pointer
- 
-        l=len(nums)
-        res=float('inf')
-        left=0
-        sum_=0
-        for i,n in enumerate(nums):
-            sum_+=n
-            while sum_&gt;=target:
-                res=min(res,i-left+1)
-                sum_-=nums[left]
-                left+=1
-        
-        return res if res!= float('inf') else 0
-                
-</code></pre>
-<p>果然是two pointer, 学习answer写法，很清晰。</p>
-<h1 id="210-course-schedule-ii-medium">210. Course Schedule II （Medium）</h1>
-<pre><code class="language-python">class Solution:
-    class Node:
-        def __init__(self,val=None):
-            self.val=val
-            self.nei = []
-            self.indegree = 0
-    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -&gt; List[int]:
-        # dag
-        
-        nodes = [self.Node(val=i) for i in range(numCourses)]
-        for a,b in prerequisites:
-            nodes[b].nei.append(nodes[a])
-            nodes[a].indegree+=1
-        
-        queue = []
-        for node in nodes:
-            if node.indegree==0:
-                queue.append(node)
-                
-        res = []
-        while queue:
-            cur=queue.pop(0)
-            res.append(cur.val)
-            for w in cur.nei:
-                w.indegree-=1
-                if w.indegree==0:
-                    queue.append(w)
-        
-        return res if len(res)==numCourses else []
-        
-</code></pre>
-<p>BFS 拓扑排序，找出indegree==0的node output。</p>
 ]]></content>
     </entry>
 </feed>

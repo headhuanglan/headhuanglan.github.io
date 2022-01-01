@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-09 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1640977169430">
+<link rel="shortcut icon" href="/favicon.ico?v=1641012692809">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">35</span>
+        <span class="site-item-stat-count">36</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1575,6 +1575,314 @@ class Solution:
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-02/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;291-word-pattern-ii-medium&#34;&gt;291. Word Pattern II （Medium）&lt;/h1&gt;
+&lt;p&gt;Given a pattern and a string s, return true if s matches the pattern.&lt;br&gt;
+A string s matches a pattern if there is some bijective mapping of single characters to strings such that if each character in pattern is replaced by the string it maps to, then the resulting string is s. A bijective mapping means that no two characters map to the same string, and no character maps to two different strings.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def wordPatternMatch(self, pattern: str, s: str) -&amp;gt; bool:
+        
+        
+        
+        def helper(pattern,s,dic1,dic2):
+            if not s: return not pattern
+            if not pattern: return not s
+            key = pattern[0]
+            res=False
+            for i in range(1,len(s)+1):
+                dic1_copy=dic1.copy() 
+                dic2_copy=dic2.copy()
+                s_val = s[:i]
+                
+                #print(key,s_val)
+                if key in dic1_copy and dic1_copy[key]!=s_val: 
+                    res=res or False
+                    continue
+                else:
+                    dic1_copy[key]=s_val
+                
+                if s_val in dic2_copy and dic2_copy[s_val]!=key: 
+                    res=res or False
+                    continue
+                else:
+                    dic2_copy[s_val]=key
+                    
+                s_rest = s[i:]
+                res = res or helper(pattern[1:],s_rest,dic1_copy,dic2_copy)
+            #if res:
+            #    print(pattern,s)
+            return res
+        
+        return helper(pattern,s,dict(),dict())
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;知道使用backtracking，但是得小心 dic1 dic2 copy问题，以及res = res or False， 既然当前s[:i] 已经是False了就skip，所以用cotinue。&lt;/p&gt;
+&lt;h1 id=&#34;292-nim-game-easy&#34;&gt;292. Nim Game （Easy）&lt;/h1&gt;
+&lt;p&gt;You are playing the following Nim Game with your friend:&lt;br&gt;
+Initially, there is a heap of stones on the table.&lt;br&gt;
+You and your friend will alternate taking turns, and you go first.&lt;br&gt;
+On each turn, the person whose turn it is will remove 1 to 3 stones from the heap.&lt;br&gt;
+The one who removes the last stone is the winner.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def canWinNim(self, n: int) -&amp;gt; bool:
+        # dp [0]   [1]     [2]   [3]    [4]     [5]
+        #    True   True   True  True   False  
+        
+        dp = [False] * (n+1)
+        if n&amp;lt;=3: return True
+        dp[0]=True
+        dp[1]=True
+        dp[2]=True
+        dp[3]=True
+        for nn in range(2,n+1):
+            for i_select in [1,2,3]:
+                dp[nn] = dp[nn] or  (not dp[nn-i_select])
+        
+        #print(dp)
+        return dp[n]
+    
+class Solution:
+    def canWinNim(self, n: int) -&amp;gt; bool:
+        # 只要对方等于4个 对方必然输。
+        # 我先开始，如何让对方等于4个
+        # n=4 我输
+        # n=5 我选1
+        # n=6 我选2
+        # n=7 我选3
+        # n=8 我选1 不行 我选2 不行 我选3 还是不行
+        # n=9 选1
+        # n=10 选2
+        # n=11 选3
+        # n=12 都不行
+        
+        return  not n%4==0
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用dp写了一个答案，但time limit exceeded。 逐渐发现规律。。。就是是否被4整除。&lt;/p&gt;
+&lt;h1 id=&#34;293-flip-game-easy&#34;&gt;293. Flip Game （Easy）&lt;/h1&gt;
+&lt;p&gt;You are playing a Flip Game with your friend.&lt;br&gt;
+You are given a string currentState that contains only &#39;+&#39; and &#39;-&#39;. You and your friend take turns to flip two consecutive &amp;quot;++&amp;quot; into &amp;quot;--&amp;quot;. The game ends when a person can no longer make a move, and therefore the other person will be the winner.&lt;br&gt;
+Return all possible states of the string currentState after one valid move. You may return the answer in any order. If there is no valid move, return an empty list [].&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def generatePossibleNextMoves(self, currentState: str) -&amp;gt; List[str]:
+        res= []
+        for i in range(len(currentState)-1):
+            if currentState[i]==&#39;+&#39; and currentState[i+1]==&#39;+&#39;:
+                res.append(currentState[:i]+&#39;--&#39;+currentState[i+2:])
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred294-flip-game-ii-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;294. Flip Game II (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are playing a Flip Game with your friend.&lt;br&gt;
+You are given a string currentState that contains only &#39;+&#39; and &#39;-&#39;. You and your friend take turns to flip two consecutive &amp;quot;++&amp;quot; into &amp;quot;--&amp;quot;. The game ends when a person can no longer make a move, and therefore the other person will be the winner.&lt;br&gt;
+Return true if the starting player can guarantee a win, and false otherwise.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def canWin(self, currentState: str) -&amp;gt; bool:
+            return any(currentState[i:i+2] == &#39;++&#39; and not self.canWin(currentState[:i] + &#39;--&#39; + currentState[i+2:])  for i in range(len(currentState)))
+#ANSWER
+class Solution(object):
+    _memo = {}
+    def canWin(self, s):
+        memo = self._memo
+        if s not in memo:
+            memo[s] = any(s[i:i+2] == &#39;++&#39; and not self.canWin(s[:i] + &#39;--&#39; + s[i+2:])
+                          for i in range(len(s)))
+        return memo[s]
+
+#ANSWER
+class Solution(object):
+    def canWin(self, s):
+        memo = {}
+        def can(s):
+            if s not in memo:
+                memo[s] = any(s[i:i+2] == &#39;++&#39; and not can(s[:i] + &#39;--&#39; + s[i+2:])
+                              for i in range(len(s)))
+            return memo[s]
+        return can(s)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;没思路。。 。。。backtracking with mem。。。。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred295-find-median-from-data-stream-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;295. Find Median from Data Stream （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from heapq import *
+
+
+class MedianFinder:
+    def __init__(self):
+        self.small = []  # the smaller half of the list, max heap (invert min-heap)
+        self.large = []  # the larger half of the list, min heap
+
+    def addNum(self, num):
+        if len(self.small) == len(self.large):
+            heappush(self.large, -heappushpop(self.small, -num))
+        else:
+            heappush(self.small, -heappushpop(self.large, num))
+
+    def findMedian(self):
+        if len(self.small) == len(self.large):
+            return float(self.large[0] - self.small[0]) / 2.0
+        else:
+            return float(self.large[0])
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最简单方法的是sort， 复杂点的比如答案，用了min heap。 思路： small 保存较小的，large保存较大的， 由于需要small的最大元素，minheap头是最小元素，所以push到small要反向。  large能最多比small多存一个元素。 heappushpop同时 push一个元素取出一个元素。TimeCoplex O(logn).&lt;/p&gt;
+&lt;h1 id=&#34;296-best-meeting-point-hard&#34;&gt;296. Best Meeting Point （Hard）&lt;/h1&gt;
+&lt;p&gt;Given an m x n binary grid grid where each 1 marks the home of one friend, return the minimal total travel distance.&lt;br&gt;
+The total travel distance is the sum of the distances between the houses of the friends and the meeting point.&lt;br&gt;
+The distance is calculated using Manhattan Distance&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def minTotalDistance(self, grid: List[List[int]]) -&amp;gt; int:
+        
+        m=len(grid)
+        n=len(grid[0])
+        rows=[]
+        cols=[]
+        for row in range(m):
+            for col in range(n):
+                if grid[row][col]==1:
+                    rows.append(row)
+                    cols.append(col)
+        
+        rows = sorted(rows)
+        cols = sorted(cols)
+        row=rows[len(rows)//2]
+        col=cols[len(cols)//2]
+        
+        def mindis1d(points,origin):
+            distance=0
+            for point in points:
+                distance += abs(point-origin)
+            return distance
+        
+        return mindis1d(rows,row)+mindis1d(cols,col)
+                    
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第一想法多次BFS。。。一次cost mn   最差情况有mn个1， 所以最差有O（mmnn）。 不可行。 答案思路：1）分解成2个1d的问题，最小值点出现在median位置。  O(mnlog⁡mn)    2）只要不sort，时间复杂度还能降低到O(mn) 。 拉出来行和列分别遍历即可。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-297-serialize-and-deserialize-binary-tree-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 297. Serialize and Deserialize Binary Tree （Hard） &lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Codec:
+
+    def serialize(self, root):
+        &amp;quot;&amp;quot;&amp;quot;Encodes a tree to a single string.
+        
+        :type root: TreeNode
+        :rtype: str
+        &amp;quot;&amp;quot;&amp;quot;
+        res = []
+        def pre(root):
+            if not root:
+                res.append(&#39;#&#39;)
+                return  
+            res.append(str(root.val))
+            pre(root.left)
+            pre(root.right)
+        pre(root)
+         
+        return &#39;@&#39;.join(res)
+        
+
+    def deserialize(self, data):
+        &amp;quot;&amp;quot;&amp;quot;Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: TreeNode
+        &amp;quot;&amp;quot;&amp;quot;
+        
+        data = [ e.strip() for e in data.split(&#39;@&#39;)  ]
+        
+        def deser(data):
+            if not data: return None
+            if data[0]==&#39;#&#39;:
+                data.pop(0)
+                return None
+            
+            root=TreeNode(int(data.pop(0))) 
+            root.left=deser(data)
+            root.right=deser(data)
+            return root
+        
+        return deser(data)
+        
+        
+
+# Your Codec object will be instantiated and called as such:
+# ser = Codec()
+# deser = Codec()
+# ans = deser.deserialize(ser.serialize(root))
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;有个什么儿子兄弟表示法，但忘记了。。。这个题目只用了preorder。 但要注意递归时候，传入data必须是list，这样随着递归list本身会变化，要是str会出错。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred298-binary-tree-longest-consecutive-sequence-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;298. Binary Tree Longest Consecutive Sequence （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def longestConsecutive(self, root: Optional[TreeNode]) -&amp;gt; int:
+        res=[0]
+        def pre(root,parent, length):
+            if not root:
+                return 
+            if parent and root.val==parent.val+1:
+                length+=1
+            else:
+                length=1
+            res[0]=max(res[0],length)
+            pre(root.left,root,length)
+            pre(root.right,root,length)
+        pre(root,None,0)
+        
+        return res[0]
+         
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;太晚了，应该能做出来，直接看答案改写。 pre order， 如果 parent+1=current ， length+=1 else length=1&lt;/p&gt;
+&lt;h1 id=&#34;299-bulls-and-cows-medium&#34;&gt;299. Bulls and Cows （Medium）&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def getHint(self, secret: str, guess: str) -&amp;gt; str:
+        aaa=0
+        dic1=dict()
+        dic2=dict()
+        for a,b in zip(secret,guess):
+            if a==b:
+                aaa+=1
+            dic1[a]=dic1.get(a,0)+1
+            dic2[b]=dic2.get(b,0)+1
+        bbb=0
+        for k in dic1:
+            if k in dic2:
+                bbb+=min(dic1[k],dic2[k])
+        
+        bbb=bbb-aaa
+        
+        return str(aaa)+&#39;A&#39;+str(bbb)+&#39;B&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorblue300-longest-increasing-subsequence-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;300. Longest Increasing Subsequence (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def lengthOfLIS(self, nums: List[int]) -&amp;gt; int:
+        # dp[i] means the LIS till ith number including i
+        # dp[i] =  max(dp[i],dp[j]+1)   j&amp;lt;i and nums[j]&amp;lt;nums[i]
+        if not nums: return 0
+        if len(nums)==1: return 1
+        dp = [1]*len(nums)
+        for i in range(1,len(nums)):
+            for j in range(i):
+                if nums[j]&amp;lt;nums[i]:
+                    dp[i]=max(dp[i],dp[j]+1)
+        
+        return max(dp)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;classical DP problem O(n^2)&lt;/p&gt;
+">Leetcode 2021-12-02</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-01/"" data-c="
