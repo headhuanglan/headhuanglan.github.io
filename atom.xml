@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-01-06T15:03:27.501Z</updated>
+    <updated>2022-01-06T15:08:05.906Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -15,7 +15,7 @@
         <id>https://headhuanglan.github.io/post/leetcode-2021-12-03/</id>
         <link href="https://headhuanglan.github.io/post/leetcode-2021-12-03/">
         </link>
-        <updated>2021-12-02T20:07:47.000Z</updated>
+        <updated>2021-12-02T07:07:47.000Z</updated>
         <content type="html"><![CDATA[<!-- more -->
 <h1 id="font-colorred301-remove-invalid-parentheses-hard-font"><font color='red'>301. Remove Invalid Parentheses (Hard) </font></h1>
 <p>Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.<br>
@@ -519,7 +519,7 @@ class NumArray:
 
 </code></pre>
 <p>第一版本用cumsum，time limit exceeded。原因在于update时候，要更新所有后续影响的cumsum值。 看答案了。思路1） Sqrt Decomposition，把nums分成 sqrt（len）个block求和。 思路2） Segment Tree。 这个没见过，是最优解。  构造方法很巧妙。可能需要记住．</p>
-<h1 id="font-colorred308-range-sum-query-2d-mutable-hard-font"><font color='red'>308. Range Sum Query 2D - Mutable (Hard) <font></h1>
+<h1 id="font-colorred308-range-sum-query-2d-mutable-hard-font"><font color='red'>308. Range Sum Query 2D - Mutable (Hard) </font></h1>
 <p>1D to 2D of rang sum Query</p>
 <pre><code class="language-python">class NumMatrix:
 
