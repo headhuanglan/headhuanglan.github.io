@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>书单 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1641013300965">
+<link rel="shortcut icon" href="/favicon.ico?v=1641481396348">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -195,7 +195,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">36</span>
+        <span class="site-item-stat-count">37</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -954,6 +954,744 @@
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-03/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;font-colorred301-remove-invalid-parentheses-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;301. Remove Invalid Parentheses (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.&lt;br&gt;
+Return all the possible results. You may return the answer in any order.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution(object):
+    def removeInvalidParentheses(self, s):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type s: str
+        :rtype: List[str]
+        &amp;quot;&amp;quot;&amp;quot;
+        
+        res=[] 
+        if not s: return [s]
+        visited=set()
+        q=[]
+        
+        q.append(s)
+        visited.add(s)
+        
+      
+        
+        def isValid(s):
+            c=0
+            for e in s:
+                if e==&#39;(&#39;:c+=1
+                if e==&#39;)&#39;:c-=1
+                
+                if c&amp;lt;0: return False
+            return c==0
+
+        found=False
+        
+        while q:
+            s=q.pop(0)
+            
+            if isValid(s):
+                res.append(s)
+                found=True
+            
+            if found: continue
+            
+            for i in range(len(s)):
+                if s[i]!=&#39;(&#39; and s[i]!=&#39;)&#39;: continue
+                t=s[:i]+s[i+1:]
+                
+                if not t in visited:
+                    q.append(t)
+                    visited.add(t)
+        
+        return res
+    
+#         def valid(s):
+#             stack=[]
+#             ss=[ i for i in s if (i in &#39;()&#39;) ]
+#             for e in ss:
+#                 if e==&#39;)&#39;:
+#                     if (not stack) or (not stack.pop()==&#39;(&#39;):
+#                         return False
+#                 else:
+#                     stack.append(e)
+#             return not stack
+
+#ANSWER
+class Solution:
+    
+  
+    
+    def removeInvalidParentheses(self, s: str) -&amp;gt; List[str]:
+        #based on hint 
+        #1) figure out how many misplaced left and right parenthesis
+        left=0
+        right=0
+        for i,p in enumerate(s):
+            if p==&#39;(&#39;:
+                left+=1
+            elif p==&#39;)&#39;:
+                if left&amp;gt;0:
+                    left-=1
+                else:
+                    right+=1
+        
+        #2)recursion process 
+        res =set()
+        def bt(left_rem,right_rem,left,right,tmp,index):
+            #left_rem is the left error position ( remained
+            #right_rem is the right error position ) remained
+            #left is # of ( in current expression tmp
+            #right is # of ) in current expression tmp
+            #tmp is current expression
+            #index is the index of char in original string s
+            
+            #BASE CASE
+            if index==len(s):     
+                #print(left_rem,right_rem,left,right,tmp)
+                if left_rem==0 and right_rem==0:
+                    res.add(&amp;quot;&amp;quot;.join(tmp))
+                return
+            
+            #discard current
+            if (s[index]==&#39;(&#39; and left_rem&amp;gt;0) or (s[index]==&#39;)&#39; and right_rem&amp;gt;0):
+                bt(left_rem-(s[index]==&#39;(&#39;),right_rem-(s[index]==&#39;)&#39;),left,right,tmp,index+1)
+
+            #add current
+            tmp.append(s[index])
+
+            #if current is not in {()}
+            if s[index] not in [&amp;quot;(&amp;quot;,&amp;quot;)&amp;quot;]:
+                bt(left_rem,right_rem,left,right,tmp,index+1)
+            elif s[index]==&#39;(&#39;:
+                #consider an opening bracket
+                bt(left_rem,right_rem,left+1,right,tmp,index+1)
+            elif s[index]==&#39;)&#39; and left&amp;gt;right:
+                # consider a closing bracket
+                bt(left_rem,right_rem,left,right+1,tmp,index+1)
+
+            tmp.pop()                 
+
+         
+        bt(left,right,0,0,[],0)
+        return list(res)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;思路1 最快最吊炸天） 类似bfs，用queue 做，验证每一个可能的结果。但为了找到最少的变动就能valid的string，所以一旦找到remove后可以valid的string就不在queue中添加后续元素了。 2）backtracking，先计算错位的left right 括号个数。需要track的， left_remain,right_remain,left_counter,right_counter, tmp=[], index.  比较复杂。&lt;/p&gt;
+&lt;h1 id=&#34;302-smallest-rectangle-enclosing-black-pixels-hard&#34;&gt;302. Smallest Rectangle Enclosing Black Pixels （Hard）&lt;/h1&gt;
+&lt;p&gt;You are given an m x n binary matrix image where 0 represents a white pixel and 1 represents a black pixel.&lt;br&gt;
+The black pixels are connected (i.e., there is only one black region). Pixels are connected horizontally and vertically.&lt;br&gt;
+Given two integers x and y that represents the location of one of the black pixels, return the area of the smallest (axis-aligned) rectangle that encloses all black pixels.&lt;br&gt;
+You must write an algorithm with less than O(mn) runtime complexity&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    minx=float(&#39;inf&#39;)
+    miny=float(&#39;inf&#39;)
+    maxx=float(&#39;-inf&#39;)
+    maxy=float(&#39;-inf&#39;)
+    def minArea(self, image: List[List[str]], x: int, y: int) -&amp;gt; int:
+        
+        m=len(image)
+        n=len(image[0])
+        def dfs(x,y):
+            self.minx=min(self.minx,x)
+            self.miny=min(self.miny,y)
+            self.maxx=max(self.maxx,x)
+            self.maxy=max(self.maxy,y)
+            image[x][y]=&#39;#&#39;
+            for xx,yy in [(x+1,y),(x-1,y),(x,y+1),(x,y-1)]:
+                if xx&amp;gt;=0 and xx&amp;lt;m and yy&amp;gt;=0 and yy&amp;lt;n and image[xx][yy]==&#39;1&#39;:
+                    dfs(xx,yy)
+        dfs(x,y)
+        return (self.maxx-self.minx+1)*(self.maxy-self.miny+1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;除了bfs ，dfs外 答案给出了一种project 图片到1D，然后用binary search 找上下界，来算面积。&lt;/p&gt;
+&lt;h1 id=&#34;303-range-sum-query-immutable-easy&#34;&gt;303. Range Sum Query - Immutable （Easy）&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class NumArray:
+
+    def __init__(self, nums: List[int]):
+        
+        for i,n in enumerate(nums):
+            if i==0: continue
+            nums[i]+=nums[i-1]
+        self.cumsum=nums
+
+    def sumRange(self, left: int, right: int) -&amp;gt; int:
+        # 1 2 3
+        # 1 3 6
+        return self.cumsum[right]-self.cumsum[left-1] if left-1&amp;gt;=0 else self.cumsum[right]
+
+
+# Your NumArray object will be instantiated and called as such:
+# obj = NumArray(nums)
+# param_1 = obj.sumRange(left,right)
+
+#OR ANSWER WAY OF WRITTEN
+class NumArray(object):
+
+    def __init__(self, nums):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type nums: List[int]
+        &amp;quot;&amp;quot;&amp;quot;
+        
+        nums = [0] + nums
+        
+        for i in range(1,len(nums)):
+            nums[i] +=nums[i-1]
+        
+        self.nums=nums
+     
+
+    def sumRange(self, i, j):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type i: int
+        :type j: int
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        return self.nums[j+1]-self.nums[i]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;304-range-sum-query-2d-immutable-medium&#34;&gt;304. Range Sum Query 2D - Immutable (Medium)&lt;/h1&gt;
+&lt;p&gt;Given a 2D matrix matrix, handle multiple queries of the following type:&lt;br&gt;
+Calculate the sum of the elements of matrix inside the rectangle defined by its upper left corner (row1, col1) and lower right corner (row2, col2).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class NumMatrix:
+
+    def __init__(self, matrix: List[List[int]]):
+        # original matrix
+        # 1 2 3
+        # 4 5 6
+        # 7 8 9
+        #
+        #cumsum matrix
+        #             c1
+        #        0 0  0    0
+        #        0 1  3    6
+        # row1   0 5  #12  21
+        # row2   0 12 27  #45 
+        #                 c2
+        # do cumsum on row
+        # do cumsum on col
+        #
+        #  row2,col2 -(row1-1)col2 - row2(col1-1) + (row1-1)(col1-1)
+        self.matrix = [[0]*(len(matrix[0])+1)]
+        for row in matrix:
+            self.matrix.append([0]+row)
+        
+    
+        for row in range(1,len(matrix)+1):
+            for col in range(1,len(matrix[0])+1):
+                self.matrix[row][col]+=self.matrix[row][col-1]
+        
+        for row in range(1,len(matrix)+1):
+            for col in range(1,len(matrix[0])+1):
+                self.matrix[row][col]+=self.matrix[row-1][col]
+        
+        
+        
+        
+    def sumRegion(self, row1: int, col1: int, row2: int, col2: int) -&amp;gt; int:
+        return self.matrix[row2+1][col2+1]-self.matrix[row1][col2+1]-self.matrix[row2+1][col1]+self.matrix[row1][col1]
+        
+
+
+# Your NumMatrix object will be instantiated and called as such:
+# obj = NumMatrix(matrix)
+# param_1 = obj.sumRegion(row1,col1,row2,col2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred305-number-of-islands-ii-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;305. Number of Islands II (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an empty 2D binary grid grid of size m x n. The grid represents a map where 0&#39;s represent water and 1&#39;s represent land. Initially, all the cells of grid are water cells (i.e., all the cells are 0&#39;s).&lt;br&gt;
+We may perform an add land operation which turns the water at position into a land. You are given an array positions where positions[i] = [ri, ci] is the position (ri, ci) at which we should operate the ith operation.&lt;br&gt;
+Return an array of integers answer where answer[i] is the number of islands after turning the cell (ri, ci) into a land.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    
+    class unionfind:
+        
+        def __init__(self,m,n):
+            self.m=m
+            self.n=n
+            self.parent=[-1]*(m*n) 
+            self.rank = [0]*(m*n)
+            self.counter=0
+           
+        def isvalid(self,row,col):
+            ind=row*self.n+col
+            return self.parent[ind]&amp;gt;=0
+        
+        def setparent(self,row,col):
+            ind=row*self.n+col
+            if self.parent[ind]==-1:
+                self.parent[ind]=ind
+                self.counter+=1
+            
+        def find(self,row,col):
+            ind= row*self.n+col
+            if self.parent[ind]!=ind:
+                new_col = self.parent[ind]%self.n
+                new_row = (self.parent[ind]-new_col)//self.n
+                self.parent[ind]=self.find(new_row,new_col)
+            return self.parent[ind]
+            
+            
+        def union(self,p1,p2):
+            x1,y1=p1
+            x2,y2=p2
+            root1=self.find(x1,y1)
+            root2=self.find(x2,y2)
+            if root1!=root2:
+                self.counter-=1
+                if self.rank[root1]&amp;gt;self.rank[root2]:
+                    self.parent[root2]=root1
+                elif self.rank[root1]&amp;lt;self.rank[root2]:
+                    self.parent[root1]=root2
+                else:
+                    self.parent[root1]=root2
+                    self.rank[root2]+=1
+                    
+        def getcount(self):
+            return self.counter
+         
+                    
+                
+            
+    
+    def numIslands2(self, m: int, n: int, positions: List[List[int]]) -&amp;gt; List[int]:
+        
+       
+        res=[]
+        
+        uf=self.unionfind(m,n)
+    
+        def get_nei(pos,uf):
+            nei = []
+            x,y=pos
+            for xx,yy in [(x+1,y),(x-1,y),(x,y+1),(x,y-1)]:
+                if xx&amp;gt;=0 and xx&amp;lt;m and yy&amp;gt;=0 and yy&amp;lt;n:
+                    if uf.isvalid(xx,yy):
+                        nei.append((xx,yy))
+            return nei
+    
+        for pos in positions:
+            uf.setparent(*pos)
+            for nei in get_nei(pos,uf):
+                uf.union(nei,pos)
+            res.append(uf.getcount())
+            
+        return res
+            
+            
+   
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;试过用neighbor_list做，但是无法分辨新加入的点是否会引起2个或3个不同island合并。 思路不正确， 感觉是用UNIONFIND做。还是不能顺畅写出UNIONFIND calss。这次的unionfind class是个变种。 注意增加相同点的时候，setparent做check，必须self.parent[i]==-1 才能做self.conter+=1 。 思路： 每次增加一个点，做setparent，counter++，找这个点所有valid neighbors，然后做union。没发现以个union则counter--。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue-306-additive-number-mediumfont&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 306. Additive Number （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;An additive number is a string whose digits can form an additive sequence.&lt;br&gt;
+A valid additive sequence should contain at least three numbers. Except for the first two numbers, each subsequent number in the sequence must be the sum of the preceding two.&lt;br&gt;
+Given a string containing only digits, return true if it is an additive number or false otherwise.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def isAdditiveNumber(self, num: str) -&amp;gt; bool:
+        if not num or len(num)&amp;lt;3: 
+            return False
+        
+        mem=dict()
+        def helper(num):
+            if not num: return True
+            if num in mem: return mem[num]
+            Found=False
+            for len_a in range(1,len(num)):
+                if len_a&amp;gt;1 and num[0]==&#39;0&#39;: continue
+                for len_b in range(1,len(num)):
+                    if len_b&amp;gt;1 and num[len_a]==&#39;0&#39;: continue
+                    temp_flag=False
+                    if len_a+len_b&amp;gt;=len(num):continue
+                    a = num[:len_a]
+                    b = num[len_a:len_a+len_b]
+                    c = str(int(a)+int(b))
+                    #print(a,b,c)
+                    len_c= len(c)
+                    if len_a+len_b+len_c&amp;gt;len(num):continue
+                    if len_a+len_b+len_c==len(num) and num[len_a+len_b:len_a+len_b+len_c]==c:
+                        return True
+                    elif num[len_a+len_b:len_a+len_b+len_c]==c:
+                        temp_flag = True and helper(num[len_a:])
+                    Found=Found or temp_flag
+            mem[num]=Found
+            print(num,Found)
+            return Found
+        
+        return helper(num)
+        
+#ANSWER WAY
+def isAdditiveNumber(self, num):
+    n = len(num)
+    for i, j in itertools.combinations(range(1, n), 2):
+        a, b = num[:i], num[i:j]
+        if a != str(int(a)) or b != str(int(b)):
+            continue
+        while j &amp;lt; n:
+            c = str(int(a) + int(b))
+            if not num.startswith(c, j):
+                break
+            j += len(c)
+            a, b = b, c
+        if j == n:
+            return True
+    return False                
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;自己通过recursion with mem解决的，头部为0问题用2个continue 判断去解决。&lt;br&gt;
+答案大神用了itertools.combinatons i 是a的长度，j是 a+b的长度，确定了a，b可以算出来c，如果不满足条件跳出while，如果满足条件，则j+len（c），前进一位做下一次判断。 推出时候如果j==n说明找到了。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-307-range-sum-query-mutable-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 307. Range Sum Query - Mutable (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums, handle multiple queries of the following types:&lt;br&gt;
+Update the value of an element in nums.&lt;br&gt;
+Calculate the sum of the elements of nums between indices left and right inclusive where left &amp;lt;= right.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+#TIME LIMIT EXCEEDED
+class NumArray:
+
+    def __init__(self, nums: List[int]):
+        self.nums=nums
+        self.cumsum=nums[:]
+        for i in range(1,len(nums)):
+            self.cumsum[i]+=self.cumsum[i-1]
+ 
+    def update(self, index: int, val: int) -&amp;gt; None:
+        diff=val-self.nums[index]
+        self.nums[index]=val
+        for i in range(index,len(self.cumsum)):
+            self.cumsum[i]+=diff
+    def sumRange(self, left: int, right: int) -&amp;gt; int:
+        
+        return self.cumsum[right]-self.cumsum[left-1] if left-1&amp;gt;=0 else self.cumsum[right]
+#METHOD 1  SQRT DECOMPOSTION
+class NumArray:
+
+    def __init__(self, nums: List[int]):
+        self.nums=nums
+        self.len =  len(nums)//int(math.sqrt(len(nums)))+1 
+        self.b=[0]*self.len
+        for i,n in enumerate(nums):
+            self.b[i//self.len]+=n
+         
+
+    def update(self, index: int, val: int) -&amp;gt; None:
+        block_index = index//self.len
+        self.b[block_index] = self.b[block_index] - self.nums[index]+val
+        self.nums[index]=val
+
+    def sumRange(self, left: int, right: int) -&amp;gt; int:
+        res=0
+        startblock=left//self.len
+        endblock=right//self.len
+        if startblock==endblock:
+            for ind in range(left,right+1):
+                res+=self.nums[ind]
+        else:
+            for ind in range(left,(startblock+1)*self.len):
+                res+=self.nums[ind]
+            for block_ind in range(startblock+1,endblock):
+                res+=self.b[block_ind]
+            for ind in range(endblock*self.len,right+1):
+                res+=self.nums[ind]
+        return res
+        
+# METHOD 2 ＳＥＧＭＥＮＴ　ＴＲＥＥ
+class NumArray:
+
+    def __init__(self, nums: List[int]):
+        self.n=len(nums)
+        self.tree=[&#39;#&#39;]*(2*self.n)
+        self.buildtree(nums)
+        print(self.tree)
+    
+    def buildtree(self,nums):
+        #populate leaves
+        j=0
+        for i in range(self.n,2*self.n):
+            self.tree[i]=nums[j]
+            j+=1
+        #populate parent nodes
+        for i in range(self.n-1,0,-1):
+            self.tree[i]=self.tree[i*2]+self.tree[i*2+1]
+        
+
+    def update(self, index: int, val: int) -&amp;gt; None:
+        #    1
+        # 2     3
+        #4  5  6  7
+        # 0  1  2  3  4  5  6   7  
+        #     22 9 13 4  5  6   7
+        pos = index+self.n
+        self.tree[pos]=val
+        while pos&amp;gt;0:
+            left=pos
+            right=pos
+            #这里比较巧妙，tree变成数组后可以理解。
+            if pos%2==0:
+                right=pos+1
+            else:
+                left=pos-1
+            
+            if left&amp;gt;0:
+                self.tree[pos//2] = self.tree[left]+self.tree[right]
+            pos //=2
+        
+
+    def sumRange(self, left: int, right: int) -&amp;gt; int:
+        #    1
+        # 2     3
+        #4  5  6  7
+        # 0  1  2  3  4  5  6   7  
+        # #  22 9  13 4  5  6   7
+        l = left+self.n
+        r = right+self.n
+        res=0
+        while l&amp;lt;=r:
+            if l%2==1:
+                res+=self.tree[l]
+                l+=1
+            if r%2==0:
+                res+=self.tree[r]
+                r-=1
+            l//=2
+            r//=2
+        return res
+        
+　
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第一版本用cumsum，time limit exceeded。原因在于update时候，要更新所有后续影响的cumsum值。 看答案了。思路1） Sqrt Decomposition，把nums分成 sqrt（len）个block求和。 思路2） Segment Tree。 这个没见过，是最优解。  构造方法很巧妙。可能需要记住．&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred308-range-sum-query-2d-mutable-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;308. Range Sum Query 2D - Mutable (Hard) &lt;font&gt;&lt;/h1&gt;
+&lt;p&gt;1D to 2D of rang sum Query&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class NumMatrix:
+
+    def __init__(self, matrix: List[List[int]]):
+        self.matrix=matrix
+        self.m=len(matrix)
+        self.n=len(matrix[0])
+        self.trees=[self.buildtree(nums) for nums in matrix]
+        
+        #for tree in self.trees:
+        #    print(tree)
+    
+    def buildtree(self,nums):
+        #   1
+        #  2  3
+        # 4 5 6 7
+        # 1 2 3 4 5 6 7
+        tree=[&#39;#&#39;]*self.n*2
+        for i,n in enumerate(nums):
+            ind=i+self.n
+            tree[ind]=n
+        
+        for ind in range(self.n-1,0,-1):
+            tree[ind]=tree[2*ind]+tree[2*ind+1]
+        return tree
+    
+    def update(self, row: int, col: int, val: int) -&amp;gt; None:
+        tree=self.trees[row]
+        #   1
+        #  2  3
+        # 4 5 6 7
+        # 1   2  3  4 5 6 7
+        # 22  9  13 4 5 6 7
+        ind = self.n+col
+        self.matrix[row][col]=val
+        tree[ind]=val
+        while ind&amp;gt;0:
+            left=ind
+            right=ind
+            if ind%2==0:
+                right+=1
+            else:
+                left-=1
+            if ind//2&amp;gt;0:
+                tree[ind//2]=tree[left]+tree[right]
+            ind=ind//2
+        self.trees[row]=tree
+      
+
+    def sumRegion(self, row1: int, col1: int, row2: int, col2: int) -&amp;gt; int:
+        res = 0
+        for row in range(row1,row2+1):
+            tree=self.trees[row]
+            #   1
+            #  2  3
+            # 4 5 6 7
+            # 1   2  3  4 5 6 7
+            # 22  9  13 4 5 6 7
+            l=col1+self.n
+            r=col2+self.n
+            while l&amp;lt;=r:
+                if l%2==1:
+                    res+=tree[l]
+                    l+=1
+                if r%2==0:
+                    res+=tree[r]
+                    r-=1
+                l//=2
+                r//=2
+        return res
+            
+# Your NumMatrix object will be instantiated and called as such:
+# obj = NumMatrix(matrix)
+# obj.update(row,col,val)
+# param_2 = obj.sumRegion(row1,col1,row2,col2)
+
+#ANSWER
+class NumMatrix:
+    
+    def lsb(self,n):
+        return n&amp;amp;-n
+    
+    def updateBIT(self,r,c,val):
+        i=r
+        while i&amp;lt;=self.m:
+            j=c
+            while j&amp;lt;=self.n:
+                self.bit[i][j]+=val
+                j+=self.lsb(j)
+            i+=self.lsb(i)
+    
+    def queryBIT(self,r,c):
+        res=0
+        i=r
+        while i&amp;gt;0:
+            j=c
+            while j&amp;gt;0:
+                res+=self.bit[i][j]
+                j-=self.lsb(j)
+            i-=self.lsb(i)
+        return res
+    def buildBIT(self,matrix):
+        for i in range(1,self.m+1):
+            for j in range(1,self.n+1):
+                val=matrix[i-1][j-1]
+                self.updateBIT(i,j,val)
+    
+    def __init__(self, matrix: List[List[int]]):
+        self.matrix=matrix
+        self.m=len(matrix)
+        self.n=len(matrix[0])
+        self.bit= [[0]*(self.n+1) for _ in range(self.m+1)]
+        self.buildBIT(matrix)
+        
+    def update(self, row: int, col: int, val: int) -&amp;gt; None:
+        old_val=self.sumRegion(row,col,row,col)
+        #handling 1-based indexing
+        row+=1
+        col+=1
+        diff=val-old_val
+        self.updateBIT(row,col,diff)
+        
+    def sumRegion(self, row1: int, col1: int, row2: int, col2: int) -&amp;gt; int:
+        #handling 1-based indexing
+        row1+=1;col1+=1;row2+=1;col2+=1
+        a=self.queryBIT(row2,col2)
+        b=self.queryBIT(row1-1,col1-1)
+        c=self.queryBIT(row2,col1-1)
+        d=self.queryBIT(row1-1,col2)
+        return a-c-d+b
+    
+
+
+# Your NumMatrix object will be instantiated and called as such:
+# obj = NumMatrix(matrix)
+# obj.update(row,col,val)
+# param_2 = obj.sumRegion(row1,col1,row2,col2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;自己套用之前的1d segment tree用在2d问题，可以pass。 但不是最优解。 答案用了 Fenwick Tree (Binary Index Tree)  https://www.youtube.com/watch?v=uSFzHCZ4E-8  没见过。而且最终还是用的2D版本的 Binary Index Tree。bit操作下，X，Y不影响，bit位置是bit，保存的值是partial sum。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred309-best-time-to-buy-and-sell-stock-with-cooldown-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;309. Best Time to Buy and Sell Stock with Cooldown （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an array prices where prices[i] is the price of a given stock on the ith day.&lt;br&gt;
+Find the maximum profit you can achieve. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times) with the following restrictions:&lt;br&gt;
+After you sell your stock, you cannot buy stock on the next day (i.e., cooldown one day).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def maxProfit(self, prices: List[int]) -&amp;gt; int: 
+        
+    
+        &amp;quot;&amp;quot;&amp;quot;
+        state machine  
+                  O held    -sell-&amp;gt;  sold 
+                    /\                |
+                    |_ buy_ O reset &amp;lt;-rest
+       
+       O is self loop
+       
+       DP:
+         sold[i]=held[i-1]+price[i]
+         held[i]=max(held[i-1],reset[i-1]-price[i])
+         reset[i]=max(rest[i-1],sold[i-1])
+         
+         return max(reset[n],sold[n]
+         &amp;quot;&amp;quot;&amp;quot;
+        sold, held, reset = float(&#39;-inf&#39;), float(&#39;-inf&#39;), 0
+        for price in prices:
+            pre_sold = sold
+            sold = held + price               #sell operation
+            held = max(held, reset - price)   #buy operation
+            reset = max(reset, pre_sold)      # do nothing operation
+            
+        return max(sold, reset)
+ 
+        #309 直接看答案了
+        # profit on ith day kth transanction 0 means 0 stock at our hand after the end of ith day， 1 means 1 stock at our hand after the end of ith day
+        #T[i][k][0] = max(T[i-1][k][0], T[i-1][k][1] + prices[i]) #sell
+        #T[i][k][1] = max(T[i-1][k][1], T[i-2][k][0] - prices[i])  # buy 
+        #Base cases:
+        # T[-1][k][0] = 0, T[-1][k][1] = -Infinity
+        # T[i][0][0] = 0, T[i][0][1] = -Infinity
+        #constain to cooldown
+        
+        T_ik0=0
+        T_ik0_pre=0
+        T_ik1=-float(&#39;inf&#39;)
+        
+        for p in prices:
+            T_ik0_old=T_ik0
+            T_ik0 = max(T_ik0, T_ik1+p)
+            T_ik1 = max(T_ik1, T_ik0_pre-p)
+            T_ik0_pre=T_ik0_old
+        
+        return T_ik0
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这是一类问题，很多变种。。。。https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/discuss/75924/Most-consistent-ways-of-dealing-with-the-series-of-stock-problems 答案的state machine 思维方法很有意思。&lt;/p&gt;
+&lt;h1 id=&#34;310-minimum-height-trees-medium&#34;&gt;310. Minimum Height Trees （Medium）&lt;/h1&gt;
+&lt;p&gt;A tree is an undirected graph in which any two vertices are connected by exactly one path. In other words, any connected graph without simple cycles is a tree.&lt;/p&gt;
+&lt;p&gt;Given a tree of n nodes labelled from 0 to n - 1, and an array of n - 1 edges where edges[i] = [ai, bi] indicates that there is an undirected edge between the two nodes ai and bi in the tree, you can choose any node of the tree as the root. When you select a node x as the root, the result tree has height h. Among all possible rooted trees, those with minimum height (i.e. min(h))  are called minimum height trees (MHTs).&lt;/p&gt;
+&lt;p&gt;Return a list of all MHTs&#39; root labels. You can return the answer in any order.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findMinHeightTrees(self, n: int, edges: List[List[int]]) -&amp;gt; List[int]:
+        #remove those leafves what left is root 
+        
+        
+        dic={i:[] for i in range(n)}
+        q = []
+        for edge in edges:
+            n1,n2=edge
+            dic[n1].append(n2)
+            dic[n2].append(n1)
+        
+        for i in range(n):
+            if len(dic[i])==1:
+                q.append(i)
+                
+        res=q
+        while q:
+            l=len(q)
+            res=q[:]
+            for _ in range(l):
+                cur=q.pop(0)
+                for nei in dic[cur]:
+                    dic[nei].remove(cur)
+                if len(dic[nei])==1:
+                    q.append(nei)
+        return res if res else [0]
+    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;看一下hint才做出来，思路topological sort，leaves 直接砍掉。&lt;/p&gt;
+">Leetcode 2021-12-03</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-02/"" data-c="
