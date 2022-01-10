@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-01-06T15:08:05.906Z</updated>
+    <updated>2022-01-10T07:41:06.933Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,6 +10,547 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Lan&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2021-12-04]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-12-04/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-04/">
+        </link>
+        <updated>2021-12-04T13:17:02.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="311-sparse-matrix-multiplication-medium">311. Sparse Matrix Multiplication (Medium)</h1>
+<p>Given two sparse matrices mat1 of size m x k and mat2 of size k x n, return the result of mat1 x mat2. You may assume that multiplication is always possible.</p>
+<pre><code class="language-python">class Solution:
+    def multiply(self, mat1: List[List[int]], mat2: List[List[int]]) -&gt; List[List[int]]:
+        l=len(mat1)
+        m=len(mat1[0])
+        n=len(mat2[0])
+        #1m*mn = ln
+        res = [[0]*n for _ in range(l)]
+        
+        for i in range(l):
+            for j in range(n):
+                for k in range(m):
+                    res[i][j]+=mat1[i][k]*mat2[k][j]
+        return res
+</code></pre>
+<p>因为题目是sparse table 所以更好的做饭是把table 存成hashmap。</p>
+<h1 id="font-colorred312-burst-balloons-hardfont"><font color='red'>312. Burst Balloons （Hard）</font></h1>
+<p>You are given n balloons, indexed from 0 to n - 1. Each balloon is painted with a number on it represented by an array nums. You are asked to burst all the balloons.<br>
+If you burst the ith balloon, you will get nums[i - 1] * nums[i] * nums[i + 1] coins. If i - 1 or i + 1 goes out of bounds of the array, then treat it as if there is a balloon with a 1 painted on it.<br>
+Return the maximum coins you can collect by bursting the balloons wisely</p>
+<pre><code class="language-python">#TIME LIMIT EXCCEEDED.
+class Solution:
+    def maxCoins(self, nums: List[int]) -&gt; int:
+        res = []
+        def bt(nums,val):
+            if not nums:
+                res.append(val)
+            for i,n in enumerate(nums):
+                new_nums = nums[:i]+nums[i+1:]
+                a = nums[i-1] if i-1&gt;=0 else 1
+                b= n
+                c= nums[i+1] if i+1&lt;len(nums) else 1
+                bt(new_nums,val+a*b*c)
+        
+        
+        bt(nums,0)
+        #print(res)
+        return max(res) if res else 1
+
+#ANSWER 1
+class Solution:
+    def maxCoins(self, nums: List[int]) -&gt; int: 
+        #ith is the last to burst
+        nums = [1]+nums+[1]
+        @lru_cache(None)
+        def dp(left,right):
+            if left&gt;right: return 0
+            res=0
+            for i in range(left,right+1):
+                gain=nums[left-1]*nums[i]*nums[right+1]
+                remaining=dp(left,i-1)+dp(i+1,right)
+                res=max(res,gain+remaining)
+            return res
+  
+        
+        return dp(1,len(nums)-2)
+
+#
+class Solution:
+    def maxCoins(self, nums: List[int]) -&gt; int: 
+        #ith is the last to burst
+        nums = [1]+nums+[1]
+        n=len(nums)
+        dp=[[0]*n for _ in range(n)]
+        for left in range(n-2,0,-1):
+            for right in range(left,n-1):
+                for i in range(left,right+1):
+                    gain=nums[left-1]*nums[i]*nums[right+1]
+                    remaining=dp[left][i-1]+dp[i+1][right]
+                    dp[left][right]=max(dp[left][right],gain+remaining)
+        return dp[1][n-2]
+</code></pre>
+<p>初次尝试，backtraking 方法会time limit exceeded， 需要更优方法。 答案1） top down dp， ith气球是最后一个burst的，所以left到i-1，i+1到right先burst。 思路是分治法，能拆分为互相不干扰的left，right部分是因为ith定义是最后一个burst，要ith定义是先burst，就会出现left，right部分dependent关系，right部分数值取决于left最右一个气球是否burst。所以定义ith气球最后一个burst是很聪明的解决了分治法左右depenent问题。2）Bottom-Up dp 算 dp【left】【right】必须知道dp【left】【i-1】和dp【i+1】【right】 i在left right之间，所以dp更新路线是从右下角zigzag更新。</p>
+<h1 id="font-colorred313-super-ugly-number-mediumfont"><font color='red'>313. Super Ugly Number （Medium）</font></h1>
+<p>A super ugly number is a positive integer whose prime factors are in the array primes.<br>
+Given an integer n and an array of integers primes, return the nth super ugly number.<br>
+The nth super ugly number is guaranteed to fit in a 32-bit signed integer.</p>
+<pre><code class="language-python">class Solution:
+    def nthSuperUglyNumber(self, n: int, primes: List[int]) -&gt; int:
+        dp = [0]*n
+        t = [0]*len(primes)
+        dp[0]=1
+        for i in range(1,n):
+            dp[i]=min(dp[t[ii]]*primes[ii] for ii in range(len(primes)))
+            for j in range(len(primes)):
+                if dp[i]==dp[t[j]]*primes[j]:
+                    t[j]+=1
+        return dp[-1]
+ 
+        
+        # dp = [0] * n
+        # t2 = t3 = t5 = 0
+        # dp[0] = 1
+        # for i in range(1,n):
+        #     dp[i] = min(dp[t2]*2,dp[t3]*3,dp[t5]*5)
+        #     if(dp[i] == dp[t2]*2): t2 += 1
+        #     if(dp[i] == dp[t3]*3): t3 += 1
+        #     if(dp[i] == dp[t5]*5): t5 += 1
+        # return dp[-1]
+class Solution:
+    def nthSuperUglyNumber(self, n: int, primes: List[int]) -&gt; int:
+ 
+        dp=[1]
+        res=1
+        s=set()
+        for _ in range(n):
+            while res in s:
+                res = heapq.heappop(dp)
+            s.add(res)
+            for p in primes:
+                heapq.heappush(dp,res*p)
+        return res
+ 
+#ANSWER
+ class Solution:
+    def nthSuperUglyNumber(self, n: int, primes: List[int]) -&gt; int:
+
+        uglies = [1]
+        def gen(prime):
+            for ugly in uglies:
+                yield ugly * prime
+        merged = heapq.merge(*map(gen, primes))
+        while len(uglies) &lt; n:
+            ugly = next(merged)
+            if ugly != uglies[-1]:
+                uglies.append(ugly)
+        return uglies[-1]
+</code></pre>
+<p>仿照ugly unmber II 写出一个dp的解但time limit excceded。   用heapq还是time limit excceded。 这个题目python不友好， 答案用了generator。</p>
+<h1 id="314-binary-tree-vertical-order-traversal-medium">314. Binary Tree Vertical Order Traversal （Medium）</h1>
+<p>Given the root of a binary tree, return the vertical order traversal of its nodes' values. (i.e., from top to bottom, column by column).<br>
+If two nodes are in the same row and column, the order should be from left to right.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def verticalOrder(self, root: Optional[TreeNode]) -&gt; List[List[int]]:
+        dic = dict()
+        def pre(root,level,hight):
+            hight+=1
+            if not root: return 
+            if level not in dic:
+                dic[level]=[]
+            dic[level].append((root.val,hight))
+            pre(root.left,level-1,hight) 
+            pre(root.right,level+1,hight)
+        pre(root,0,0)
+        res= [ [val[0] for val in sorted(v,key=lambda x:x[1])] for k,v in  sorted(dic.items(),key=lambda x:x[0])]
+        return res
+
+</code></pre>
+<p>记录左右移动同时记录上下移动。</p>
+<h1 id="font-colorred-315-count-of-smaller-numbers-after-self-hardfont"><font color='red'> 315. Count of Smaller Numbers After Self （Hard）</font></h1>
+<p>You are given an integer array nums and you have to return a new counts array. The counts array has the property where counts[i] is the number of smaller elements to the right of nums[i].<br>
+Input: nums = [5,2,6,1]<br>
+Output: [2,1,1,0]<br>
+Explanation:<br>
+To the right of 5 there are 2 smaller elements (2 and 1).<br>
+To the right of 2 there is only 1 smaller element (1).<br>
+To the right of 6 there is 1 smaller element (1).<br>
+To the right of 1 there is 0 smaller element.</p>
+<pre><code class="language-python">class Solution:
+    def countSmaller(self, nums: List[int]) -&gt; List[int]:    
+        #   5  2   6   1
+        #
+        #   0 1 2 3 4 5 6
+        #     1 1     1 1
+        #
+        #  找出 i-1 到 -inf 的cumsum ，而且update 从右往左。
+        #  -OFFSET ~0 ~ OFFSET
+        
+        OFFSET=10000
+        size=2 * OFFSET+1  
+        tree=[0]*(2*size)
+        
+        #####
+        #   1
+        # 2   3
+        #4 5 6 7
+        # 1 2 3 4 5 6 7
+       
+                    
+            
+        def update(ind):
+            tree[ind]+=1
+           
+            while ind&gt;0:
+                left=ind
+                right=ind
+                if ind%2==0:
+                    right+=1
+                else:
+                    left-=1
+                if ind//2&gt;0:
+                    tree[ind//2]=tree[left]+tree[right]
+                ind//=2
+                
+        def query(left,right):
+            res=0
+            while left&lt;=right:
+                if right%2==0:
+                    res+=tree[right]
+                    right-=1
+                if left%2==1:
+                    res+=tree[left]
+                    left+=1
+
+                left//=2
+                right//=2
+    
+            return res
+                    
+        ans = []
+        for num in nums[::-1]:
+            ind = num+OFFSET+size 
+            ans.append(query(size,ind-1))
+            update(ind)
+             
+            
+        return ans[::-1]
+
+
+#ANSWER 2
+class Solution:
+    def countSmaller(self, nums: List[int]) -&gt; List[int]:    
+ 
+        OFFSET=10000
+        size=2 * OFFSET+1 + 1 #total possible values in nums plus one dummy 
+        tree=[0]*size
+        ans = []
+            
+        def update(ind):
+            ind=ind+1   #index in BIT is 1 more than original index
+            while ind&lt;size:
+                tree[ind]+=1
+                ind+= ind&amp;-ind
+        def query(ind):
+            ind=ind+ 1  #index in BIT is 1 more than original index
+            res=0
+            while ind&gt;0:
+                res+=tree[ind]
+                ind-= ind&amp;-ind
+            return res
+           
+          
+        ans = []
+        for num in nums[::-1]:
+            ind = num+OFFSET
+            ans.append(query(ind-1))
+            update(ind)
+             
+            
+        return ans[::-1]
+    
+#ANSWER3
+class Solution:
+    def countSmaller(self, nums: List[int]) -&gt; List[int]:    
+        def sort(enum):
+            half = len(enum) // 2
+            if half:
+                left, right = sort(enum[:half]), sort(enum[half:])
+                m, n = len(left), len(right)
+                i = j = 0
+                while i &lt; m or j &lt; n:
+                    if j == n or i &lt; m and left[i][1] &lt;= right[j][1]:
+                        enum[i+j] = left[i]
+                        smaller[left[i][0]] += j
+                        i += 1
+                    else:
+                        enum[i+j] = right[j]
+                        j += 1
+            return enum
+        smaller = [0] * len(nums)
+        sort(list(enumerate(nums)))
+        return smaller
+ 
+
+</code></pre>
+<p>错误以为用stack可以解决~~，答案方法1）Segment Tree 2）Binary index Tree 3)Merge Sort,当选取左边元素，记录 smaller[left[i][0]] += j  ；  left【i】【0】是左边元素在原始数组种的index， j是right中未被选中元素的index，恰巧是小于左边被选中元素的在右边需要变换位置元素的长度。</p>
+<h1 id="font-colorred316-remove-duplicate-letters-mediumfont"><font color='red'>316. Remove Duplicate Letters （Medium）</font></h1>
+<p>Given a string s, remove duplicate letters so that every letter appears once and only once. You must make sure your result is the smallest in lexicographical order among all possible results.<br>
+Example 1:<br>
+Input: s = &quot;bcabc&quot;<br>
+Output: &quot;abc&quot;<br>
+Example 2:<br>
+Input: s = &quot;cbacdcbc&quot;<br>
+Output: &quot;acdb&quot;</p>
+<pre><code class="language-python">class Solution:
+    def removeDuplicateLetters(self, s: str) -&gt; str:
+        # maintain smalleset lexicographical order How?
+        
+        # find pos - the index of the leftmost letter in our solution
+        # we create a counter and end the iteration once the suffix doesn't have each unique character
+        # pos will be the index of the smallest character we encounter before the iteration ends
+        c=Counter(s)
+        pos=0
+        for i in range(len(s)):
+            if s[i]&lt;s[pos]:
+                pos=i
+            c[s[i]]-=1
+            if c[s[i]]==0:
+                break
+        return s[pos]+self.removeDuplicateLetters(s[pos:].replace(s[pos],&quot;&quot;)) if s  else ''
+
+#ANSWER
+class Solution:
+    def removeDuplicateLetters(self, s: str) -&gt; str:
+        stack=[]
+        seen=set()
+        last_occurrence = {c:i for i,c in enumerate(s)}
+        for i,c in enumerate(s):
+            if c not in seen:
+                #只有c不在seen中才能试图在stack中加c
+                while stack and c&lt;stack[-1] and i&lt;last_occurrence[stack[-1]]:  
+                    # 如果当前试图加入的c&lt;stack[-1] 而且 c的位置&lt; stack[-1]最后出现位置
+                    # 可以安全移除stack【-1】
+                    val=stack.pop()
+                    seen.discard(val)
+                    
+                seen.add(c)
+                stack.append(c)
+                
+        return ''.join(stack)
+</code></pre>
+<p>思路1） 找到第一个qualify的pos，s【i】小于s【pos】需要更新pos成i，当counter s【i】==0时候说明s【i】是当前必须加入结果的字符，然后找下一个字符用recursive方法。<br>
+思路2）  见代码 Greedy 方法的应用</p>
+<h1 id="font-colorred317-shortest-distance-from-all-buildings-hard-font"><font color='red'>317. Shortest Distance from All Buildings （Hard） </font></h1>
+<p>You are given an m x n grid grid of values 0, 1, or 2, where:<br>
+each 0 marks an empty land that you can pass by freely,<br>
+each 1 marks a building that you cannot pass through, and<br>
+each 2 marks an obstacle that you cannot pass through.<br>
+You want to build a house on an empty land that reaches all buildings in the shortest total travel distance. You can only move up, down, left, and right.<br>
+Return the shortest travel distance for such a house. If it is not possible to build such a house according to the above rules, return -1.</p>
+<pre><code class="language-python">#METHOD 1 BFS from Biulding
+class Solution:
+    def shortestDistance(self, grid: List[List[int]]) -&gt; int:
+        
+        
+        #Use hit to record how many times a 0 grid has been reached and use distSum to record the sum of distance from all 1 grids to this 0 grid. A powerful pruning is that during the BFS we use count1 to count how many 1 grids we reached. If count1 &lt; buildings then we know not all 1 grids are connected are we can return -1 immediately, which greatly improved speed (beat 100% submissions).
+
+ 
+        if not grid or not grid[0]: return -1
+        M, N, buildings = len(grid), len(grid[0]), sum(val for line in grid for val in line if val == 1)
+        hit, distSum = [[0] * N for i in range(M)], [[0] * N for i in range(M)]
+
+        def BFS(start_x, start_y):
+            visited = [[False] * N for k in range(M)]
+            visited[start_x][start_y], count1, queue = True, 1, collections.deque([(start_x, start_y, 0)])
+            while queue:
+                x, y, dist = queue.popleft()
+                for i, j in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if 0 &lt;= i &lt; M and 0 &lt;= j &lt; N and not visited[i][j]:
+                        visited[i][j] = True
+                        if not grid[i][j]:
+                            queue.append((i, j, dist + 1))
+                            hit[i][j] += 1
+                            distSum[i][j] += dist + 1
+                        elif grid[i][j] == 1:
+                            count1 += 1
+            return count1 == buildings  
+
+        for x in range(M):
+            for y in range(N):
+                if grid[x][y] == 1:
+                    if not BFS(x, y): return -1
+        return min([distSum[i][j] for i in range(M) for j in range(N) if not grid[i][j] and hit[i][j] == buildings] or [-1])
+    
+
+#METHOD 2 BFS from Empty space
+class Solution:
+    def shortestDistance(self, grid: List[List[int]]) -&gt; int:
+        M=len(grid)
+        N=len(grid[0])
+        totalHouses = sum([v for row in grid for v in row if v==1])
+        minDistance=float('inf')
+        def bfs(row,col):
+            distanceSum=0
+            housesReached=0
+            visited =[[False]*N for _ in range(M)]
+            q=collections.deque()
+            q.append((row,col))
+            step=0
+            while q and housesReached!=totalHouses:
+                l=len(q)
+                for _ in range(l):
+                    row,col=q.popleft()
+                    
+                    if grid[row][col]==1:
+                        distanceSum+=step
+                        housesReached+=1
+                        continue
+                    
+                    for new_row,new_col in [(row+1,col),(row-1,col),(row,col+1),(row,col-1)]:
+                        if M&gt;new_row&gt;=0 and N&gt;new_col&gt;=0:
+                            if not visited[new_row][new_col] and grid[new_row][new_col]!=2:
+                                visited[new_row][new_col]=True
+                                q.append((new_row,new_col))
+                                
+                step+=1
+            
+            if housesReached!=totalHouses:
+                for row in  range(M):
+                    for col in range(N):
+                        if grid[row][col]==0 and visited[row][col]:
+                            grid[row][col]=2
+                
+                return float('inf')
+            return distanceSum
+        
+        
+        
+        #main
+        for row in range(M):
+            for col in range(N):
+                if grid[row][col]==0:
+                    minDistance=min(minDistance,bfs(row,col))
+        
+        if minDistance==float('inf'):
+            return -1
+        return minDistance         
+
+</code></pre>
+<p>直接看答案了。。。。方法一更好点， 从building处做BFS，保存hits数目。BFS返回count1==#Buildings 这样可以提前截断如果存在不能完全到达所有building情况。</p>
+<h1 id="318-maximum-product-of-word-lengths-medium">318. Maximum Product of Word Lengths （Medium）</h1>
+<p>Given a string array words, return the maximum value of length(word[i]) * length(word[j]) where the two words do not share common letters. If no such two words exist, return 0.</p>
+<pre><code class="language-python">class Solution:
+    def maxProduct(self, words: List[str]) -&gt; int:
+        ss  = [set() for _ in range(len(words))]
+        for i,word in enumerate(words):
+            for w in word:
+                ss[i].add(w)
+        res=float('-inf')
+        for i in range(len(words)-1):
+            for j in range(i+1,len(words)):
+                if not ss[i] &amp; ss[j]:
+                    res=max(res,len(words[i])*len(words[j]))
+        return res if res!=float('-inf') else 0
+#ANSWER
+from collections import defaultdict
+class Solution:
+    def maxProduct(self, words: List[str]) -&gt; int:
+        hashmap = defaultdict(int)
+        bit_number = lambda ch : ord(ch) - ord('a')
+        
+        for word in words:
+            bitmask = 0
+            for ch in word:
+                # add bit number bit_number in bitmask
+                bitmask |= 1 &lt;&lt; bit_number(ch)
+            # there could be different words with the same bitmask
+            # ex. ab and aabb
+            hashmap[bitmask] = max(hashmap[bitmask], len(word))
+        
+        max_prod = 0
+        for x in hashmap:
+            for y in hashmap:
+                if x &amp; y == 0:
+                    max_prod = max(max_prod, hashmap[x] * hashmap[y])
+        return max_prod
+</code></pre>
+<p>答案用了bitmask作为key来优化。思路很好。</p>
+<h1 id="319-bulb-switcher-medium">319. Bulb Switcher （Medium）</h1>
+<p>There are n bulbs that are initially off. You first turn on all the bulbs, then you turn off every second bulb.<br>
+On the third round, you toggle every third bulb (turning on if it's off or turning off if it's on). For the ith round, you toggle every i bulb. For the nth round, you only toggle the last bulb.<br>
+Return the number of bulbs that are on after n rounds.</p>
+<pre><code class="language-python">class Solution:
+    def bulbSwitch(self, n: int) -&gt; int:
+        return int(math.sqrt(n))
+        
+</code></pre>
+<p>这题比较tricky， 灯泡1到n， 只有灯泡被拨动奇数次才会亮， 比如第i个灯泡，i%round==0时候会被拨动一次， 这样第i个灯泡比如第12个，1，12，2，6，3，4轮时候会被拨到，但是对于完全平方数，比如36个灯泡，1，36，2，18，3，12，4，9，6轮时候会被拨到但为奇数轮。所以找到有多少个完全平方数在1到n之间就可以了。</p>
+<h1 id="font-colorred320-generalized-abbreviation-mediumfont"><font color='red'>320. Generalized Abbreviation （Medium）</font></h1>
+<p>A word's generalized abbreviation can be constructed by taking any number of non-overlapping and non-adjacent substrings and replacing them with their respective lengths.<br>
+For example, &quot;abcde&quot; can be abbreviated into:<br>
+&quot;a3e&quot; (&quot;bcd&quot; turned into &quot;3&quot;)<br>
+&quot;1bcd1&quot; (&quot;a&quot; and &quot;e&quot; both turned into &quot;1&quot;)<br>
+&quot;5&quot; (&quot;abcde&quot; turned into &quot;5&quot;)<br>
+&quot;abcde&quot; (no substrings replaced)<br>
+However, these abbreviations are invalid:<br>
+&quot;23&quot; (&quot;ab&quot; turned into &quot;2&quot; and &quot;cde&quot; turned into &quot;3&quot;) is invalid as the substrings chosen are adjacent.<br>
+&quot;22de&quot; (&quot;ab&quot; turned into &quot;2&quot; and &quot;bc&quot; turned into &quot;2&quot;) is invalid as the substring chosen overlap.<br>
+Given a string word, return a list of all the possible generalized abbreviations of word. Return the answer in any order.</p>
+<pre><code class="language-python">class Solution:
+    def generateAbbreviations(self, word: str) -&gt; List[str]:
+        if not word: return []
+        res= set()
+        res.add(str(len(word)))
+        res.add(word)
+        for seg_pos in range(len(word)):
+            left=word[:seg_pos]
+            right=word[seg_pos:]
+            
+            if left:
+                res.add(str(len(left))+right)
+            if right:
+                res.add(left+str(len(right)))
+            
+            for left_res in self.generateAbbreviations(left):
+                for right_res in self.generateAbbreviations(right):
+                    if not (left_res and left_res[-1].isdigit() and right_res and right_res[0].isdigit()):
+                        res.add(left_res+right_res)
+        
+        return sorted(list(res))
+#ANSWER
+class Solution:
+    def generateAbbreviations(self, word: str) -&gt; List[str]:
+        def rec(idx, curr_list):
+            if idx == L:
+                res.append(''.join(curr_list))
+                return
+            
+            #Abbreviate
+            if curr_list and curr_list[-1].isdigit():
+                curr_list[-1] = str(int(curr_list[-1]) + 1)
+                rec(idx + 1, curr_list)
+                curr_list[-1] = str(int(curr_list[-1]) - 1)
+            else:
+                rec(idx + 1, curr_list + ['1'])
+            
+            #Not to abbreviate
+            rec(idx + 1, curr_list + [word[idx]])
+                
+        L = len(word)
+        res = []
+        rec(0, [])
+        return res
+</code></pre>
+<p>初次尝试time limit exceeded。。。但这题只能backtracking解。 time complexity应该是相同的，看答案的backtracking写的很完美。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Leetcode 2021-12-03]]></title>
         <id>https://headhuanglan.github.io/post/leetcode-2021-12-03/</id>
@@ -3629,593 +4170,6 @@ class Solution(object):
                 return True
         
         return False
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-11-25]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-11-25/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-25/">
-        </link>
-        <updated>2021-11-25T08:23:51.000Z</updated>
-        <summary type="html"><![CDATA[<p>感恩节假期中断了刷题，沉迷于半小时漫画系列... 补上月25进度。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>感恩节假期中断了刷题，沉迷于半小时漫画系列... 补上月25进度。</p>
-<!-- more -->
-<h1 id="font-colorred-221-maximal-square-mediumfont"><font color='red'> 221. Maximal Square （Medium）</font></h1>
-<p>Given an m x n binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.</p>
-<pre><code class="language-python">class Solution:
-    def maximalSquare(self, matrix: List[List[str]]) -&gt; int:
-        rows=len(matrix)
-        cols=len(matrix[0])
-        maxqlen=0
-        for i in range(rows):
-            for j in range(cols):
-                if matrix[i][j]=='1':
-                    sqlen=1
-                    flag=True
-                    while sqlen+i&lt;rows and sqlen+j&lt; cols and flag:
-                        for k in range(j,sqlen+j+1):
-                            if matrix[i+sqlen][k]=='0':
-                                flag=False
-                                break
-                        for k in range(i,i+sqlen+1):
-                            if matrix[k][j+sqlen]=='0':
-                                flag=False
-                                break
-                        if flag:
-                            sqlen+=1
-                    
-                    if maxqlen&lt;sqlen:
-                        maxqlen=sqlen
-                        
-                        
-        return maxqlen**2
-
-class Solution:
-    def maximalSquare(self, matrix: List[List[str]]) -&gt; int:
-        # dp[i][j]  size of box which bottom right in pos[i][j]
-        # if matrix[i][j]==1
-        #    dp[i][j]=   min(dp[i-1][j],dp[i-1][j-1],dp[i][j-1])+1 
-        
-        m = len(matrix)
-        n = len(matrix[0])
-        dp = [[0]*(n+1) for _ in range(m+1)]
-        res=0
-        for i in range(1,m+1):
-            for j in range(1,n+1):
-                if matrix[i-1][j-1]=='1':
-                    dp[i][j]=min(dp[i-1][j],dp[i-1][j-1],dp[i][j-1])+1
-                    res=max(res,dp[i][j])
-        return res**2
-</code></pre>
-<p>试着用cumsum去解但失败了， 方法1，暴力解。 每次发现是“1”就以它作为正方形左上角起始点， 检查 row: i，i+sqlen col: j, j+sqlen 是否有‘0’.<br>
-方法2：dp： dp【i】【j】保存右下角位置在i，j的盒子大小。</p>
-<h1 id="font-colorred-222-count-complete-tree-nodes-mediumfont"><font color='red'> 222. Count Complete Tree Nodes （Medium）</font></h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def countNodes(self, root: Optional[TreeNode]) -&gt; int:
-        if not root:
-            return 0
-        if not root.left and not root.right:
-            return 1
-        if not root.right:
-            return 1+ self.countNodes(root.left)
-        else:
-            return  self.countNodes(root.left)+self.countNodes(root.right)+1
-
-
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def countNodes(self, root: Optional[TreeNode]) -&gt; int:
-        
-        def depth(node):
-            d=0
-            while node.left:
-                node=node.left
-                d+=1
-            return d
-        
-        def exists(idx,d,node):
-            left=0
-            right=2**d-1
-            for _ in range(d):
-                pivot = (left+right)//2
-                if idx&lt;=pivot:
-                    node=node.left
-                    right=pivot
-                else:
-                    node=node.right
-                    left=pivot +1
-            return node is not None
-        
-        if not root: return 0
-        d = depth(root)
-        if d==0: return 1
-        
-        l=1
-        r=2**d-1
-        while l&lt;=r:
-            mid = (l+r)//2
-            if exists(mid,d,root):
-                l=mid+1
-            else:
-                r=mid-1
-        
-        return (2**d-1) +l 
-        
-</code></pre>
-<p>给出了个O（n）解法，但题目要求小于O(n)...<br>
-思路： 完全二叉树，第0层2<sup>0个node，第一层，2</sup>1个node，第n层2^n个node，所以假设这个树深度为d=n， 不包含最后一层2<sup>0+2</sup>1+..+2<sup>(n-1)=2</sup>n  -  1 的所有node总和为2^d-1 ,问题转化成求最后一层有多少node。 范围在1~2^n.  因为d=n所以肯定有第一个node。  可以用binary search 求。</p>
-<h1 id="223-rectangle-area-medium">223. Rectangle Area （Medium）</h1>
-<pre><code class="language-python">class Solution:
-    def computeArea(self, ax1: int, ay1: int, ax2: int, ay2: int, bx1: int, by1: int, bx2: int, by2: int) -&gt; int:
-        
-        # intersect of 1d line
-        
-        def intersect(a1,a2,b1,b2):
-            if a1&gt;b1:
-                a1,a2,b1,b2=b1,b2,a1,a2
-            
-            #print(a1,a2,b1,b2)
-            #case 1  --
-            #            --
-            if a2&lt;b1:
-                return 0
-            
-            #case 2   a1---a2
-            #            b1---b2
-            if b1&lt;=a2 and a2&lt;=b2:
-                return a2-b1
-            # case 3  a1------a2
-            #            b1-b2
-            if b1&lt;a2 and b2&lt;a2:
-                return b2-b1
-            
-            return 'ERROR'
-        
-        width = intersect(ax1,ax2,bx1,bx2)
-        height = intersect(by1,by2,ay1,ay2)
-        print(width,height)
-        return (ay2-ay1)*(ax2-ax1)+ (by2-by1)*(bx2-bx1)    -width*height
-
-</code></pre>
-<h1 id="font-colorred224-basic-calculator-hard-font"><font color='red'>224. Basic Calculator (Hard) </font></h1>
-<pre><code class="language-python">class Solution:
-    def calculate(self, s: str) -&gt; int:
-        
-        #1+1
-        #1 1 +  
-        #2-1+3
-        #2 1 - 3 + 
-        #(1+(4+5+2)-3)+(6-8)
-        
-        s='('+s+')'
-        s_res=[]
-        s_char=[]
-        i=0
-        while i&lt;len(s):
-            e=s[i]
-            if e==' ':
-                i+=1
-                continue
-            elif e==')':
-                while s_char[-1]!='(':
-                    op=s_char.pop()
-                    s_res.append(op)
-                if s_char and s_char[-1]=='(':
-                    s_char.pop()
-            elif e in '(':
-                s_char.append(e)
-                    
-            elif e in '+-':
-                if e == &quot;-&quot; and (i == 0 or s[i-1] == &quot;(&quot; ):
-                    s_res.append(0)
-                    
-                while s_char[-1] in '+-':
-                    s_res.append(s_char.pop())
-                s_char.append(e)
-            else:
-                #e is num
-                tmp=int(e)
-                while i+1&lt;len(s) and s[i+1] in '0123456789':
-                    tmp = tmp*10+ int(s[i+1])
-                    i+=1
-                s_res.append(tmp)
-            
-                
-            i+=1
-        
-                
-        
-        print(s_res)
-        if '+' not in s_res and '-' not in s_res:
-            return int(''.join(map(str,s_res)))
-        
-        res = []
-        for e in s_res:
-            if e=='+' or e=='-':
-                b = res.pop() if res else None
-                a = res.pop() if res else None
-                
-                
-                if a is None:
-                    if e=='+':
-                        res.append(b)
-                    else:
-                        res.append(-b)
-                
-                else:    
-                    if e=='+':
-                        res.append(a+b) 
-                    else:
-                        res.append(a-b)
-            else:
-                res.append(e)
-        #print(res)
-        return res[0]
-
-#通解
-class Solution:
-    def calculate(self, s: str) -&gt; int:
-        
-        # 转换为 后缀表达式
-        # 运算符优先级
-        prec = {}
-        prec[&quot;*&quot;] = 3
-        prec[&quot;/&quot;] = 3
-        prec[&quot;+&quot;] = 2
-        prec[&quot;-&quot;] = 2
-        prec[&quot;(&quot;] = 1
-
-        res = []
-        stack = []
-        i = 0
-        while i &lt; len(s):
-            # 数字 直接 接到后缀表达式上
-            if s[i] == &quot; &quot;:
-                i += 1
-                
-            elif s[i].isdigit():
-                temp = &quot;&quot;
-                while i &lt; len(s) and s[i].isdigit():
-                    temp += s[i]
-                    i += 1
-                res.append(temp)
-
-            # 左括号直接入栈
-            elif s[i] == &quot;(&quot;:
-                stack.append(s[i])
-                i += 1
-
-            # 右括号，开始弹栈，直达遇到左括号 左括号出栈 但不输出
-            elif s[i] == &quot;)&quot;:
-                while stack and stack[-1] != &quot;(&quot;:
-                    res.append(stack.pop())
-                stack.pop() # 左括号出战， 但是不输出
-                i += 1
-
-            # 遇到运算符
-            elif s[i] in [&quot;+&quot;, &quot;-&quot;, &quot;*&quot;, &quot;/&quot;]:
-                #  对 &quot;-2 + 2&quot; 或者 &quot;1-(-2)&quot; 进行特殊处理
-                if s[i] == &quot;-&quot; and (i == 0 or s[i-1] == &quot;(&quot; ):
-                    res.append('0')
-                # 只要栈顶符号不低于当前符号，就一直输出。最后把当前符号入栈
-                while stack and prec[s[i]]&lt;=prec[stack[-1]]:
-                    res.append(stack.pop())
-                stack.append(s[i])
-                i += 1
-        
-        # 最后把栈里面的元素均 放到后缀表达式后面
-        while stack:
-            res.append(stack.pop())
-
-
-        # 计算后缀表达式
-        stack = []
-        
-        for char in res:
-            if char.isdigit():
-                stack.append(int(char))
-            else:
-                x = stack.pop()
-                y = stack.pop() 
-                if char == &quot;+&quot;:
-                    stack.append(x + y)
-                elif char == &quot;-&quot;:
-                    stack.append(y-x)
-                elif char == &quot;*&quot;:
-                    stack.append(y*x)
-                elif char == &quot;/&quot;:
-                    stack.append(x/y)
-
-        return stack.pop()
-</code></pre>
-<p>&quot; 2-1 + 2 &quot; 直接用stack解出现-1时候符号和1是合体的，所以换思路把表达式变成前缀/后坠表达。 又遇到后缀表达如何去括号问题。<br>
-1 + (( 2 + 3)* 4 ) – 5   方法：  当读到数时，立即输出， 若读到操作符，判断符号与栈顶符号的优先级，若该符号优先级高于栈顶元素，则将该操作符入栈，否则就依次把栈中运算符弹出并加到后缀表达式尾端，但又遇到 &quot;1-(-2)&quot; 无法pass。 同理 &quot;- (3 - (- (4 + 5) ) )&quot; 无法pass。 负号不作为减法，作为符号。 需要特殊处理： 方法：</p>
-<pre><code class="language-python">if e == &quot;-&quot; and (i == 0 or s[i-1] == &quot;(&quot; ):
-    s_res.append(0)
-</code></pre>
-<p>答案很简单，问题根源在-号不能互相换 比如(A-B)+C != A-(B+C) , 所以把-看作数字的符号。</p>
-<pre><code class="language-python">class Solution:
-    def calculate(self, s: str) -&gt; int:
-
-        stack = []
-        operand = 0
-        res = 0 # For the on-going result
-        sign = 1 # 1 means positive, -1 means negative  
-
-        for ch in s:
-            if ch.isdigit():
-                # Forming operand, since it could be more than one digit
-                operand = (operand * 10) + int(ch)
-
-            elif ch == '+':
-                # Evaluate the expression to the left,
-                # with result, sign, operand
-                res += sign * operand
-
-                # Save the recently encountered '+' sign
-                sign = 1
-                # Reset operand
-                operand = 0
-
-            elif ch == '-':
-
-                res += sign * operand
-                sign = -1
-                operand = 0
-
-            elif ch == '(':
-
-                # Push the result and sign on to the stack, for later
-                # We push the result first, then sign
-                stack.append(res)
-                stack.append(sign)
-
-                # Reset operand and result, as if new evaluation begins for the new sub-expression
-                sign = 1
-                res = 0
-
-            elif ch == ')':
-
-                # Evaluate the expression to the left
-                # with result, sign and operand
-                res += sign * operand
-
-                # ')' marks end of expression within a set of parenthesis
-                # Its result is multiplied with sign on top of stack
-                # as stack.pop() is the sign before the parenthesis
-                res *= stack.pop() # stack pop 1, sign
-
-                # Then add to the next operand on the top.
-                # as stack.pop() is the result calculated before this parenthesis
-                # (operand on stack) + (sign on stack * (result from parenthesis))
-                res += stack.pop() # stack pop 2, operand
-
-                # Reset the operand
-                operand = 0
-
-        return res + sign * operand
-
-</code></pre>
-<h1 id="font-colorblue225-implement-stack-using-queues-easy-font"><font color='blue'>225. Implement Stack using Queues (Easy) </font></h1>
-<pre><code class="language-python">class MyStack(object):
-    def __init__(self):
-        self._queue = collections.deque()
-
-    def push(self, x):
-        q = self._queue
-        q.append(x)
-        for _ in range(len(q) - 1):
-            q.append(q.popleft())
- 
-    def pop(self):
-        return self._queue.popleft()
-
-    def top(self):
-        return self._queue[0]
-    
-    def empty(self):
-        return not len(self._queue)
-
-</code></pre>
-<p>三种方法</p>
-<h1 id="226-invert-binary-tree-easy">226. Invert Binary Tree （Easy）</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def invertTree(self, root: Optional[TreeNode]) -&gt; Optional[TreeNode]:
-        if not root: return root
-        root.left,root.right = root.right,root.left
-        root.left = self.invertTree(root.left)
-        root.right=self.invertTree(root.right)
-        return root
-
-</code></pre>
-<h1 id="font-colorblue227-basic-calculator-ii-medium-font"><font color='blue'>227. Basic Calculator II (Medium) </font></h1>
-<pre><code class="language-python">class Solution:
-    def calculate(self, s: str) -&gt; int:
-        
-        #convert to 后缀表达
-        priority = {'+':1,'-':1,'*':2,'/':2,'(':0}
-        res = [] #保存后缀表达式
-        stack=[] #保存符号
-        i=0
-        while i&lt;len(s):
-            ch=s[i]
-            if ch.isdigit():
-                tmp=ch
-                while i+1&lt;len(s) and s[i+1].isdigit():
-                    tmp+=s[i+1]
-                    i+=1
-                res.append(int(tmp))
-            
-            elif ch=='(':
-                stack.append(ch)
-            elif ch==')':
-                while stack and stack[-1] != &quot;(&quot;:
-                    res.append(stack.pop())
-                stack.pop() 
-            elif ch in  [&quot;+&quot;, &quot;-&quot;, &quot;*&quot;, &quot;/&quot;]:
-                
-                while stack and priority[ch] &lt;= priority[stack[-1]]:
-                    res.append(stack.pop())
-
-                stack.append(ch)
-            
-            i+=1
-                
-        while stack:
-            res.append(stack.pop())
-        
-        # 计算后缀表达式
-        stack = []
-        
-        for char in res:
-            if char not in  [&quot;+&quot;, &quot;-&quot;, &quot;*&quot;, &quot;/&quot;]:
-                #char is number
-                stack.append(char)
-            else:
-                x = stack.pop()
-                y = stack.pop() 
-                if char == &quot;+&quot;:
-                    stack.append(x + y)
-                elif char == &quot;-&quot;:
-                    stack.append(y-x)
-                elif char == &quot;*&quot;:
-                    stack.append(y*x)
-                elif char == &quot;/&quot;:
-                    stack.append(y//x)
-
-        return stack.pop()
-
-</code></pre>
-<p>直接上通杀法。转成后缀表达然后求结果。</p>
-<h1 id="font-colorblue-228-summary-ranges-easy-font"><font color='blue'> 228. Summary Ranges （Easy） </font></h1>
-<pre><code class="language-python">class Solution:
-    def summaryRanges(self, nums: List[int]) -&gt; List[str]:
-        # [0]
-        # [0,1]
-        # [0,2]
-        # [0-2,4]
-        # [0-2,4,5]
-        
-        res = []
-        stack=[]
-        for n in nums:
-            if not stack:
-                stack.append(n)
-            elif len(stack)==1:
-                if n==stack[-1]+1:
-                    stack.append(n)
-                else:
-                    res.append(str(stack[-1]))
-                    stack=[n]
-            else:
-                if n==stack[-1]+1:
-                    stack[-1]=n
-                else:
-                    res.append(str(stack[0])+'-&gt;'+str(stack[1]))
-                    stack=[n]
- 
-        if len(stack)==1:
-            res.append(str(stack[0]))
-        elif len(stack)==2:
-            res.append(str(stack[0])+'-&gt;'+str(stack[1]))
-        
-        return res
-#answer way of writting
-class Solution:
-    def summaryRanges(self, nums: List[int]) -&gt; List[str]:
-        res = []
-        i=0
-        for j in range(len(nums)):
-            if j+1&lt;len(nums) and nums[j+1]==nums[j]+1:
-                continue
-            if i==j:
-                res.append(str(nums[i]))
-            else:
-                res.append(str(nums[i])+'-&gt;'+str(nums[j]))
-            i=j+1
-        return res
-
-</code></pre>
-<p>答案更简单</p>
-<h1 id="font-colorred229-majority-element-ii-medium-font"><font color='red'>229. Majority Element II (Medium) </font></h1>
-<pre><code class="language-python">class Solution:
-    def majorityElement(self, nums: List[int]) -&gt; List[int]:
-        
-        maj1=nums[0]
-        maj2=nums[0]
-        c1=0
-        c2=0
-
-        for n in nums:
-            if n==maj1:
-                c1+=1
-            elif n==maj2:
-                c2+=1
-            elif c1==0:
-                c1=1
-                maj1=n
-            elif c2==0:
-                c2=1
-                maj2=n
-            else:
-                c1-=1
-                c2-=1
-        #recalce make sure        
-        c1=c2=0
-        for n in nums:
-            if n==maj1:c1+=1
-            if n==maj2:c2+=1
-        res=[]
-        if c1&gt;len(nums)//3:
-            res.append(maj1)
-        if c2&gt;len(nums)//3 and maj1!=maj2:
-            res.append(maj2)
-        return res
-
-
-</code></pre>
-<p>经典算法，在做majorelement 1时候写过，需要记住。</p>
-<h1 id="230-kth-smallest-element-in-a-bst-medium">230. Kth Smallest Element in a BST （Medium）</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def kthSmallest(self, root: Optional[TreeNode], k: int) -&gt; int:
-        ind=0
-        stack=[]
-        while root or stack:
-            while root:
-                stack.append(root)
-                root=root.left
-            
-            node=stack.pop()
-            ind+=1
-            if ind==k:
-                return node.val
-            
-            root=node.right
 </code></pre>
 ]]></content>
     </entry>

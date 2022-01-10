@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-06 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1641481678802">
+<link rel="shortcut icon" href="/favicon.ico?v=1641800460968">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">37</span>
+        <span class="site-item-stat-count">38</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -963,14 +963,14 @@ k的最大位阶乘计数对应的值为 index=k//bignumber[i]   i~n-1:0。知�
     <div class="nav-prev">
       
         <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="backtracking 总结" href="https://headhuanglan.github.io/post/backtracking-zong-jie/">backtracking 总结</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="backtracking 总结" href="https://headhuanglan.github.io/post/backtracking-zong-jie/">上一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2021-11-08" href="https://headhuanglan.github.io/post/leetcode-2021-11-07/">Leetcode 2021-11-08</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="Leetcode 2021-11-08" href="https://headhuanglan.github.io/post/leetcode-2021-11-07/">上一篇</a>
       
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2021-11-05" href="https://headhuanglan.github.io/post/leetcode-2021-11-05/">Leetcode 2021-11-05</a>
-        <a class="nav-mobile-next" title="Leetcode 2021-11-05" href="https://headhuanglan.github.io/post/leetcode-2021-11-05/">下一篇</a>
+        <a class="nav-pc-next" title="backtracking 总结" href="https://headhuanglan.github.io/post/backtracking-zong-jie/">backtracking 总结</a>
+        <a class="nav-mobile-next" title="backtracking 总结" href="https://headhuanglan.github.io/post/backtracking-zong-jie/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
@@ -1521,6 +1521,544 @@ k的最大位阶乘计数对应的值为 index=k//bignumber[i]   i~n-1:0。知�
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-04/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;311-sparse-matrix-multiplication-medium&#34;&gt;311. Sparse Matrix Multiplication (Medium)&lt;/h1&gt;
+&lt;p&gt;Given two sparse matrices mat1 of size m x k and mat2 of size k x n, return the result of mat1 x mat2. You may assume that multiplication is always possible.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def multiply(self, mat1: List[List[int]], mat2: List[List[int]]) -&amp;gt; List[List[int]]:
+        l=len(mat1)
+        m=len(mat1[0])
+        n=len(mat2[0])
+        #1m*mn = ln
+        res = [[0]*n for _ in range(l)]
+        
+        for i in range(l):
+            for j in range(n):
+                for k in range(m):
+                    res[i][j]+=mat1[i][k]*mat2[k][j]
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;因为题目是sparse table 所以更好的做饭是把table 存成hashmap。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred312-burst-balloons-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;312. Burst Balloons （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given n balloons, indexed from 0 to n - 1. Each balloon is painted with a number on it represented by an array nums. You are asked to burst all the balloons.&lt;br&gt;
+If you burst the ith balloon, you will get nums[i - 1] * nums[i] * nums[i + 1] coins. If i - 1 or i + 1 goes out of bounds of the array, then treat it as if there is a balloon with a 1 painted on it.&lt;br&gt;
+Return the maximum coins you can collect by bursting the balloons wisely&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#TIME LIMIT EXCCEEDED.
+class Solution:
+    def maxCoins(self, nums: List[int]) -&amp;gt; int:
+        res = []
+        def bt(nums,val):
+            if not nums:
+                res.append(val)
+            for i,n in enumerate(nums):
+                new_nums = nums[:i]+nums[i+1:]
+                a = nums[i-1] if i-1&amp;gt;=0 else 1
+                b= n
+                c= nums[i+1] if i+1&amp;lt;len(nums) else 1
+                bt(new_nums,val+a*b*c)
+        
+        
+        bt(nums,0)
+        #print(res)
+        return max(res) if res else 1
+
+#ANSWER 1
+class Solution:
+    def maxCoins(self, nums: List[int]) -&amp;gt; int: 
+        #ith is the last to burst
+        nums = [1]+nums+[1]
+        @lru_cache(None)
+        def dp(left,right):
+            if left&amp;gt;right: return 0
+            res=0
+            for i in range(left,right+1):
+                gain=nums[left-1]*nums[i]*nums[right+1]
+                remaining=dp(left,i-1)+dp(i+1,right)
+                res=max(res,gain+remaining)
+            return res
+  
+        
+        return dp(1,len(nums)-2)
+
+#
+class Solution:
+    def maxCoins(self, nums: List[int]) -&amp;gt; int: 
+        #ith is the last to burst
+        nums = [1]+nums+[1]
+        n=len(nums)
+        dp=[[0]*n for _ in range(n)]
+        for left in range(n-2,0,-1):
+            for right in range(left,n-1):
+                for i in range(left,right+1):
+                    gain=nums[left-1]*nums[i]*nums[right+1]
+                    remaining=dp[left][i-1]+dp[i+1][right]
+                    dp[left][right]=max(dp[left][right],gain+remaining)
+        return dp[1][n-2]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;初次尝试，backtraking 方法会time limit exceeded， 需要更优方法。 答案1） top down dp， ith气球是最后一个burst的，所以left到i-1，i+1到right先burst。 思路是分治法，能拆分为互相不干扰的left，right部分是因为ith定义是最后一个burst，要ith定义是先burst，就会出现left，right部分dependent关系，right部分数值取决于left最右一个气球是否burst。所以定义ith气球最后一个burst是很聪明的解决了分治法左右depenent问题。2）Bottom-Up dp 算 dp【left】【right】必须知道dp【left】【i-1】和dp【i+1】【right】 i在left right之间，所以dp更新路线是从右下角zigzag更新。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred313-super-ugly-number-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;313. Super Ugly Number （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;A super ugly number is a positive integer whose prime factors are in the array primes.&lt;br&gt;
+Given an integer n and an array of integers primes, return the nth super ugly number.&lt;br&gt;
+The nth super ugly number is guaranteed to fit in a 32-bit signed integer.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def nthSuperUglyNumber(self, n: int, primes: List[int]) -&amp;gt; int:
+        dp = [0]*n
+        t = [0]*len(primes)
+        dp[0]=1
+        for i in range(1,n):
+            dp[i]=min(dp[t[ii]]*primes[ii] for ii in range(len(primes)))
+            for j in range(len(primes)):
+                if dp[i]==dp[t[j]]*primes[j]:
+                    t[j]+=1
+        return dp[-1]
+ 
+        
+        # dp = [0] * n
+        # t2 = t3 = t5 = 0
+        # dp[0] = 1
+        # for i in range(1,n):
+        #     dp[i] = min(dp[t2]*2,dp[t3]*3,dp[t5]*5)
+        #     if(dp[i] == dp[t2]*2): t2 += 1
+        #     if(dp[i] == dp[t3]*3): t3 += 1
+        #     if(dp[i] == dp[t5]*5): t5 += 1
+        # return dp[-1]
+class Solution:
+    def nthSuperUglyNumber(self, n: int, primes: List[int]) -&amp;gt; int:
+ 
+        dp=[1]
+        res=1
+        s=set()
+        for _ in range(n):
+            while res in s:
+                res = heapq.heappop(dp)
+            s.add(res)
+            for p in primes:
+                heapq.heappush(dp,res*p)
+        return res
+ 
+#ANSWER
+ class Solution:
+    def nthSuperUglyNumber(self, n: int, primes: List[int]) -&amp;gt; int:
+
+        uglies = [1]
+        def gen(prime):
+            for ugly in uglies:
+                yield ugly * prime
+        merged = heapq.merge(*map(gen, primes))
+        while len(uglies) &amp;lt; n:
+            ugly = next(merged)
+            if ugly != uglies[-1]:
+                uglies.append(ugly)
+        return uglies[-1]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;仿照ugly unmber II 写出一个dp的解但time limit excceded。   用heapq还是time limit excceded。 这个题目python不友好， 答案用了generator。&lt;/p&gt;
+&lt;h1 id=&#34;314-binary-tree-vertical-order-traversal-medium&#34;&gt;314. Binary Tree Vertical Order Traversal （Medium）&lt;/h1&gt;
+&lt;p&gt;Given the root of a binary tree, return the vertical order traversal of its nodes&#39; values. (i.e., from top to bottom, column by column).&lt;br&gt;
+If two nodes are in the same row and column, the order should be from left to right.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def verticalOrder(self, root: Optional[TreeNode]) -&amp;gt; List[List[int]]:
+        dic = dict()
+        def pre(root,level,hight):
+            hight+=1
+            if not root: return 
+            if level not in dic:
+                dic[level]=[]
+            dic[level].append((root.val,hight))
+            pre(root.left,level-1,hight) 
+            pre(root.right,level+1,hight)
+        pre(root,0,0)
+        res= [ [val[0] for val in sorted(v,key=lambda x:x[1])] for k,v in  sorted(dic.items(),key=lambda x:x[0])]
+        return res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;记录左右移动同时记录上下移动。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-315-count-of-smaller-numbers-after-self-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 315. Count of Smaller Numbers After Self （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an integer array nums and you have to return a new counts array. The counts array has the property where counts[i] is the number of smaller elements to the right of nums[i].&lt;br&gt;
+Input: nums = [5,2,6,1]&lt;br&gt;
+Output: [2,1,1,0]&lt;br&gt;
+Explanation:&lt;br&gt;
+To the right of 5 there are 2 smaller elements (2 and 1).&lt;br&gt;
+To the right of 2 there is only 1 smaller element (1).&lt;br&gt;
+To the right of 6 there is 1 smaller element (1).&lt;br&gt;
+To the right of 1 there is 0 smaller element.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def countSmaller(self, nums: List[int]) -&amp;gt; List[int]:    
+        #   5  2   6   1
+        #
+        #   0 1 2 3 4 5 6
+        #     1 1     1 1
+        #
+        #  找出 i-1 到 -inf 的cumsum ，而且update 从右往左。
+        #  -OFFSET ~0 ~ OFFSET
+        
+        OFFSET=10000
+        size=2 * OFFSET+1  
+        tree=[0]*(2*size)
+        
+        #####
+        #   1
+        # 2   3
+        #4 5 6 7
+        # 1 2 3 4 5 6 7
+       
+                    
+            
+        def update(ind):
+            tree[ind]+=1
+           
+            while ind&amp;gt;0:
+                left=ind
+                right=ind
+                if ind%2==0:
+                    right+=1
+                else:
+                    left-=1
+                if ind//2&amp;gt;0:
+                    tree[ind//2]=tree[left]+tree[right]
+                ind//=2
+                
+        def query(left,right):
+            res=0
+            while left&amp;lt;=right:
+                if right%2==0:
+                    res+=tree[right]
+                    right-=1
+                if left%2==1:
+                    res+=tree[left]
+                    left+=1
+
+                left//=2
+                right//=2
+    
+            return res
+                    
+        ans = []
+        for num in nums[::-1]:
+            ind = num+OFFSET+size 
+            ans.append(query(size,ind-1))
+            update(ind)
+             
+            
+        return ans[::-1]
+
+
+#ANSWER 2
+class Solution:
+    def countSmaller(self, nums: List[int]) -&amp;gt; List[int]:    
+ 
+        OFFSET=10000
+        size=2 * OFFSET+1 + 1 #total possible values in nums plus one dummy 
+        tree=[0]*size
+        ans = []
+            
+        def update(ind):
+            ind=ind+1   #index in BIT is 1 more than original index
+            while ind&amp;lt;size:
+                tree[ind]+=1
+                ind+= ind&amp;amp;-ind
+        def query(ind):
+            ind=ind+ 1  #index in BIT is 1 more than original index
+            res=0
+            while ind&amp;gt;0:
+                res+=tree[ind]
+                ind-= ind&amp;amp;-ind
+            return res
+           
+          
+        ans = []
+        for num in nums[::-1]:
+            ind = num+OFFSET
+            ans.append(query(ind-1))
+            update(ind)
+             
+            
+        return ans[::-1]
+    
+#ANSWER3
+class Solution:
+    def countSmaller(self, nums: List[int]) -&amp;gt; List[int]:    
+        def sort(enum):
+            half = len(enum) // 2
+            if half:
+                left, right = sort(enum[:half]), sort(enum[half:])
+                m, n = len(left), len(right)
+                i = j = 0
+                while i &amp;lt; m or j &amp;lt; n:
+                    if j == n or i &amp;lt; m and left[i][1] &amp;lt;= right[j][1]:
+                        enum[i+j] = left[i]
+                        smaller[left[i][0]] += j
+                        i += 1
+                    else:
+                        enum[i+j] = right[j]
+                        j += 1
+            return enum
+        smaller = [0] * len(nums)
+        sort(list(enumerate(nums)))
+        return smaller
+ 
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;错误以为用stack可以解决~~，答案方法1）Segment Tree 2）Binary index Tree 3)Merge Sort,当选取左边元素，记录 smaller[left[i][0]] += j  ；  left【i】【0】是左边元素在原始数组种的index， j是right中未被选中元素的index，恰巧是小于左边被选中元素的在右边需要变换位置元素的长度。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred316-remove-duplicate-letters-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;316. Remove Duplicate Letters （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a string s, remove duplicate letters so that every letter appears once and only once. You must make sure your result is the smallest in lexicographical order among all possible results.&lt;br&gt;
+Example 1:&lt;br&gt;
+Input: s = &amp;quot;bcabc&amp;quot;&lt;br&gt;
+Output: &amp;quot;abc&amp;quot;&lt;br&gt;
+Example 2:&lt;br&gt;
+Input: s = &amp;quot;cbacdcbc&amp;quot;&lt;br&gt;
+Output: &amp;quot;acdb&amp;quot;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def removeDuplicateLetters(self, s: str) -&amp;gt; str:
+        # maintain smalleset lexicographical order How?
+        
+        # find pos - the index of the leftmost letter in our solution
+        # we create a counter and end the iteration once the suffix doesn&#39;t have each unique character
+        # pos will be the index of the smallest character we encounter before the iteration ends
+        c=Counter(s)
+        pos=0
+        for i in range(len(s)):
+            if s[i]&amp;lt;s[pos]:
+                pos=i
+            c[s[i]]-=1
+            if c[s[i]]==0:
+                break
+        return s[pos]+self.removeDuplicateLetters(s[pos:].replace(s[pos],&amp;quot;&amp;quot;)) if s  else &#39;&#39;
+
+#ANSWER
+class Solution:
+    def removeDuplicateLetters(self, s: str) -&amp;gt; str:
+        stack=[]
+        seen=set()
+        last_occurrence = {c:i for i,c in enumerate(s)}
+        for i,c in enumerate(s):
+            if c not in seen:
+                #只有c不在seen中才能试图在stack中加c
+                while stack and c&amp;lt;stack[-1] and i&amp;lt;last_occurrence[stack[-1]]:  
+                    # 如果当前试图加入的c&amp;lt;stack[-1] 而且 c的位置&amp;lt; stack[-1]最后出现位置
+                    # 可以安全移除stack【-1】
+                    val=stack.pop()
+                    seen.discard(val)
+                    
+                seen.add(c)
+                stack.append(c)
+                
+        return &#39;&#39;.join(stack)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;思路1） 找到第一个qualify的pos，s【i】小于s【pos】需要更新pos成i，当counter s【i】==0时候说明s【i】是当前必须加入结果的字符，然后找下一个字符用recursive方法。&lt;br&gt;
+思路2）  见代码 Greedy 方法的应用&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred317-shortest-distance-from-all-buildings-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;317. Shortest Distance from All Buildings （Hard） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an m x n grid grid of values 0, 1, or 2, where:&lt;br&gt;
+each 0 marks an empty land that you can pass by freely,&lt;br&gt;
+each 1 marks a building that you cannot pass through, and&lt;br&gt;
+each 2 marks an obstacle that you cannot pass through.&lt;br&gt;
+You want to build a house on an empty land that reaches all buildings in the shortest total travel distance. You can only move up, down, left, and right.&lt;br&gt;
+Return the shortest travel distance for such a house. If it is not possible to build such a house according to the above rules, return -1.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#METHOD 1 BFS from Biulding
+class Solution:
+    def shortestDistance(self, grid: List[List[int]]) -&amp;gt; int:
+        
+        
+        #Use hit to record how many times a 0 grid has been reached and use distSum to record the sum of distance from all 1 grids to this 0 grid. A powerful pruning is that during the BFS we use count1 to count how many 1 grids we reached. If count1 &amp;lt; buildings then we know not all 1 grids are connected are we can return -1 immediately, which greatly improved speed (beat 100% submissions).
+
+ 
+        if not grid or not grid[0]: return -1
+        M, N, buildings = len(grid), len(grid[0]), sum(val for line in grid for val in line if val == 1)
+        hit, distSum = [[0] * N for i in range(M)], [[0] * N for i in range(M)]
+
+        def BFS(start_x, start_y):
+            visited = [[False] * N for k in range(M)]
+            visited[start_x][start_y], count1, queue = True, 1, collections.deque([(start_x, start_y, 0)])
+            while queue:
+                x, y, dist = queue.popleft()
+                for i, j in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if 0 &amp;lt;= i &amp;lt; M and 0 &amp;lt;= j &amp;lt; N and not visited[i][j]:
+                        visited[i][j] = True
+                        if not grid[i][j]:
+                            queue.append((i, j, dist + 1))
+                            hit[i][j] += 1
+                            distSum[i][j] += dist + 1
+                        elif grid[i][j] == 1:
+                            count1 += 1
+            return count1 == buildings  
+
+        for x in range(M):
+            for y in range(N):
+                if grid[x][y] == 1:
+                    if not BFS(x, y): return -1
+        return min([distSum[i][j] for i in range(M) for j in range(N) if not grid[i][j] and hit[i][j] == buildings] or [-1])
+    
+
+#METHOD 2 BFS from Empty space
+class Solution:
+    def shortestDistance(self, grid: List[List[int]]) -&amp;gt; int:
+        M=len(grid)
+        N=len(grid[0])
+        totalHouses = sum([v for row in grid for v in row if v==1])
+        minDistance=float(&#39;inf&#39;)
+        def bfs(row,col):
+            distanceSum=0
+            housesReached=0
+            visited =[[False]*N for _ in range(M)]
+            q=collections.deque()
+            q.append((row,col))
+            step=0
+            while q and housesReached!=totalHouses:
+                l=len(q)
+                for _ in range(l):
+                    row,col=q.popleft()
+                    
+                    if grid[row][col]==1:
+                        distanceSum+=step
+                        housesReached+=1
+                        continue
+                    
+                    for new_row,new_col in [(row+1,col),(row-1,col),(row,col+1),(row,col-1)]:
+                        if M&amp;gt;new_row&amp;gt;=0 and N&amp;gt;new_col&amp;gt;=0:
+                            if not visited[new_row][new_col] and grid[new_row][new_col]!=2:
+                                visited[new_row][new_col]=True
+                                q.append((new_row,new_col))
+                                
+                step+=1
+            
+            if housesReached!=totalHouses:
+                for row in  range(M):
+                    for col in range(N):
+                        if grid[row][col]==0 and visited[row][col]:
+                            grid[row][col]=2
+                
+                return float(&#39;inf&#39;)
+            return distanceSum
+        
+        
+        
+        #main
+        for row in range(M):
+            for col in range(N):
+                if grid[row][col]==0:
+                    minDistance=min(minDistance,bfs(row,col))
+        
+        if minDistance==float(&#39;inf&#39;):
+            return -1
+        return minDistance         
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;直接看答案了。。。。方法一更好点， 从building处做BFS，保存hits数目。BFS返回count1==#Buildings 这样可以提前截断如果存在不能完全到达所有building情况。&lt;/p&gt;
+&lt;h1 id=&#34;318-maximum-product-of-word-lengths-medium&#34;&gt;318. Maximum Product of Word Lengths （Medium）&lt;/h1&gt;
+&lt;p&gt;Given a string array words, return the maximum value of length(word[i]) * length(word[j]) where the two words do not share common letters. If no such two words exist, return 0.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def maxProduct(self, words: List[str]) -&amp;gt; int:
+        ss  = [set() for _ in range(len(words))]
+        for i,word in enumerate(words):
+            for w in word:
+                ss[i].add(w)
+        res=float(&#39;-inf&#39;)
+        for i in range(len(words)-1):
+            for j in range(i+1,len(words)):
+                if not ss[i] &amp;amp; ss[j]:
+                    res=max(res,len(words[i])*len(words[j]))
+        return res if res!=float(&#39;-inf&#39;) else 0
+#ANSWER
+from collections import defaultdict
+class Solution:
+    def maxProduct(self, words: List[str]) -&amp;gt; int:
+        hashmap = defaultdict(int)
+        bit_number = lambda ch : ord(ch) - ord(&#39;a&#39;)
+        
+        for word in words:
+            bitmask = 0
+            for ch in word:
+                # add bit number bit_number in bitmask
+                bitmask |= 1 &amp;lt;&amp;lt; bit_number(ch)
+            # there could be different words with the same bitmask
+            # ex. ab and aabb
+            hashmap[bitmask] = max(hashmap[bitmask], len(word))
+        
+        max_prod = 0
+        for x in hashmap:
+            for y in hashmap:
+                if x &amp;amp; y == 0:
+                    max_prod = max(max_prod, hashmap[x] * hashmap[y])
+        return max_prod
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案用了bitmask作为key来优化。思路很好。&lt;/p&gt;
+&lt;h1 id=&#34;319-bulb-switcher-medium&#34;&gt;319. Bulb Switcher （Medium）&lt;/h1&gt;
+&lt;p&gt;There are n bulbs that are initially off. You first turn on all the bulbs, then you turn off every second bulb.&lt;br&gt;
+On the third round, you toggle every third bulb (turning on if it&#39;s off or turning off if it&#39;s on). For the ith round, you toggle every i bulb. For the nth round, you only toggle the last bulb.&lt;br&gt;
+Return the number of bulbs that are on after n rounds.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def bulbSwitch(self, n: int) -&amp;gt; int:
+        return int(math.sqrt(n))
+        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这题比较tricky， 灯泡1到n， 只有灯泡被拨动奇数次才会亮， 比如第i个灯泡，i%round==0时候会被拨动一次， 这样第i个灯泡比如第12个，1，12，2，6，3，4轮时候会被拨到，但是对于完全平方数，比如36个灯泡，1，36，2，18，3，12，4，9，6轮时候会被拨到但为奇数轮。所以找到有多少个完全平方数在1到n之间就可以了。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred320-generalized-abbreviation-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;320. Generalized Abbreviation （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;A word&#39;s generalized abbreviation can be constructed by taking any number of non-overlapping and non-adjacent substrings and replacing them with their respective lengths.&lt;br&gt;
+For example, &amp;quot;abcde&amp;quot; can be abbreviated into:&lt;br&gt;
+&amp;quot;a3e&amp;quot; (&amp;quot;bcd&amp;quot; turned into &amp;quot;3&amp;quot;)&lt;br&gt;
+&amp;quot;1bcd1&amp;quot; (&amp;quot;a&amp;quot; and &amp;quot;e&amp;quot; both turned into &amp;quot;1&amp;quot;)&lt;br&gt;
+&amp;quot;5&amp;quot; (&amp;quot;abcde&amp;quot; turned into &amp;quot;5&amp;quot;)&lt;br&gt;
+&amp;quot;abcde&amp;quot; (no substrings replaced)&lt;br&gt;
+However, these abbreviations are invalid:&lt;br&gt;
+&amp;quot;23&amp;quot; (&amp;quot;ab&amp;quot; turned into &amp;quot;2&amp;quot; and &amp;quot;cde&amp;quot; turned into &amp;quot;3&amp;quot;) is invalid as the substrings chosen are adjacent.&lt;br&gt;
+&amp;quot;22de&amp;quot; (&amp;quot;ab&amp;quot; turned into &amp;quot;2&amp;quot; and &amp;quot;bc&amp;quot; turned into &amp;quot;2&amp;quot;) is invalid as the substring chosen overlap.&lt;br&gt;
+Given a string word, return a list of all the possible generalized abbreviations of word. Return the answer in any order.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def generateAbbreviations(self, word: str) -&amp;gt; List[str]:
+        if not word: return []
+        res= set()
+        res.add(str(len(word)))
+        res.add(word)
+        for seg_pos in range(len(word)):
+            left=word[:seg_pos]
+            right=word[seg_pos:]
+            
+            if left:
+                res.add(str(len(left))+right)
+            if right:
+                res.add(left+str(len(right)))
+            
+            for left_res in self.generateAbbreviations(left):
+                for right_res in self.generateAbbreviations(right):
+                    if not (left_res and left_res[-1].isdigit() and right_res and right_res[0].isdigit()):
+                        res.add(left_res+right_res)
+        
+        return sorted(list(res))
+#ANSWER
+class Solution:
+    def generateAbbreviations(self, word: str) -&amp;gt; List[str]:
+        def rec(idx, curr_list):
+            if idx == L:
+                res.append(&#39;&#39;.join(curr_list))
+                return
+            
+            #Abbreviate
+            if curr_list and curr_list[-1].isdigit():
+                curr_list[-1] = str(int(curr_list[-1]) + 1)
+                rec(idx + 1, curr_list)
+                curr_list[-1] = str(int(curr_list[-1]) - 1)
+            else:
+                rec(idx + 1, curr_list + [&#39;1&#39;])
+            
+            #Not to abbreviate
+            rec(idx + 1, curr_list + [word[idx]])
+                
+        L = len(word)
+        res = []
+        rec(0, [])
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;初次尝试time limit exceeded。。。但这题只能backtracking解。 time complexity应该是相同的，看答案的backtracking写的很完美。&lt;/p&gt;
+">Leetcode 2021-12-04</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-03/"" data-c="
@@ -12265,129 +12803,6 @@ Each time you can either climb 1 or 2 steps. In how many distinct ways can you c
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/backtracking-zong-jie/"" data-c="
-          &lt;p&gt;backtracking 不同题目不完全汇总&lt;/p&gt;
-&lt;!-- more --&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
-### Subsets
-        def backtrack(list, templist,nums,start):
-            list.append(templist[:])
-            for i in range(start,len(nums)):
-                templist.append(nums[i])
-                backtrack(list,templist,nums,i+1)
-                templist.pop()      
-
-        list=[]
-        nums.sort()
-        backtrack(list,[],nums,0)
-        return list
-### Subsets II
-    def subsetsWithDup(self, nums: List[int]) -&amp;gt; List[List[int]]:
-        def backtrack(list, templist,nums,start):
-            list.append(templist[:])
-            for i in range(start,len(nums)):
-                if i &amp;gt; start and nums[i] == nums[i-1]: continue
-                templist.append(nums[i])
-                backtrack(list,templist,nums,i+1)
-                templist.pop()      
-
-        list=[]
-        nums.sort()
-        backtrack(list,[],nums,0)
-        return list
-### Permutations
-    def permute(self, nums: List[int]) -&amp;gt; List[List[int]]:
-        def backtrack(list, templist,nums):
-            
-            if len(templist)==len(nums): list.append(templist[:])
-            else:
-                for i in range(0,len(nums)):
-                    if nums[i] in templist: continue
-                    templist.append(nums[i])
-                    backtrack(list,templist,nums)
-                    templist.pop()      
-
-        list=[]
-        #nums.sort()
-        backtrack(list,[],nums)
-        return list
-### Permutations II
-    def permuteUnique(self, nums: List[int]) -&amp;gt; List[List[int]]:
-             
-        def backtrack(list, templist,nums,used):
-            
-            if len(templist)==len(nums): list.append(templist[:])
-            else:
-                for i in range(0,len(nums)):
-                    if used[i] or (i &amp;gt; 0 and nums[i] == nums[i-1] and (not used[i - 1])): continue
-                    used[i]=True
-                    templist.append(nums[i])
-                    backtrack(list,templist,nums,used)
-                    used[i] = False 
-                    templist.pop()      
-
-        list=[]
-        used=[False]*len(nums)
-        nums.sort()
-        backtrack(list,[],nums,used)
-        return list
-### combination sum
-    def combinationSum(self, candidates: List[int], target: int) -&amp;gt; List[List[int]]:
-        
-        def backtrack(list, templist,nums,remain,start):
-            
-            if remain &amp;lt; 0: return
-            elif remain == 0: list.append(templist[:])
-            else:
-                for i in range(start,len(nums)):
-                    
-                    templist.append(nums[i])
-                    backtrack(list,templist,nums,remain - nums[i], i)
-                    templist.pop()      
-        nums=candidates
-        list=[]
-        nums.sort()
-        backtrack(list,[],nums,target,0)
-        return list
-### combination sum II
-    def combinationSum2(self, candidates: List[int], target: int) -&amp;gt; List[List[int]]:
-             
-        def backtrack(list, templist,nums,remain,start):
-            
-            if remain &amp;lt; 0: return
-            elif remain == 0: list.append(templist[:])
-            else:
-                for i in range(start,len(nums)):
-                    if (i &amp;gt; start) and (nums[i] == nums[i-1]): continue
-                    templist.append(nums[i])
-                    backtrack(list,templist,nums,remain - nums[i], i+1)
-                    templist.pop()      
-        nums=candidates
-        list=[]
-        nums.sort()
-        backtrack(list,[],nums,target,0)
-        return list
-### Palindrome Partitional 
-    def partition(self, s: str) -&amp;gt; List[List[str]]:
-        
-        def backtrack(list, templist,s,start):
-            
-            if start==len(s): list.append(templist[:])  
-            else:
-                for i in range(start,len(s)):
-                    if s[start:i+1]==s[start:i+1][::-1]:
-                        templist.append(s[start:i+1])
-                        backtrack(list,templist,s, i+1)
-                        templist.pop()      
-
-        list=[]
-        backtrack(list,[],s,0)
-        return list
-&lt;/code&gt;&lt;/pre&gt;
-">backtracking 总结</a>
-      </div>
-      
-      <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-06/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-51-n-queens-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 51. N-Queens (Hard) &lt;/font&gt;&lt;/h1&gt;
@@ -12784,6 +13199,129 @@ Given n and k, return the kth permutation sequence.&lt;/p&gt;
 某个k只是这个阶乘进制计数的值，所以先算bignumber阶乘计数base。&lt;br&gt;
 k的最大位阶乘计数对应的值为 index=k//bignumber[i]   i~n-1:0。知道index就能定位出当前位应该放哪个值，由于是无放回抽样。需要删除值。 然后算下一个index。&lt;/p&gt;
 ">Leetcode 2021-11-06</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/backtracking-zong-jie/"" data-c="
+          &lt;p&gt;backtracking 不同题目不完全汇总&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+### Subsets
+        def backtrack(list, templist,nums,start):
+            list.append(templist[:])
+            for i in range(start,len(nums)):
+                templist.append(nums[i])
+                backtrack(list,templist,nums,i+1)
+                templist.pop()      
+
+        list=[]
+        nums.sort()
+        backtrack(list,[],nums,0)
+        return list
+### Subsets II
+    def subsetsWithDup(self, nums: List[int]) -&amp;gt; List[List[int]]:
+        def backtrack(list, templist,nums,start):
+            list.append(templist[:])
+            for i in range(start,len(nums)):
+                if i &amp;gt; start and nums[i] == nums[i-1]: continue
+                templist.append(nums[i])
+                backtrack(list,templist,nums,i+1)
+                templist.pop()      
+
+        list=[]
+        nums.sort()
+        backtrack(list,[],nums,0)
+        return list
+### Permutations
+    def permute(self, nums: List[int]) -&amp;gt; List[List[int]]:
+        def backtrack(list, templist,nums):
+            
+            if len(templist)==len(nums): list.append(templist[:])
+            else:
+                for i in range(0,len(nums)):
+                    if nums[i] in templist: continue
+                    templist.append(nums[i])
+                    backtrack(list,templist,nums)
+                    templist.pop()      
+
+        list=[]
+        #nums.sort()
+        backtrack(list,[],nums)
+        return list
+### Permutations II
+    def permuteUnique(self, nums: List[int]) -&amp;gt; List[List[int]]:
+             
+        def backtrack(list, templist,nums,used):
+            
+            if len(templist)==len(nums): list.append(templist[:])
+            else:
+                for i in range(0,len(nums)):
+                    if used[i] or (i &amp;gt; 0 and nums[i] == nums[i-1] and (not used[i - 1])): continue
+                    used[i]=True
+                    templist.append(nums[i])
+                    backtrack(list,templist,nums,used)
+                    used[i] = False 
+                    templist.pop()      
+
+        list=[]
+        used=[False]*len(nums)
+        nums.sort()
+        backtrack(list,[],nums,used)
+        return list
+### combination sum
+    def combinationSum(self, candidates: List[int], target: int) -&amp;gt; List[List[int]]:
+        
+        def backtrack(list, templist,nums,remain,start):
+            
+            if remain &amp;lt; 0: return
+            elif remain == 0: list.append(templist[:])
+            else:
+                for i in range(start,len(nums)):
+                    
+                    templist.append(nums[i])
+                    backtrack(list,templist,nums,remain - nums[i], i)
+                    templist.pop()      
+        nums=candidates
+        list=[]
+        nums.sort()
+        backtrack(list,[],nums,target,0)
+        return list
+### combination sum II
+    def combinationSum2(self, candidates: List[int], target: int) -&amp;gt; List[List[int]]:
+             
+        def backtrack(list, templist,nums,remain,start):
+            
+            if remain &amp;lt; 0: return
+            elif remain == 0: list.append(templist[:])
+            else:
+                for i in range(start,len(nums)):
+                    if (i &amp;gt; start) and (nums[i] == nums[i-1]): continue
+                    templist.append(nums[i])
+                    backtrack(list,templist,nums,remain - nums[i], i+1)
+                    templist.pop()      
+        nums=candidates
+        list=[]
+        nums.sort()
+        backtrack(list,[],nums,target,0)
+        return list
+### Palindrome Partitional 
+    def partition(self, s: str) -&amp;gt; List[List[str]]:
+        
+        def backtrack(list, templist,s,start):
+            
+            if start==len(s): list.append(templist[:])  
+            else:
+                for i in range(start,len(s)):
+                    if s[start:i+1]==s[start:i+1][::-1]:
+                        templist.append(s[start:i+1])
+                        backtrack(list,templist,s, i+1)
+                        templist.pop()      
+
+        list=[]
+        backtrack(list,[],s,0)
+        return list
+&lt;/code&gt;&lt;/pre&gt;
+">backtracking 总结</a>
       </div>
       
       <div class="item">
