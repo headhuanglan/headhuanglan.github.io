@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>Leetcode 2021-11-11 | Lan&#39;s Blog</title>
+<title>Leetcode 2021-12-05 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1642671028416">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,7 +41,7 @@
 
 
 
-  <meta name="description" content="Leetcode 2021-11-11" />
+  <meta name="description" content="Leetcode 2021-12-05" />
   <meta name="keywords" content="leetcode" />
 </head>
 
@@ -223,16 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#font-colorred-91-decode-ways-medium-font"><font color='red'> 91. Decode Ways (Medium) </font></a></li>
-<li><a href="#92-reverse-linked-list-ii-medium">92. Reverse Linked List II （Medium）</a></li>
-<li><a href="#93-restore-ip-addresses-medium">93. Restore IP Addresses （Medium）</a></li>
-<li><a href="#94-binary-tree-inorder-traversal-easy">94. Binary Tree Inorder Traversal （Easy）</a></li>
-<li><a href="#95-unique-binary-search-trees-ii-medium">95. Unique Binary Search Trees II （Medium）</a></li>
-<li><a href="#96-unique-binary-search-trees-medium">96. Unique Binary Search Trees （Medium）</a></li>
-<li><a href="#font-colorred-97-interleaving-string-mediumfont"><font color='red'> 97. Interleaving String （Medium）</font></a></li>
-<li><a href="#98-validate-binary-search-tree-medium">98. Validate Binary Search Tree （Medium）</a></li>
-<li><a href="#font-colorred99-recover-binary-search-tree-mediumfont"><font color='red'>99. Recover Binary Search Tree （Medium）</font></a></li>
-<li><a href="#100-same-tree-easy">100. Same Tree （Easy）</a></li>
+<li><a href="#font-colorred321-create-maximum-number-hard-font"><font color='red'>321. Create Maximum Number (Hard) </font></a></li>
+<li><a href="#322-coin-change-medium">322. Coin Change （Medium）</a></li>
+<li><a href="#323-number-of-connected-components-in-an-undirected-graph-medium">323. Number of Connected Components in an Undirected Graph （Medium）</a></li>
+<li><a href="#font-colorred324-wiggle-sort-ii-mediumfont"><font color='red'>324. Wiggle Sort II （Medium）</font></a></li>
+<li><a href="#font-colorred325-maximum-size-subarray-sum-equals-k-mediumfont"><font color='red'>325. Maximum Size Subarray Sum Equals k （Medium）</font></a></li>
+<li><a href="#326-power-of-three-easy">326. Power of Three （Easy）</a></li>
+<li><a href="#font-colorred327-count-of-range-sum-hard-font"><font color='red'>327. Count of Range Sum (Hard) </font></a></li>
+<li><a href="#328-odd-even-linked-list-medium">328. Odd Even Linked List (Medium)</a></li>
+<li><a href="#font-colorred329-longest-increasing-path-in-a-matrix-hard-font"><font color='red'>329. Longest Increasing Path in a Matrix (Hard) </font></a></li>
+<li><a href="#font-colorred330-patching-array-hardfont"><font color='red'>330. Patching Array （Hard）</font></a></li>
 </ul>
 
   </div>
@@ -498,14 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-11/"> Leetcode 2021-11-11 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-12-05/"> Leetcode 2021-12-05 </a>
   </h1>
   <div class="post-meta">
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-11 05:30:50">2021-11-11</span>
+      <span class="publish-time" data-t="2021-12-05 05:46:30">2021-12-05</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -523,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >11<span class="language" data-lan="minute"
+        >16<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -532,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >1822<span class="pc-show language" data-lan="words"
+        >2832<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -543,348 +543,441 @@
 
             <div class="post-body next-md-body" id="post_body">
               <!-- more -->
-<h1 id="font-colorred-91-decode-ways-medium-font"><font color='red'> 91. Decode Ways (Medium) </font></h1>
-<p>A message containing letters from A-Z can be encoded into numbers using the following mapping:</p>
-<p>'A' -&gt; &quot;1&quot;<br>
-'B' -&gt; &quot;2&quot;<br>
-...<br>
-'Z' -&gt; &quot;26&quot;</p>
-<p>To decode an encoded message, all the digits must be grouped then mapped back into letters using the reverse of the mapping above (there may be multiple ways). For example, &quot;11106&quot; can be mapped into:<br>
-&quot;AAJF&quot; with the grouping (1 1 10 6)<br>
-&quot;KJF&quot; with the grouping (11 10 6)<br>
-Note that the grouping (1 11 06) is invalid because &quot;06&quot; cannot be mapped into 'F' since &quot;6&quot; is different from &quot;06&quot;.<br>
-Given a string s containing only digits, return the number of ways to decode it.<br>
-The answer is guaranteed to fit in a 32-bit integer.</p>
+<h1 id="font-colorred321-create-maximum-number-hard-font"><font color='red'>321. Create Maximum Number (Hard) </font></h1>
+<p>You are given two integer arrays nums1 and nums2 of lengths m and n respectively. nums1 and nums2 represent the digits of two numbers. You are also given an integer k.<br>
+Create the maximum number of length k &lt;= m + n from digits of the two numbers. The relative order of the digits from the same array must be preserved.<br>
+Return an array of the k digits representing the answer.<br>
+Example<br>
+Input: nums1 = [3,4,6,5], nums2 = [9,1,2,5,8,3], k = 5<br>
+Output: [9,8,6,5,3]</p>
 <pre><code class="language-python">class Solution:
-    def numDecodings(self, s: str) -&gt; int:
+    def maxNumber(self, nums1: List[int], nums2: List[int], k: int) -&gt; List[int]:
+        # 思路。。。
+        # 最大需要每个位置数字最大，
+        # 但选择最大的数字有顺序约束
+        # 而且当可选最大数字相同时，需要程序tracking 2种不同结果。
         
-        if not s: return 0
-        n=len(s)
-        dp=[0]*(n+1)
-        dp[0]=1 # empty s have 1 way 
-        dp[1]=1 if s[0]!='0' else 0 # 1 single char, if char!=0 dp[1]=1 else 0
-        
-        for i in range(2,n+1):
-            #     cur
-            # pre cur 
-            cur=int(s[i-1])
-            precur=int(s[i-2:i])
-            # cur 1 to 9 is valid
-            if cur&gt;=1 and cur&lt;=9:
-                dp[i]+=dp[i-1]
-            
-            #precur 10 to 26 is valid
-            if precur&gt;=10 and precur&lt;=26:
-                dp[i]+=dp[i-2]
-                
-        return dp[n]
+
+        def prep(nums, k):
+            drop = len(nums) - k
+            out = []
+            for num in nums:
+                while drop and out and out[-1] &lt; num:
+                    out.pop()
+                    drop -= 1
+                out.append(num)
+            return out[:k]
+
+        def merge(a, b):
+            return [max(a, b).pop(0) for _ in a+b]
+
+        return max(merge(prep(nums1, i), prep(nums2, k-i))  for i in range(k+1)   if i &lt;= len(nums1) and k-i &lt;= len(nums2))
+
 </code></pre>
-<p>试图用递归+mem方法写，越写越繁琐。。。没有解决。 看答案用了DP。<br>
-解决方法很巧妙。 空字符dp val=1， dp【1】为首字符结果， 如果首字符为0，则dp【1】=0 else dp【1】=1 从字符第二位到末位。 检查cur 和 （per，cur）形成的数字。 如果valid。就做dp【i】的更新。</p>
-<h1 id="92-reverse-linked-list-ii-medium">92. Reverse Linked List II （Medium）</h1>
-<p>Given the head of a singly linked list and two integers left and right where left &lt;= right, reverse the nodes of the list from position left to position right, and return the reversed list.</p>
+<p>没思路。。。看到答案用了greedy方法。。。  prep function只是在一个数组中按照顺序找出K个最大的数。先算一下需要drop多少个数， 如果当前值大于栈顶元素，说明需要更新栈顶。  merge function这一步是按照a，b的lexcial顺序找到最大的元素，a+b总共有K个元素，所以pop k次。 最后return所有K+1个分割可能产生的结果取最大的。基本不可能现想出来解法。</p>
+<h1 id="322-coin-change-medium">322. Coin Change （Medium）</h1>
+<p>You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.<br>
+Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.<br>
+You may assume that you have an infinite number of each kind of coin.</p>
+<pre><code class="language-python">class Solution:
+    def coinChange(self, coins: List[int], amount: int) -&gt; int:
+        if amount==0: return 0 if coins else -1
+        dp = dict()
+        for c in coins:
+            dp[c]=1
+        for a in range(1,amount+1):
+            for c in coins:
+                if a+c&lt;=amount and a in dp:
+                    if a+c in dp:
+                        dp[a+c]=min(dp[a+c],dp[a]+1) 
+                    else:
+                        dp[a+c]=dp[a]+1
+        return dp[amount] if   amount in dp else -1
+
+#ANSWER
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -&gt; int:
+        dp = [float('inf')] * (amount + 1)
+        dp[0] = 0
+        
+        for coin in coins:
+            for x in range(coin, amount + 1):
+                dp[x] = min(dp[x], dp[x - coin] + 1)
+        return dp[amount] if dp[amount] != float('inf') else -1 
+</code></pre>
+<p>感觉是个DP问题，递归关系？  dp【i】是需要达到amount i需要的次数。 初始coins值的dp【coins_val】=1.   对于每一个有dp值的位置，都用coints_val 更新， dp【i+val】=min（dp【i+val】，dp【i】+1）直到amount。 由于不能开过大内存，所以dp变成dict。<br>
+答案写法更标准， dp【x】=min（dp【x】，dp【x-coin】+1） x大于等于coin小于等于amount。</p>
+<h1 id="323-number-of-connected-components-in-an-undirected-graph-medium">323. Number of Connected Components in an Undirected Graph （Medium）</h1>
+<p>You have a graph of n nodes. You are given an integer n and an array edges where edges[i] = [ai, bi] indicates that there is an edge between ai and bi in the graph.<br>
+Return the number of connected components in the graph.</p>
+<pre><code class="language-python">class Solution:
+    def countComponents(self, n: int, edges: List[List[int]]) -&gt; int:
+        #  BFS
+        neis = collections.defaultdict(list)
+        for edge in edges:
+            neis[edge[0]].append(edge[1])
+            neis[edge[1]].append(edge[0])
+        
+        
+        res=0
+        visited=set()
+        while len(visited)!=n:
+            res+=1
+            for i in range(n):
+                if i not in visited:
+                    visited.add(i)
+                    q=[i]
+                    break     
+            while q:
+                l=len(q)
+                for _ in range(l):
+                    cur=q.pop(0)
+                    for nei in neis[cur]:
+                        if nei not in visited:
+                            visited.add(nei)
+                            q.append(nei)
+        return res
+#UNIONFIND
+class Solution:
+    
+    class UnionFind:
+        def __init__(self,n):
+            self.parent=[i for i in range(n)]
+            self.rank=[0]*n
+            self.n=n
+        def find(self,x):
+            if x!=self.parent[x]:
+                self.parent[x]=self.find(self.parent[x])
+            return self.parent[x]
+        
+        def union(self,x,y):
+            px=self.find(x)
+            py=self.find(y)
+            if px!=py:
+                self.n-=1
+                if self.rank[px]&lt;self.rank[py]:
+                    self.parent[px]=py
+                elif self.rank[px]&gt;self.rank[py]:
+                    self.parent[py]=px
+                else:
+                    self.parent[py]=px
+                    self.rank[px]+=1
+                    
+    def countComponents(self, n: int, edges: List[List[int]]) -&gt; int:
+        uf=self.UnionFind(n)
+        for edge in edges:
+            uf.union(*edge)
+        return uf.n
+
+</code></pre>
+<p>注意unionfind中   if x!=self.parent[x]   爸爸=找爸爸（爸爸）  self.parent[x]=self.find(self.parent[x])， union只有rank相同时候才需要+rank。</p>
+<h1 id="font-colorred324-wiggle-sort-ii-mediumfont"><font color='red'>324. Wiggle Sort II （Medium）</font></h1>
+<p>Given an integer array nums, reorder it such that nums[0] &lt; nums[1] &gt; nums[2] &lt; nums[3]....<br>
+You may assume the input array always has a valid answer.</p>
+<pre><code class="language-python">     def wiggleSort(self, nums):
+        count = [0]*5001
+        
+        for n in nums:
+            count[n]+=1
+        
+        odd = 1
+        even = 0
+        for n in range(5000,-1,-1):
+            if odd &gt;= len(nums) and even &gt;= len(nums):
+                break
+                
+            if count[n] == 0:
+                continue
+            
+            while count[n] and (odd &lt; len(nums) or even &lt; len(nums)):
+                count[n]-=1
+                if odd &lt; len(nums):
+                    nums[odd] = n
+                    odd+=2
+                else:
+                    nums[even] = n
+                    even+=2
+        
+ class Solution(object):
+    def wiggleSort(self, nums):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :rtype: void Do not return anything, modify nums in-place instead.
+        &quot;&quot;&quot;
+      
+        arr = sorted(nums)
+        for i in range(1, len(nums), 2): nums[i] = arr.pop() 
+        for i in range(0, len(nums), 2): nums[i] = arr.pop() 
+
+class Solution:
+    def wiggleSort(self, A: List[int]) -&gt; None:        
+        N = len(A)                    
+        count = [0] * 5001        
+        self.curr_val = A[0]
+        
+        for v in A:
+            count[v] += 1
+            self.curr_val = max(self.curr_val, v)
+        
+        def next_val():
+            while count[self.curr_val] == 0: self.curr_val -= 1            
+            count[self.curr_val] -= 1
+            return self.curr_val
+                            
+        for i in range(1, N, 2): A[i] = next_val()     
+        for i in range(0, N, 2): A[i] = next_val() 
+</code></pre>
+<p>思路：从sorted 最大到最小，奇数位置放置，然后偶数位置放置数字。时间要降低到O（n）只能用count sort了。</p>
+<h1 id="font-colorred325-maximum-size-subarray-sum-equals-k-mediumfont"><font color='red'>325. Maximum Size Subarray Sum Equals k （Medium）</font></h1>
+<p>Given an integer array nums and an integer k, return the maximum length of a subarray that sums to k. If there isn't one, return 0 instead.</p>
+<pre><code class="language-python">class Solution:
+    def maxSubArrayLen(self, nums: List[int], k: int) -&gt; int:
+        
+        prefix_sum = 0 
+        res = 0
+        indices = dict()
+        
+        for i,n in enumerate(nums):
+            prefix_sum+=n
+            
+            if prefix_sum==k:
+                res=i+1
+            
+            if prefix_sum-k in indices:
+                res=max(res,i-indices[prefix_sum-k])
+            
+            if prefix_sum not in indices:
+                indices[prefix_sum]=i
+        
+        return res
+
+</code></pre>
+<p>没思路，直接看答案了。看错题目了，题目是subarray。。。是连续的字符串，并不是sublist。。。。<br>
+思路：用到了prefix sum和 two sum的解法。 因为是subarray，prefix【j】-prefix【i】==k 就是一个答案。  具体扫predix过程借鉴two sum，在predix-k在 dict中，更新res。 不在dict中，更新dict。 不能无条件更新dict，因为prefix在dict中与之间prefix重复，应该保留更早的index使长度更长。</p>
+<h1 id="326-power-of-three-easy">326. Power of Three （Easy）</h1>
+<p>Given an integer n, return true if it is a power of three. Otherwise, return false.<br>
+An integer n is a power of three, if there exists an integer x such that n == 3x.</p>
+<pre><code class="language-python">class Solution:
+    def isPowerOfThree(self, n: int) -&gt; bool:
+        if n==0: return False
+        while n:
+            if n==1: return True
+            if n%3!=0:
+                return False
+            n//=3
+        return True
+
+class Solution:
+    def isPowerOfThree(self, n: int) -&gt; bool:
+        if n&lt;1: return False
+        while n%3==0:
+            n//=3
+            
+        return n==1
+</code></pre>
+<h1 id="font-colorred327-count-of-range-sum-hard-font"><font color='red'>327. Count of Range Sum (Hard) </font></h1>
+<p>Given an integer array nums and two integers lower and upper, return the number of range sums that lie in [lower, upper] inclusive.<br>
+Range sum S(i, j) is defined as the sum of the elements in nums between indices i and j inclusive, where i &lt;= j.</p>
+<pre><code class="language-python">class Solution:
+    def countRangeSum(self, nums: List[int], lower: int, upper: int) -&gt; int:
+        presum = [0]*(len(nums)+1)
+        for i,n in enumerate(nums):
+            presum[i+1]=presum[i]+n
+        
+        res=0
+        for i in range(1,len(nums)+1):
+            for j in range(i):
+                if upper&gt;=presum[i]-presum[j]&gt;=lower:
+                    res+=1
+        return res
+#ANSWER 1 PrefixSum+MergeSort
+class Solution:
+    def countRangeSum(self, nums, lower, upper):
+        cumsum = [0]*(len(nums)+1)
+        for i,num in enumerate(nums):
+            cumsum[i+1]=cumsum[i]+num
+        def sort(lo, hi):
+            mid = (lo + hi) // 2
+            if mid == lo:
+                return 0
+            count = sort(lo, mid) + sort(mid, hi)
+            i = j = mid
+            for left in cumsum[lo:mid]:
+                while i &lt; hi and cumsum[i] - left &lt;  lower: i += 1
+                while j &lt; hi and cumsum[j] - left &lt;= upper: j += 1
+                count += j - i
+            cumsum[lo:hi] = sorted(cumsum[lo:hi])
+            return count
+        return sort(0, len(cumsum))
+
+
+#ANSER Binary Indexed Tree + Binary Search
+class BinaryIndexedTree:
+    
+    def __init__(self, n):
+        self.n = n
+        self.tree = [0 for _ in range(n+1)]
+    
+    def update(self, idx, val):
+        while idx &lt;= self.n:
+            self.tree[idx] += val
+            idx += idx &amp; -idx
+    
+    def query(self, idx):
+        total = 0
+        while idx &gt; 0:
+            total += self.tree[idx]
+            idx -= idx &amp; -idx
+        return total
+
+    
+class Solution:
+    def countRangeSum(self, nums: List[int], lower: int, upper: int) -&gt; int:
+        n, prefixes = len(nums), list(itertools.accumulate(nums))
+        
+        sortedPrefixes = sorted(set(prefixes))
+        ranks = { prefix: idx + 1 for idx, prefix in enumerate(sortedPrefixes) }
+        
+        ds = BinaryIndexedTree(len(sortedPrefixes))
+        for prefix in prefixes:
+            ds.update(ranks[prefix], 1)
+        
+        res = 0
+        processed = 0
+        for prefix in prefixes:
+            l = bisect.bisect_left(sortedPrefixes, lower + processed)
+            r = bisect.bisect_right(sortedPrefixes, upper + processed)  
+            res += ds.query(r) - ds.query(l)
+            ds.update(ranks[prefix], -1)
+            processed = prefix
+        
+        return res
+</code></pre>
+<p>首次尝试O（n^2）time limit exccded。  看来得低于O（n^2）才可以。。。改进方法是增加mergesort。 思路：先算cumsum。 目标找出cumsum【right】-cumsum【left】在upper lower 之间的这样的pair个数。 定义helper function merge sort。 返回值是满足条件的个数，先递归找出只在lo<sub>mid和mid</sub>hi之间的个数。若left~right横跨mid， 对于每一个left in sumsum【lo：mid】 找出满足upper lower bond的 right。其中满足lower bound的index 是i， 满足upper bound 的index 是j 所以 count+=j-i。<br>
+又忘记了有segment tree 和binary indexed tree这两种数据结构。。。。</p>
+<h1 id="328-odd-even-linked-list-medium">328. Odd Even Linked List (Medium)</h1>
+<p>Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.<br>
+The first node is considered odd, and the second node is even, and so on.<br>
+Note that the relative order inside both the even and odd groups should remain as it was in the input.<br>
+You must solve the problem in O(1) extra space complexity and O(n) time complexity.</p>
 <pre><code class="language-python"># Definition for singly-linked list.
 # class ListNode:
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
 class Solution:
-    def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -&gt; Optional[ListNode]:
+    def oddEvenList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
+        if not head: return head
+        odd_head=head
+        even_head=head.next
         
-        def rev(node):
-            pre=None
-            while node :
-                nodenext=node.next
-                node.next = pre
-                pre=node
-                node = nodenext    
-            return pre
+        cur=head
+        odd_tail=None
+        c=0
+        while cur:
+            curnext=cur.next
+            c+=1
+            if c%2==1:
+                #cur is odd node
+                cur.next=cur.next.next if cur.next else None
+                odd_tail=cur
+            else:
+                #cur is even node
+                cur.next=cur.next.next if cur.next else None
+            
+            cur=curnext
         
-        # get left~right chan, do rev, concat
+        if odd_tail:
+            odd_tail.next=even_head
         
-        dummyhead=ListNode(val='NULL',next=head)
-        
-        cur = dummyhead
-        pre=None
-        for _ in range(left):
-            pre=cur
-            cur = cur.next
-        
-        revhead_pre=pre
-        revhead=cur
-        
-        for _ in range(right-left):
-            cur=cur.next
+        return odd_head
 
-        revend = cur
-        revend_next = revend.next
-        revend.next = None
-        
-        revhead_pre.next=rev(revhead)
-        revhead.next = revend_next
-        
-        return dummyhead.next
-</code></pre>
-<p>用了dummyhead 细心就可以了。。。</p>
-<h1 id="93-restore-ip-addresses-medium">93. Restore IP Addresses （Medium）</h1>
-<p>Given a string s containing only digits, return all possible valid IP addresses that can be obtained from s. You can return them in any order.</p>
-<pre><code class="language-python">class Solution:
-    def restoreIpAddresses(self, s: str) -&gt; List[str]:
-        # 4 parts, 0 ~ 255 
-        ss = s
-        
-        res = []
-        
-        def bt(s,tmp):
-             
-            if len('.'.join(tmp))==len(ss)+3 and len(tmp)==4:
-                res.append('.'.join(tmp))
-                
-            for length in [1,2,3]:
-                if len(s)&gt;=length and 255&gt;=int(s[:length])&gt;=0:
-                    if (length==2 or length==3) and s[0]=='0' : continue
-                    tmp.append(s[:length])
-                    bt(s[length:],tmp)
-                    tmp.pop()
-        
-        bt(s,[])
-        
-        return res
-                
-</code></pre>
-<p>backtracking 终止条件是被分割成4份而且总长度是string长度加3个点长度。 可能的length只有1，2，3。 length 2，3时候0不能作为开头元素。</p>
-<h1 id="94-binary-tree-inorder-traversal-easy">94. Binary Tree Inorder Traversal （Easy）</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def inorderTraversal(self, root: Optional[TreeNode]) -&gt; List[int]:
-        
-        res = []
-        def ino(node):
-            if not node: 
-                return
-            ino(node.left)
-            res.append(node.val)
-            ino(node.right)
-        
-        ino(root)
-        return res
-</code></pre>
-<p>递归很容易写，how about iterative one？</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def inorderTraversal(self, root: Optional[TreeNode]) -&gt; List[int]:
-        
-        res = []
-        s = []
-        while s or root:
-            while root:
-                s.append(root)
-                root = root.left
-            
-            node = s.pop()
-            res.append(node.val)
-            
-            if node.right:
-                root =node.right
-        
-        return res
-</code></pre>
-<p>经典写法了应该是，当stack有东西或者root不为空，root先入栈，一直探索左子树。当root为空时。从stack中取出node，提取值。如果有右子树。则开始以右子树的node作为root探索。</p>
-<h1 id="95-unique-binary-search-trees-ii-medium">95. Unique Binary Search Trees II （Medium）</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def generateTrees(self, n: int) -&gt; List[Optional[TreeNode]]:
-        
-        
-        nums = list(range(1,n+1))
-        
-        def gen(nums):
-            if not nums:
-                return [None]
-            res = []
-            for i in range(len(nums)):
-                mid = nums[i]
-                leftnums=nums[:i] if i!=0 else []
-                rightnums = nums[i+1:] if i!=len(nums)-1 else []
-                
-                for left in gen(leftnums):
-                    for right in gen(rightnums):
-                        root = TreeNode(mid)
-                        root.left = left
-                        root.right= right
-                        res.append(root)
-            
-            return res
-        
-        return gen(nums)
-</code></pre>
-<p>递归分治法。</p>
-<h1 id="96-unique-binary-search-trees-medium">96. Unique Binary Search Trees （Medium）</h1>
-<p>Given an integer n, return the number of structurally unique BST's (binary search trees) which has exactly n nodes of unique values from 1 to n.</p>
-<pre><code class="language-python">class Solution:
-    mem = {0:1,1:1,2:2}
-    def numTrees(self, n: int) -&gt; int:
-        if n in self.mem: return self.mem[n]
-        if n==0:
-            return 1
-        if n==1:
-            return 1
-        if n==2:
-            return 2
-        
-        res= 0
-        for i in range(n):
-            left = i
-            right= n-left-1
-            res += self.numTrees(left)*self.numTrees(right)
-        self.mem[n]=res
-        return res
-</code></pre>
-<p>递归+记忆  比较容易理解。 答案是什么catalanta number，不感兴趣。。</p>
-<h1 id="font-colorred-97-interleaving-string-mediumfont"><font color='red'> 97. Interleaving String （Medium）</font></h1>
-<p>Given strings s1, s2, and s3, find whether s3 is formed by an interleaving of s1 and s2.<br>
-An interleaving of two strings s and t is a configuration where they are divided into non-empty substrings such that:<br>
-s = s1 + s2 + ... + sn<br>
-t = t1 + t2 + ... + tm<br>
-|n - m| &lt;= 1<br>
-The interleaving is s1 + t1 + s2 + t2 + s3 + t3 + ... or t1 + s1 + t2 + s2 + t3 + s3 + ...</p>
-<pre><code class="language-python">class Solution:
-    def isInterleave(self, s1: str, s2: str, s3: str) -&gt; bool:
-        
-        #dp[i][j]   i is length of string1   
-        #           j is length of string2
-        #           so interleaving length= i+j
-        
-        
-        
-        m=len(s1)
-        n=len(s2)
-        
-        if m+n!=len(s3) or sorted(s1+s2)!=sorted(s3):
-            return False
-        
-        dp=[ [False]*(n+1) for _ in range(m+1)]
-        dp[0][0]=True
-        
-        #fill row 0
-        for col in range(1,n+1):
-            dp[0][col]=dp[0][col-1] and s2[col-1]==s3[0+col-1]
-        #fill col 0
-        for row in range(1,m+1):
-            dp[row][0]=dp[row-1][0] and s1[row-1]==s3[0+row-1]
-            
-        #dp
-        
-        for row in range(1,m+1):
-            for col in range(1,n+1):
-                dp[row][col]=(dp[row-1][col] and s1[row-1]==s3[row+col-1] ) or (dp[row][col-1] and s2[col-1]==s3[row+col-1])
-        
-        return dp[m][n]
-        
-</code></pre>
-<p>没思路。。。<br>
-思路： dynamic programming  dp[i][j] 是指长度为i的s1和长度为j的s2是否可interleave。所以dp[i][j] = (dp[i-1][j] and s1[i-1]==s3[i+j-1]) or (dp[i][j-1] and s2[j-1]==s3[i+j-1])<br>
-没想到是dynamic programming， 最小子结构是差一位时候，是否interleaving有递推关系。</p>
-<h1 id="98-validate-binary-search-tree-medium">98. Validate Binary Search Tree （Medium）</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def isValidBST(self, root: Optional[TreeNode]) -&gt; bool:
-        
-        s = []
-        pre=None
-        while s or root:
-            while root:
-                s.append(root)
-                root=root.left
-                
-            node = s.pop()
-            if pre is not None:
-                if pre&gt;=node.val:
-                    return False
-                
-            pre = node.val
-            
-            if node.right:
-                root=node.right
-        return True
-</code></pre>
-<p>可以inorder 然后看是否递增，或者iterative的inorder 直接判断。</p>
-<h1 id="font-colorred99-recover-binary-search-tree-mediumfont"><font color='red'>99. Recover Binary Search Tree （Medium）</font></h1>
-<p>You are given the root of a binary search tree (BST), where the values of exactly two nodes of the tree were swapped by mistake. Recover the tree without changing its structure.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def recoverTree(self, root: Optional[TreeNode]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify root in-place instead.
-        &quot;&quot;&quot;
- 
-        s=[]
-        y=x=pre=None
 
-        while s or root:
-            while root:
-                s.append(root)
-                root=root.left
-           
-            node=s.pop()
-            
-            if pre and pre.val&gt; node.val:
-                y=node
-                if x is None:
-                    x=pre
-                else:
-                    break
-           
-            pre=node
-            if node.right:
-                root=node.right
-            
-        x.val,y.val=y.val,x.val
-</code></pre>
-<p>很巧妙的解法， 如果x是None， 第一次记录下pre&gt;cur中的pre node, 第二次记录下 pre&gt;cur中的cur node。 【1，2，3，4，5，6】交换2，5 【1，5，3，4，2，6】 第一次出现pre&gt;cur 时候，pre就是5，第二次出现pre&gt;cur时候 cur 是2. 这样就找到了需要交换的nodes。</p>
-<h1 id="100-same-tree-easy">100. Same Tree （Easy）</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
+#ANSWER 
 class Solution:
-    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -&gt; bool:
+    def oddEvenList(self, head: ListNode) -&gt; ListNode:
         
-        if not p:
-            return not q
+        if not head: return head
         
-        if not q:
-            return not p
+        odd  = head
+        even = head.next
+        evenhead = even
+        while even and even.next:
+            odd.next = even.next
+            odd = odd.next
+            even.next = odd.next
+            even = even.next
         
-        return p.val==q.val and self.isSameTree(p.left,q.left) and self.isSameTree(p.right,q.right) 
+        odd.next = evenhead
+        return head
 </code></pre>
+<h1 id="font-colorred329-longest-increasing-path-in-a-matrix-hard-font"><font color='red'>329. Longest Increasing Path in a Matrix (Hard) </font></h1>
+<p>Given an m x n integers matrix, return the length of the longest increasing path in matrix.<br>
+From each cell, you can either move in four directions: left, right, up, or down. You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).</p>
+<pre><code class="language-python">class Solution:
+    def longestIncreasingPath(self, matrix: List[List[int]]) -&gt; int:
+        dirs = [[0,1],[1,0],[0,-1],[-1,0]]
+        m=len(matrix)
+        n=len(matrix[0])
+        if not matrix: return 0
+        cache= [[0]*n for _ in range(m)]
+        res=0
+        
+        def dfs(i,j):
+            if cache[i][j]!=0: return cache[i][j]
+            for d in dirs:
+                x=i+d[0]
+                y=j+d[1]
+                if m&gt;x&gt;=0 and n&gt;y&gt;=0 and matrix[x][y]&gt;matrix[i][j]:
+                    cache[i][j]=max(cache[i][j],dfs(x,y))
+            
+            cache[i][j]+=1
+            return cache[i][j] 
+        
+        
+        for i in range(m):
+            for j in range(n):
+                res=max(res,dfs(i,j))
+                
+        return res
+</code></pre>
+<p>DFS+mem  太晚了直接看答案了。。。因为是strictly increasing path 所以是DAG，所以dfs（i，j） path length 是可以用mem记住的。 但通常的DFS是不能用mem的。</p>
+<h1 id="font-colorred330-patching-array-hardfont"><font color='red'>330. Patching Array （Hard）</font></h1>
+<p>Given a sorted integer array nums and an integer n, add/patch elements to the array such that any number in the range [1, n] inclusive can be formed by the sum of some elements in the array.<br>
+Return the minimum number of patches required.</p>
+<pre><code class="language-python">class Solution:
+    def minPatches(self, nums: List[int], n: int) -&gt; int:
+        
+        '''Initialize the range [1, miss) = [1, 1) = empty
+        While n is not covered yet
+            if the current element nums[i] is less than or equal to miss
+                extends the range to [1, miss + nums[i])
+                increase i by 1
+            otherwise
+                patch the array with miss, extends the range to [1, miss + miss)
+                increase the number of patches
+        Return the number of patches
+        '''
+        
+        patches=0
+        i=0
+        miss=1
+        while miss&lt;=n:
+            if i&lt;len(nums) and nums[i]&lt;=miss:
+                #miss is covered
+                miss+=nums[i]
+                i+=1
+            else:
+                #patch miss to aray
+                miss+=miss
+                patches+=1
+        return patches
+
+</code></pre>
+<p>太晚没思路直接看答案， 答案思路：假设miss 是最小的missing number， 但我们知道【1，miss） 已经covered。 要cover miss，需要添加小于等于miss的数字。<br>
+假设我们添加的数字是x，那么区间【1，miss） 【x，x+miss）都covered。由于x小于等于miss。 所以两个区间可以合并为【1，x+miss）我们想选一个range cover最大的x，显然当x=miss时候区间最大。所以算法是：<br>
+初始化区间【1，miss）=【1，1）<br>
+当n还没covered，如果 nums【i】小于等于miss，增加区间为【1，miss+nums【i】），i++ 否则， 数组里添加miss， 增加区间为【1，miss+miss), res+=1</p>
 
             </div>
             
@@ -897,7 +990,7 @@ class Solution:
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-11/" title="Leetcode 2021-11-11">https://headhuanglan.github.io/post/leetcode-2021-11-11/</a>
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-12-05/" title="Leetcode 2021-12-05">https://headhuanglan.github.io/post/leetcode-2021-12-05/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -912,15 +1005,11 @@ class Solution:
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-12" href="https://headhuanglan.github.io/post/leetcode-2021-11-12/">Leetcode 2021-11-12</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-12" href="https://headhuanglan.github.io/post/leetcode-2021-11-12/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2021-11-10" href="https://headhuanglan.github.io/post/leetcode-2021-11-10/">Leetcode 2021-11-10</a>
-        <a class="nav-mobile-next" title="Leetcode 2021-11-10" href="https://headhuanglan.github.io/post/leetcode-2021-11-10/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2021-12-04" href="https://headhuanglan.github.io/post/leetcode-2021-12-04/">Leetcode 2021-12-04</a>
+        <a class="nav-mobile-next" title="Leetcode 2021-12-04" href="https://headhuanglan.github.io/post/leetcode-2021-12-04/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>

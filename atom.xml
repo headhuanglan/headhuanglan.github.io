@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-01-10T07:41:06.933Z</updated>
+    <updated>2022-01-20T09:30:35.085Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,6 +10,450 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Lan&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2021-12-05]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-12-05/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-05/">
+        </link>
+        <updated>2021-12-05T10:46:30.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="font-colorred321-create-maximum-number-hard-font"><font color='red'>321. Create Maximum Number (Hard) </font></h1>
+<p>You are given two integer arrays nums1 and nums2 of lengths m and n respectively. nums1 and nums2 represent the digits of two numbers. You are also given an integer k.<br>
+Create the maximum number of length k &lt;= m + n from digits of the two numbers. The relative order of the digits from the same array must be preserved.<br>
+Return an array of the k digits representing the answer.<br>
+Example<br>
+Input: nums1 = [3,4,6,5], nums2 = [9,1,2,5,8,3], k = 5<br>
+Output: [9,8,6,5,3]</p>
+<pre><code class="language-python">class Solution:
+    def maxNumber(self, nums1: List[int], nums2: List[int], k: int) -&gt; List[int]:
+        # 思路。。。
+        # 最大需要每个位置数字最大，
+        # 但选择最大的数字有顺序约束
+        # 而且当可选最大数字相同时，需要程序tracking 2种不同结果。
+        
+
+        def prep(nums, k):
+            drop = len(nums) - k
+            out = []
+            for num in nums:
+                while drop and out and out[-1] &lt; num:
+                    out.pop()
+                    drop -= 1
+                out.append(num)
+            return out[:k]
+
+        def merge(a, b):
+            return [max(a, b).pop(0) for _ in a+b]
+
+        return max(merge(prep(nums1, i), prep(nums2, k-i))  for i in range(k+1)   if i &lt;= len(nums1) and k-i &lt;= len(nums2))
+
+</code></pre>
+<p>没思路。。。看到答案用了greedy方法。。。  prep function只是在一个数组中按照顺序找出K个最大的数。先算一下需要drop多少个数， 如果当前值大于栈顶元素，说明需要更新栈顶。  merge function这一步是按照a，b的lexcial顺序找到最大的元素，a+b总共有K个元素，所以pop k次。 最后return所有K+1个分割可能产生的结果取最大的。基本不可能现想出来解法。</p>
+<h1 id="322-coin-change-medium">322. Coin Change （Medium）</h1>
+<p>You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.<br>
+Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.<br>
+You may assume that you have an infinite number of each kind of coin.</p>
+<pre><code class="language-python">class Solution:
+    def coinChange(self, coins: List[int], amount: int) -&gt; int:
+        if amount==0: return 0 if coins else -1
+        dp = dict()
+        for c in coins:
+            dp[c]=1
+        for a in range(1,amount+1):
+            for c in coins:
+                if a+c&lt;=amount and a in dp:
+                    if a+c in dp:
+                        dp[a+c]=min(dp[a+c],dp[a]+1) 
+                    else:
+                        dp[a+c]=dp[a]+1
+        return dp[amount] if   amount in dp else -1
+
+#ANSWER
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -&gt; int:
+        dp = [float('inf')] * (amount + 1)
+        dp[0] = 0
+        
+        for coin in coins:
+            for x in range(coin, amount + 1):
+                dp[x] = min(dp[x], dp[x - coin] + 1)
+        return dp[amount] if dp[amount] != float('inf') else -1 
+</code></pre>
+<p>感觉是个DP问题，递归关系？  dp【i】是需要达到amount i需要的次数。 初始coins值的dp【coins_val】=1.   对于每一个有dp值的位置，都用coints_val 更新， dp【i+val】=min（dp【i+val】，dp【i】+1）直到amount。 由于不能开过大内存，所以dp变成dict。<br>
+答案写法更标准， dp【x】=min（dp【x】，dp【x-coin】+1） x大于等于coin小于等于amount。</p>
+<h1 id="323-number-of-connected-components-in-an-undirected-graph-medium">323. Number of Connected Components in an Undirected Graph （Medium）</h1>
+<p>You have a graph of n nodes. You are given an integer n and an array edges where edges[i] = [ai, bi] indicates that there is an edge between ai and bi in the graph.<br>
+Return the number of connected components in the graph.</p>
+<pre><code class="language-python">class Solution:
+    def countComponents(self, n: int, edges: List[List[int]]) -&gt; int:
+        #  BFS
+        neis = collections.defaultdict(list)
+        for edge in edges:
+            neis[edge[0]].append(edge[1])
+            neis[edge[1]].append(edge[0])
+        
+        
+        res=0
+        visited=set()
+        while len(visited)!=n:
+            res+=1
+            for i in range(n):
+                if i not in visited:
+                    visited.add(i)
+                    q=[i]
+                    break     
+            while q:
+                l=len(q)
+                for _ in range(l):
+                    cur=q.pop(0)
+                    for nei in neis[cur]:
+                        if nei not in visited:
+                            visited.add(nei)
+                            q.append(nei)
+        return res
+#UNIONFIND
+class Solution:
+    
+    class UnionFind:
+        def __init__(self,n):
+            self.parent=[i for i in range(n)]
+            self.rank=[0]*n
+            self.n=n
+        def find(self,x):
+            if x!=self.parent[x]:
+                self.parent[x]=self.find(self.parent[x])
+            return self.parent[x]
+        
+        def union(self,x,y):
+            px=self.find(x)
+            py=self.find(y)
+            if px!=py:
+                self.n-=1
+                if self.rank[px]&lt;self.rank[py]:
+                    self.parent[px]=py
+                elif self.rank[px]&gt;self.rank[py]:
+                    self.parent[py]=px
+                else:
+                    self.parent[py]=px
+                    self.rank[px]+=1
+                    
+    def countComponents(self, n: int, edges: List[List[int]]) -&gt; int:
+        uf=self.UnionFind(n)
+        for edge in edges:
+            uf.union(*edge)
+        return uf.n
+
+</code></pre>
+<p>注意unionfind中   if x!=self.parent[x]   爸爸=找爸爸（爸爸）  self.parent[x]=self.find(self.parent[x])， union只有rank相同时候才需要+rank。</p>
+<h1 id="font-colorred324-wiggle-sort-ii-mediumfont"><font color='red'>324. Wiggle Sort II （Medium）</font></h1>
+<p>Given an integer array nums, reorder it such that nums[0] &lt; nums[1] &gt; nums[2] &lt; nums[3]....<br>
+You may assume the input array always has a valid answer.</p>
+<pre><code class="language-python">     def wiggleSort(self, nums):
+        count = [0]*5001
+        
+        for n in nums:
+            count[n]+=1
+        
+        odd = 1
+        even = 0
+        for n in range(5000,-1,-1):
+            if odd &gt;= len(nums) and even &gt;= len(nums):
+                break
+                
+            if count[n] == 0:
+                continue
+            
+            while count[n] and (odd &lt; len(nums) or even &lt; len(nums)):
+                count[n]-=1
+                if odd &lt; len(nums):
+                    nums[odd] = n
+                    odd+=2
+                else:
+                    nums[even] = n
+                    even+=2
+        
+ class Solution(object):
+    def wiggleSort(self, nums):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :rtype: void Do not return anything, modify nums in-place instead.
+        &quot;&quot;&quot;
+      
+        arr = sorted(nums)
+        for i in range(1, len(nums), 2): nums[i] = arr.pop() 
+        for i in range(0, len(nums), 2): nums[i] = arr.pop() 
+
+class Solution:
+    def wiggleSort(self, A: List[int]) -&gt; None:        
+        N = len(A)                    
+        count = [0] * 5001        
+        self.curr_val = A[0]
+        
+        for v in A:
+            count[v] += 1
+            self.curr_val = max(self.curr_val, v)
+        
+        def next_val():
+            while count[self.curr_val] == 0: self.curr_val -= 1            
+            count[self.curr_val] -= 1
+            return self.curr_val
+                            
+        for i in range(1, N, 2): A[i] = next_val()     
+        for i in range(0, N, 2): A[i] = next_val() 
+</code></pre>
+<p>思路：从sorted 最大到最小，奇数位置放置，然后偶数位置放置数字。时间要降低到O（n）只能用count sort了。</p>
+<h1 id="font-colorred325-maximum-size-subarray-sum-equals-k-mediumfont"><font color='red'>325. Maximum Size Subarray Sum Equals k （Medium）</font></h1>
+<p>Given an integer array nums and an integer k, return the maximum length of a subarray that sums to k. If there isn't one, return 0 instead.</p>
+<pre><code class="language-python">class Solution:
+    def maxSubArrayLen(self, nums: List[int], k: int) -&gt; int:
+        
+        prefix_sum = 0 
+        res = 0
+        indices = dict()
+        
+        for i,n in enumerate(nums):
+            prefix_sum+=n
+            
+            if prefix_sum==k:
+                res=i+1
+            
+            if prefix_sum-k in indices:
+                res=max(res,i-indices[prefix_sum-k])
+            
+            if prefix_sum not in indices:
+                indices[prefix_sum]=i
+        
+        return res
+
+</code></pre>
+<p>没思路，直接看答案了。看错题目了，题目是subarray。。。是连续的字符串，并不是sublist。。。。<br>
+思路：用到了prefix sum和 two sum的解法。 因为是subarray，prefix【j】-prefix【i】==k 就是一个答案。  具体扫predix过程借鉴two sum，在predix-k在 dict中，更新res。 不在dict中，更新dict。 不能无条件更新dict，因为prefix在dict中与之间prefix重复，应该保留更早的index使长度更长。</p>
+<h1 id="326-power-of-three-easy">326. Power of Three （Easy）</h1>
+<p>Given an integer n, return true if it is a power of three. Otherwise, return false.<br>
+An integer n is a power of three, if there exists an integer x such that n == 3x.</p>
+<pre><code class="language-python">class Solution:
+    def isPowerOfThree(self, n: int) -&gt; bool:
+        if n==0: return False
+        while n:
+            if n==1: return True
+            if n%3!=0:
+                return False
+            n//=3
+        return True
+
+class Solution:
+    def isPowerOfThree(self, n: int) -&gt; bool:
+        if n&lt;1: return False
+        while n%3==0:
+            n//=3
+            
+        return n==1
+</code></pre>
+<h1 id="font-colorred327-count-of-range-sum-hard-font"><font color='red'>327. Count of Range Sum (Hard) </font></h1>
+<p>Given an integer array nums and two integers lower and upper, return the number of range sums that lie in [lower, upper] inclusive.<br>
+Range sum S(i, j) is defined as the sum of the elements in nums between indices i and j inclusive, where i &lt;= j.</p>
+<pre><code class="language-python">class Solution:
+    def countRangeSum(self, nums: List[int], lower: int, upper: int) -&gt; int:
+        presum = [0]*(len(nums)+1)
+        for i,n in enumerate(nums):
+            presum[i+1]=presum[i]+n
+        
+        res=0
+        for i in range(1,len(nums)+1):
+            for j in range(i):
+                if upper&gt;=presum[i]-presum[j]&gt;=lower:
+                    res+=1
+        return res
+#ANSWER 1 PrefixSum+MergeSort
+class Solution:
+    def countRangeSum(self, nums, lower, upper):
+        cumsum = [0]*(len(nums)+1)
+        for i,num in enumerate(nums):
+            cumsum[i+1]=cumsum[i]+num
+        def sort(lo, hi):
+            mid = (lo + hi) // 2
+            if mid == lo:
+                return 0
+            count = sort(lo, mid) + sort(mid, hi)
+            i = j = mid
+            for left in cumsum[lo:mid]:
+                while i &lt; hi and cumsum[i] - left &lt;  lower: i += 1
+                while j &lt; hi and cumsum[j] - left &lt;= upper: j += 1
+                count += j - i
+            cumsum[lo:hi] = sorted(cumsum[lo:hi])
+            return count
+        return sort(0, len(cumsum))
+
+
+#ANSER Binary Indexed Tree + Binary Search
+class BinaryIndexedTree:
+    
+    def __init__(self, n):
+        self.n = n
+        self.tree = [0 for _ in range(n+1)]
+    
+    def update(self, idx, val):
+        while idx &lt;= self.n:
+            self.tree[idx] += val
+            idx += idx &amp; -idx
+    
+    def query(self, idx):
+        total = 0
+        while idx &gt; 0:
+            total += self.tree[idx]
+            idx -= idx &amp; -idx
+        return total
+
+    
+class Solution:
+    def countRangeSum(self, nums: List[int], lower: int, upper: int) -&gt; int:
+        n, prefixes = len(nums), list(itertools.accumulate(nums))
+        
+        sortedPrefixes = sorted(set(prefixes))
+        ranks = { prefix: idx + 1 for idx, prefix in enumerate(sortedPrefixes) }
+        
+        ds = BinaryIndexedTree(len(sortedPrefixes))
+        for prefix in prefixes:
+            ds.update(ranks[prefix], 1)
+        
+        res = 0
+        processed = 0
+        for prefix in prefixes:
+            l = bisect.bisect_left(sortedPrefixes, lower + processed)
+            r = bisect.bisect_right(sortedPrefixes, upper + processed)  
+            res += ds.query(r) - ds.query(l)
+            ds.update(ranks[prefix], -1)
+            processed = prefix
+        
+        return res
+</code></pre>
+<p>首次尝试O（n^2）time limit exccded。  看来得低于O（n^2）才可以。。。改进方法是增加mergesort。 思路：先算cumsum。 目标找出cumsum【right】-cumsum【left】在upper lower 之间的这样的pair个数。 定义helper function merge sort。 返回值是满足条件的个数，先递归找出只在lo<sub>mid和mid</sub>hi之间的个数。若left~right横跨mid， 对于每一个left in sumsum【lo：mid】 找出满足upper lower bond的 right。其中满足lower bound的index 是i， 满足upper bound 的index 是j 所以 count+=j-i。<br>
+又忘记了有segment tree 和binary indexed tree这两种数据结构。。。。</p>
+<h1 id="328-odd-even-linked-list-medium">328. Odd Even Linked List (Medium)</h1>
+<p>Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.<br>
+The first node is considered odd, and the second node is even, and so on.<br>
+Note that the relative order inside both the even and odd groups should remain as it was in the input.<br>
+You must solve the problem in O(1) extra space complexity and O(n) time complexity.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def oddEvenList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
+        if not head: return head
+        odd_head=head
+        even_head=head.next
+        
+        cur=head
+        odd_tail=None
+        c=0
+        while cur:
+            curnext=cur.next
+            c+=1
+            if c%2==1:
+                #cur is odd node
+                cur.next=cur.next.next if cur.next else None
+                odd_tail=cur
+            else:
+                #cur is even node
+                cur.next=cur.next.next if cur.next else None
+            
+            cur=curnext
+        
+        if odd_tail:
+            odd_tail.next=even_head
+        
+        return odd_head
+
+
+#ANSWER 
+class Solution:
+    def oddEvenList(self, head: ListNode) -&gt; ListNode:
+        
+        if not head: return head
+        
+        odd  = head
+        even = head.next
+        evenhead = even
+        while even and even.next:
+            odd.next = even.next
+            odd = odd.next
+            even.next = odd.next
+            even = even.next
+        
+        odd.next = evenhead
+        return head
+</code></pre>
+<h1 id="font-colorred329-longest-increasing-path-in-a-matrix-hard-font"><font color='red'>329. Longest Increasing Path in a Matrix (Hard) </font></h1>
+<p>Given an m x n integers matrix, return the length of the longest increasing path in matrix.<br>
+From each cell, you can either move in four directions: left, right, up, or down. You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).</p>
+<pre><code class="language-python">class Solution:
+    def longestIncreasingPath(self, matrix: List[List[int]]) -&gt; int:
+        dirs = [[0,1],[1,0],[0,-1],[-1,0]]
+        m=len(matrix)
+        n=len(matrix[0])
+        if not matrix: return 0
+        cache= [[0]*n for _ in range(m)]
+        res=0
+        
+        def dfs(i,j):
+            if cache[i][j]!=0: return cache[i][j]
+            for d in dirs:
+                x=i+d[0]
+                y=j+d[1]
+                if m&gt;x&gt;=0 and n&gt;y&gt;=0 and matrix[x][y]&gt;matrix[i][j]:
+                    cache[i][j]=max(cache[i][j],dfs(x,y))
+            
+            cache[i][j]+=1
+            return cache[i][j] 
+        
+        
+        for i in range(m):
+            for j in range(n):
+                res=max(res,dfs(i,j))
+                
+        return res
+</code></pre>
+<p>DFS+mem  太晚了直接看答案了。。。因为是strictly increasing path 所以是DAG，所以dfs（i，j） path length 是可以用mem记住的。 但通常的DFS是不能用mem的。</p>
+<h1 id="font-colorred330-patching-array-hardfont"><font color='red'>330. Patching Array （Hard）</font></h1>
+<p>Given a sorted integer array nums and an integer n, add/patch elements to the array such that any number in the range [1, n] inclusive can be formed by the sum of some elements in the array.<br>
+Return the minimum number of patches required.</p>
+<pre><code class="language-python">class Solution:
+    def minPatches(self, nums: List[int], n: int) -&gt; int:
+        
+        '''Initialize the range [1, miss) = [1, 1) = empty
+        While n is not covered yet
+            if the current element nums[i] is less than or equal to miss
+                extends the range to [1, miss + nums[i])
+                increase i by 1
+            otherwise
+                patch the array with miss, extends the range to [1, miss + miss)
+                increase the number of patches
+        Return the number of patches
+        '''
+        
+        patches=0
+        i=0
+        miss=1
+        while miss&lt;=n:
+            if i&lt;len(nums) and nums[i]&lt;=miss:
+                #miss is covered
+                miss+=nums[i]
+                i+=1
+            else:
+                #patch miss to aray
+                miss+=miss
+                patches+=1
+        return patches
+
+</code></pre>
+<p>太晚没思路直接看答案， 答案思路：假设miss 是最小的missing number， 但我们知道【1，miss） 已经covered。 要cover miss，需要添加小于等于miss的数字。<br>
+假设我们添加的数字是x，那么区间【1，miss） 【x，x+miss）都covered。由于x小于等于miss。 所以两个区间可以合并为【1，x+miss）我们想选一个range cover最大的x，显然当x=miss时候区间最大。所以算法是：<br>
+初始化区间【1，miss）=【1，1）<br>
+当n还没covered，如果 nums【i】小于等于miss，增加区间为【1，miss+nums【i】），i++ 否则， 数组里添加miss， 增加区间为【1，miss+miss), res+=1</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Leetcode 2021-12-04]]></title>
         <id>https://headhuanglan.github.io/post/leetcode-2021-12-04/</id>
@@ -3727,450 +4171,6 @@ class Solution:
 
 </code></pre>
 <p>从上个题目获得的trick这个题目马上用到， count作为list，边run边更新不影响helper function的bool返回值。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-11-26]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-11-26/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-26/">
-        </link>
-        <updated>2021-11-26T01:39:32.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="231-power-of-two-easy">231. Power of Two (Easy)</h1>
-<p>Given an integer n, return true if it is a power of two. Otherwise, return false.An integer n is a power of two, if there exists an integer x such that n == 2^x.</p>
-<pre><code class="language-python">class Solution:
-    def isPowerOfTwo(self, n: int) -&gt; bool:
-        if n&lt;0: return False
-        c=0
-        while n:
-            lastbit= n%2
-            if lastbit==1:
-                c+=1
-            n=n&gt;&gt;1
-        return c==1
-
-#answer is great
-class Solution:
-    def isPowerOfTwo(self, n: int) -&gt; bool:
-        if n&lt;=0: return False
-        # 1 000 000 000
-        #    111 111 111
-        return n&amp;(n-1)==0
-
-</code></pre>
-<h1 id="232-implement-queue-using-stacks-easy">232. Implement Queue using Stacks (Easy)</h1>
-<pre><code class="language-python">class MyQueue:
-
-    def __init__(self):
-        self.s1=[]
-        self.s2=[]
-        
-
-    def push(self, x: int) -&gt; None:
-        self.s1.append(x)
-
-    def pop(self) -&gt; int:
-        # 1 2 3
-        # 3 2 1
-        while self.s1:
-            self.s2.append(self.s1.pop())
-        val=self.s2.pop()
-        while self.s2:
-            self.s1.append(self.s2.pop())
-        
-        return val
-
-    def peek(self) -&gt; int:
-        pre=None
-        while self.s1:
-            cur=self.s1.pop()
-            self.s2.append(cur)
-            pre=cur
-        while self.s2:
-            self.s1.append(self.s2.pop())
-        
-        return pre
-        
-
-    def empty(self) -&gt; bool:
-        return len(self.s1)==0
-
-
-# Your MyQueue object will be instantiated and called as such:
-# obj = MyQueue()
-# obj.push(x)
-# param_2 = obj.pop()
-# param_3 = obj.peek()
-# param_4 = obj.empty()
-</code></pre>
-<p>Follow-up: Can you implement the queue such that each operation is amortized O(1) time complexity?</p>
-<pre><code class="language-python">class MyQueue:
-
-    def __init__(self):
-        self.s1=[]
-        self.s2=[]
-        self.front=None
-
-    def push(self, x: int) -&gt; None:
-        if self.s1==[]:
-            self.front=x
-        self.s1.append(x)
-
-    def pop(self) -&gt; int:
-        if self.s2==[]:
-            while self.s1:
-                self.s2.append(self.s1.pop())
-        return self.s2.pop()
-
-    def peek(self) -&gt; int:
-        if self.s2:
-            return self.s2[-1]
-        
-        return self.front
-          
-        
-    def empty(self) -&gt; bool:
-        return self.s1==[] and self.s2==[]
-
-</code></pre>
-<p>follow up的思路挺有意思，push: 数字保存在s1，但是当s1为空时候，保存front。  pop：如果s2有元素，pop s2， 否则 把s1 push到s2    peek: 若s2 有元素，peek s2 否则 就是 front。</p>
-<h1 id="font-colorred233-number-of-digit-one-hard-font"><font color='red'>233. Number of Digit One （Hard） </font></h1>
-<p>Given an integer n, count the total number of digit 1 appearing in all non-negative integers less than or equal to n.<br>
-Example：<br>
-Input: n = 13<br>
-Output: 6<br>
-1，10， 11，12，13</p>
-<pre><code class="language-python">class Solution:
-    def countDigitOne(self, n: int) -&gt; int:
-        c=0
-        i=1
-        while i&lt;=n:
-            divider = i*10
-            c += (n//divider)*i + min(max(n%divider -i+1,0),i)
-            i*=10
-        return c
-</code></pre>
-<p>完全不是考算法，对于个位来说，存在1的位置有，1，11，21，31，41，51，61，71 ... 基本10个一循环，比如 1到13的个位为1的有1，11，总共2个。 所以是 13//10 + (13%10)!=0。 对于十位来说存在1的有， 10，11，12，。。。19  |   110，111，112，113，。。。119| 210,...，每100个一循环，比如1到113的十位， (113/ 100) * 10 + min(max(113%100-10+1,0),10)   同理千位100,101,...199| 1100,1101....1199|....     千位中1的个数  (n/1000)*100 + min(max(n%1000-100+1,0),100)   具体的循环截断1的个数是在 0到 100之间， 具体多少是n%1000-100+1.</p>
-<h1 id="234-palindrome-linked-list-easy">234. Palindrome Linked List (Easy)</h1>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def isPalindrome(self, head: Optional[ListNode]) -&gt; bool:
-        
-        fast=slow=head
-        
-        while slow and fast and fast.next:
-            slow=slow.next
-            fast=fast.next.next
-        
-        if fast:
-            mid=slow.next
-        else:
-            mid=slow
-            
-        
-        def rev(node):
-            pre=None
-            while node:
-                nodenext=node.next
-                node.next=pre
-                pre=node
-                node=nodenext
-            return pre
-        
-        revmid  = rev(mid)
-        
-        while revmid:
-            if revmid.val!=head.val:
-                return False
-            revmid=revmid.next
-            head=head.next
-        return True
-        #1 2 3 4 5
-        #    s m
-        #        f
-                
-        #1 2 3 4
-        #    s
-        #    m   f  
-</code></pre>
-<h1 id="font-colorred235-lowest-common-ancestor-of-a-binary-search-tree-easyfont">&lt;/font color='red'&gt;235. Lowest Common Ancestor of a Binary Search Tree （Easy）</font></h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-
-class Solution:
-    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -&gt; 'TreeNode':
-        # 
-        #    all left ,  all right,    p mid q
-        #
-        
-        if root.val &gt; p.val and root.val &gt; q.val:
-            return self.lowestCommonAncestor(root.left, p, q)
-        elif root.val &lt; p.val and root.val &lt; q.val:
-            return self.lowestCommonAncestor(root.right, p, q)
-        else:
-            return root
-
-</code></pre>
-<p>卡在了一道easy题上确实不应该。。。没仔细看题，忽略了这个是个BST，得用BST性质。</p>
-<h1 id="font-colorblue-236-lowest-common-ancestor-of-a-binary-tree-medium-font"><font color='blue'> 236. Lowest Common Ancestor of a Binary Tree （Medium） </font></h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-
-class Solution:
-    dic=dict()
-    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -&gt; 'TreeNode':
-        
-        def find(root,node):
-            if not root: return False
-            if (root.val,node.val) in self.dic:
-                return self.dic[(root.val,node.val)]
-          
-            if root.val==node.val:
-                self.dic[(root.val,node.val)]=True
-                return True
-            if find(root.left,node):
-                self.dic[(root.left.val,node.val)]=True
-                return True
-            if find(root.right,node):
-                if root.right:
-                    self.dic[(root.right.val,node.val)]=True
-                return True
-            return False
-        
-        if find(root.left,p) and find(root.left,q):
-            return self.lowestCommonAncestor(root.left,p,q)
-        elif find(root.right,p) and find(root.right,q):
-            return self.lowestCommonAncestor(root.right,p,q)
-        else:
-            return root
-#answer way of writting
-class Solution:
-    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -&gt; 'TreeNode':
-        
-        if root in [p,q,None]: return root
-        
-        left = self.lowestCommonAncestor(root.left,p,q)
-        right = self.lowestCommonAncestor(root.right,p,q)
-        
-        
-        if left and right: 
-            return root
-        if left: 
-            return left
-        if right:
-            return right
-</code></pre>
-<p>第一次尝试Time limit exceeded...，得找到p，q是在root的同侧还是异侧。 由于是递归调用，find funciton call了太多次，所以用memerization 方法， pass了。答案思路： 如果root 是{p,q,None} 就返回root， left=从root.left找p，q共同祖先， right=从root.right 找p，q共同祖先。</p>
-<h1 id="237-delete-node-in-a-linked-list-easy">237. Delete Node in a Linked List (Easy)</h1>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
-
-class Solution:
-    def deleteNode(self, node):
-        &quot;&quot;&quot;
-        :type node: ListNode
-        :rtype: void Do not return anything, modify node in-place instead.
-        &quot;&quot;&quot;
-        
-      if node.next:
-            node.val=node.next.val
-            node.next=node.next.next
-</code></pre>
-<p>把下一位数字覆盖到当前node， 然后跳过这个node。</p>
-<h1 id="238-product-of-array-except-self-medium">238. Product of Array Except Self （Medium）</h1>
-<p>Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].</p>
-<p>The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.</p>
-<p>You must write an algorithm that runs in O(n) time and without using the division operation.</p>
-<pre><code class="language-python">class Solution:
-    def productExceptSelf(self, nums: List[int]) -&gt; List[int]:
-        
-        prefix_left = [1]*len(nums)
-        prefix_right= [1]*len(nums)
-        
-        for i in range(1,len(nums)):
-            prefix_left[i] = prefix_left[i-1]*nums[i-1]
-        for j in range(len(nums)-2,-1,-1):
-            prefix_right[j] = prefix_right[j+1]*nums[j+1]
-        res = []    
-        for (l,r) in zip(prefix_left,prefix_right):
-            res.append(l*r)
-        return res
-
-</code></pre>
-<h1 id="font-colorred239-sliding-window-maximum-hard-font"><font color='red'>239. Sliding Window Maximum (Hard) </font></h1>
-<p>You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.</p>
-<p>Return the max sliding window.</p>
-<pre><code class="language-python">
-class Solution:
-    def maxSlidingWindow(self, nums: List[int], k: int) -&gt; List[int]:
-        
-        #if k==1: return nums
-        
-        stack_max = []
-        queue = []
-        res = []
-        for n in nums:
-            queue.append(n)
-            
-            
-            while stack_max and n&gt;stack_max[-1]:
-                stack_max.pop()
-            if not stack_max or  n&gt;stack_max[-1]:
-                stack_max.append(n)
-            
-            if len(queue)&gt;k:
-                expired = queue.pop(0)
-                if expired == stack_max[-1]:
-                    stack_max.pop()
-            
-            if len(queue)==k:
-                #print(queue,stack_max)
-                if stack_max:
-                    res.append(stack_max[-1])
-                else:
-                    #the expired one is the max and poped out
-                    newmax=max(queue)
-                    res.append(newmax)
-                    stack_max.append(newmax)
-            
-        return res
-#answer way of writting
-class Solution(object):
-    def maxSlidingWindow(self, nums, k):
-        &quot;&quot;&quot;
-        :type nums: List[int]
-        :type k: int
-        :rtype: List[int]
-        &quot;&quot;&quot;
-        
-        
-        queue = collections.deque()
-        res = []
-        for i, n in enumerate(nums):
-            while queue and n&gt; nums[queue[-1]]:
-                queue.pop()
-            queue.append(i)
-            #expire
-            if queue[0] == i - k:
-                queue.popleft()
-            #can add to result
-            if i &gt;= k - 1:
-                res.append(nums[queue[0]])
-        return res
-    
-#         if not nums:
-#             return []
-#         start=0
-#         r=[]
-#         while start+k&lt;=len(nums):
-#             r.append(max(nums[start:start+k]))
-#             start+=1
-            
-#         return r
-</code></pre>
-<p>初次尝试， time limit exceeded。  思路是一致的， 如果过期，踢掉， queue中保存最大值位置。</p>
-<h1 id="font-colorblue240-search-a-2d-matrix-ii-mediumfont"><font color='blue'>240. Search a 2D Matrix II （Medium）</font></h1>
-<pre><code class="language-python">class Solution:
-    def searchMatrix(self, matrix: List[List[int]], target: int) -&gt; bool:
-        
-        
-        def search(rowl,rowr,coll,colr,target):
-            if rowl==rowr and coll==colr:
-                return matrix[rowl][coll]==target
-            elif rowl==rowr:
-                return target in matrix[rowl]
-            elif coll==colr:
-                return target in [row[coll] for row in matrix]
-            
-            if  rowr-rowl==1 and colr-coll==1:    
-                if matrix[rowl][coll]==target or matrix[rowr][colr]==target or matrix[rowr][coll]==target or matrix[rowl][colr]==target:
-                    return True
-                return False
-            
-            
-            rowmid = (rowl+rowr)//2
-            colmid = (coll+colr)//2
-            if matrix[rowmid][colmid]==target:
-                return True
-            elif target&lt;matrix[rowmid][colmid]:
-                return search(rowl,rowmid,coll,colmid,target) or search(rowl,rowmid,colmid,colr,target) or search(rowmid,rowr,coll,colmid,target)
-            else:
-                return search(rowmid,rowr,colmid,colr,target) or search(rowl,rowmid,colmid,colr,target) or search(rowmid,rowr,coll,colmid,target)
-            
-        
-        return search(0,len(matrix)-1,0,len(matrix[0])-1,target)
-</code></pre>
-<p>用了分治法，虽然写出来了，但感觉写了陀X。 答案分治法</p>
-<pre><code class="language-python">class Solution:
-    def searchMatrix(self, matrix: List[List[int]], target: int) -&gt; bool:
-        # an empty matrix obviously does not contain `target`
-        if not matrix:
-            return False
-
-        def search_rec(left, up, right, down):
-            # this submatrix has no height or no width.
-            if left &gt; right or up &gt; down:
-                return False
-            # `target` is already larger than the largest element or smaller
-            # than the smallest element in this submatrix.
-            elif target &lt; matrix[up][left] or target &gt; matrix[down][right]:
-                return False
-
-            mid = left + (right-left) // 2
-
-            # Locate `row` such that matrix[row-1][mid] &lt; target &lt; matrix[row][mid]
-            row = up
-            while row &lt;= down and matrix[row][mid] &lt;= target:
-                if matrix[row][mid] == target:
-                    return True
-                row += 1
-            
-            return search_rec(left, row, mid - 1, down) or \
-                   search_rec(mid + 1, up, right, row - 1)
-
-        return search_rec(0, 0, len(matrix[0]) - 1, len(matrix) - 1)
-</code></pre>
-<p>最佳答案 思路 ： 从左下角开始，如果target大于cur, 列+1， 如果targe 小于cur，行-1.</p>
-<pre><code class="language-python">class Solution:
-    def searchMatrix(self, matrix: List[List[int]], target: int) -&gt; bool:
-        # an empty matrix obviously does not contain `target` (make this check
-        # because we want to cache `width` for efficiency's sake)
-        if len(matrix) == 0 or len(matrix[0]) == 0:
-            return False
-
-        # cache these, as they won't change.
-        height = len(matrix)
-        width = len(matrix[0])
-
-        # start our &quot;pointer&quot; in the bottom-left
-        row = height - 1
-        col = 0
-
-        while col &lt; width and row &gt;= 0:
-            if matrix[row][col] &gt; target:
-                row -= 1
-            elif matrix[row][col] &lt; target:
-                col += 1
-            else: # found it
-                return True
-        
-        return False
-</code></pre>
 ]]></content>
     </entry>
 </feed>

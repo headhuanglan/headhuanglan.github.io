@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-15 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1641800460968">
+<link rel="shortcut icon" href="/favicon.ico?v=1642671028416">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">38</span>
+        <span class="site-item-stat-count">39</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1604,6 +1604,447 @@ class Solution(object):
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-05/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;font-colorred321-create-maximum-number-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;321. Create Maximum Number (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given two integer arrays nums1 and nums2 of lengths m and n respectively. nums1 and nums2 represent the digits of two numbers. You are also given an integer k.&lt;br&gt;
+Create the maximum number of length k &amp;lt;= m + n from digits of the two numbers. The relative order of the digits from the same array must be preserved.&lt;br&gt;
+Return an array of the k digits representing the answer.&lt;br&gt;
+Example&lt;br&gt;
+Input: nums1 = [3,4,6,5], nums2 = [9,1,2,5,8,3], k = 5&lt;br&gt;
+Output: [9,8,6,5,3]&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def maxNumber(self, nums1: List[int], nums2: List[int], k: int) -&amp;gt; List[int]:
+        # 思路。。。
+        # 最大需要每个位置数字最大，
+        # 但选择最大的数字有顺序约束
+        # 而且当可选最大数字相同时，需要程序tracking 2种不同结果。
+        
+
+        def prep(nums, k):
+            drop = len(nums) - k
+            out = []
+            for num in nums:
+                while drop and out and out[-1] &amp;lt; num:
+                    out.pop()
+                    drop -= 1
+                out.append(num)
+            return out[:k]
+
+        def merge(a, b):
+            return [max(a, b).pop(0) for _ in a+b]
+
+        return max(merge(prep(nums1, i), prep(nums2, k-i))  for i in range(k+1)   if i &amp;lt;= len(nums1) and k-i &amp;lt;= len(nums2))
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;没思路。。。看到答案用了greedy方法。。。  prep function只是在一个数组中按照顺序找出K个最大的数。先算一下需要drop多少个数， 如果当前值大于栈顶元素，说明需要更新栈顶。  merge function这一步是按照a，b的lexcial顺序找到最大的元素，a+b总共有K个元素，所以pop k次。 最后return所有K+1个分割可能产生的结果取最大的。基本不可能现想出来解法。&lt;/p&gt;
+&lt;h1 id=&#34;322-coin-change-medium&#34;&gt;322. Coin Change （Medium）&lt;/h1&gt;
+&lt;p&gt;You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.&lt;br&gt;
+Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.&lt;br&gt;
+You may assume that you have an infinite number of each kind of coin.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def coinChange(self, coins: List[int], amount: int) -&amp;gt; int:
+        if amount==0: return 0 if coins else -1
+        dp = dict()
+        for c in coins:
+            dp[c]=1
+        for a in range(1,amount+1):
+            for c in coins:
+                if a+c&amp;lt;=amount and a in dp:
+                    if a+c in dp:
+                        dp[a+c]=min(dp[a+c],dp[a]+1) 
+                    else:
+                        dp[a+c]=dp[a]+1
+        return dp[amount] if   amount in dp else -1
+
+#ANSWER
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -&amp;gt; int:
+        dp = [float(&#39;inf&#39;)] * (amount + 1)
+        dp[0] = 0
+        
+        for coin in coins:
+            for x in range(coin, amount + 1):
+                dp[x] = min(dp[x], dp[x - coin] + 1)
+        return dp[amount] if dp[amount] != float(&#39;inf&#39;) else -1 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;感觉是个DP问题，递归关系？  dp【i】是需要达到amount i需要的次数。 初始coins值的dp【coins_val】=1.   对于每一个有dp值的位置，都用coints_val 更新， dp【i+val】=min（dp【i+val】，dp【i】+1）直到amount。 由于不能开过大内存，所以dp变成dict。&lt;br&gt;
+答案写法更标准， dp【x】=min（dp【x】，dp【x-coin】+1） x大于等于coin小于等于amount。&lt;/p&gt;
+&lt;h1 id=&#34;323-number-of-connected-components-in-an-undirected-graph-medium&#34;&gt;323. Number of Connected Components in an Undirected Graph （Medium）&lt;/h1&gt;
+&lt;p&gt;You have a graph of n nodes. You are given an integer n and an array edges where edges[i] = [ai, bi] indicates that there is an edge between ai and bi in the graph.&lt;br&gt;
+Return the number of connected components in the graph.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def countComponents(self, n: int, edges: List[List[int]]) -&amp;gt; int:
+        #  BFS
+        neis = collections.defaultdict(list)
+        for edge in edges:
+            neis[edge[0]].append(edge[1])
+            neis[edge[1]].append(edge[0])
+        
+        
+        res=0
+        visited=set()
+        while len(visited)!=n:
+            res+=1
+            for i in range(n):
+                if i not in visited:
+                    visited.add(i)
+                    q=[i]
+                    break     
+            while q:
+                l=len(q)
+                for _ in range(l):
+                    cur=q.pop(0)
+                    for nei in neis[cur]:
+                        if nei not in visited:
+                            visited.add(nei)
+                            q.append(nei)
+        return res
+#UNIONFIND
+class Solution:
+    
+    class UnionFind:
+        def __init__(self,n):
+            self.parent=[i for i in range(n)]
+            self.rank=[0]*n
+            self.n=n
+        def find(self,x):
+            if x!=self.parent[x]:
+                self.parent[x]=self.find(self.parent[x])
+            return self.parent[x]
+        
+        def union(self,x,y):
+            px=self.find(x)
+            py=self.find(y)
+            if px!=py:
+                self.n-=1
+                if self.rank[px]&amp;lt;self.rank[py]:
+                    self.parent[px]=py
+                elif self.rank[px]&amp;gt;self.rank[py]:
+                    self.parent[py]=px
+                else:
+                    self.parent[py]=px
+                    self.rank[px]+=1
+                    
+    def countComponents(self, n: int, edges: List[List[int]]) -&amp;gt; int:
+        uf=self.UnionFind(n)
+        for edge in edges:
+            uf.union(*edge)
+        return uf.n
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意unionfind中   if x!=self.parent[x]   爸爸=找爸爸（爸爸）  self.parent[x]=self.find(self.parent[x])， union只有rank相同时候才需要+rank。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred324-wiggle-sort-ii-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;324. Wiggle Sort II （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums, reorder it such that nums[0] &amp;lt; nums[1] &amp;gt; nums[2] &amp;lt; nums[3]....&lt;br&gt;
+You may assume the input array always has a valid answer.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;     def wiggleSort(self, nums):
+        count = [0]*5001
+        
+        for n in nums:
+            count[n]+=1
+        
+        odd = 1
+        even = 0
+        for n in range(5000,-1,-1):
+            if odd &amp;gt;= len(nums) and even &amp;gt;= len(nums):
+                break
+                
+            if count[n] == 0:
+                continue
+            
+            while count[n] and (odd &amp;lt; len(nums) or even &amp;lt; len(nums)):
+                count[n]-=1
+                if odd &amp;lt; len(nums):
+                    nums[odd] = n
+                    odd+=2
+                else:
+                    nums[even] = n
+                    even+=2
+        
+ class Solution(object):
+    def wiggleSort(self, nums):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type nums: List[int]
+        :rtype: void Do not return anything, modify nums in-place instead.
+        &amp;quot;&amp;quot;&amp;quot;
+      
+        arr = sorted(nums)
+        for i in range(1, len(nums), 2): nums[i] = arr.pop() 
+        for i in range(0, len(nums), 2): nums[i] = arr.pop() 
+
+class Solution:
+    def wiggleSort(self, A: List[int]) -&amp;gt; None:        
+        N = len(A)                    
+        count = [0] * 5001        
+        self.curr_val = A[0]
+        
+        for v in A:
+            count[v] += 1
+            self.curr_val = max(self.curr_val, v)
+        
+        def next_val():
+            while count[self.curr_val] == 0: self.curr_val -= 1            
+            count[self.curr_val] -= 1
+            return self.curr_val
+                            
+        for i in range(1, N, 2): A[i] = next_val()     
+        for i in range(0, N, 2): A[i] = next_val() 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;思路：从sorted 最大到最小，奇数位置放置，然后偶数位置放置数字。时间要降低到O（n）只能用count sort了。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred325-maximum-size-subarray-sum-equals-k-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;325. Maximum Size Subarray Sum Equals k （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums and an integer k, return the maximum length of a subarray that sums to k. If there isn&#39;t one, return 0 instead.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def maxSubArrayLen(self, nums: List[int], k: int) -&amp;gt; int:
+        
+        prefix_sum = 0 
+        res = 0
+        indices = dict()
+        
+        for i,n in enumerate(nums):
+            prefix_sum+=n
+            
+            if prefix_sum==k:
+                res=i+1
+            
+            if prefix_sum-k in indices:
+                res=max(res,i-indices[prefix_sum-k])
+            
+            if prefix_sum not in indices:
+                indices[prefix_sum]=i
+        
+        return res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;没思路，直接看答案了。看错题目了，题目是subarray。。。是连续的字符串，并不是sublist。。。。&lt;br&gt;
+思路：用到了prefix sum和 two sum的解法。 因为是subarray，prefix【j】-prefix【i】==k 就是一个答案。  具体扫predix过程借鉴two sum，在predix-k在 dict中，更新res。 不在dict中，更新dict。 不能无条件更新dict，因为prefix在dict中与之间prefix重复，应该保留更早的index使长度更长。&lt;/p&gt;
+&lt;h1 id=&#34;326-power-of-three-easy&#34;&gt;326. Power of Three （Easy）&lt;/h1&gt;
+&lt;p&gt;Given an integer n, return true if it is a power of three. Otherwise, return false.&lt;br&gt;
+An integer n is a power of three, if there exists an integer x such that n == 3x.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def isPowerOfThree(self, n: int) -&amp;gt; bool:
+        if n==0: return False
+        while n:
+            if n==1: return True
+            if n%3!=0:
+                return False
+            n//=3
+        return True
+
+class Solution:
+    def isPowerOfThree(self, n: int) -&amp;gt; bool:
+        if n&amp;lt;1: return False
+        while n%3==0:
+            n//=3
+            
+        return n==1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred327-count-of-range-sum-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;327. Count of Range Sum (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums and two integers lower and upper, return the number of range sums that lie in [lower, upper] inclusive.&lt;br&gt;
+Range sum S(i, j) is defined as the sum of the elements in nums between indices i and j inclusive, where i &amp;lt;= j.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def countRangeSum(self, nums: List[int], lower: int, upper: int) -&amp;gt; int:
+        presum = [0]*(len(nums)+1)
+        for i,n in enumerate(nums):
+            presum[i+1]=presum[i]+n
+        
+        res=0
+        for i in range(1,len(nums)+1):
+            for j in range(i):
+                if upper&amp;gt;=presum[i]-presum[j]&amp;gt;=lower:
+                    res+=1
+        return res
+#ANSWER 1 PrefixSum+MergeSort
+class Solution:
+    def countRangeSum(self, nums, lower, upper):
+        cumsum = [0]*(len(nums)+1)
+        for i,num in enumerate(nums):
+            cumsum[i+1]=cumsum[i]+num
+        def sort(lo, hi):
+            mid = (lo + hi) // 2
+            if mid == lo:
+                return 0
+            count = sort(lo, mid) + sort(mid, hi)
+            i = j = mid
+            for left in cumsum[lo:mid]:
+                while i &amp;lt; hi and cumsum[i] - left &amp;lt;  lower: i += 1
+                while j &amp;lt; hi and cumsum[j] - left &amp;lt;= upper: j += 1
+                count += j - i
+            cumsum[lo:hi] = sorted(cumsum[lo:hi])
+            return count
+        return sort(0, len(cumsum))
+
+
+#ANSER Binary Indexed Tree + Binary Search
+class BinaryIndexedTree:
+    
+    def __init__(self, n):
+        self.n = n
+        self.tree = [0 for _ in range(n+1)]
+    
+    def update(self, idx, val):
+        while idx &amp;lt;= self.n:
+            self.tree[idx] += val
+            idx += idx &amp;amp; -idx
+    
+    def query(self, idx):
+        total = 0
+        while idx &amp;gt; 0:
+            total += self.tree[idx]
+            idx -= idx &amp;amp; -idx
+        return total
+
+    
+class Solution:
+    def countRangeSum(self, nums: List[int], lower: int, upper: int) -&amp;gt; int:
+        n, prefixes = len(nums), list(itertools.accumulate(nums))
+        
+        sortedPrefixes = sorted(set(prefixes))
+        ranks = { prefix: idx + 1 for idx, prefix in enumerate(sortedPrefixes) }
+        
+        ds = BinaryIndexedTree(len(sortedPrefixes))
+        for prefix in prefixes:
+            ds.update(ranks[prefix], 1)
+        
+        res = 0
+        processed = 0
+        for prefix in prefixes:
+            l = bisect.bisect_left(sortedPrefixes, lower + processed)
+            r = bisect.bisect_right(sortedPrefixes, upper + processed)  
+            res += ds.query(r) - ds.query(l)
+            ds.update(ranks[prefix], -1)
+            processed = prefix
+        
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;首次尝试O（n^2）time limit exccded。  看来得低于O（n^2）才可以。。。改进方法是增加mergesort。 思路：先算cumsum。 目标找出cumsum【right】-cumsum【left】在upper lower 之间的这样的pair个数。 定义helper function merge sort。 返回值是满足条件的个数，先递归找出只在lo&lt;sub&gt;mid和mid&lt;/sub&gt;hi之间的个数。若left~right横跨mid， 对于每一个left in sumsum【lo：mid】 找出满足upper lower bond的 right。其中满足lower bound的index 是i， 满足upper bound 的index 是j 所以 count+=j-i。&lt;br&gt;
+又忘记了有segment tree 和binary indexed tree这两种数据结构。。。。&lt;/p&gt;
+&lt;h1 id=&#34;328-odd-even-linked-list-medium&#34;&gt;328. Odd Even Linked List (Medium)&lt;/h1&gt;
+&lt;p&gt;Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.&lt;br&gt;
+The first node is considered odd, and the second node is even, and so on.&lt;br&gt;
+Note that the relative order inside both the even and odd groups should remain as it was in the input.&lt;br&gt;
+You must solve the problem in O(1) extra space complexity and O(n) time complexity.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def oddEvenList(self, head: Optional[ListNode]) -&amp;gt; Optional[ListNode]:
+        if not head: return head
+        odd_head=head
+        even_head=head.next
+        
+        cur=head
+        odd_tail=None
+        c=0
+        while cur:
+            curnext=cur.next
+            c+=1
+            if c%2==1:
+                #cur is odd node
+                cur.next=cur.next.next if cur.next else None
+                odd_tail=cur
+            else:
+                #cur is even node
+                cur.next=cur.next.next if cur.next else None
+            
+            cur=curnext
+        
+        if odd_tail:
+            odd_tail.next=even_head
+        
+        return odd_head
+
+
+#ANSWER 
+class Solution:
+    def oddEvenList(self, head: ListNode) -&amp;gt; ListNode:
+        
+        if not head: return head
+        
+        odd  = head
+        even = head.next
+        evenhead = even
+        while even and even.next:
+            odd.next = even.next
+            odd = odd.next
+            even.next = odd.next
+            even = even.next
+        
+        odd.next = evenhead
+        return head
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred329-longest-increasing-path-in-a-matrix-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;329. Longest Increasing Path in a Matrix (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an m x n integers matrix, return the length of the longest increasing path in matrix.&lt;br&gt;
+From each cell, you can either move in four directions: left, right, up, or down. You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def longestIncreasingPath(self, matrix: List[List[int]]) -&amp;gt; int:
+        dirs = [[0,1],[1,0],[0,-1],[-1,0]]
+        m=len(matrix)
+        n=len(matrix[0])
+        if not matrix: return 0
+        cache= [[0]*n for _ in range(m)]
+        res=0
+        
+        def dfs(i,j):
+            if cache[i][j]!=0: return cache[i][j]
+            for d in dirs:
+                x=i+d[0]
+                y=j+d[1]
+                if m&amp;gt;x&amp;gt;=0 and n&amp;gt;y&amp;gt;=0 and matrix[x][y]&amp;gt;matrix[i][j]:
+                    cache[i][j]=max(cache[i][j],dfs(x,y))
+            
+            cache[i][j]+=1
+            return cache[i][j] 
+        
+        
+        for i in range(m):
+            for j in range(n):
+                res=max(res,dfs(i,j))
+                
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;DFS+mem  太晚了直接看答案了。。。因为是strictly increasing path 所以是DAG，所以dfs（i，j） path length 是可以用mem记住的。 但通常的DFS是不能用mem的。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred330-patching-array-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;330. Patching Array （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a sorted integer array nums and an integer n, add/patch elements to the array such that any number in the range [1, n] inclusive can be formed by the sum of some elements in the array.&lt;br&gt;
+Return the minimum number of patches required.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def minPatches(self, nums: List[int], n: int) -&amp;gt; int:
+        
+        &#39;&#39;&#39;Initialize the range [1, miss) = [1, 1) = empty
+        While n is not covered yet
+            if the current element nums[i] is less than or equal to miss
+                extends the range to [1, miss + nums[i])
+                increase i by 1
+            otherwise
+                patch the array with miss, extends the range to [1, miss + miss)
+                increase the number of patches
+        Return the number of patches
+        &#39;&#39;&#39;
+        
+        patches=0
+        i=0
+        miss=1
+        while miss&amp;lt;=n:
+            if i&amp;lt;len(nums) and nums[i]&amp;lt;=miss:
+                #miss is covered
+                miss+=nums[i]
+                i+=1
+            else:
+                #patch miss to aray
+                miss+=miss
+                patches+=1
+        return patches
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;太晚没思路直接看答案， 答案思路：假设miss 是最小的missing number， 但我们知道【1，miss） 已经covered。 要cover miss，需要添加小于等于miss的数字。&lt;br&gt;
+假设我们添加的数字是x，那么区间【1，miss） 【x，x+miss）都covered。由于x小于等于miss。 所以两个区间可以合并为【1，x+miss）我们想选一个range cover最大的x，显然当x=miss时候区间最大。所以算法是：&lt;br&gt;
+初始化区间【1，miss）=【1，1）&lt;br&gt;
+当n还没covered，如果 nums【i】小于等于miss，增加区间为【1，miss+nums【i】），i++ 否则， 数组里添加miss， 增加区间为【1，miss+miss), res+=1&lt;/p&gt;
+">Leetcode 2021-12-05</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-04/"" data-c="
