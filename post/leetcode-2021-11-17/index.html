@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-17 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1642671028416">
+<link rel="shortcut icon" href="/favicon.ico?v=1642896995939">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">39</span>
+        <span class="site-item-stat-count">40</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -2142,6 +2142,502 @@ Explanation: ((2 + 1) * 3) = 9</p>
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-06/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;font-colorblue331-verify-preorder-serialization-of-a-binary-tree-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;331. Verify Preorder Serialization of a Binary Tree &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;One way to serialize a binary tree is to use preorder traversal. When we encounter a non-null node, we record the node&#39;s value. If it is a null node, we record using a sentinel value such as &#39;#&#39;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def isValidSerialization(self, preorder: str) -&amp;gt; bool:
+        
+        stack = []
+        for char in preorder.split(&#39;,&#39;):
+            while char==&#39;#&#39; and stack and stack[-1]==&#39;#&#39;:
+                if len(stack)&amp;lt;2: return False
+                stack.pop()
+                stack.pop()
+            
+            stack.append(char)
+        
+        return stack==[&#39;#&#39;]
+                
+ #ANSWER           
+ class Solution:
+    def isValidSerialization(self, preorder: str) -&amp;gt; bool:
+        # number of available slots
+        slots = 1
+
+        for node in preorder.split(&#39;,&#39;):
+            # one node takes one slot
+            slots -= 1
+            
+            # no more slots available
+            if slots &amp;lt; 0:
+                return False
+            
+            # non-empty node creates two children slots
+            if node != &#39;#&#39;:
+                slots += 2
+        
+        # all slots should be used up
+        return slots == 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;没思路初看， 但是用stack解决了， 如果遇到‘X,#,#’ X一定是个leave，出栈，但X本身可能是其他人的child，所以补一个#。  最后如果valid，应该stack为【#】。答案思路没用stack用了计算slot的方法。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred332-reconstruct-itinerary-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;332. Reconstruct Itinerary （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given a list of airline tickets where tickets[i] = [fromi, toi] represent the departure and the arrival airports of one flight. Reconstruct the itinerary in order and return it.&lt;br&gt;
+All of the tickets belong to a man who departs from &amp;quot;JFK&amp;quot;, thus, the itinerary must begin with &amp;quot;JFK&amp;quot;. If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findItinerary(self, tickets: List[List[str]]) -&amp;gt; List[str]:
+        self.flightMap = collections.defaultdict(list)
+        for ticket in tickets:
+            origin,dest=ticket[0],ticket[1]
+            self.flightMap[origin].append(dest)
+        
+        self.visitBitmap=dict()
+        
+        for origin,itinerary in self.flightMap.items():
+            itinerary.sort()
+            self.visitBitmap[origin]=[False]*len(itinerary)
+        
+        self.flights=len(tickets)
+        self.result=[]
+        route=[&#39;JFK&#39;]
+        self.backtracking(&#39;JFK&#39;,route)
+        return self.result
+    
+    def backtracking(self,origin,route):
+        if len(route)==self.flights+1:
+            self.result=route
+            return True
+        
+        for i, nextDest in enumerate(self.flightMap[origin]):
+            if not self.visitBitmap[origin][i]:
+                self.visitBitmap[origin][i]=True
+                ret=self.backtracking(nextDest,route+[nextDest])
+                self.visitBitmap[origin][i]=False
+                if ret:
+                    return True
+        return False
+
+#
+class Solution:
+    def findItinerary(self, tickets: List[List[str]]) -&amp;gt; List[str]:
+        self.flightMap = collections.defaultdict(list)
+        for ticket in tickets:
+            origin,dest=ticket[0],ticket[1]
+            self.flightMap[origin].append(dest)
+ 
+        
+        for origin,itinerary in self.flightMap.items():
+            itinerary.sort()
+         
+        self.result=[]
+        self.DFS(&#39;JFK&#39;)
+       
+        return self.result[::-1]
+    
+    def DFS(self,origin):
+        destList=self.flightMap[origin]
+        while destList:
+            nextDest=destList.pop(0)
+            self.DFS(nextDest)
+        self.result.append(origin)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个明显是个一笔画问题，不知道答案。。。有两个问题，判断能否是一笔画，怎么能画出一笔画。一笔画算法：&lt;br&gt;
+It starts with a random node and then follows an arbitrary unvisited edge to a neighbor. This step is repeated until one returns to the starting node. This yields a first circle in the graph.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;If this circle covers all nodes it is an Eulerian cycle and the algorithm is finished. Otherwise, one chooses another node among the cycles&#39; nodes with unvisited edges and constructs another circle, called subtour.
+By connecting all the circles in the above process, we build the Eulerian cycle at the end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案1：backtracking+greedy  答案2： 在倒序添加一个机场前，必须已经visited 所有这个机场的outgoing edge。否则就是还有路径没有浏览过。 所以算法是postorder DFS&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue333-largest-bst-subtree-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;333. Largest BST Subtree （Medium） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given the root of a binary tree, find the largest subtree, which is also a Binary Search Tree (BST), where the largest means subtree has the largest number of nodes.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def largestBSTSubtree(self, root: Optional[TreeNode]) -&amp;gt; int:
+         
+        self.res=0
+        
+        def isBST(root):
+            if not root: 
+                return True
+            res=[]
+            def inorder(root):
+                if not root: return 
+                inorder(root.left)
+                res.append(root.val)
+                inorder(root.right)
+            inorder(root)
+            for i in range(1,len(res)):
+                if res[i-1] &amp;gt;= res[i]:
+                    return False
+            root.size=len(res)
+            return True
+            
+        
+        def helper(root):
+            if not root: return
+            helper(root.left)
+            helper(root.right)
+            if isBST(root):
+                self.res=max(self.res,root.size)  
+     
+        helper(root)
+        return self.res          
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;因为要判断isBST，call很多次，自己写的时间复杂度感觉比较大。。。 isBST同时设置了 BST大小，所以call完isBST后直接更新self.res.  看答案思路：答案是preorder 和postorder 。。。 postorder优于preorder，因为没有重复判断isvalidBST. 但需要通知parent node maxleft minright是多少，感觉更繁琐，不如自己的答案。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred334-increasing-triplet-subsequence-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;334. Increasing Triplet Subsequence （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums, return true if there exists a triple of indices (i, j, k) such that i &amp;lt; j &amp;lt; k and nums[i] &amp;lt; nums[j] &amp;lt; nums[k]. If no such indices exists, return false.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def increasingTriplet(self, nums: List[int]) -&amp;gt; bool:
+        if len(nums)&amp;lt;3: return False
+        
+        dp=[1]*len(nums)
+        for i in range(len(nums)):
+            for j in range(i):
+                 if nums[i]&amp;gt;nums[j]:
+                    dp[i]= max(dp[j]+1,dp[i])  
+                    if dp[i]&amp;gt;=3: return True
+        
+        return False
+
+
+class Solution:
+    def increasingTriplet(self, nums: List[int]) -&amp;gt; bool:
+        first_num = float(&amp;quot;inf&amp;quot;)
+        second_num = float(&amp;quot;inf&amp;quot;)
+        for n in nums:
+            if n &amp;lt;= first_num:
+                first_num = n
+            elif n &amp;lt;= second_num:
+                second_num = n
+            else:
+                return True
+        return False
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;初次尝试用increasing subsequence DP方法， time limit exceeded。。。直接看答案了。。。直接比较难相到这个方法，思路：scan num list。 边scan边保存看到的最小的和次小的数字，如果遇到比这两个数字都大的，那么找到了答案，如果都没有return False。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred335-self-crossing-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;335. Self Crossing （Hard） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an array of integers distance.&lt;br&gt;
+You start at point (0,0) on an X-Y plane and you move distance[0] meters to the north, then distance[1] meters to the west, distance[2] meters to the south, distance[3] meters to the east, and so on. In other words, after each move, your direction changes counter-clockwise.&lt;br&gt;
+Return true if your path crosses itself, and false if it does not.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def isSelfCrossing(self, distance: List[int]) -&amp;gt; bool:
+        
+        x=distance
+        for i in range(3,len(x)):
+            
+            if i &amp;gt;= 3 and x[i] &amp;gt;= x[i - 2] and x[i - 1] &amp;lt;= x[i - 3]:
+                return True
+            
+            if i &amp;gt;= 4 and x[i - 1] == x[i - 3] and x[i] + x[i - 4] &amp;gt;= x[i - 2]:
+                return True
+            
+            if i &amp;gt;= 5 and x[i - 2] &amp;gt;= x[i - 4] and x[i - 5] + x[i - 1] &amp;gt;= x[i - 3] and x[i - 1] &amp;lt;= x[i - 3] and x[i - 4] + x[i] &amp;gt;= x[i - 2]:
+                return True
+        
+        return False
+
+#GREAT ANSWER
+def isSelfCrossing(self, x):
+    b = c = d = e = 0
+    for a in x:
+        if d &amp;gt;= b &amp;gt; 0 and (a &amp;gt;= c or a &amp;gt;= c-e &amp;gt;= 0 and f &amp;gt;= d-b):
+            return True
+        b, c, d, e, f = a, b, c, d, e
+    return False
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;直接看答案， 只有3种情况会crossing， 第一种包含4条线段 最后一条穿过第一条， 第二种包括5条线段，最后一条嵌入第一条。 第三种包含6条线段，最后一条与第一条十字交叉穿过。&lt;/p&gt;
+&lt;p&gt;第二种解法：&lt;/p&gt;
+&lt;pre&gt;
+            b                              b
+   +----------------+             +----------------+
+   |                |             |                |
+   |                |             |                | a
+ c |                |           c |                |
+   |                | a           |                |    f
+   +-----------&gt;    |             |                | &lt;----+
+            d       |             |                |      | e
+                    |             |                       |
+                                  +-----------------------+
+                                               d
+&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred336-palindrome-pairs-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;336. Palindrome Pairs (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a list of unique words, return all the pairs of the distinct indices (i, j) in the given list, so that the concatenation of the two words words[i] + words[j] is a palindrome.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def palindromePairs(self, words: List[str]) -&amp;gt; List[List[int]]:
+        res= []
+        def isp(w):
+            res = [e for e in w]
+            return res==res[::-1]
+        for i in range(len(words)):
+            for j in range(i+1,len(words)):
+                if not words[i] or not words[j] or words[i][0]==words[j][-1]:
+                    if isp(words[i]+words[j]):
+                        res.append([i,j])
+                if not words[i] or not words[j] or words[j][0]==words[i][-1]:
+                    if isp(words[j]+words[i]):
+                        res.append([j,i])
+        return res
+#answer                  
+class Solution:
+    def palindromePairs(self, words: List[str]) -&amp;gt; List[List[int]]:
+      
+        def all_valid_prefixes(word):
+            valid_prefixes = []
+            for i in range(len(word)):
+                if word[i:] == word[i:][::-1]:
+                    valid_prefixes.append(word[:i])
+            return valid_prefixes
+
+        def all_valid_suffixes(word):
+            valid_suffixes = []
+            for i in range(len(word)):
+                if word[:i+1] == word[:i+1][::-1]:
+                    valid_suffixes.append(word[i + 1:])
+            return valid_suffixes
+
+        word_lookup = {word: i for i, word in enumerate(words)}
+        solutions = []
+
+        for word_index, word in enumerate(words):
+            reversed_word = word[::-1]
+
+            # Build solutions of case #1. This word will be word 1.
+            if reversed_word in word_lookup and word_index != word_lookup[reversed_word]:
+                solutions.append([word_index, word_lookup[reversed_word]])
+
+            # Build solutions of case #2. This word will be word 2.
+            for suffix in all_valid_suffixes(word):
+                reversed_suffix = suffix[::-1]
+                if reversed_suffix in word_lookup:
+                    solutions.append([word_lookup[reversed_suffix], word_index])
+
+            # Build solutions of case #3. This word will be word 1.
+            for prefix in all_valid_prefixes(word):
+                reversed_prefix = prefix[::-1]
+                if reversed_prefix in word_lookup:
+                    solutions.append([word_index, word_lookup[reversed_prefix]])
+
+        return solutions
+#ANSWER TRIE
+
+class TrieNode:
+    def __init__(self):
+        self.next = collections.defaultdict(TrieNode)
+        self.ending_word = -1
+        self.palindrome_suffixes = []
+
+class Solution:
+    def palindromePairs(self, words):
+
+        # Create the Trie and add the reverses of all the words.
+        trie = TrieNode()
+        for i, word in enumerate(words):
+            word = word[::-1] # We want to insert the reverse.
+            current_level = trie
+            for j, c in enumerate(word):
+                # Check if remainder of word is a palindrome.
+                if word[j:] == word[j:][::-1]:# Is the word the same as its reverse?
+                    current_level.palindrome_suffixes.append(i)
+                # Move down the trie.
+                current_level = current_level.next[c]
+            current_level.ending_word = i
+
+        # Look up each word in the Trie and find palindrome pairs.
+        solutions = []
+        for i, word in enumerate(words):
+            current_level = trie
+            for j, c in enumerate(word):
+                # Check for case 3.
+                if current_level.ending_word != -1:
+                    if word[j:] == word[j:][::-1]: # Is the word the same as its reverse?
+                        solutions.append([i, current_level.ending_word])
+                if c not in current_level.next:
+                    break
+                current_level = current_level.next[c]
+            else: # Case 1 and 2 only come up if whole word was iterated.
+                # Check for case 1.
+                if current_level.ending_word != -1 and current_level.ending_word != i:
+                    solutions.append([i, current_level.ending_word])
+                # Check for case 2.
+                for j in current_level.palindrome_suffixes:
+                    solutions.append([i, j])
+        return solutions
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;初次尝试，time limit exceeded。 基本暴力解，无优化。如何优化？  感觉是用Trie。。。看答案了。思路1： 三种情况，1）word本身是palindrome，2）AB_PALINDROME     BA  找到第一个词所有满足第一个pattern的prefix，然后找prefix[::-1]  3)    BA    PALINDROM_AB,找第二个词所有满足第二个patern的suffix，然后找suffix[::-1]&lt;br&gt;
+思路2： Trie， case1） CAT TAC     case2）  CAT   PALINDROME_TAC case3） CAT_PALINDROME  TAC.     只有在扫过所有word1字符情况都不break情况下才会再检查case1和2. 逆序在tire保存word和保存满足palindrome suffix的word ids是简化算法的关键。&lt;/p&gt;
+&lt;h1 id=&#34;337-house-robber-iii-medium&#34;&gt;337. House Robber III （Medium）&lt;/h1&gt;
+&lt;p&gt;The thief has found himself a new place for his thievery again. There is only one entrance to this area, called root.&lt;br&gt;
+Besides the root, each house has one and only one parent house. After a tour, the smart thief realized that all houses in this place form a binary tree. It will automatically contact the police if two directly-linked houses were broken into on the same night.&lt;br&gt;
+Given the root of the binary tree, return the maximum amount of money the thief can rob without alerting the police.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def rob(self, root: Optional[TreeNode]) -&amp;gt; int:
+        # root.val =  root.left_rob+root.right.rob                         1)rob2child
+        # root.val =  root.left_norob + root.right.norob + root.val        2)rob root no rob child
+        # root.val = root.left/right.rob   root.right/left.norob      3) rob one of child norob root
+        
+    
+        #postorder transversal  add two value, rob  norob
+        
+        def helper(root):
+            if not root: return 
+            helper(root.left)
+            helper(root.right)
+            
+            #processing leaves
+            if not root.left and not root.right:
+                root.rob=root.val
+                root.norob=0
+            
+            #if decide rob root:
+            root_left_max = root.left.norob if root.left else 0
+            root_right_max= root.right.norob if root.right else 0
+            root.rob = root.val + root_left_max + root_right_max
+            #if decide norob root:
+            root_left_max =max([root.left.norob,root.left.rob]) if root.left else 0
+            root_right_max= max([root.right.norob,root.right.rob]) if root.right else 0
+            root.norob = root_left_max + root_right_max
+        
+        helper(root)
+        return max([root.rob,root.norob])
+
+
+#ANSWER
+class Solution:
+    def rob(self, root: TreeNode) -&amp;gt; int:
+        def helper(node):
+            # return [rob this node, not rob this node]
+            if not node:
+                return (0, 0)
+            left = helper(node.left)
+            right = helper(node.right)
+            # if we rob this node, we cannot rob its children
+            rob = node.val + left[1] + right[1]
+            # else we could choose to either rob its children or not
+            not_rob = max(left) + max(right)
+            return [rob, not_rob]
+
+        return max(helper(root))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;338-counting-bits-easy&#34;&gt;338. Counting Bits (Easy)&lt;/h1&gt;
+&lt;p&gt;Given an integer n, return an array ans of length n + 1 such that for each i (0 &amp;lt;= i &amp;lt;= n), ans[i] is the number of 1&#39;s in the binary representation of i.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def countBits(self, n: int) -&amp;gt; List[int]:
+        if n==0: return [0]
+        if n==1: return [0,1]
+        cur=[0,1]
+        while len(cur)&amp;lt;=n:
+            cur = cur+[1+e for e in cur]
+        return cur[:n+1]
+        
+#ANSWER
+class Solution:
+    def countBits(self, n: int) -&amp;gt; List[int]:
+        ans = [0] * (n + 1)
+        for x in range(1, n + 1):
+            ans[x] = ans[x &amp;amp; (x - 1)] + 1
+        return ans 
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案更优雅，x&amp;amp;x-1 得到去掉最后一个significant bit的数字  X&amp;gt; X&amp;amp;(X-1) 然后从1遍历到n用dp。&lt;/p&gt;
+&lt;h1 id=&#34;339-nested-list-weight-sum-medium&#34;&gt;339. Nested List Weight Sum （Medium）&lt;/h1&gt;
+&lt;p&gt;You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists.&lt;br&gt;
+The depth of an integer is the number of lists that it is inside of. For example, the nested list [1,[2,2],[[3],2],1] has each integer&#39;s value set to its depth.&lt;br&gt;
+Return the sum of each integer in nestedList multiplied by its depth.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+class Solution:
+    def depthSum(self, nestedList: List[NestedInteger]) -&amp;gt; int:
+        def helper(nestli,level):
+            res=0
+            for nl in nestli:
+                if nl.isInteger():
+                    res+=nl.getInteger() * level
+                else:
+                    res+=helper(nl.getList(),level+1)
+            
+            return res
+        return helper(nestedList,1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorblue340-longest-substring-with-at-most-k-distinct-characters-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;340. Longest Substring with At Most K Distinct Characters (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a string s and an integer k, return the length of the longest substring of s that contains at most k distinct characters.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def lengthOfLongestSubstringKDistinct(self, s: str, k: int) -&amp;gt; int:
+        #  e c e b a  a a a a a a c d a a 
+        # two pointer
+        #   
+        dic=dict()
+        start=0
+        res=0
+        for j,char in enumerate(s):
+            #process over k case
+            if dic and char not in dic and len(dic)==k:
+                while len(dic)==k:
+                    dic[s[start]]-=1
+                    if dic[s[start]]==0:
+                        del dic[s[start]]
+                    start+=1
+            
+            elif char in dic and len(dic)&amp;lt;=k:
+                res=max(res,j-start+1)
+            
+            
+            elif len(dic)&amp;lt;k:
+                res+=1
+        
+            
+            dic[char]=dic.get(char,0)+1
+        
+        return res
+
+
+
+#ANSWER
+from collections import defaultdict
+class Solution:
+    def lengthOfLongestSubstringKDistinct(self, s: str, k: int) -&amp;gt; int:
+        n = len(s)
+        if n * k == 0:
+            return 0
+
+        # sliding window left and right pointers
+        left, right = 0, 0
+        # hashmap character -&amp;gt; its rightmost position
+        # in the sliding window
+        hashmap = defaultdict()
+
+        max_len = 1
+
+        while right &amp;lt; n:
+            # add new character and move right pointer
+            hashmap[s[right]] = right
+            right += 1
+
+            if len(hashmap) == k + 1:
+                # delete the leftmost character
+                del_idx = min(hashmap.values())
+                del hashmap[s[del_idx]]
+                # move left pointer of the slidewindow
+                left = del_idx + 1
+
+            max_len = max(max_len, right - left)
+
+        return max_len
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;典型的two pointer 写的磕磕绊绊 但写出来了。。。dic存放window中遇到字符的个数，  case1）如果目前dic有内容而且当前char不在dic而且window已经达到容量，start得向前移动，每前进一位，dic中s【start】数目减少一个，如果减少到0需要删除key。 退出while循环现在len（dic）小于k，后续这个不在dic中的char会加入dic。 case2）char in dic and len（dic）小于等于k，直接算结果 case3） len（dic）小于k，res+1.  答案方法思路也差不多。&lt;/p&gt;
+">Leetcode 2021-12-06</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-05/"" data-c="
