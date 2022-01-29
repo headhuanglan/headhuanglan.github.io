@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>Leetcode 2021-12-05 | Lan&#39;s Blog</title>
+<title>Leetcode 2021-12-07 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1643494127338">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,7 +41,7 @@
 
 
 
-  <meta name="description" content="Leetcode 2021-12-05" />
+  <meta name="description" content="Leetcode 2021-12-07" />
   <meta name="keywords" content="leetcode" />
 </head>
 
@@ -223,16 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#font-colorred321-create-maximum-number-hard-font"><font color='red'>321. Create Maximum Number (Hard) </font></a></li>
-<li><a href="#322-coin-change-medium">322. Coin Change （Medium）</a></li>
-<li><a href="#323-number-of-connected-components-in-an-undirected-graph-medium">323. Number of Connected Components in an Undirected Graph （Medium）</a></li>
-<li><a href="#font-colorred324-wiggle-sort-ii-mediumfont"><font color='red'>324. Wiggle Sort II （Medium）</font></a></li>
-<li><a href="#font-colorred325-maximum-size-subarray-sum-equals-k-mediumfont"><font color='red'>325. Maximum Size Subarray Sum Equals k （Medium）</font></a></li>
-<li><a href="#326-power-of-three-easy">326. Power of Three （Easy）</a></li>
-<li><a href="#font-colorred327-count-of-range-sum-hard-font"><font color='red'>327. Count of Range Sum (Hard) </font></a></li>
-<li><a href="#328-odd-even-linked-list-medium">328. Odd Even Linked List (Medium)</a></li>
-<li><a href="#font-colorred329-longest-increasing-path-in-a-matrix-hard-font"><font color='red'>329. Longest Increasing Path in a Matrix (Hard) </font></a></li>
-<li><a href="#font-colorred330-patching-array-hardfont"><font color='red'>330. Patching Array （Hard）</font></a></li>
+<li><a href="#font-colorred341-flatten-nested-list-iterator-mediumfont"><font color='red'>341. Flatten Nested List Iterator （Medium）</font></a></li>
+<li><a href="#342-power-of-four-easy">342. Power of Four （Easy）</a></li>
+<li><a href="#font-colorred343-integer-break-medium-font"><font color='red'>343. Integer Break (Medium) </font></a></li>
+<li><a href="#344-reverse-string-easy">344. Reverse String (Easy)</a></li>
+<li><a href="#345-reverse-vowels-of-a-string-easy">345. Reverse Vowels of a String (Easy)</a></li>
+<li><a href="#346-moving-average-from-data-stream-easy">346. Moving Average from Data Stream (Easy)</a></li>
+<li><a href="#font-colorblue347-top-k-frequent-elements-mediumfont"><font color='blue'>347. Top K Frequent Elements （Medium）</font></a></li>
+<li><a href="#348-design-tic-tac-toe-medium">348. Design Tic-Tac-Toe （Medium）</a></li>
+<li><a href="#349-intersection-of-two-arrays-easy">349. Intersection of Two Arrays (Easy)</a></li>
+<li><a href="#350-intersection-of-two-arrays-ii-easy">350. Intersection of Two Arrays II （Easy）</a></li>
 </ul>
 
   </div>
@@ -498,14 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-12-05/"> Leetcode 2021-12-05 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-12-07/"> Leetcode 2021-12-07 </a>
   </h1>
   <div class="post-meta">
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-12-05 05:46:30">2021-12-05</span>
+      <span class="publish-time" data-t="2021-12-07 06:31:40">2021-12-07</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -523,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >16<span class="language" data-lan="minute"
+        >14<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -532,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >2832<span class="pc-show language" data-lan="words"
+        >2287<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -543,441 +543,441 @@
 
             <div class="post-body next-md-body" id="post_body">
               <!-- more -->
-<h1 id="font-colorred321-create-maximum-number-hard-font"><font color='red'>321. Create Maximum Number (Hard) </font></h1>
-<p>You are given two integer arrays nums1 and nums2 of lengths m and n respectively. nums1 and nums2 represent the digits of two numbers. You are also given an integer k.<br>
-Create the maximum number of length k &lt;= m + n from digits of the two numbers. The relative order of the digits from the same array must be preserved.<br>
-Return an array of the k digits representing the answer.<br>
-Example<br>
-Input: nums1 = [3,4,6,5], nums2 = [9,1,2,5,8,3], k = 5<br>
-Output: [9,8,6,5,3]</p>
-<pre><code class="language-python">class Solution:
-    def maxNumber(self, nums1: List[int], nums2: List[int], k: int) -&gt; List[int]:
-        # 思路。。。
-        # 最大需要每个位置数字最大，
-        # 但选择最大的数字有顺序约束
-        # 而且当可选最大数字相同时，需要程序tracking 2种不同结果。
-        
-
-        def prep(nums, k):
-            drop = len(nums) - k
-            out = []
-            for num in nums:
-                while drop and out and out[-1] &lt; num:
-                    out.pop()
-                    drop -= 1
-                out.append(num)
-            return out[:k]
-
-        def merge(a, b):
-            return [max(a, b).pop(0) for _ in a+b]
-
-        return max(merge(prep(nums1, i), prep(nums2, k-i))  for i in range(k+1)   if i &lt;= len(nums1) and k-i &lt;= len(nums2))
-
-</code></pre>
-<p>没思路。。。看到答案用了greedy方法。。。  prep function只是在一个数组中按照顺序找出K个最大的数。先算一下需要drop多少个数， 如果当前值大于栈顶元素，说明需要更新栈顶。  merge function这一步是按照a，b的lexcial顺序找到最大的元素，a+b总共有K个元素，所以pop k次。 最后return所有K+1个分割可能产生的结果取最大的。基本不可能现想出来解法。</p>
-<h1 id="322-coin-change-medium">322. Coin Change （Medium）</h1>
-<p>You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.<br>
-Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.<br>
-You may assume that you have an infinite number of each kind of coin.</p>
-<pre><code class="language-python">class Solution:
-    def coinChange(self, coins: List[int], amount: int) -&gt; int:
-        if amount==0: return 0 if coins else -1
-        dp = dict()
-        for c in coins:
-            dp[c]=1
-        for a in range(1,amount+1):
-            for c in coins:
-                if a+c&lt;=amount and a in dp:
-                    if a+c in dp:
-                        dp[a+c]=min(dp[a+c],dp[a]+1) 
-                    else:
-                        dp[a+c]=dp[a]+1
-        return dp[amount] if   amount in dp else -1
-
-#ANSWER
-class Solution:
-    def coinChange(self, coins: List[int], amount: int) -&gt; int:
-        dp = [float('inf')] * (amount + 1)
-        dp[0] = 0
-        
-        for coin in coins:
-            for x in range(coin, amount + 1):
-                dp[x] = min(dp[x], dp[x - coin] + 1)
-        return dp[amount] if dp[amount] != float('inf') else -1 
-</code></pre>
-<p>感觉是个DP问题，递归关系？  dp【i】是需要达到amount i需要的次数。 初始coins值的dp【coins_val】=1.   对于每一个有dp值的位置，都用coints_val 更新， dp【i+val】=min（dp【i+val】，dp【i】+1）直到amount。 由于不能开过大内存，所以dp变成dict。<br>
-答案写法更标准， dp【x】=min（dp【x】，dp【x-coin】+1） x大于等于coin小于等于amount。</p>
-<h1 id="323-number-of-connected-components-in-an-undirected-graph-medium">323. Number of Connected Components in an Undirected Graph （Medium）</h1>
-<p>You have a graph of n nodes. You are given an integer n and an array edges where edges[i] = [ai, bi] indicates that there is an edge between ai and bi in the graph.<br>
-Return the number of connected components in the graph.</p>
-<pre><code class="language-python">class Solution:
-    def countComponents(self, n: int, edges: List[List[int]]) -&gt; int:
-        #  BFS
-        neis = collections.defaultdict(list)
-        for edge in edges:
-            neis[edge[0]].append(edge[1])
-            neis[edge[1]].append(edge[0])
-        
-        
-        res=0
-        visited=set()
-        while len(visited)!=n:
-            res+=1
-            for i in range(n):
-                if i not in visited:
-                    visited.add(i)
-                    q=[i]
-                    break     
-            while q:
-                l=len(q)
-                for _ in range(l):
-                    cur=q.pop(0)
-                    for nei in neis[cur]:
-                        if nei not in visited:
-                            visited.add(nei)
-                            q.append(nei)
-        return res
-#UNIONFIND
-class Solution:
+<h1 id="font-colorred341-flatten-nested-list-iterator-mediumfont"><font color='red'>341. Flatten Nested List Iterator （Medium）</font></h1>
+<p>You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists. Implement an iterator to flatten it.</p>
+<pre><code class="language-python">
+class NestedIterator:
+    def __init__(self, nestedList: [NestedInteger]):
+        self.integers=[]
+        self.position = -1
+        def flaten_list(nestedList):
+            for nl in nestedList:
+                if nl.isInteger():
+                    self.integers.append(nl.getInteger())
+                else:
+                    flaten_list(nl.getList())
+        flaten_list(nestedList)
     
-    class UnionFind:
-        def __init__(self,n):
-            self.parent=[i for i in range(n)]
-            self.rank=[0]*n
-            self.n=n
-        def find(self,x):
-            if x!=self.parent[x]:
-                self.parent[x]=self.find(self.parent[x])
-            return self.parent[x]
-        
-        def union(self,x,y):
-            px=self.find(x)
-            py=self.find(y)
-            if px!=py:
-                self.n-=1
-                if self.rank[px]&lt;self.rank[py]:
-                    self.parent[px]=py
-                elif self.rank[px]&gt;self.rank[py]:
-                    self.parent[py]=px
-                else:
-                    self.parent[py]=px
-                    self.rank[px]+=1
-                    
-    def countComponents(self, n: int, edges: List[List[int]]) -&gt; int:
-        uf=self.UnionFind(n)
-        for edge in edges:
-            uf.union(*edge)
-        return uf.n
+    def next(self) -&gt; int:
+        self.position+=1
+        return self.integers[self.position]
+    
+    def hasNext(self) -&gt; bool:
+        return self.position+1&lt;len(self.integers)
 
-</code></pre>
-<p>注意unionfind中   if x!=self.parent[x]   爸爸=找爸爸（爸爸）  self.parent[x]=self.find(self.parent[x])， union只有rank相同时候才需要+rank。</p>
-<h1 id="font-colorred324-wiggle-sort-ii-mediumfont"><font color='red'>324. Wiggle Sort II （Medium）</font></h1>
-<p>Given an integer array nums, reorder it such that nums[0] &lt; nums[1] &gt; nums[2] &lt; nums[3]....<br>
-You may assume the input array always has a valid answer.</p>
-<pre><code class="language-python">     def wiggleSort(self, nums):
-        count = [0]*5001
-        
-        for n in nums:
-            count[n]+=1
-        
-        odd = 1
-        even = 0
-        for n in range(5000,-1,-1):
-            if odd &gt;= len(nums) and even &gt;= len(nums):
-                break
-                
-            if count[n] == 0:
-                continue
-            
-            while count[n] and (odd &lt; len(nums) or even &lt; len(nums)):
-                count[n]-=1
-                if odd &lt; len(nums):
-                    nums[odd] = n
-                    odd+=2
-                else:
-                    nums[even] = n
-                    even+=2
-        
- class Solution(object):
-    def wiggleSort(self, nums):
+
+class NestedIterator(object):
+
+    def __init__(self, nestedList):
         &quot;&quot;&quot;
-        :type nums: List[int]
-        :rtype: void Do not return anything, modify nums in-place instead.
+        Initialize your data structure here.
+        :type nestedList: List[NestedInteger]
         &quot;&quot;&quot;
-      
-        arr = sorted(nums)
-        for i in range(1, len(nums), 2): nums[i] = arr.pop() 
-        for i in range(0, len(nums), 2): nums[i] = arr.pop() 
+        self.stack = nestedList[::-1]
+        
+    def next(self):
+        &quot;&quot;&quot;
+        :rtype: int
+        &quot;&quot;&quot;
+        return self.stack.pop().getInteger()
+        
+    def hasNext(self):
+        &quot;&quot;&quot;
+        :rtype: bool
+        &quot;&quot;&quot;
+        while self.stack:
+            top = self.stack[-1]
+            if top.isInteger():
+                return True
+            self.stack = self.stack[:-1] + top.getList()[::-1]
+        return False
 
-class Solution:
-    def wiggleSort(self, A: List[int]) -&gt; None:        
-        N = len(A)                    
-        count = [0] * 5001        
-        self.curr_val = A[0]
+class NestedIterator:
+
+    def __init__(self, nestedList: [NestedInteger]):
+        # Get a generator object from the generator function, passing in
+        # nestedList as the parameter.
+        self._generator = self._int_generator(nestedList)
+        # All values are placed here before being returned.
+        self._peeked = None
+
+    # This is the generator function. It can be used to create generator
+    # objects.
+    def _int_generator(self, nested_list) -&gt; &quot;Generator[int]&quot;:
+        # This code is the same as Approach 1. It's a recursive DFS.
+        for nested in nested_list:
+            if nested.isInteger():
+                yield nested.getInteger()
+            else:
+                # We always use &quot;yield from&quot; on recursive generator calls.
+                yield from self._int_generator(nested.getList())
+        # Will automatically raise a StopIteration.
+    
+    def next(self) -&gt; int:
+        # Check there are integers left, and if so, then this will
+        # also put one into self._peeked.
+        if not self.hasNext(): return None
+        # Return the value of self._peeked, also clearing it.
+        next_integer, self._peeked = self._peeked, None
+        return next_integer
         
-        for v in A:
-            count[v] += 1
-            self.curr_val = max(self.curr_val, v)
-        
-        def next_val():
-            while count[self.curr_val] == 0: self.curr_val -= 1            
-            count[self.curr_val] -= 1
-            return self.curr_val
-                            
-        for i in range(1, N, 2): A[i] = next_val()     
-        for i in range(0, N, 2): A[i] = next_val() 
-</code></pre>
-<p>思路：从sorted 最大到最小，奇数位置放置，然后偶数位置放置数字。时间要降低到O（n）只能用count sort了。</p>
-<h1 id="font-colorred325-maximum-size-subarray-sum-equals-k-mediumfont"><font color='red'>325. Maximum Size Subarray Sum Equals k （Medium）</font></h1>
-<p>Given an integer array nums and an integer k, return the maximum length of a subarray that sums to k. If there isn't one, return 0 instead.</p>
-<pre><code class="language-python">class Solution:
-    def maxSubArrayLen(self, nums: List[int], k: int) -&gt; int:
-        
-        prefix_sum = 0 
-        res = 0
-        indices = dict()
-        
-        for i,n in enumerate(nums):
-            prefix_sum+=n
-            
-            if prefix_sum==k:
-                res=i+1
-            
-            if prefix_sum-k in indices:
-                res=max(res,i-indices[prefix_sum-k])
-            
-            if prefix_sum not in indices:
-                indices[prefix_sum]=i
-        
-        return res
+    def hasNext(self) -&gt; bool:
+        if self._peeked is not None: return True
+        try: # Get another integer out of the generator.
+            self._peeked = next(self._generator)
+            return True
+        except: # The generator is finished so raised StopIteration.
+            return False
 
 </code></pre>
-<p>没思路，直接看答案了。看错题目了，题目是subarray。。。是连续的字符串，并不是sublist。。。。<br>
-思路：用到了prefix sum和 two sum的解法。 因为是subarray，prefix【j】-prefix【i】==k 就是一个答案。  具体扫predix过程借鉴two sum，在predix-k在 dict中，更新res。 不在dict中，更新dict。 不能无条件更新dict，因为prefix在dict中与之间prefix重复，应该保留更早的index使长度更长。</p>
-<h1 id="326-power-of-three-easy">326. Power of Three （Easy）</h1>
-<p>Given an integer n, return true if it is a power of three. Otherwise, return false.<br>
-An integer n is a power of three, if there exists an integer x such that n == 3x.</p>
+<p>generator 解法没见过， 普通解法，要么初始化时候分解，要么用stack倒序，保证栈顶是integer。</p>
+<h1 id="342-power-of-four-easy">342. Power of Four （Easy）</h1>
+<p>Given an integer n, return true if it is a power of four. Otherwise, return false.<br>
+An integer n is a power of four, if there exists an integer x such that n == 4^x.</p>
 <pre><code class="language-python">class Solution:
-    def isPowerOfThree(self, n: int) -&gt; bool:
-        if n==0: return False
+    def isPowerOfFour(self, n: int) -&gt; bool:
+        if n==0: return False 
         while n:
             if n==1: return True
-            if n%3!=0:
+            if n%4!=0:
                 return False
-            n//=3
+            n//=4
         return True
 
-class Solution:
-    def isPowerOfThree(self, n: int) -&gt; bool:
-        if n&lt;1: return False
-        while n%3==0:
-            n//=3
-            
-        return n==1
+class Solution(object):
+    def isPowerOfFour(self, n):
+        if n == 0:
+            return False
+        while n % 4 == 0:
+            n /= 4
+        return n == 1
 </code></pre>
-<h1 id="font-colorred327-count-of-range-sum-hard-font"><font color='red'>327. Count of Range Sum (Hard) </font></h1>
-<p>Given an integer array nums and two integers lower and upper, return the number of range sums that lie in [lower, upper] inclusive.<br>
-Range sum S(i, j) is defined as the sum of the elements in nums between indices i and j inclusive, where i &lt;= j.</p>
+<h1 id="font-colorred343-integer-break-medium-font"><font color='red'>343. Integer Break (Medium) </font></h1>
+<p>Given an integer n, break it into the sum of k positive integers, where k &gt;= 2, and maximize the product of those integers.<br>
+Return the maximum product you can get.</p>
 <pre><code class="language-python">class Solution:
-    def countRangeSum(self, nums: List[int], lower: int, upper: int) -&gt; int:
-        presum = [0]*(len(nums)+1)
-        for i,n in enumerate(nums):
-            presum[i+1]=presum[i]+n
-        
-        res=0
-        for i in range(1,len(nums)+1):
-            for j in range(i):
-                if upper&gt;=presum[i]-presum[j]&gt;=lower:
-                    res+=1
-        return res
-#ANSWER 1 PrefixSum+MergeSort
+    def integerBreak(self, n: int) -&gt; int:
+        dp = [0]*(n+1)
+        dp[1]=1
+        for i in range(2,n+1):
+            for j in range(1,i):
+                dp[i]=max(dp[i],max(dp[j],j)*max(i-j,dp[i-j]))
+        return dp[n]
+  
 class Solution:
-    def countRangeSum(self, nums, lower, upper):
-        cumsum = [0]*(len(nums)+1)
-        for i,num in enumerate(nums):
-            cumsum[i+1]=cumsum[i]+num
-        def sort(lo, hi):
-            mid = (lo + hi) // 2
-            if mid == lo:
-                return 0
-            count = sort(lo, mid) + sort(mid, hi)
-            i = j = mid
-            for left in cumsum[lo:mid]:
-                while i &lt; hi and cumsum[i] - left &lt;  lower: i += 1
-                while j &lt; hi and cumsum[j] - left &lt;= upper: j += 1
-                count += j - i
-            cumsum[lo:hi] = sorted(cumsum[lo:hi])
-            return count
-        return sort(0, len(cumsum))
+    def integerBreak(self, n: int) -&gt; int:
+        if n==2: return 1
+        if n==3: return 2
+        product = 1
+        while n&gt;4:
+            product*=3;
+            n-=3
+        product*=n;
+        return product
 
-
-#ANSER Binary Indexed Tree + Binary Search
-class BinaryIndexedTree:
-    
-    def __init__(self, n):
-        self.n = n
-        self.tree = [0 for _ in range(n+1)]
-    
-    def update(self, idx, val):
-        while idx &lt;= self.n:
-            self.tree[idx] += val
-            idx += idx &amp; -idx
-    
-    def query(self, idx):
-        total = 0
-        while idx &gt; 0:
-            total += self.tree[idx]
-            idx -= idx &amp; -idx
-        return total
-
-    
+#
 class Solution:
-    def countRangeSum(self, nums: List[int], lower: int, upper: int) -&gt; int:
-        n, prefixes = len(nums), list(itertools.accumulate(nums))
-        
-        sortedPrefixes = sorted(set(prefixes))
-        ranks = { prefix: idx + 1 for idx, prefix in enumerate(sortedPrefixes) }
-        
-        ds = BinaryIndexedTree(len(sortedPrefixes))
-        for prefix in prefixes:
-            ds.update(ranks[prefix], 1)
-        
-        res = 0
-        processed = 0
-        for prefix in prefixes:
-            l = bisect.bisect_left(sortedPrefixes, lower + processed)
-            r = bisect.bisect_right(sortedPrefixes, upper + processed)  
-            res += ds.query(r) - ds.query(l)
-            ds.update(ranks[prefix], -1)
-            processed = prefix
-        
-        return res
+    def integerBreak(self, n: int) -&gt; int:
+        if n == 2: 
+            return 1 
+        elif n == 3:
+            return 2
+        elif n%3 == 0:
+            return 3**(n//3)
+        elif n%3 == 1:
+            return 4* 3**((n - 4) // 3)
+        else: 
+            #n%3==2
+            return 2 * (3** (n//3))
 </code></pre>
-<p>首次尝试O（n^2）time limit exccded。  看来得低于O（n^2）才可以。。。改进方法是增加mergesort。 思路：先算cumsum。 目标找出cumsum【right】-cumsum【left】在upper lower 之间的这样的pair个数。 定义helper function merge sort。 返回值是满足条件的个数，先递归找出只在lo<sub>mid和mid</sub>hi之间的个数。若left~right横跨mid， 对于每一个left in sumsum【lo：mid】 找出满足upper lower bond的 right。其中满足lower bound的index 是i， 满足upper bound 的index 是j 所以 count+=j-i。<br>
-又忘记了有segment tree 和binary indexed tree这两种数据结构。。。。</p>
-<h1 id="328-odd-even-linked-list-medium">328. Odd Even Linked List (Medium)</h1>
-<p>Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.<br>
-The first node is considered odd, and the second node is even, and so on.<br>
-Note that the relative order inside both the even and odd groups should remain as it was in the input.<br>
-You must solve the problem in O(1) extra space complexity and O(n) time complexity.</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def oddEvenList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
-        if not head: return head
-        odd_head=head
-        even_head=head.next
+<p>没思路,答案一，dp，dp【i】保存i可以被分解的最大乘集，假设i被分解成 a和b的和， 那么a或者b可以选中集训分解dp【a/b】或者不分解保留原始值a/b. 思路2： 用3 as many as possible. 比如 6, 3 乘 3大于2 乘 2 乘 2. 因此答案不会有超过3个的2. 尽力用3.   答案3： 有了思路2 ，和容易写出答案3.但dp这种方法应该想出来。。。</p>
+<h1 id="344-reverse-string-easy">344. Reverse String (Easy)</h1>
+<p>Write a function that reverses a string. The input string is given as an array of characters s.<br>
+You must do this by modifying the input array in-place with O(1) extra memory.</p>
+<pre><code class="language-python">class Solution:
+    def reverseString(self, s: List[str]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify s in-place instead.
+        &quot;&quot;&quot;
+        l=0
+        r=len(s)-1
+        while l&lt;r:
+            s[l],s[r]=s[r],s[l]
+            l+=1
+            r-=1
+</code></pre>
+<h1 id="345-reverse-vowels-of-a-string-easy">345. Reverse Vowels of a String (Easy)</h1>
+<p>Given a string s, reverse only all the vowels in the string and return it.<br>
+The vowels are 'a', 'e', 'i', 'o', and 'u', and they can appear in both cases.</p>
+<pre><code class="language-python">class Solution:
+    def reverseVowels(self, s: str) -&gt; str:
+        s=[e for e in s]
+        l=0
+        r=len(s)-1
+        vowels={'a','e','i','o','u'}
+        while l&lt;r:
+            while l&lt;r and s[l].lower() not in vowels:
+                l+=1
+            while l&lt;r and s[r].lower() not in vowels:
+                r-=1
+            
+            s[l],s[r]=s[r],s[l]
+            r-=1
+            l+=1
         
-        cur=head
-        odd_tail=None
-        c=0
-        while cur:
-            curnext=cur.next
-            c+=1
-            if c%2==1:
-                #cur is odd node
-                cur.next=cur.next.next if cur.next else None
-                odd_tail=cur
+        return ''.join(s)
+</code></pre>
+<h1 id="346-moving-average-from-data-stream-easy">346. Moving Average from Data Stream (Easy)</h1>
+<p>Given a stream of integers and a window size, calculate the moving average of all integers in the sliding window.<br>
+Implement the MovingAverage class:<br>
+MovingAverage(int size) Initializes the object with the size of the window size.<br>
+double next(int val) Returns the moving average of the last size values of the stream.</p>
+<pre><code class="language-python">class MovingAverage:
+
+    def __init__(self, size: int):
+        self.size=size
+        self.q=[]
+    def next(self, val: int) -&gt; float:
+        if len(self.q)&lt;self.size:
+            self.q.append(val)
+            return sum(self.q)/len(self.q)
+        else:
+            self.q.pop(0)
+            self.q.append(val)
+            return sum(self.q)/len(self.q)
+        
+from collections import deque
+class MovingAverage:
+    def __init__(self, size: int):
+        self.size = size
+        self.queue = deque()
+        # number of elements seen so far
+        self.window_sum = 0
+        self.count = 0
+
+    def next(self, val: int) -&gt; float:
+        self.count += 1
+        # calculate the new sum by shifting the window
+        self.queue.append(val)
+        tail = self.queue.popleft() if self.count &gt; self.size else 0
+
+        self.window_sum = self.window_sum - tail + val
+
+        return self.window_sum / min(self.size, self.count)
+
+class MovingAverage:
+    def __init__(self, size: int):
+        self.size = size
+        self.queue = [0] * self.size
+        self.head = self.window_sum = 0
+        # number of elements seen so far
+        self.count = 0
+
+    def next(self, val: int) -&gt; float:
+        self.count += 1
+        # calculate the new sum by shifting the window
+        tail = (self.head + 1) % self.size
+        self.window_sum = self.window_sum - self.queue[tail] + val
+        # move on to the next head
+        self.head = (self.head + 1) % self.size
+        self.queue[self.head] = val
+        return self.window_sum / min(self.size, self.count)
+
+</code></pre>
+<p>用queue 和 Circular Queue 都是好想法。</p>
+<h1 id="font-colorblue347-top-k-frequent-elements-mediumfont"><font color='blue'>347. Top K Frequent Elements （Medium）</font></h1>
+<p>Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.<br>
+Your algorithm's time complexity must be better than O(n log n), where n is the array's size</p>
+<pre><code class="language-python">class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -&gt; List[int]:
+        dic_c = collections.Counter(nums)
+        return sorted(dic_c.keys(),key=lambda x: dic_c[x],reverse=True)[:k]
+
+#ANSWER
+from collections import Counter
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -&gt; List[int]:
+        count = Counter(nums)
+        unique = list(count.keys())
+        
+        def partition(left, right, pivot_index) -&gt; int:
+            pivot_frequency = count[unique[pivot_index]]
+            # 1. move pivot to end
+            unique[pivot_index], unique[right] = unique[right], unique[pivot_index]  
+            
+            # 2. move all less frequent elements to the left
+            store_index = left
+            for i in range(left, right):
+                if count[unique[i]] &lt; pivot_frequency:
+                    unique[store_index], unique[i] = unique[i], unique[store_index]
+                    store_index += 1
+
+            # 3. move pivot to its final place
+            unique[right], unique[store_index] = unique[store_index], unique[right]  
+            
+            return store_index
+        
+        def quickselect(left, right, k_smallest) -&gt; None:
+            &quot;&quot;&quot;
+            Sort a list within left..right till kth less frequent element
+            takes its place. 
+            &quot;&quot;&quot;
+            # base case: the list contains only one element
+            if left == right: 
+                return
+            
+            # select a random pivot_index
+            pivot_index = random.randint(left, right)     
+                            
+            # find the pivot position in a sorted list   
+            pivot_index = partition(left, right, pivot_index)
+            
+            # if the pivot is in its final sorted position
+            if k_smallest == pivot_index:
+                 return 
+            # go left
+            elif k_smallest &lt; pivot_index:
+                quickselect(left, pivot_index - 1, k_smallest)
+            # go right
             else:
-                #cur is even node
-                cur.next=cur.next.next if cur.next else None
-            
-            cur=curnext
-        
-        if odd_tail:
-            odd_tail.next=even_head
-        
-        return odd_head
+                quickselect(pivot_index + 1, right, k_smallest)
+         
+        n = len(unique) 
+        # kth top frequent element is (n - k)th less frequent.
+        # Do a partial sort: from less frequent to the most frequent, till
+        # (n - k)th less frequent element takes its place (n - k) in a sorted array. 
+        # All element on the left are less frequent.
+        # All the elements on the right are more frequent.  
+        quickselect(0, n - 1, n - k)
+        # Return top k frequent elements
+        return unique[n - k:]
 
-
-#ANSWER 
+#ANSWER
+from collections import Counter
 class Solution:
-    def oddEvenList(self, head: ListNode) -&gt; ListNode:
+    def topKFrequent(self, nums: List[int], k: int) -&gt; List[int]:
         
-        if not head: return head
-        
-        odd  = head
-        even = head.next
-        evenhead = even
-        while even and even.next:
-            odd.next = even.next
-            odd = odd.next
-            even.next = odd.next
-            even = even.next
-        
-        odd.next = evenhead
-        return head
+        bucket = [[] for _ in range(len(nums) + 1)]
+        Count = Counter(nums).items()  
+        for num, freq in Count: 
+            bucket[freq].append(num) 
+        flat_list = [item for sublist in bucket for item in sublist]
+        return flat_list[::-1][:k]
 </code></pre>
-<h1 id="font-colorred329-longest-increasing-path-in-a-matrix-hard-font"><font color='red'>329. Longest Increasing Path in a Matrix (Hard) </font></h1>
-<p>Given an m x n integers matrix, return the length of the longest increasing path in matrix.<br>
-From each cell, you can either move in four directions: left, right, up, or down. You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).</p>
-<pre><code class="language-python">class Solution:
-    def longestIncreasingPath(self, matrix: List[List[int]]) -&gt; int:
-        dirs = [[0,1],[1,0],[0,-1],[-1,0]]
-        m=len(matrix)
-        n=len(matrix[0])
-        if not matrix: return 0
-        cache= [[0]*n for _ in range(m)]
-        res=0
-        
-        def dfs(i,j):
-            if cache[i][j]!=0: return cache[i][j]
-            for d in dirs:
-                x=i+d[0]
-                y=j+d[1]
-                if m&gt;x&gt;=0 and n&gt;y&gt;=0 and matrix[x][y]&gt;matrix[i][j]:
-                    cache[i][j]=max(cache[i][j],dfs(x,y))
-            
-            cache[i][j]+=1
-            return cache[i][j] 
-        
-        
-        for i in range(m):
-            for j in range(n):
-                res=max(res,dfs(i,j))
+<p>答案给出了quick selelct的解法O（n）。但bucket 方法更好。 也是O（n）。</p>
+<h1 id="348-design-tic-tac-toe-medium">348. Design Tic-Tac-Toe （Medium）</h1>
+<p>Assume the following rules are for the tic-tac-toe game on an n x n board between two players:<br>
+A move is guaranteed to be valid and is placed on an empty block.<br>
+Once a winning condition is reached, no more moves are allowed.<br>
+A player who succeeds in placing n of their marks in a horizontal, vertical, or diagonal row wins the game.<br>
+Implement the TicTacToe class:<br>
+TicTacToe(int n) Initializes the object the size of the board n.<br>
+int move(int row, int col, int player) Indicates that the player with id player plays at the cell (row, col) of the board. The move is guaranteed to be a valid move.</p>
+<pre><code class="language-python">class TicTacToe:
+
+    def __init__(self, n: int):
+        self.n=n
+        self.rows_p1 = [0]*n
+        self.rows_p2 = [0]*n
+        self.cols_p1 = [0]*n
+        self.cols_p2 = [0]*n
+        self.i_plus_j_n_1_p1=0
+        self.i_plus_j_n_1_p2=0
+        self.i_equal_j_p1=0
+        self.i_equal_j_p2=0
                 
-        return res
-</code></pre>
-<p>DFS+mem  太晚了直接看答案了。。。因为是strictly increasing path 所以是DAG，所以dfs（i，j） path length 是可以用mem记住的。 但通常的DFS是不能用mem的。</p>
-<h1 id="font-colorred330-patching-array-hardfont"><font color='red'>330. Patching Array （Hard）</font></h1>
-<p>Given a sorted integer array nums and an integer n, add/patch elements to the array such that any number in the range [1, n] inclusive can be formed by the sum of some elements in the array.<br>
-Return the minimum number of patches required.</p>
-<pre><code class="language-python">class Solution:
-    def minPatches(self, nums: List[int], n: int) -&gt; int:
+    def move(self, row: int, col: int, player: int) -&gt; int:
+        if player==1:
+            self.rows_p1[row]+=1
+            if self.rows_p1[row]==self.n: return player
+            self.cols_p1[col]+=1
+            if self.cols_p1[col]==self.n: return player
+            if row+col==self.n-1:
+                self.i_plus_j_n_1_p1+=1
+                if self.i_plus_j_n_1_p1==self.n: return player
+            if row==col:
+                self.i_equal_j_p1+=1
+                if self.i_equal_j_p1==self.n: return player
+        else:
+            self.rows_p2[row]+=1
+            if self.rows_p2[row]==self.n: return player
+            self.cols_p2[col]+=1
+            if self.cols_p2[col]==self.n: return player
+            if row+col==self.n-1:
+                self.i_plus_j_n_1_p2+=1
+                if self.i_plus_j_n_1_p2==self.n: return player
+            if row==col:
+                self.i_equal_j_p2+=1
+                if self.i_equal_j_p2==self.n: return player
         
-        '''Initialize the range [1, miss) = [1, 1) = empty
-        While n is not covered yet
-            if the current element nums[i] is less than or equal to miss
-                extends the range to [1, miss + nums[i])
-                increase i by 1
-            otherwise
-                patch the array with miss, extends the range to [1, miss + miss)
-                increase the number of patches
-        Return the number of patches
-        '''
-        
-        patches=0
-        i=0
-        miss=1
-        while miss&lt;=n:
-            if i&lt;len(nums) and nums[i]&lt;=miss:
-                #miss is covered
-                miss+=nums[i]
-                i+=1
-            else:
-                #patch miss to aray
-                miss+=miss
-                patches+=1
-        return patches
+        return 0
+
 
 </code></pre>
-<p>太晚没思路直接看答案， 答案思路：假设miss 是最小的missing number， 但我们知道【1，miss） 已经covered。 要cover miss，需要添加小于等于miss的数字。<br>
-假设我们添加的数字是x，那么区间【1，miss） 【x，x+miss）都covered。由于x小于等于miss。 所以两个区间可以合并为【1，x+miss）我们想选一个range cover最大的x，显然当x=miss时候区间最大。所以算法是：<br>
-初始化区间【1，miss）=【1，1）<br>
-当n还没covered，如果 nums【i】小于等于miss，增加区间为【1，miss+nums【i】），i++ 否则， 数组里添加miss， 增加区间为【1，miss+miss), res+=1</p>
+<h1 id="349-intersection-of-two-arrays-easy">349. Intersection of Two Arrays (Easy)</h1>
+<p>Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must be unique and you may return the result in any order.</p>
+<pre><code class="language-python">class Solution:
+    def intersection(self, nums1: List[int], nums2: List[int]) -&gt; List[int]:
+        return list(set(nums1)&amp;set(nums2))
+</code></pre>
+<p>folowup, solve in O(n) time O(1) space given nums1,nums2 are sorted.</p>
+<pre><code class="language-python">def intersection(self, nums1: List[int], nums2: List[int]) -&gt; List[int]:
+    # if the lists are already sorted and you're told to solve in O(n) time and O(1) space:
+    nums1.sort() # assume sorted
+    nums2.sort() # assume sorted
+
+    # iterate both nums backwards till at least 1 is empty
+    # if num2[j] &gt; num1[i], pop num2
+    # if num2[j] &lt; num1[i], pop num1
+    # if equal and num not last appended to result, append to result and pop both nums
+    
+    result = []
+            
+    while nums1 and nums2:
+        if nums2[-1] &gt; nums1[-1]:
+            nums2.pop()
+        elif nums2[-1] &lt; nums1[-1]:
+            nums1.pop()
+        else:
+            # to avoid duplicates
+            if not result or (result and nums1[-1] != result[-1]):
+                result.append(nums1[-1])
+            nums1.pop()
+            nums2.pop()
+
+    return result
+</code></pre>
+<h1 id="350-intersection-of-two-arrays-ii-easy">350. Intersection of Two Arrays II （Easy）</h1>
+<p>Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must appear as many times as it shows in both arrays and you may return the result in any order.</p>
+<pre><code class="language-python">class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -&gt; List[int]:
+        c1=collections.Counter(nums1)
+        c2=collections.Counter(nums2)
+        res=[]
+        for k in c1:
+            if k in c2:
+                res.extend([k]*min(c1[k],c2[k]))
+        return res
+
+#Bad but save space answer
+class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -&gt; List[int]:
+        nums1.sort()
+        nums2.sort()
+        result = []
+    
+        while nums1 and nums2:
+            if nums2[-1] &gt; nums1[-1]:
+                nums2.pop()
+            elif nums2[-1] &lt; nums1[-1]:
+                nums1.pop()
+            else:
+                result.append(nums1[-1])
+                nums1.pop()
+                nums2.pop()
+
+        return result
+</code></pre>
 
             </div>
             
@@ -990,7 +990,7 @@ Return the minimum number of patches required.</p>
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-12-05/" title="Leetcode 2021-12-05">https://headhuanglan.github.io/post/leetcode-2021-12-05/</a>
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-12-07/" title="Leetcode 2021-12-07">https://headhuanglan.github.io/post/leetcode-2021-12-07/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -1005,15 +1005,11 @@ Return the minimum number of patches required.</p>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-12-06" href="https://headhuanglan.github.io/post/leetcode-2021-12-06/">Leetcode 2021-12-06</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-12-06" href="https://headhuanglan.github.io/post/leetcode-2021-12-06/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2021-12-04" href="https://headhuanglan.github.io/post/leetcode-2021-12-04/">Leetcode 2021-12-04</a>
-        <a class="nav-mobile-next" title="Leetcode 2021-12-04" href="https://headhuanglan.github.io/post/leetcode-2021-12-04/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2021-12-06" href="https://headhuanglan.github.io/post/leetcode-2021-12-06/">Leetcode 2021-12-06</a>
+        <a class="nav-mobile-next" title="Leetcode 2021-12-06" href="https://headhuanglan.github.io/post/leetcode-2021-12-06/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>

@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-12-03 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1642896995939">
+<link rel="shortcut icon" href="/favicon.ico?v=1643494127338">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">40</span>
+        <span class="site-item-stat-count">41</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1861,6 +1861,447 @@ After you sell your stock, you cannot buy stock on the next day (i.e., cooldown 
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-07/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;font-colorred341-flatten-nested-list-iterator-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;341. Flatten Nested List Iterator （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists. Implement an iterator to flatten it.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+class NestedIterator:
+    def __init__(self, nestedList: [NestedInteger]):
+        self.integers=[]
+        self.position = -1
+        def flaten_list(nestedList):
+            for nl in nestedList:
+                if nl.isInteger():
+                    self.integers.append(nl.getInteger())
+                else:
+                    flaten_list(nl.getList())
+        flaten_list(nestedList)
+    
+    def next(self) -&amp;gt; int:
+        self.position+=1
+        return self.integers[self.position]
+    
+    def hasNext(self) -&amp;gt; bool:
+        return self.position+1&amp;lt;len(self.integers)
+
+
+class NestedIterator(object):
+
+    def __init__(self, nestedList):
+        &amp;quot;&amp;quot;&amp;quot;
+        Initialize your data structure here.
+        :type nestedList: List[NestedInteger]
+        &amp;quot;&amp;quot;&amp;quot;
+        self.stack = nestedList[::-1]
+        
+    def next(self):
+        &amp;quot;&amp;quot;&amp;quot;
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        return self.stack.pop().getInteger()
+        
+    def hasNext(self):
+        &amp;quot;&amp;quot;&amp;quot;
+        :rtype: bool
+        &amp;quot;&amp;quot;&amp;quot;
+        while self.stack:
+            top = self.stack[-1]
+            if top.isInteger():
+                return True
+            self.stack = self.stack[:-1] + top.getList()[::-1]
+        return False
+
+class NestedIterator:
+
+    def __init__(self, nestedList: [NestedInteger]):
+        # Get a generator object from the generator function, passing in
+        # nestedList as the parameter.
+        self._generator = self._int_generator(nestedList)
+        # All values are placed here before being returned.
+        self._peeked = None
+
+    # This is the generator function. It can be used to create generator
+    # objects.
+    def _int_generator(self, nested_list) -&amp;gt; &amp;quot;Generator[int]&amp;quot;:
+        # This code is the same as Approach 1. It&#39;s a recursive DFS.
+        for nested in nested_list:
+            if nested.isInteger():
+                yield nested.getInteger()
+            else:
+                # We always use &amp;quot;yield from&amp;quot; on recursive generator calls.
+                yield from self._int_generator(nested.getList())
+        # Will automatically raise a StopIteration.
+    
+    def next(self) -&amp;gt; int:
+        # Check there are integers left, and if so, then this will
+        # also put one into self._peeked.
+        if not self.hasNext(): return None
+        # Return the value of self._peeked, also clearing it.
+        next_integer, self._peeked = self._peeked, None
+        return next_integer
+        
+    def hasNext(self) -&amp;gt; bool:
+        if self._peeked is not None: return True
+        try: # Get another integer out of the generator.
+            self._peeked = next(self._generator)
+            return True
+        except: # The generator is finished so raised StopIteration.
+            return False
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;generator 解法没见过， 普通解法，要么初始化时候分解，要么用stack倒序，保证栈顶是integer。&lt;/p&gt;
+&lt;h1 id=&#34;342-power-of-four-easy&#34;&gt;342. Power of Four （Easy）&lt;/h1&gt;
+&lt;p&gt;Given an integer n, return true if it is a power of four. Otherwise, return false.&lt;br&gt;
+An integer n is a power of four, if there exists an integer x such that n == 4^x.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def isPowerOfFour(self, n: int) -&amp;gt; bool:
+        if n==0: return False 
+        while n:
+            if n==1: return True
+            if n%4!=0:
+                return False
+            n//=4
+        return True
+
+class Solution(object):
+    def isPowerOfFour(self, n):
+        if n == 0:
+            return False
+        while n % 4 == 0:
+            n /= 4
+        return n == 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred343-integer-break-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;343. Integer Break (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer n, break it into the sum of k positive integers, where k &amp;gt;= 2, and maximize the product of those integers.&lt;br&gt;
+Return the maximum product you can get.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def integerBreak(self, n: int) -&amp;gt; int:
+        dp = [0]*(n+1)
+        dp[1]=1
+        for i in range(2,n+1):
+            for j in range(1,i):
+                dp[i]=max(dp[i],max(dp[j],j)*max(i-j,dp[i-j]))
+        return dp[n]
+  
+class Solution:
+    def integerBreak(self, n: int) -&amp;gt; int:
+        if n==2: return 1
+        if n==3: return 2
+        product = 1
+        while n&amp;gt;4:
+            product*=3;
+            n-=3
+        product*=n;
+        return product
+
+#
+class Solution:
+    def integerBreak(self, n: int) -&amp;gt; int:
+        if n == 2: 
+            return 1 
+        elif n == 3:
+            return 2
+        elif n%3 == 0:
+            return 3**(n//3)
+        elif n%3 == 1:
+            return 4* 3**((n - 4) // 3)
+        else: 
+            #n%3==2
+            return 2 * (3** (n//3))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;没思路,答案一，dp，dp【i】保存i可以被分解的最大乘集，假设i被分解成 a和b的和， 那么a或者b可以选中集训分解dp【a/b】或者不分解保留原始值a/b. 思路2： 用3 as many as possible. 比如 6, 3 乘 3大于2 乘 2 乘 2. 因此答案不会有超过3个的2. 尽力用3.   答案3： 有了思路2 ，和容易写出答案3.但dp这种方法应该想出来。。。&lt;/p&gt;
+&lt;h1 id=&#34;344-reverse-string-easy&#34;&gt;344. Reverse String (Easy)&lt;/h1&gt;
+&lt;p&gt;Write a function that reverses a string. The input string is given as an array of characters s.&lt;br&gt;
+You must do this by modifying the input array in-place with O(1) extra memory.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def reverseString(self, s: List[str]) -&amp;gt; None:
+        &amp;quot;&amp;quot;&amp;quot;
+        Do not return anything, modify s in-place instead.
+        &amp;quot;&amp;quot;&amp;quot;
+        l=0
+        r=len(s)-1
+        while l&amp;lt;r:
+            s[l],s[r]=s[r],s[l]
+            l+=1
+            r-=1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;345-reverse-vowels-of-a-string-easy&#34;&gt;345. Reverse Vowels of a String (Easy)&lt;/h1&gt;
+&lt;p&gt;Given a string s, reverse only all the vowels in the string and return it.&lt;br&gt;
+The vowels are &#39;a&#39;, &#39;e&#39;, &#39;i&#39;, &#39;o&#39;, and &#39;u&#39;, and they can appear in both cases.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def reverseVowels(self, s: str) -&amp;gt; str:
+        s=[e for e in s]
+        l=0
+        r=len(s)-1
+        vowels={&#39;a&#39;,&#39;e&#39;,&#39;i&#39;,&#39;o&#39;,&#39;u&#39;}
+        while l&amp;lt;r:
+            while l&amp;lt;r and s[l].lower() not in vowels:
+                l+=1
+            while l&amp;lt;r and s[r].lower() not in vowels:
+                r-=1
+            
+            s[l],s[r]=s[r],s[l]
+            r-=1
+            l+=1
+        
+        return &#39;&#39;.join(s)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;346-moving-average-from-data-stream-easy&#34;&gt;346. Moving Average from Data Stream (Easy)&lt;/h1&gt;
+&lt;p&gt;Given a stream of integers and a window size, calculate the moving average of all integers in the sliding window.&lt;br&gt;
+Implement the MovingAverage class:&lt;br&gt;
+MovingAverage(int size) Initializes the object with the size of the window size.&lt;br&gt;
+double next(int val) Returns the moving average of the last size values of the stream.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class MovingAverage:
+
+    def __init__(self, size: int):
+        self.size=size
+        self.q=[]
+    def next(self, val: int) -&amp;gt; float:
+        if len(self.q)&amp;lt;self.size:
+            self.q.append(val)
+            return sum(self.q)/len(self.q)
+        else:
+            self.q.pop(0)
+            self.q.append(val)
+            return sum(self.q)/len(self.q)
+        
+from collections import deque
+class MovingAverage:
+    def __init__(self, size: int):
+        self.size = size
+        self.queue = deque()
+        # number of elements seen so far
+        self.window_sum = 0
+        self.count = 0
+
+    def next(self, val: int) -&amp;gt; float:
+        self.count += 1
+        # calculate the new sum by shifting the window
+        self.queue.append(val)
+        tail = self.queue.popleft() if self.count &amp;gt; self.size else 0
+
+        self.window_sum = self.window_sum - tail + val
+
+        return self.window_sum / min(self.size, self.count)
+
+class MovingAverage:
+    def __init__(self, size: int):
+        self.size = size
+        self.queue = [0] * self.size
+        self.head = self.window_sum = 0
+        # number of elements seen so far
+        self.count = 0
+
+    def next(self, val: int) -&amp;gt; float:
+        self.count += 1
+        # calculate the new sum by shifting the window
+        tail = (self.head + 1) % self.size
+        self.window_sum = self.window_sum - self.queue[tail] + val
+        # move on to the next head
+        self.head = (self.head + 1) % self.size
+        self.queue[self.head] = val
+        return self.window_sum / min(self.size, self.count)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用queue 和 Circular Queue 都是好想法。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue347-top-k-frequent-elements-mediumfont&#34;&gt;&lt;font color=&#39;blue&#39;&gt;347. Top K Frequent Elements （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.&lt;br&gt;
+Your algorithm&#39;s time complexity must be better than O(n log n), where n is the array&#39;s size&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -&amp;gt; List[int]:
+        dic_c = collections.Counter(nums)
+        return sorted(dic_c.keys(),key=lambda x: dic_c[x],reverse=True)[:k]
+
+#ANSWER
+from collections import Counter
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -&amp;gt; List[int]:
+        count = Counter(nums)
+        unique = list(count.keys())
+        
+        def partition(left, right, pivot_index) -&amp;gt; int:
+            pivot_frequency = count[unique[pivot_index]]
+            # 1. move pivot to end
+            unique[pivot_index], unique[right] = unique[right], unique[pivot_index]  
+            
+            # 2. move all less frequent elements to the left
+            store_index = left
+            for i in range(left, right):
+                if count[unique[i]] &amp;lt; pivot_frequency:
+                    unique[store_index], unique[i] = unique[i], unique[store_index]
+                    store_index += 1
+
+            # 3. move pivot to its final place
+            unique[right], unique[store_index] = unique[store_index], unique[right]  
+            
+            return store_index
+        
+        def quickselect(left, right, k_smallest) -&amp;gt; None:
+            &amp;quot;&amp;quot;&amp;quot;
+            Sort a list within left..right till kth less frequent element
+            takes its place. 
+            &amp;quot;&amp;quot;&amp;quot;
+            # base case: the list contains only one element
+            if left == right: 
+                return
+            
+            # select a random pivot_index
+            pivot_index = random.randint(left, right)     
+                            
+            # find the pivot position in a sorted list   
+            pivot_index = partition(left, right, pivot_index)
+            
+            # if the pivot is in its final sorted position
+            if k_smallest == pivot_index:
+                 return 
+            # go left
+            elif k_smallest &amp;lt; pivot_index:
+                quickselect(left, pivot_index - 1, k_smallest)
+            # go right
+            else:
+                quickselect(pivot_index + 1, right, k_smallest)
+         
+        n = len(unique) 
+        # kth top frequent element is (n - k)th less frequent.
+        # Do a partial sort: from less frequent to the most frequent, till
+        # (n - k)th less frequent element takes its place (n - k) in a sorted array. 
+        # All element on the left are less frequent.
+        # All the elements on the right are more frequent.  
+        quickselect(0, n - 1, n - k)
+        # Return top k frequent elements
+        return unique[n - k:]
+
+#ANSWER
+from collections import Counter
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -&amp;gt; List[int]:
+        
+        bucket = [[] for _ in range(len(nums) + 1)]
+        Count = Counter(nums).items()  
+        for num, freq in Count: 
+            bucket[freq].append(num) 
+        flat_list = [item for sublist in bucket for item in sublist]
+        return flat_list[::-1][:k]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案给出了quick selelct的解法O（n）。但bucket 方法更好。 也是O（n）。&lt;/p&gt;
+&lt;h1 id=&#34;348-design-tic-tac-toe-medium&#34;&gt;348. Design Tic-Tac-Toe （Medium）&lt;/h1&gt;
+&lt;p&gt;Assume the following rules are for the tic-tac-toe game on an n x n board between two players:&lt;br&gt;
+A move is guaranteed to be valid and is placed on an empty block.&lt;br&gt;
+Once a winning condition is reached, no more moves are allowed.&lt;br&gt;
+A player who succeeds in placing n of their marks in a horizontal, vertical, or diagonal row wins the game.&lt;br&gt;
+Implement the TicTacToe class:&lt;br&gt;
+TicTacToe(int n) Initializes the object the size of the board n.&lt;br&gt;
+int move(int row, int col, int player) Indicates that the player with id player plays at the cell (row, col) of the board. The move is guaranteed to be a valid move.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class TicTacToe:
+
+    def __init__(self, n: int):
+        self.n=n
+        self.rows_p1 = [0]*n
+        self.rows_p2 = [0]*n
+        self.cols_p1 = [0]*n
+        self.cols_p2 = [0]*n
+        self.i_plus_j_n_1_p1=0
+        self.i_plus_j_n_1_p2=0
+        self.i_equal_j_p1=0
+        self.i_equal_j_p2=0
+                
+    def move(self, row: int, col: int, player: int) -&amp;gt; int:
+        if player==1:
+            self.rows_p1[row]+=1
+            if self.rows_p1[row]==self.n: return player
+            self.cols_p1[col]+=1
+            if self.cols_p1[col]==self.n: return player
+            if row+col==self.n-1:
+                self.i_plus_j_n_1_p1+=1
+                if self.i_plus_j_n_1_p1==self.n: return player
+            if row==col:
+                self.i_equal_j_p1+=1
+                if self.i_equal_j_p1==self.n: return player
+        else:
+            self.rows_p2[row]+=1
+            if self.rows_p2[row]==self.n: return player
+            self.cols_p2[col]+=1
+            if self.cols_p2[col]==self.n: return player
+            if row+col==self.n-1:
+                self.i_plus_j_n_1_p2+=1
+                if self.i_plus_j_n_1_p2==self.n: return player
+            if row==col:
+                self.i_equal_j_p2+=1
+                if self.i_equal_j_p2==self.n: return player
+        
+        return 0
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;349-intersection-of-two-arrays-easy&#34;&gt;349. Intersection of Two Arrays (Easy)&lt;/h1&gt;
+&lt;p&gt;Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must be unique and you may return the result in any order.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def intersection(self, nums1: List[int], nums2: List[int]) -&amp;gt; List[int]:
+        return list(set(nums1)&amp;amp;set(nums2))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;folowup, solve in O(n) time O(1) space given nums1,nums2 are sorted.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def intersection(self, nums1: List[int], nums2: List[int]) -&amp;gt; List[int]:
+    # if the lists are already sorted and you&#39;re told to solve in O(n) time and O(1) space:
+    nums1.sort() # assume sorted
+    nums2.sort() # assume sorted
+
+    # iterate both nums backwards till at least 1 is empty
+    # if num2[j] &amp;gt; num1[i], pop num2
+    # if num2[j] &amp;lt; num1[i], pop num1
+    # if equal and num not last appended to result, append to result and pop both nums
+    
+    result = []
+            
+    while nums1 and nums2:
+        if nums2[-1] &amp;gt; nums1[-1]:
+            nums2.pop()
+        elif nums2[-1] &amp;lt; nums1[-1]:
+            nums1.pop()
+        else:
+            # to avoid duplicates
+            if not result or (result and nums1[-1] != result[-1]):
+                result.append(nums1[-1])
+            nums1.pop()
+            nums2.pop()
+
+    return result
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;350-intersection-of-two-arrays-ii-easy&#34;&gt;350. Intersection of Two Arrays II （Easy）&lt;/h1&gt;
+&lt;p&gt;Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must appear as many times as it shows in both arrays and you may return the result in any order.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -&amp;gt; List[int]:
+        c1=collections.Counter(nums1)
+        c2=collections.Counter(nums2)
+        res=[]
+        for k in c1:
+            if k in c2:
+                res.extend([k]*min(c1[k],c2[k]))
+        return res
+
+#Bad but save space answer
+class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -&amp;gt; List[int]:
+        nums1.sort()
+        nums2.sort()
+        result = []
+    
+        while nums1 and nums2:
+            if nums2[-1] &amp;gt; nums1[-1]:
+                nums2.pop()
+            elif nums2[-1] &amp;lt; nums1[-1]:
+                nums1.pop()
+            else:
+                result.append(nums1[-1])
+                nums1.pop()
+                nums2.pop()
+
+        return result
+&lt;/code&gt;&lt;/pre&gt;
+">Leetcode 2021-12-07</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-06/"" data-c="
