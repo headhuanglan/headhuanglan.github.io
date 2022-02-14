@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-01-29T22:08:54.951Z</updated>
+    <updated>2022-02-14T21:25:49.115Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,6 +10,424 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Lan&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2021-12-08]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-12-08/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-08/">
+        </link>
+        <updated>2021-12-07T16:32:01.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="font-colorred351-android-unlock-patterns-medium-font"><font color='red'>351. Android Unlock Patterns (Medium) </font></h1>
+<p>Android devices have a special lock screen with a 3 x 3 grid of dots. Users can set an &quot;unlock pattern&quot; by connecting the dots in a specific sequence, forming a series of joined line segments where each segment's endpoints are two consecutive dots in the sequence. A sequence of k dots is a valid unlock pattern if both of the following are true:<br>
+All the dots in the sequence are distinct.<br>
+If the line segment connecting two consecutive dots in the sequence passes through the center of any other dot, the other dot must have previously appeared in the sequence. No jumps through the center non-selected dots are allowed.<br>
+For example, connecting dots 2 and 9 without dots 5 or 6 appearing beforehand is valid because the line from dot 2 to dot 9 does not pass through the center of either dot 5 or 6.<br>
+However, connecting dots 1 and 3 without dot 2 appearing beforehand is invalid because the line from dot 1 to dot 3 passes through the center of dot 2.<br>
+Given two integers m and n, return the number of unique and valid unlock patterns of the Android grid lock screen that consist of at least m keys and at most n keys.</p>
+<p>Two unlock patterns are considered unique if there is a dot in one sequence that is not in the other, or the order of the dots is different.</p>
+<pre><code class="language-python">class Solution:
+    def numberOfPatterns(self, m: int, n: int) -&gt; int:
+        skip = [[0]*10 for _ in range(10)]
+        skip[1][3] = skip[3][1] = 2 
+        skip[1][7] = skip[7][1] = 4 
+        skip[3][9] = skip[9][3] = 6 
+        skip[7][9] = skip[9][7] = 8 
+        skip[1][9] = skip[9][1] = skip[2][8] = skip[8][2] = skip[3][7] = skip[7][3] = skip[4][6] = skip[6][4] = 5 
+        visited = [False]*10
+        res=0
+        def DFS(cur,remain):
+            if remain&lt;0: return 0
+            if remain==0: return 1
+            visited[cur]=True
+            res=0
+            for i in range(1,10):
+                if not visited[i] and (skip[cur][i]==0 or visited[skip[cur][i]]):
+                    res+=DFS(i,remain-1)
+            visited[cur]=False
+            return res
+        
+        for i in range(m,n+1):
+            res+=DFS(1,i-1)*4 # 1,3,7, 9 sym 
+            res+=DFS(2,i-1)*4 # 2 4 6 8  sym
+            res+=DFS(5,i-1) 
+            
+        return res
+        
+</code></pre>
+<p>问题是奇怪的问题，解决方法大概是DP，但递归关系不好找。思路错误， 答案用DFS+BT  简化思路是 1,3,7,9 are symmetric, 2,4,6,8 are also symmetric. Hence we only calculate one among each group and multiply by 4.</p>
+<h1 id="font-colorred352-data-stream-as-disjoint-intervals-hardfont"><font color='red'>352. Data Stream as Disjoint Intervals （Hard）</font></h1>
+<p>Given a data stream input of non-negative integers a1, a2, ..., an, summarize the numbers seen so far as a list of disjoint intervals.<br>
+Implement the SummaryRanges class:<br>
+SummaryRanges() Initializes the object with an empty stream.<br>
+void addNum(int val) Adds the integer val to the stream.<br>
+int[][] getIntervals() Returns a summary of the integers in the stream currently as a list of disjoint intervals [starti, endi].</p>
+<pre><code class="language-python">class SummaryRanges:
+
+    def __init__(self):
+        &quot;&quot;&quot;
+        Initialize your data structure here.
+        &quot;&quot;&quot;
+        self.interval = [] # record the interval
+        self.s = set() # record the number we have added before
+        return 
+
+    def addNum(self, val: int) -&gt; None:
+        if val in self.s:
+            return 
+        self.s.add(val)
+        index = bisect_left(self.interval,[val,val])
+
+        # check whether we could extend the interval on its left and right 
+        if index &lt; len(self.interval) and self.interval[index][0]-1 == val:
+            self.interval[index][0] = self.interval[index][0] - 1
+        elif index &gt; 0 and self.interval[index-1][1]+1 == val:
+            self.interval[index-1][1] = self.interval[index-1][1] + 1
+        else:
+            self.interval.insert(index, [val,val])
+
+    def getIntervals(self) -&gt; List[List[int]]:
+        # update the intervals in getIntervals function 
+        connect = []
+        for x in self.interval:
+            if connect and connect[-1][1] == x[0]-1:
+                connect[-1][1] = x[1]
+            else:
+                connect.append(x)
+        self.interval = connect
+        return self.interval 
+
+</code></pre>
+<p>思路： binary search for interval， interval update when getIntervals。</p>
+<h1 id="353-design-snake-game-medium">353. Design Snake Game （Medium）</h1>
+<pre><code class="language-python">class SnakeGame:
+
+    def __init__(self, width: int, height: int, food: List[List[int]]):
+        self.food=food
+        self.w=width
+        self.h=height
+        self.score=0
+        self.body = [[0,0]]
+        self.pos=[0,0]
+
+    def move(self, direction: str) -&gt; int:
+        #outofbound check
+        if direction=='R':
+            self.pos[1]+=1
+        elif direction=='L':
+            self.pos[1]-=1
+        elif direction=='U':
+            self.pos[0]-=1
+        elif direction=='D':
+            self.pos[0]+=1
+        
+        if not (self.h&gt;self.pos[0]&gt;=0): return -1
+        if not (self.w&gt;self.pos[1]&gt;=0): return -1
+        
+        #hadle food
+       
+        if not (self.food and self.pos==self.food[0]):
+            #no food
+            self.body.pop(0)
+            if self.pos in self.body: return -1
+            self.body.append(self.pos[:])
+        else:
+            #food
+            self.food.pop(0)
+            self.body.append(self.pos[:])
+            self.score+=1
+        return self.score
+            
+# Your SnakeGame object will be instantiated and called as such:
+# obj = SnakeGame(width, height, food)
+# param_1 = obj.move(direction)
+
+</code></pre>
+<h1 id="font-colorred354-russian-doll-envelopes-hard-font"><font color='red'>354. Russian Doll Envelopes (Hard) </font></h1>
+<p>You are given a 2D array of integers envelopes where envelopes[i] = [wi, hi] represents the width and the height of an envelope.</p>
+<p>One envelope can fit into another if and only if both the width and height of one envelope are greater than the other envelope's width and height.</p>
+<p>Return the maximum number of envelopes you can Russian doll (i.e., put one inside the other).</p>
+<pre><code class="language-python">from bisect import bisect_left
+class Solution:
+    def maxEnvelopes(self, envelopes: List[List[int]]) -&gt; int:
+        arr = envelopes
+        arr.sort(key=lambda x: (x[0], -x[1]))
+
+        def lis(nums):
+            dp = []
+            for i in range(len(nums)):
+                idx = bisect_left(dp, nums[i])
+                if idx == len(dp):
+                    dp.append(nums[i])
+                else:
+                    dp[idx] = nums[i]
+            return len(dp)
+        # extract the second dimension and run the LIS
+        return lis([i[1] for i in arr])
+
+</code></pre>
+<p>尝试用greedy解决但失败了，感觉是个DP问题。。。思路看答案了。  2D longest increasing subsequence problem (LIS).  KEY： ''we also sort decreasing on the second dimension, so two envelopes that are equal in the first dimension can never be in the same increasing subsequence'' 关键是NlogN的 LIS 没用过。。。，需要记住写法。dp[i] 存储的是长度是i+1的LIS末尾元素。</p>
+<h1 id="355-design-twitter-medium">355. Design Twitter （Medium）</h1>
+<p>Design a simplified version of Twitter where users can post tweets, follow/unfollow another user, and is able to see the 10 most recent tweets in the user's news feed.<br>
+Implement the Twitter class:<br>
+Twitter() Initializes your twitter object.<br>
+void postTweet(int userId, int tweetId) Composes a new tweet with ID tweetId by the user userId. Each call to this function will be made with a unique tweetId.<br>
+List<Integer> getNewsFeed(int userId) Retrieves the 10 most recent tweet IDs in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user themself. Tweets must be ordered from most recent to least recent.<br>
+void follow(int followerId, int followeeId) The user with ID followerId started following the user with ID followeeId.<br>
+void unfollow(int followerId, int followeeId) The user with ID followerId started unfollowing the user with ID followeeId.</p>
+<pre><code class="language-python">
+class Twitter:
+
+    def __init__(self):
+        self.follows=collections.defaultdict(set)
+        self.tweets=collections.defaultdict(list)
+        self.time=0
+   
+
+    def postTweet(self, userId: int, tweetId: int) -&gt; None:
+        self.tweets[userId].append([tweetId,self.time])
+        self.time+=1
+        
+
+    def getNewsFeed(self, userId: int) -&gt; List[int]:
+        res=[]
+        followers=self.follows[userId]
+        for f in list(followers)+[userId]:
+            res.extend(self.tweets[f])
+        
+        return [ e[0] for e in sorted(res,key=lambda x:-x[1])][:10] 
+
+    def follow(self, followerId: int, followeeId: int) -&gt; None:
+        self.follows[followerId].add(followeeId)
+    
+
+    def unfollow(self, followerId: int, followeeId: int) -&gt; None:
+        if followeeId in self.follows[followerId]:
+            self.follows[followerId].remove(followeeId)
+        
+
+
+</code></pre>
+<h1 id="font-colorred356-line-reflection-medium-font"><font color='red'>356. Line Reflection (Medium) </font></h1>
+<p>Given n points on a 2D plane, find if there is such a line parallel to the y-axis that reflects the given points symmetrically.</p>
+<p>In other words, answer whether or not if there exists a line that after reflecting all points over the given line, the original points' set is the same as the reflected ones.</p>
+<pre><code class="language-python">class Solution:
+    def isReflected(self, points: List[List[int]]) -&gt; bool:
+        s=set()
+        min_=float('inf')
+        max_=float('-inf')
+        for p in points:
+            min_=min(p[0],min_)
+            max_=max(p[0],max_)
+            s.add(tuple(p))
+        sum_=min_+max_
+        for p in points:
+            if s and (sum_-p[0],p[1]) not in s:
+                return False
+        return True
+        
+
+</code></pre>
+<p>思路竟然和two sum类似， 用一个set先保存点，然后找reflect点是否在set里。 中心位置一定是min+max的中点。</p>
+<h1 id="font-colorblue357-count-numbers-with-unique-digits-medium-font"><font color='blue'>357. Count Numbers with Unique Digits (Medium) </font></h1>
+<p>Given an integer n, return the count of all numbers with unique digits, x, where 0 &lt;= x &lt; 10n.</p>
+<pre><code class="language-python">class Solution:
+    def countNumbersWithUniqueDigits(self, n: int) -&gt; int:
+        #Let f(k) = count of numbers with unique digits with length equals k.
+        # f(1)=10
+        # f(2)=9*9   choose 1~9, choose 0~9 except first choose
+        # f(3)=9*9*8
+        # f(k)=9*9*8*...(9-k+2)
+        if n==0: return 1
+        if n==1: return 10 
+        if n==2: return 91
+        f=[0]*(n+1)
+        f[1]=10
+        f[2]=81
+        for i in range(3,n+1):
+            f[i]=f[i-1]*(9-i+2)
+        
+         
+        res=0
+        for j in range(1,n+1):
+            #print(j,f[j])
+            res+=f[j]
+        return res
+</code></pre>
+<p>看了提示才做出来。。。 定义f（x） ，意思是长度为x的string，有多少种不同组合方式。答案就是f1+f2+。。。+fn</p>
+<h1 id="font-colorred-358-rearrange-string-k-distance-apart-hard-font"><font color='red'> 358. Rearrange String k Distance Apart (Hard) </font></h1>
+<p>Given a string s and an integer k, rearrange s such that the same characters are at least distance k from each other. If it is not possible to rearrange the string, return an empty string &quot;&quot;.</p>
+<pre><code class="language-python">class Solution:
+    def rearrangeString(self, s: str, k: int) -&gt; str:
+     
+        if k == 0:
+            return s
+        n = len(s)
+        count = collections.Counter(s)
+        max_val = max(count.values())
+        max_count = sum(1 for val in count.values() if val == max_val)
+        if (max_val-1)*k+max_count &gt; n:
+            return &quot;&quot;
+        
+        buckets = [[] for _ in range(max_val)]
+        cnt = 0
+        for key in sorted(count, key = lambda x: -count[x]):
+            divisor = max_val if count[key] == max_val else max_val-1
+            for _ in range(count[key]):
+                buckets[cnt% divisor].append(key)
+                cnt += 1
+        return &quot;&quot;.join([&quot;&quot;.join(bucket) for bucket in buckets])
+</code></pre>
+<p>刚开始想用bt做，看了答案用的是比较巧妙的bucket。 而且要从数目多的char到数目少的char来排。 排的位置如果是频率最大的，则能排到所有buket，否则只能排到n-1 buket。<br>
+aaabbcccd  k=2<br>
+count={a：3，c：3，b：2，d：1}<br>
+max_val=3 所以有3个buket<br>
+【】 【】 【】<br>
+先排a，divisor=3<br>
+【a】 【a】 【a】<br>
+再排c，divisor=3<br>
+【ac】【ac】【ac】<br>
+再排b，divisor=2 最后一个位置排满了<br>
+【acb】【acb】【ac】<br>
+再排d，divisor=2<br>
+【acbd】【acb】【ac】</p>
+<p>这个思路比较难想出来。。。buket+变divisor。。。</p>
+<h1 id="359-logger-rate-limiter-easy">359. Logger Rate Limiter （Easy）</h1>
+<p>Design a logger system that receives a stream of messages along with their timestamps. Each unique message should only be printed at most every 10 seconds (i.e. a message printed at timestamp t will prevent other identical messages from being printed until timestamp t + 10).<br>
+All messages will come in chronological order. Several messages may arrive at the same timestamp.<br>
+Implement the Logger class:<br>
+Logger() Initializes the logger object.<br>
+bool shouldPrintMessage(int timestamp, string message) Returns true if the message should be printed in the given timestamp, otherwise returns false.</p>
+<pre><code class="language-python">class Logger:
+
+    def __init__(self):
+        self.dic=dict()
+        
+
+    def shouldPrintMessage(self, timestamp: int, message: str) -&gt; bool:
+        res=True
+        if message in self.dic and timestamp-self.dic[message]&lt;10:
+            res=False
+        if res:
+            self.dic[message]=timestamp
+        return res
+# Your Logger object will be instantiated and called as such:
+# obj = Logger()
+# param_1 = obj.shouldPrintMessage(timestamp,message)
+
+
+#ANSWER WAY OF WRITTING
+class Logger(object):
+
+    def __init__(self):
+        &quot;&quot;&quot;
+        Initialize your data structure here.
+        &quot;&quot;&quot;
+        self._msg_dict = {}
+    
+    def shouldPrintMessage(self, timestamp, message):
+        &quot;&quot;&quot;
+        Returns true if the message should be printed in the given timestamp, otherwise returns false.
+        &quot;&quot;&quot;
+        if message not in self._msg_dict:
+            # case 1). add the message to print
+            self._msg_dict[message] = timestamp
+            return True
+
+        if timestamp - self._msg_dict[message] &gt;= 10:
+            # case 2). update the timestamp of the message
+            self._msg_dict[message] = timestamp
+            return True
+        else:
+            return False
+
+</code></pre>
+<h1 id="360-sort-transformed-array-medium">360. Sort Transformed Array (Medium)</h1>
+<p>Given a sorted integer array nums and three integers a, b and c, apply a quadratic function of the form f(x) = ax2 + bx + c to each element nums[i] in the array, and return the array in a sorted order.</p>
+<pre><code class="language-python">class Solution:
+    def sortTransformedArray(self, nums: List[int], a: int, b: int, c: int) -&gt; List[int]:
+        #f(x)=ax**2+bx+c
+        #f(x)= a(x+b/2a)**2 -b**2/4a+c
+        #Therefore, sym axis=  -b/2a  
+        
+        
+        
+        f=lambda x: a*x**2+b*x+c
+        if a==0: return [f(i) for i in nums] if b&gt;0 else  [f(i) for i in nums[::-1]]
+        
+        axis=-b/(2*a)
+        res=[]
+        ind=bisect.bisect_left(nums,axis)
+        l=ind-1
+        r=ind
+        while l&gt;=0 and r&lt;len(nums):
+            
+            if a&gt;0: #fill left to right find smaller
+                if f(nums[l])&lt;=f(nums[r]):
+                    res.append(f(nums[l]))
+                    l-=1
+                else:
+                    res.append(f(nums[r]))
+                    r+=1
+            
+            else:# fill right to left find larger
+                if f(nums[l])&gt;=f(nums[r]):
+                    res=[f(nums[l])]+res
+                    l-=1
+                else:
+                    res= [f(nums[r])]+res
+                    r+=1
+        
+        #print(res)
+        while l&gt;=0:
+            if a&gt;0:
+                res.append(f(nums[l]))
+            else:
+                res=[f(nums[l])]+res
+            l-=1
+                
+        while r&lt;len(nums):
+            if a&gt;0:
+                res.append(f(nums[r]))
+            else:
+                res=[f(nums[r])]+res
+            r+=1
+        
+        return res
+        
+#ANSWER WAY
+class Solution:
+    def sortTransformedArray(self, nums: List[int], a: int, b: int, c: int) -&gt; List[int]:
+ 
+        
+        f=lambda x: a*x**2+b*x+c
+        n=len(nums)
+        res=['NULL']*n
+        l=0
+        r=n-1
+        index= n-1 if a&gt;=0 else 0
+        while l&lt;=r:
+            if a&gt;=0:
+                res[index]=f(nums[l]) if f(nums[l])&gt;=f(nums[r]) else f(nums[r])
+                index-=1
+                if f(nums[l])&gt;=f(nums[r]):
+                    l+=1
+                else:
+                    r-=1
+             
+            else:
+                res[index]=f(nums[r]) if f(nums[l])&gt;=f(nums[r]) else f(nums[l])
+                index+=1
+                if f(nums[l])&gt;=f(nums[r]):
+                    r-=1
+                else:
+                    l+=1
+        return res
+      
+
+</code></pre>
+<p>考二次函数，答案更精巧 用two pointer，关键点在于如果a大于0, 最大值肯定在head tail之间的一个，如果a小于0，最小值肯定在head tail中的一个。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Leetcode 2021-12-07]]></title>
         <id>https://headhuanglan.github.io/post/leetcode-2021-12-07/</id>
@@ -4507,311 +4925,6 @@ class Solution:
             root = root.left if target &lt; root.val else root.right
         return closest
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-11-28]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-11-28/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-28/">
-        </link>
-        <updated>2021-11-27T20:14:09.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="251-flatten-2d-vector-medium">251. Flatten 2D Vector (Medium)</h1>
-<p>Design an iterator to flatten a 2D vector. It should support the next and hasNext operations.<br>
-Implement the Vector2D class:<br>
-Vector2D(int[][] vec) initializes the object with the 2D vector vec.<br>
-next() returns the next element from the 2D vector and moves the pointer one step forward. You may assume that all the calls to next are valid.<br>
-hasNext() returns true if there are still some elements in the vector, and false otherwise.</p>
-<pre><code class="language-python">class Vector2D:
-
-    def __init__(self, vec: List[List[int]]):
-        self.stack=[]
-        self.vec=vec
-
-    def next(self) -&gt; int:
-        if self.hasNext():
-            val=self.stack.pop(0)
-        return val
-
-    def hasNext(self) -&gt; bool:
-        if not self.stack:
-            if not self.vec:
-                return False
-            row=self.vec.pop(0)
-            if not row: 
-                if self.hasNext():
-                    return True
-                else:
-                    return False
-            for e in row:
-                self.stack.append(e)
-        return True
-
-
-# Your Vector2D object will be instantiated and called as such:
-# obj = Vector2D(vec)
-# param_1 = obj.next()
-# param_2 = obj.hasNext()
-#answer way of writing
-class Vector2D:
-
-    def __init__(self, v: List[List[int]]):
-        # We need to iterate over the 2D vector, getting all the integers
-        # out of it and putting them into the nums list.
-         
-        self.nums = []
-        for inner_list in v:
-            for num in inner_list:
-                self.nums.append(num)
-        # We'll keep position 1 behind the next number to return.
-        self.position = -1
-
-    def next(self) -&gt; int:
-        # Move up to the current element and return it.
-        self.position += 1
-        return self.nums[self.position]
-
-    def hasNext(self) -&gt; bool:
-        # If the next position is a valid index of nums, return True.
-        return self.position + 1 &lt; len(self.nums)
-
-</code></pre>
-<p>自己写的这个递归调用比较tricky。。。答案很简答。</p>
-<h1 id="252-meeting-rooms-easy">252. Meeting Rooms （Easy）</h1>
-<p>Given an array of meeting time intervals where intervals[i] = [starti, endi], determine if a person could attend all meetings.</p>
-<pre><code class="language-python">class Solution:
-    def canAttendMeetings(self, intervals: List[List[int]]) -&gt; bool:
-        intervals=sorted(intervals,key=lambda x:x[0])
-        pre_end = None
-        for interval in intervals:
-            if pre_end is not None and interval[0]&lt;pre_end:
-                return False
-            pre_end = interval[1]
-        return True
-</code></pre>
-<h1 id="font-colorblue253-meeting-rooms-ii-medium-font"><font color='blue'>253. Meeting Rooms II (Medium) </font></h1>
-<p>Given an array of meeting time intervals intervals where intervals[i] = [starti, endi], return the minimum number of conference rooms required.</p>
-<pre><code class="language-python">class Solution:
-    def minMeetingRooms(self, intervals: List[List[int]]) -&gt; int:
-        #find max overlapping interval num
-        res=1
-        c=0
-        #at start +=1 at end -=1
-        dic=dict()
-        for interval in intervals:
-            start,end=interval[0],interval[1]
-            if start in dic:
-                dic[start]+=1
-            else:
-                dic[start]=1
-            
-            if end in dic:
-                dic[end]-=1
-            else:
-                dic[end]=-1
-        
-        for k in sorted(dic.keys()):
-            c+=dic[k]
-            res=max(res,c)
-        return res
-</code></pre>
-<p>虽然做出来了，感觉下次再做可能会忘记怎么做的， 思路： 把所有时节节点从小到大排序，如果是start， counter+=1 如果是end， counter-=1， 找出counter变化过程中最大值。 答案做的感觉没自己的思路简单。</p>
-<h1 id="font-colorred-254-factor-combinations-mediumfont"><font color='red'> 254. Factor Combinations （Medium）</font></h1>
-<p>Numbers can be regarded as the product of their factors.</p>
-<pre><code>For example, 8 = 2 x 2 x 2 = 2 x 4.
-</code></pre>
-<p>Given an integer n, return all possible combinations of its factors. You may return the answer in any order.</p>
-<p>Note that the factors should be in the range [2, n - 1].</p>
-<pre><code class="language-python">#Iterative:
-
-def getFactors(self, n):
-    todo, combis = [(n, 2, [])], []
-    while todo:
-        n, i, combi = todo.pop()
-        while i * i &lt;= n:
-            if n % i == 0:
-                combis += combi + [i, n/i],
-                todo += (n/i, i, combi+[i]),
-            i += 1
-    return combis
-
-#Recursive:
-
-class Solution:
-    def getFactors(self, n: int) -&gt; List[List[int]]:
-        
-        res=[]
-        def factor(n, i, tmp):
-            while i * i &lt;= n:
-                if n % i == 0:
-                    res.append(tmp + [i, n//i])
-                    factor(n//i, i, tmp+[i])
-                i += 1
-        factor(n, 2, [])
-        return res
-
-</code></pre>
-<p>思路类似，但是还是没写粗来，这个不应该， res 先append  tmp+[i,n//i],然后再factor（n//i， i，tmp+【i】，res）</p>
-<h1 id="font-colorred255-verify-preorder-sequence-in-binary-search-tree-mediumfont"><font color='red'>255. Verify Preorder Sequence in Binary Search Tree （Medium）</font></h1>
-<pre><code class="language-python">def verifyPreorder(self, preorder):
-    stack = []
-    low = float('-inf')
-    for p in preorder:
-        if p &lt; low:
-            return False
-        while stack and p &gt; stack[-1]:
-            low = stack.pop()
-        stack.append(p)
-    return True
-</code></pre>
-<p>没思路，答案思路： 模拟traversal，stack是左子树的栈。 如果下一个数小于栈顶，说明还在左子树，所以append。  如果当前preorder值大于栈顶，所有小于当前值元素出栈。说明当前元素跳到了右子树。low=stack.pop() 很巧妙， lower bound是满足小于当前值的最后一个pop出去的元素。</p>
-<h1 id="font-colorred256-paint-house-mediumfont"><font color='red'>256. Paint House （Medium）</font></h1>
-<p>Input: costs = [[17,2,17],[16,16,5],[14,3,19]]<br>
-Output: 10<br>
-Explanation: Paint house 0 into blue, paint house 1 into green, paint house 2 into blue.<br>
-Minimum cost: 2 + 5 + 3 = 10.</p>
-<pre><code class="language-python">class Solution:
-    def minCost(self, costs: List[List[int]]) -&gt; int:
-        mem=dict()
-        def paint(n,color):
-            if (n,color) in mem:
-                return mem[(n,color)]
-            res = costs[n][color]
-            
-            if n!=len(costs)-1:
-                if color==0:
-                    res+=min(paint(n+1,1),paint(n+1,2))
-                elif color==1:
-                    res+=min(paint(n+1,0),paint(n+1,2))
-                else:
-                    res+=min(paint(n+1,0),paint(n+1,1))
-            mem[(n,color)]=res
-            return res
-       
-        return min([paint(0,0),paint(0,1),paint(0,2)])
-
-#
-class Solution:
-    def minCost(self, costs: List[List[int]]) -&gt; int:
-        if not costs:return 0
-        for n in range(len(costs)-2,-1,-1):
-            costs[n][0]+=min(costs[n+1][1],costs[n+1][2])
-            costs[n][1]+=min(costs[n+1][0],costs[n+1][2])
-            costs[n][2]+=min(costs[n+1][0],costs[n+1][1])
-        return min(costs[0])
-</code></pre>
-<p>这个应该是递归mem的经典题和dp的经典题。用dynamic programming，但是写出来一版是错的。。。应该定义dp=【#costs】【#color】。从最后一个房子开始， 倒数第二个 cost红=最后一个min（绿，蓝），。。。</p>
-<h1 id="257-binary-tree-paths-easy">257. Binary Tree Paths （Easy）</h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def binaryTreePaths(self, root: Optional[TreeNode]) -&gt; List[str]:
-        res=[]
-        def bt(tmp,node):
-            if not node: return
-            if not node.left and not node.right:
-                tmp.append(str(node.val))
-                res.append('-&gt;'.join(tmp))
-                return
-            tmp.append(str(node.val))
-            bt(tmp[:],node.left)
-            bt(tmp[:],node.right)
-        bt([],root)
-        return res
-</code></pre>
-<h1 id="258-add-digits-easy">258. Add Digits (Easy)</h1>
-<pre><code class="language-python">class Solution:
-    def addDigits(self, num: int) -&gt; int:
-        res = 0
-        while num:
-            #
-            tmp=0
-            while num:
-                lastdig = num%10
-                num=num//10
-                tmp+=lastdig
-            num=tmp
-            if num&gt;=0 and num&lt;=9:
-                return num
-        
-        return res 
-# answer way of writing
-class Solution:
-    def addDigits(self, num: int) -&gt; int:
-        if num == 0:
-            return 0
-        if num % 9 == 0:
-            return 9
-        return num % 9
-</code></pre>
-<p>答案用了一个数能被九整除，那么他们所有位数和能被9整除。</p>
-<h1 id="font-colorblue259-3sum-smaller-mediumfont"><font color='blue'>259. 3Sum Smaller （Medium）</font></h1>
-<p>Given an array of n integers nums and an integer target, find the number of index triplets i, j, k with 0 &lt;= i &lt; j &lt; k &lt; n that satisfy the condition nums[i] + nums[j] + nums[k] &lt; target.</p>
-<pre><code class="language-python">class Solution:
-    def threeSumSmaller(self, nums: List[int], target: int) -&gt; int:
-        nums.sort()
-        res=0
-        for start in range(len(nums)-2):
-            for left in range(start+1,len(nums)-1):
-                right=left+1
-                if nums[start]+nums[left]+nums[right]&gt;target:continue
-                
-                while  right&lt;len(nums) and nums[start]+nums[left]+nums[right]&lt;target:
-                    res+=1
-                    right+=1
-                
-               
-        return res
-
-#answer
-class Solution:
-    def threeSumSmaller(self, nums: List[int], target: int) -&gt; int:
-        nums.sort()
-        res=0
-        for start in range(len(nums)-2):
-            tar = target-nums[start]
-            #become two sum question
-            left=start+1
-            right=len(nums)-1
-            while left&lt;right:
-                #print('@',left,right,tar)
-                if nums[left]+nums[right]&lt;tar:
-                    #print(left,right)
-                    res+=right-left
-                    left+=1
-                else:
-                    right-=1
-            
-        return res
-</code></pre>
-<p>写出来个暴力解。。。 几乎是O(n^3)....  O（n^2）思路, 选出一个数字，把3sum转成2sum，然后定义left=start+1，right=len（nums）-1， 若left +right 值小于target 说明 left 到right所有都满足条件，这样left+1求解下一步， 若left +right 值大于target说明right太大得减1.</p>
-<h1 id="font-colorred260-single-number-iii-mediumfont"><font color='red'>260. Single Number III （Medium）</font></h1>
-<p>Given an integer array nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once. You can return the answer in any order.</p>
-<p>You must write an algorithm that runs in linear runtime complexity and uses only constant extra space.</p>
-<pre><code class="language-python">class Solution:
-    def singleNumber(self, nums: List[int]) -&gt; List[int]:
-        xor=0
-        for n in nums:
-            xor = xor^n
-        
-        # rightmost 1-bit diff between a and b
-        diff = xor &amp; -xor
-        
-        a=0
-        for n in nums:
-            if n&amp;diff:
-                # diff means a's last bit is diff then b's last bit
-                # by using this filter we could get a 
-                a= a^n
-        return [a,xor^a]
-
-</code></pre>
-<p>没思路， one pass 只能找出xor=a^b  但不能确定出a，b具体值。<br>
-答案思路：用了一个不知道的trick， x &amp; (-x) 保留x中最右边bit，设置其他bit为0.   这样就能用a，b 的diff bit把所有数字过滤一次，只有a可以被过滤出来，因为a的diff bit是1 其余diff bit是1的都出现了2次抵消了。。</p>
 ]]></content>
     </entry>
 </feed>

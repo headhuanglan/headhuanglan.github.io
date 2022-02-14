@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>Leetcode 2021-11-15 | Lan&#39;s Blog</title>
+<title>Leetcode 2021-12-08 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1644873940747">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,7 +41,7 @@
 
 
 
-  <meta name="description" content="Leetcode 2021-11-15" />
+  <meta name="description" content="Leetcode 2021-12-08" />
   <meta name="keywords" content="leetcode" />
 </head>
 
@@ -223,16 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#121-best-time-to-buy-and-sell-stock-easy">121. Best Time to Buy and Sell Stock (Easy)</a></li>
-<li><a href="#122-best-time-to-buy-and-sell-stock-ii-medium">122. Best Time to Buy and Sell Stock II (Medium)</a></li>
-<li><a href="#font-colorred123-best-time-to-buy-and-sell-stock-iii-hard-font"><font color='red'>123. Best Time to Buy and Sell Stock III (Hard) </font></a></li>
-<li><a href="#font-colorred124-binary-tree-maximum-path-sum-hard-font"><font color='red'>124. Binary Tree Maximum Path Sum （Hard） </font></a></li>
-<li><a href="#125-valid-palindrome-easy">125. Valid Palindrome （Easy）</a></li>
-<li><a href="#font-colorred126-word-ladder-ii-hardfont"><font color='red'>126. Word Ladder II （Hard）</font></a></li>
-<li><a href="#font-colorred-127-word-ladder-hard-font"><font color='red'> 127. Word Ladder （Hard） </font></a></li>
-<li><a href="#font-colorred128-longest-consecutive-sequence-mediumfont"><font color='red'>128. Longest Consecutive Sequence （Medium）</font></a></li>
-<li><a href="#font129-sum-root-to-leaf-numbers-medium-font"><font>129. Sum Root to Leaf Numbers (Medium) </font></a></li>
-<li><a href="#130-surrounded-regions-medium">130. Surrounded Regions （Medium）</a></li>
+<li><a href="#font-colorred351-android-unlock-patterns-medium-font"><font color='red'>351. Android Unlock Patterns (Medium) </font></a></li>
+<li><a href="#font-colorred352-data-stream-as-disjoint-intervals-hardfont"><font color='red'>352. Data Stream as Disjoint Intervals （Hard）</font></a></li>
+<li><a href="#353-design-snake-game-medium">353. Design Snake Game （Medium）</a></li>
+<li><a href="#font-colorred354-russian-doll-envelopes-hard-font"><font color='red'>354. Russian Doll Envelopes (Hard) </font></a></li>
+<li><a href="#355-design-twitter-medium">355. Design Twitter （Medium）</a></li>
+<li><a href="#font-colorred356-line-reflection-medium-font"><font color='red'>356. Line Reflection (Medium) </font></a></li>
+<li><a href="#font-colorblue357-count-numbers-with-unique-digits-medium-font"><font color='blue'>357. Count Numbers with Unique Digits (Medium) </font></a></li>
+<li><a href="#font-colorred-358-rearrange-string-k-distance-apart-hard-font"><font color='red'> 358. Rearrange String k Distance Apart (Hard) </font></a></li>
+<li><a href="#359-logger-rate-limiter-easy">359. Logger Rate Limiter （Easy）</a></li>
+<li><a href="#360-sort-transformed-array-medium">360. Sort Transformed Array (Medium)</a></li>
 </ul>
 
   </div>
@@ -498,14 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-15/"> Leetcode 2021-11-15 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-12-08/"> Leetcode 2021-12-08 </a>
   </h1>
   <div class="post-meta">
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-14 11:18:20">2021-11-14</span>
+      <span class="publish-time" data-t="2021-12-07 11:32:01">2021-12-07</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -523,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >14<span class="language" data-lan="minute"
+        >16<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -532,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >2379<span class="pc-show language" data-lan="words"
+        >2667<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -543,481 +543,415 @@
 
             <div class="post-body next-md-body" id="post_body">
               <!-- more -->
-<h1 id="121-best-time-to-buy-and-sell-stock-easy">121. Best Time to Buy and Sell Stock (Easy)</h1>
-<p>You are given an array prices where prices[i] is the price of a given stock on the ith day.<br>
-You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.<br>
-Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.</p>
+<h1 id="font-colorred351-android-unlock-patterns-medium-font"><font color='red'>351. Android Unlock Patterns (Medium) </font></h1>
+<p>Android devices have a special lock screen with a 3 x 3 grid of dots. Users can set an &quot;unlock pattern&quot; by connecting the dots in a specific sequence, forming a series of joined line segments where each segment's endpoints are two consecutive dots in the sequence. A sequence of k dots is a valid unlock pattern if both of the following are true:<br>
+All the dots in the sequence are distinct.<br>
+If the line segment connecting two consecutive dots in the sequence passes through the center of any other dot, the other dot must have previously appeared in the sequence. No jumps through the center non-selected dots are allowed.<br>
+For example, connecting dots 2 and 9 without dots 5 or 6 appearing beforehand is valid because the line from dot 2 to dot 9 does not pass through the center of either dot 5 or 6.<br>
+However, connecting dots 1 and 3 without dot 2 appearing beforehand is invalid because the line from dot 1 to dot 3 passes through the center of dot 2.<br>
+Given two integers m and n, return the number of unique and valid unlock patterns of the Android grid lock screen that consist of at least m keys and at most n keys.</p>
+<p>Two unlock patterns are considered unique if there is a dot in one sequence that is not in the other, or the order of the dots is different.</p>
 <pre><code class="language-python">class Solution:
-    def maxProfit(self, prices: List[int]) -&gt; int:
-        #two pointer
-        profit = 0
-        min_price = float('inf')
-        for i,n in enumerate(prices):
-            min_price= min(min_price,n)
-            profit=max(profit,n-min_price)
-        return profit
-</code></pre>
-<h1 id="122-best-time-to-buy-and-sell-stock-ii-medium">122. Best Time to Buy and Sell Stock II (Medium)</h1>
-<p>On each day, you may decide to buy and/or sell the stock. You can only hold at most one share of the stock at any time. However, you can buy it then immediately sell it on the same day.<br>
-Find and return the maximum profit you can achieve.</p>
-<pre><code class="language-python">class Solution:
-    def maxProfit(self, prices: List[int]) -&gt; int:
-        # this means I can accumulate every increase trend in fluctuation of price
-        if len(prices)&lt;=1: return 0
-        profit=0
-        for i in range(1,len(prices)):
-            profit_i = prices[i]-prices[i-1]
-            if profit_i&gt;0:
-                profit+=profit_i
-        return profit
-</code></pre>
-<h1 id="font-colorred123-best-time-to-buy-and-sell-stock-iii-hard-font"><font color='red'>123. Best Time to Buy and Sell Stock III (Hard) </font></h1>
-<p>Find the maximum profit you can achieve. You may complete at most two transactions.</p>
-<pre><code class="language-python">class Solution:
-    def maxProfit(self, prices: List[int]) -&gt; int:
-        
-        min_=[float('inf')]*3
-        r=[0]*3
-        
-        for i in range(len(prices)):
-            for k in range(1,3):
-                min_[k]=min(min_[k],prices[i]-r[k-1])
-                r[k]=max(r[k],prices[i]-min_[k])
-        
-        return r[2]
-</code></pre>
-<p>第一感觉是用Dynamic Programming。但是没想出来递推关系。。。Two pointer 的扩展， 求第二次min的时候是price[i]-第一次profit， 因为算第二次profit时候会用price[j] - (price[i]-第一次profit) 所以正好加上了第一次profit。比较巧妙。。</p>
-<h1 id="font-colorred124-binary-tree-maximum-path-sum-hard-font"><font color='red'>124. Binary Tree Maximum Path Sum （Hard） </font></h1>
-<p>A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence at most once. Note that the path does not need to pass through the root.<br>
-The path sum of a path is the sum of the node's values in the path.<br>
-Given the root of a binary tree, return the maximum path sum of any non-empty path.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def maxPathSum(self, root: Optional[TreeNode]) -&gt; int:
-        
-        def max_gain(node):
-            nonlocal max_sum
-            if not node:
-                return 0
-
-            # max sum on the left and right sub-trees of node
-            left_gain = max(max_gain(node.left), 0)
-            right_gain = max(max_gain(node.right), 0)
-            
-            # the price to start a new path where `node` is a highest node
-            price_newpath = node.val + left_gain + right_gain
-            
-            # update max_sum if it's better to start a new path
-            max_sum = max(max_sum, price_newpath)
-        
-            # for recursion :
-            # return the max gain if continue the same path
-            return node.val + max(left_gain, right_gain)
-   
-        max_sum = float('-inf')
-        max_gain(root)
-        return max_sum
-</code></pre>
-<p>Fail to writing a working recursive solution!....问题出在recursion的return部分。<br>
-思路：  local_max_sum = root.val + leftpath+rightpath  但在return时候，由于之前调用自己计算root.left 的leftpath和root.right的rightpath，所以是root.val+max(leftpath,rightpath) 这样return的路径是从root.left/root.right 单点延申出去的。不存在重复计算问题， 要是return  root.val+ leftpath+rightpath， 那么调用自己在root.left计算的是root.left的左右扩展了， 而不是 root.left 的单一延申。  这样返回值会错误。</p>
-<h1 id="125-valid-palindrome-easy">125. Valid Palindrome （Easy）</h1>
-<pre><code class="language-python">class Solution:
-    def isPalindrome(self, s: str) -&gt; bool:
-        l=0
-        r=len(s)-1
-        s=s.lower()
-        while l&lt;=r:
-            while l&lt;=r and s[l] not in '0123456789abcdefghijklmnopqrstuvwxyz':
-                l+=1
-            while l&lt;=r and s[r] not in '0123456789abcdefghijklmnopqrstuvwxyz':
-                r-=1
-            
-            if l&lt;=r and s[l]!=s[r]:
-                return False
-            
-            l+=1
-            r-=1
-        
-        return True
-</code></pre>
-<p>注意while l&lt;=r的判断。。。即使在内循环中。</p>
-<h1 id="font-colorred126-word-ladder-ii-hardfont"><font color='red'>126. Word Ladder II （Hard）</font></h1>
-<pre><code class="language-python">class Solution:
-    def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -&gt; List[List[str]]:
-        # sortest path, graph bfs 
-        # node is word
-        # node neighbors are word differ by 1 letter in wordList.
-        # find sortest path from beginWordd to endWord
-        
-        
-        visited =set()
-        
-        def neigh(word, wordList):
-            nei = []
-            for w in wordList:
-                if w not in visited:
-                    valid = 0
-                    for a,b in zip(w,word):
-                        if ord(a)^ord(b)==0:
-                            continue
-                        else:
-                            valid+=1
-                    if valid==1:
-                        nei.append(w)
-            return nei
-        
-        queue = [beginWord]
-        res = []
-        Found=False
-        while queue:
-            level = []
-            for i in range(len(queue)):
-                cur = queue.pop(0)
-                if cur==endWord:
-                    Found=True
-                if Found:
-                    break
-                level.append(cur)
-                visited.add(cur)
-                
-                for w in neigh(cur,wordList):
-                    queue.append(w)
-            if Found:
-                break
-            
-            res.append(level)
-        
-        if Found:
-            visited = set()
-            res[-1] = neigh(endWord,res[-1])
-           
-            #buld result
-            level= [[]]
-            while res:
-                new_level = []
-                for w in res.pop(0):
-                    for oldlevelpath in level:
-                        tmp=oldlevelpath[:]
-                        if tmp:
-                            flag=0
-                            for a,b in zip(tmp[-1],w):
-                                if ord(a)^ord(b)==0:
-                                    continue
-                                else:
-                                    flag+=1
-                            if flag==1:
-
-                                tmp.append(w)
-                                new_level.append(tmp)
-                            else:
-                                continue
-                        else:
-                            tmp.append(w)
-                            new_level.append(tmp)
-                            
-                level=new_level
-            for row in level:
-                row.append(endWord)
-            #remove dup
-            resdic = dict()
-            for row in level:
-                key  ='-'.join(row)
-                val = row
-                resdic[key]=val
-            return resdic.values()
-        else:
-            return []
-
-#answer way of writting
-class Solution:
-    def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -&gt; List[List[str]]:
-        # sortest path, graph bfs 
-        # node is word
-        # node neighbors are word differ by 1 letter in wordList.
-        # find sortest path from beginWordd to endWord
-        tree=collections.defaultdict(set)
-        words = set(wordList)
-        if endWord not in words:
-            return []
-        starts = {beginWord}
-        ends = {endWord}
-        rev=False
-        FOUND=False
-        
-        while starts and not FOUND:
-            
-            words -= starts
-            next_words = set()
-            for word in starts:
-                for i in range(len(word)):
-                    left = word[:i]
-                    right = word[i+1:]
-                    for char in string.ascii_lowercase:
-                        next_word = left + char + right
-                        if next_word in words:
-                            if next_word in ends:
-                                FOUND= True
-                            else:
-                                next_words.add(next_word)
-                            
-                            tree[word].add(next_word) if not rev else tree[next_word].add(word)
-            starts = next_words
-            if len(starts) &gt; len(ends):
-                starts, ends = ends, starts
-                rev=not rev
-        
-        def bt(x):
-            if x==endWord:
-                return [[x]]
-            else:
-                res = []
-                for y in tree[x]:
-                    for rest in bt(y):
-                        res.append([x]+rest)
-                return res
-      
-        return bt(beginWord)
-        
-
-
-</code></pre>
-<p>整出来一个写的巨丑但还算正确的time limit exceeded解决方法,思路应该是graph bfs 找最短路径。<br>
-答案思路很巧妙， 用了bfs但是是从2端查找，缩小了时间。 然后通过collections.defaultdict(set)记录下一个节点。最后通过backtracking 得到结果。果然是hard 题目。</p>
-<h1 id="font-colorred-127-word-ladder-hard-font"><font color='red'> 127. Word Ladder （Hard） </font></h1>
-<p>A transformation sequence from word beginWord to word endWord using a dictionary wordList is a sequence of words beginWord -&gt; s1 -&gt; s2 -&gt; ... -&gt; sk such that:<br>
-Every adjacent pair of words differs by a single letter.<br>
-Every si for 1 &lt;= i &lt;= k is in wordList. Note that beginWord does not need to be in wordList.<br>
-sk == endWord<br>
-Given two words, beginWord and endWord, and a dictionary wordList, return the number of words in the shortest transformation sequence from beginWord to endWord, or 0 if no such sequence exists.</p>
-<pre><code class="language-python">class Solution:
-    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -&gt; int:
-        
-      
-        visited =set()
-        
-        def neigh(word, wordList):
-            nei = []
-            for w in wordList:
-                if w not in visited:
-                    valid = 0
-                    for a,b in zip(w,word):
-                        if ord(a)^ord(b)==0:
-                            continue
-                        else:
-                            valid+=1
-                    if valid==1:
-                        nei.append(w)
-            return nei
-        
-        queue = [beginWord]
-        res = []
-        Found=False
-        level=0
-        while queue:
-            level += 1
-            for i in range(len(queue)):
-                cur = queue.pop(0)
-                if cur==endWord:
-                    Found=True
-                    return level
-                if Found:
-                    break
-                
-                visited.add(cur)
-                
-                for w in neigh(cur,wordList):
-                    queue.append(w)
-            if Found:
-                break
-        return 0
-
-#answer way of writring
-class Solution:
-    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -&gt; int:
-        
-        words = set(wordList)
-        if endWord not in words:
-            return 0
-        starts = {beginWord}
-        ends = {endWord}
-        level = 1
-        # charSet = {w for word in wordList for w in word}
-        while starts:
-            level += 1
-            words -= starts
-            next_words = set()
-            for word in starts:
-                for i in range(len(word)):
-                    left = word[:i]
-                    right = word[i+1:]
-                    for char in string.ascii_lowercase:
-                        next_word = left + char + right
-                        if next_word in words:
-                            if next_word in ends:
-                                return level
-                            next_words.add(next_word)
-            starts = next_words
-            if len(starts) &gt; len(ends):
-                starts, ends = ends, starts
-        return 0 
-</code></pre>
-<p>简单复用之前代码还是会得到time limit exceeded，因为bfs不是2头扫的。但2头扫bfs 怎么写？？</p>
-<h1 id="font-colorred128-longest-consecutive-sequence-mediumfont"><font color='red'>128. Longest Consecutive Sequence （Medium）</font></h1>
-<p>Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence.<br>
-You must write an algorithm that runs in O(n) time.<br>
-Input: nums = [100,4,200,1,3,2]<br>
-Output: 4<br>
-Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.</p>
-<pre><code class="language-python">class Solution:
-    def longestConsecutive(self, nums: List[int]) -&gt; int:
-        
+    def numberOfPatterns(self, m: int, n: int) -&gt; int:
+        skip = [[0]*10 for _ in range(10)]
+        skip[1][3] = skip[3][1] = 2 
+        skip[1][7] = skip[7][1] = 4 
+        skip[3][9] = skip[9][3] = 6 
+        skip[7][9] = skip[9][7] = 8 
+        skip[1][9] = skip[9][1] = skip[2][8] = skip[8][2] = skip[3][7] = skip[7][3] = skip[4][6] = skip[6][4] = 5 
+        visited = [False]*10
         res=0
-        nums=set(nums)
+        def DFS(cur,remain):
+            if remain&lt;0: return 0
+            if remain==0: return 1
+            visited[cur]=True
+            res=0
+            for i in range(1,10):
+                if not visited[i] and (skip[cur][i]==0 or visited[skip[cur][i]]):
+                    res+=DFS(i,remain-1)
+            visited[cur]=False
+            return res
         
-        for num in nums:
-            if num-1 not in nums:
-                cur=num
-                cres=1
-                
-                while cur+1 in nums:
-                    cur+=1
-                    cres+=1
-                    
-                res=max(res,cres)
-        
+        for i in range(m,n+1):
+            res+=DFS(1,i-1)*4 # 1,3,7, 9 sym 
+            res+=DFS(2,i-1)*4 # 2 4 6 8  sym
+            res+=DFS(5,i-1) 
+            
         return res
+        
 </code></pre>
-<p>O（n）没思路。。。 看到答案后。。。大悟。  用了set，这样 num-1 not in nums时候知道当前值为开头。 如果当前值+1还在nums里。 更新当前值和局部最大值。  扫一次，虽然右内部while loop但还是O（n）</p>
-<h1 id="font129-sum-root-to-leaf-numbers-medium-font"><font>129. Sum Root to Leaf Numbers (Medium) </font></h1>
-<p>Input: root = [1,2,3]<br>
-Output: 25<br>
-Explanation:<br>
-The root-to-leaf path 1-&gt;2 represents the number 12.<br>
-The root-to-leaf path 1-&gt;3 represents the number 13.<br>
-Therefore, sum = 12 + 13 = 25.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def sumNumbers(self, root: Optional[TreeNode]) -&gt; int:
-        
-        res = 0
-        def calc(root,tmp):
-            nonlocal res
-            if not root: return
-            if not root.left and not root.right:
-                #I am leaf do calculatoin and the sum
-                res +=  tmp*10+root.val
-            
-            tmp = tmp*10+root.val
-            calc(root.left,tmp)
-            calc(root.right,tmp)
-            
-            
-        calc(root,0)
-        return res
-</code></pre>
-<p>思路：到达leave 才把结果加和给res。 如果不是leave只更新tmp值。 然后前序遍历。</p>
-<h1 id="130-surrounded-regions-medium">130. Surrounded Regions （Medium）</h1>
-<p>Given an m x n matrix board containing 'X' and 'O', capture all regions that are 4-directionally surrounded by 'X'.<br>
-A region is captured by flipping all 'O's into 'X's in that surrounded region.</p>
-<pre><code class="language-python">class Solution:
-    def solve(self, board: List[List[str]]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify board in-place instead.
-        &quot;&quot;&quot;
-        m = len(board)
-        n = len(board[0])
-        
-        def dfs(board,i,j):
-            
-            if m&gt;i&gt;=0 and n&gt;j&gt;=0:
-                if board[i][j]=='O':
-                    board[i][j]='#'
-                    
-            
-                    for newi,newj in [(i+1,j),(i-1,j),(i,j+1),(i,j-1)]:
-                        dfs(board,newi,newj)
-      
-        
-        for i in range(m):
-            for j in range(n):
-                if i==0 or i==m-1 or j==0 or j==n-1 and board[i][j]=='O':
-                    dfs(board,i,j)
-        
-        for i in range(m):
-            for j in range(n):
-                if board[i][j]!='#':
-                    board[i][j]='X'
-        for i in range(m):
-            for j in range(n):
-                if board[i][j]=='#':
-                    board[i][j]='O'
+<p>问题是奇怪的问题，解决方法大概是DP，但递归关系不好找。思路错误， 答案用DFS+BT  简化思路是 1,3,7,9 are symmetric, 2,4,6,8 are also symmetric. Hence we only calculate one among each group and multiply by 4.</p>
+<h1 id="font-colorred352-data-stream-as-disjoint-intervals-hardfont"><font color='red'>352. Data Stream as Disjoint Intervals （Hard）</font></h1>
+<p>Given a data stream input of non-negative integers a1, a2, ..., an, summarize the numbers seen so far as a list of disjoint intervals.<br>
+Implement the SummaryRanges class:<br>
+SummaryRanges() Initializes the object with an empty stream.<br>
+void addNum(int val) Adds the integer val to the stream.<br>
+int[][] getIntervals() Returns a summary of the integers in the stream currently as a list of disjoint intervals [starti, endi].</p>
+<pre><code class="language-python">class SummaryRanges:
 
-#BFS way of writting
-class Solution(object):
-    def solve(self, board):
+    def __init__(self):
         &quot;&quot;&quot;
-        :type board: List[List[str]]
-        :rtype: void Do not return anything, modify board in-place instead.
+        Initialize your data structure here.
         &quot;&quot;&quot;
-        if not board: return 
-        m=len(board)
-        n=len(board[0])
-        #boarder bfs O-&gt;#          else to  X  restore # to O
-        
-      
-        def nei(i,j):
-            r= [ (i+1,j),(i-1,j),(i,j+1),(i,j-1)]
-            return [ (xy[0],xy[1]) for xy in r if  (0&lt;=xy[0]&lt;m and 0&lt;=xy[1]&lt;n)]
-        
-      
-        def bfs(i,j):
-            visited=set()
-            q=[(i,j)]
-            visited.add((i,j))
-            board[i][j]='#'
-            while q:
-                x,y=q.pop(0)
-                neis=nei(x,y)
-                for xy in neis:
-                    if xy not in visited:
-                        if board[xy[0]][xy[1]]=='O':
-                            q.append(xy)
-                            board[xy[0]][xy[1]]='#'
-                            visited.add(xy)
-                            
-                         
-                        
-                    
-                    
-                
-        
-        for i in range(m):
-            for j in range(n):
-                if i==0 or i==m-1 or j==0 or j==n-1:
-                    if board[i][j]=='O':
-                        bfs(i,j)
-            
-        
-        for row in board:
-            print(row)
-        for i in range(m):
-            for j in range(n):
-                if board[i][j]!='#':
-                    board[i][j]='X'
-                if board[i][j]=='#':
-                    board[i][j]='O'
+        self.interval = [] # record the interval
+        self.s = set() # record the number we have added before
+        return 
+
+    def addNum(self, val: int) -&gt; None:
+        if val in self.s:
+            return 
+        self.s.add(val)
+        index = bisect_left(self.interval,[val,val])
+
+        # check whether we could extend the interval on its left and right 
+        if index &lt; len(self.interval) and self.interval[index][0]-1 == val:
+            self.interval[index][0] = self.interval[index][0] - 1
+        elif index &gt; 0 and self.interval[index-1][1]+1 == val:
+            self.interval[index-1][1] = self.interval[index-1][1] + 1
+        else:
+            self.interval.insert(index, [val,val])
+
+    def getIntervals(self) -&gt; List[List[int]]:
+        # update the intervals in getIntervals function 
+        connect = []
+        for x in self.interval:
+            if connect and connect[-1][1] == x[0]-1:
+                connect[-1][1] = x[1]
+            else:
+                connect.append(x)
+        self.interval = connect
+        return self.interval 
+
 </code></pre>
-<p>思路，在board边界地方为O的点做dfs，更新为#。之后把所有不为#的变为X。之后把#变为O。 得写个bfs dfs模板总结。</p>
+<p>思路： binary search for interval， interval update when getIntervals。</p>
+<h1 id="353-design-snake-game-medium">353. Design Snake Game （Medium）</h1>
+<pre><code class="language-python">class SnakeGame:
+
+    def __init__(self, width: int, height: int, food: List[List[int]]):
+        self.food=food
+        self.w=width
+        self.h=height
+        self.score=0
+        self.body = [[0,0]]
+        self.pos=[0,0]
+
+    def move(self, direction: str) -&gt; int:
+        #outofbound check
+        if direction=='R':
+            self.pos[1]+=1
+        elif direction=='L':
+            self.pos[1]-=1
+        elif direction=='U':
+            self.pos[0]-=1
+        elif direction=='D':
+            self.pos[0]+=1
+        
+        if not (self.h&gt;self.pos[0]&gt;=0): return -1
+        if not (self.w&gt;self.pos[1]&gt;=0): return -1
+        
+        #hadle food
+       
+        if not (self.food and self.pos==self.food[0]):
+            #no food
+            self.body.pop(0)
+            if self.pos in self.body: return -1
+            self.body.append(self.pos[:])
+        else:
+            #food
+            self.food.pop(0)
+            self.body.append(self.pos[:])
+            self.score+=1
+        return self.score
+            
+# Your SnakeGame object will be instantiated and called as such:
+# obj = SnakeGame(width, height, food)
+# param_1 = obj.move(direction)
+
+</code></pre>
+<h1 id="font-colorred354-russian-doll-envelopes-hard-font"><font color='red'>354. Russian Doll Envelopes (Hard) </font></h1>
+<p>You are given a 2D array of integers envelopes where envelopes[i] = [wi, hi] represents the width and the height of an envelope.</p>
+<p>One envelope can fit into another if and only if both the width and height of one envelope are greater than the other envelope's width and height.</p>
+<p>Return the maximum number of envelopes you can Russian doll (i.e., put one inside the other).</p>
+<pre><code class="language-python">from bisect import bisect_left
+class Solution:
+    def maxEnvelopes(self, envelopes: List[List[int]]) -&gt; int:
+        arr = envelopes
+        arr.sort(key=lambda x: (x[0], -x[1]))
+
+        def lis(nums):
+            dp = []
+            for i in range(len(nums)):
+                idx = bisect_left(dp, nums[i])
+                if idx == len(dp):
+                    dp.append(nums[i])
+                else:
+                    dp[idx] = nums[i]
+            return len(dp)
+        # extract the second dimension and run the LIS
+        return lis([i[1] for i in arr])
+
+</code></pre>
+<p>尝试用greedy解决但失败了，感觉是个DP问题。。。思路看答案了。  2D longest increasing subsequence problem (LIS).  KEY： ''we also sort decreasing on the second dimension, so two envelopes that are equal in the first dimension can never be in the same increasing subsequence'' 关键是NlogN的 LIS 没用过。。。，需要记住写法。dp[i] 存储的是长度是i+1的LIS末尾元素。</p>
+<h1 id="355-design-twitter-medium">355. Design Twitter （Medium）</h1>
+<p>Design a simplified version of Twitter where users can post tweets, follow/unfollow another user, and is able to see the 10 most recent tweets in the user's news feed.<br>
+Implement the Twitter class:<br>
+Twitter() Initializes your twitter object.<br>
+void postTweet(int userId, int tweetId) Composes a new tweet with ID tweetId by the user userId. Each call to this function will be made with a unique tweetId.<br>
+List<Integer> getNewsFeed(int userId) Retrieves the 10 most recent tweet IDs in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user themself. Tweets must be ordered from most recent to least recent.<br>
+void follow(int followerId, int followeeId) The user with ID followerId started following the user with ID followeeId.<br>
+void unfollow(int followerId, int followeeId) The user with ID followerId started unfollowing the user with ID followeeId.</p>
+<pre><code class="language-python">
+class Twitter:
+
+    def __init__(self):
+        self.follows=collections.defaultdict(set)
+        self.tweets=collections.defaultdict(list)
+        self.time=0
+   
+
+    def postTweet(self, userId: int, tweetId: int) -&gt; None:
+        self.tweets[userId].append([tweetId,self.time])
+        self.time+=1
+        
+
+    def getNewsFeed(self, userId: int) -&gt; List[int]:
+        res=[]
+        followers=self.follows[userId]
+        for f in list(followers)+[userId]:
+            res.extend(self.tweets[f])
+        
+        return [ e[0] for e in sorted(res,key=lambda x:-x[1])][:10] 
+
+    def follow(self, followerId: int, followeeId: int) -&gt; None:
+        self.follows[followerId].add(followeeId)
+    
+
+    def unfollow(self, followerId: int, followeeId: int) -&gt; None:
+        if followeeId in self.follows[followerId]:
+            self.follows[followerId].remove(followeeId)
+        
+
+
+</code></pre>
+<h1 id="font-colorred356-line-reflection-medium-font"><font color='red'>356. Line Reflection (Medium) </font></h1>
+<p>Given n points on a 2D plane, find if there is such a line parallel to the y-axis that reflects the given points symmetrically.</p>
+<p>In other words, answer whether or not if there exists a line that after reflecting all points over the given line, the original points' set is the same as the reflected ones.</p>
+<pre><code class="language-python">class Solution:
+    def isReflected(self, points: List[List[int]]) -&gt; bool:
+        s=set()
+        min_=float('inf')
+        max_=float('-inf')
+        for p in points:
+            min_=min(p[0],min_)
+            max_=max(p[0],max_)
+            s.add(tuple(p))
+        sum_=min_+max_
+        for p in points:
+            if s and (sum_-p[0],p[1]) not in s:
+                return False
+        return True
+        
+
+</code></pre>
+<p>思路竟然和two sum类似， 用一个set先保存点，然后找reflect点是否在set里。 中心位置一定是min+max的中点。</p>
+<h1 id="font-colorblue357-count-numbers-with-unique-digits-medium-font"><font color='blue'>357. Count Numbers with Unique Digits (Medium) </font></h1>
+<p>Given an integer n, return the count of all numbers with unique digits, x, where 0 &lt;= x &lt; 10n.</p>
+<pre><code class="language-python">class Solution:
+    def countNumbersWithUniqueDigits(self, n: int) -&gt; int:
+        #Let f(k) = count of numbers with unique digits with length equals k.
+        # f(1)=10
+        # f(2)=9*9   choose 1~9, choose 0~9 except first choose
+        # f(3)=9*9*8
+        # f(k)=9*9*8*...(9-k+2)
+        if n==0: return 1
+        if n==1: return 10 
+        if n==2: return 91
+        f=[0]*(n+1)
+        f[1]=10
+        f[2]=81
+        for i in range(3,n+1):
+            f[i]=f[i-1]*(9-i+2)
+        
+         
+        res=0
+        for j in range(1,n+1):
+            #print(j,f[j])
+            res+=f[j]
+        return res
+</code></pre>
+<p>看了提示才做出来。。。 定义f（x） ，意思是长度为x的string，有多少种不同组合方式。答案就是f1+f2+。。。+fn</p>
+<h1 id="font-colorred-358-rearrange-string-k-distance-apart-hard-font"><font color='red'> 358. Rearrange String k Distance Apart (Hard) </font></h1>
+<p>Given a string s and an integer k, rearrange s such that the same characters are at least distance k from each other. If it is not possible to rearrange the string, return an empty string &quot;&quot;.</p>
+<pre><code class="language-python">class Solution:
+    def rearrangeString(self, s: str, k: int) -&gt; str:
+     
+        if k == 0:
+            return s
+        n = len(s)
+        count = collections.Counter(s)
+        max_val = max(count.values())
+        max_count = sum(1 for val in count.values() if val == max_val)
+        if (max_val-1)*k+max_count &gt; n:
+            return &quot;&quot;
+        
+        buckets = [[] for _ in range(max_val)]
+        cnt = 0
+        for key in sorted(count, key = lambda x: -count[x]):
+            divisor = max_val if count[key] == max_val else max_val-1
+            for _ in range(count[key]):
+                buckets[cnt% divisor].append(key)
+                cnt += 1
+        return &quot;&quot;.join([&quot;&quot;.join(bucket) for bucket in buckets])
+</code></pre>
+<p>刚开始想用bt做，看了答案用的是比较巧妙的bucket。 而且要从数目多的char到数目少的char来排。 排的位置如果是频率最大的，则能排到所有buket，否则只能排到n-1 buket。<br>
+aaabbcccd  k=2<br>
+count={a：3，c：3，b：2，d：1}<br>
+max_val=3 所以有3个buket<br>
+【】 【】 【】<br>
+先排a，divisor=3<br>
+【a】 【a】 【a】<br>
+再排c，divisor=3<br>
+【ac】【ac】【ac】<br>
+再排b，divisor=2 最后一个位置排满了<br>
+【acb】【acb】【ac】<br>
+再排d，divisor=2<br>
+【acbd】【acb】【ac】</p>
+<p>这个思路比较难想出来。。。buket+变divisor。。。</p>
+<h1 id="359-logger-rate-limiter-easy">359. Logger Rate Limiter （Easy）</h1>
+<p>Design a logger system that receives a stream of messages along with their timestamps. Each unique message should only be printed at most every 10 seconds (i.e. a message printed at timestamp t will prevent other identical messages from being printed until timestamp t + 10).<br>
+All messages will come in chronological order. Several messages may arrive at the same timestamp.<br>
+Implement the Logger class:<br>
+Logger() Initializes the logger object.<br>
+bool shouldPrintMessage(int timestamp, string message) Returns true if the message should be printed in the given timestamp, otherwise returns false.</p>
+<pre><code class="language-python">class Logger:
+
+    def __init__(self):
+        self.dic=dict()
+        
+
+    def shouldPrintMessage(self, timestamp: int, message: str) -&gt; bool:
+        res=True
+        if message in self.dic and timestamp-self.dic[message]&lt;10:
+            res=False
+        if res:
+            self.dic[message]=timestamp
+        return res
+# Your Logger object will be instantiated and called as such:
+# obj = Logger()
+# param_1 = obj.shouldPrintMessage(timestamp,message)
+
+
+#ANSWER WAY OF WRITTING
+class Logger(object):
+
+    def __init__(self):
+        &quot;&quot;&quot;
+        Initialize your data structure here.
+        &quot;&quot;&quot;
+        self._msg_dict = {}
+    
+    def shouldPrintMessage(self, timestamp, message):
+        &quot;&quot;&quot;
+        Returns true if the message should be printed in the given timestamp, otherwise returns false.
+        &quot;&quot;&quot;
+        if message not in self._msg_dict:
+            # case 1). add the message to print
+            self._msg_dict[message] = timestamp
+            return True
+
+        if timestamp - self._msg_dict[message] &gt;= 10:
+            # case 2). update the timestamp of the message
+            self._msg_dict[message] = timestamp
+            return True
+        else:
+            return False
+
+</code></pre>
+<h1 id="360-sort-transformed-array-medium">360. Sort Transformed Array (Medium)</h1>
+<p>Given a sorted integer array nums and three integers a, b and c, apply a quadratic function of the form f(x) = ax2 + bx + c to each element nums[i] in the array, and return the array in a sorted order.</p>
+<pre><code class="language-python">class Solution:
+    def sortTransformedArray(self, nums: List[int], a: int, b: int, c: int) -&gt; List[int]:
+        #f(x)=ax**2+bx+c
+        #f(x)= a(x+b/2a)**2 -b**2/4a+c
+        #Therefore, sym axis=  -b/2a  
+        
+        
+        
+        f=lambda x: a*x**2+b*x+c
+        if a==0: return [f(i) for i in nums] if b&gt;0 else  [f(i) for i in nums[::-1]]
+        
+        axis=-b/(2*a)
+        res=[]
+        ind=bisect.bisect_left(nums,axis)
+        l=ind-1
+        r=ind
+        while l&gt;=0 and r&lt;len(nums):
+            
+            if a&gt;0: #fill left to right find smaller
+                if f(nums[l])&lt;=f(nums[r]):
+                    res.append(f(nums[l]))
+                    l-=1
+                else:
+                    res.append(f(nums[r]))
+                    r+=1
+            
+            else:# fill right to left find larger
+                if f(nums[l])&gt;=f(nums[r]):
+                    res=[f(nums[l])]+res
+                    l-=1
+                else:
+                    res= [f(nums[r])]+res
+                    r+=1
+        
+        #print(res)
+        while l&gt;=0:
+            if a&gt;0:
+                res.append(f(nums[l]))
+            else:
+                res=[f(nums[l])]+res
+            l-=1
+                
+        while r&lt;len(nums):
+            if a&gt;0:
+                res.append(f(nums[r]))
+            else:
+                res=[f(nums[r])]+res
+            r+=1
+        
+        return res
+        
+#ANSWER WAY
+class Solution:
+    def sortTransformedArray(self, nums: List[int], a: int, b: int, c: int) -&gt; List[int]:
+ 
+        
+        f=lambda x: a*x**2+b*x+c
+        n=len(nums)
+        res=['NULL']*n
+        l=0
+        r=n-1
+        index= n-1 if a&gt;=0 else 0
+        while l&lt;=r:
+            if a&gt;=0:
+                res[index]=f(nums[l]) if f(nums[l])&gt;=f(nums[r]) else f(nums[r])
+                index-=1
+                if f(nums[l])&gt;=f(nums[r]):
+                    l+=1
+                else:
+                    r-=1
+             
+            else:
+                res[index]=f(nums[r]) if f(nums[l])&gt;=f(nums[r]) else f(nums[l])
+                index+=1
+                if f(nums[l])&gt;=f(nums[r]):
+                    r-=1
+                else:
+                    l+=1
+        return res
+      
+
+</code></pre>
+<p>考二次函数，答案更精巧 用two pointer，关键点在于如果a大于0, 最大值肯定在head tail之间的一个，如果a小于0，最小值肯定在head tail中的一个。</p>
 
             </div>
             
@@ -1030,7 +964,7 @@ class Solution(object):
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-15/" title="Leetcode 2021-11-15">https://headhuanglan.github.io/post/leetcode-2021-11-15/</a>
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-12-08/" title="Leetcode 2021-12-08">https://headhuanglan.github.io/post/leetcode-2021-12-08/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -1045,15 +979,11 @@ class Solution(object):
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-16" href="https://headhuanglan.github.io/post/leetcode-2021-11-16/">Leetcode 2021-11-16</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-16" href="https://headhuanglan.github.io/post/leetcode-2021-11-16/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2021-11-13" href="https://headhuanglan.github.io/post/leetcode-2021-11-13/">Leetcode 2021-11-13</a>
-        <a class="nav-mobile-next" title="Leetcode 2021-11-13" href="https://headhuanglan.github.io/post/leetcode-2021-11-13/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2021-12-07" href="https://headhuanglan.github.io/post/leetcode-2021-12-07/">Leetcode 2021-12-07</a>
+        <a class="nav-mobile-next" title="Leetcode 2021-12-07" href="https://headhuanglan.github.io/post/leetcode-2021-12-07/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>

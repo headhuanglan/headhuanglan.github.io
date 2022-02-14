@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-17 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1643494127338">
+<link rel="shortcut icon" href="/favicon.ico?v=1644873940747">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">41</span>
+        <span class="site-item-stat-count">42</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -2142,6 +2142,421 @@ Explanation: ((2 + 1) * 3) = 9</p>
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-08/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;font-colorred351-android-unlock-patterns-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;351. Android Unlock Patterns (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Android devices have a special lock screen with a 3 x 3 grid of dots. Users can set an &amp;quot;unlock pattern&amp;quot; by connecting the dots in a specific sequence, forming a series of joined line segments where each segment&#39;s endpoints are two consecutive dots in the sequence. A sequence of k dots is a valid unlock pattern if both of the following are true:&lt;br&gt;
+All the dots in the sequence are distinct.&lt;br&gt;
+If the line segment connecting two consecutive dots in the sequence passes through the center of any other dot, the other dot must have previously appeared in the sequence. No jumps through the center non-selected dots are allowed.&lt;br&gt;
+For example, connecting dots 2 and 9 without dots 5 or 6 appearing beforehand is valid because the line from dot 2 to dot 9 does not pass through the center of either dot 5 or 6.&lt;br&gt;
+However, connecting dots 1 and 3 without dot 2 appearing beforehand is invalid because the line from dot 1 to dot 3 passes through the center of dot 2.&lt;br&gt;
+Given two integers m and n, return the number of unique and valid unlock patterns of the Android grid lock screen that consist of at least m keys and at most n keys.&lt;/p&gt;
+&lt;p&gt;Two unlock patterns are considered unique if there is a dot in one sequence that is not in the other, or the order of the dots is different.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def numberOfPatterns(self, m: int, n: int) -&amp;gt; int:
+        skip = [[0]*10 for _ in range(10)]
+        skip[1][3] = skip[3][1] = 2 
+        skip[1][7] = skip[7][1] = 4 
+        skip[3][9] = skip[9][3] = 6 
+        skip[7][9] = skip[9][7] = 8 
+        skip[1][9] = skip[9][1] = skip[2][8] = skip[8][2] = skip[3][7] = skip[7][3] = skip[4][6] = skip[6][4] = 5 
+        visited = [False]*10
+        res=0
+        def DFS(cur,remain):
+            if remain&amp;lt;0: return 0
+            if remain==0: return 1
+            visited[cur]=True
+            res=0
+            for i in range(1,10):
+                if not visited[i] and (skip[cur][i]==0 or visited[skip[cur][i]]):
+                    res+=DFS(i,remain-1)
+            visited[cur]=False
+            return res
+        
+        for i in range(m,n+1):
+            res+=DFS(1,i-1)*4 # 1,3,7, 9 sym 
+            res+=DFS(2,i-1)*4 # 2 4 6 8  sym
+            res+=DFS(5,i-1) 
+            
+        return res
+        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;问题是奇怪的问题，解决方法大概是DP，但递归关系不好找。思路错误， 答案用DFS+BT  简化思路是 1,3,7,9 are symmetric, 2,4,6,8 are also symmetric. Hence we only calculate one among each group and multiply by 4.&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred352-data-stream-as-disjoint-intervals-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;352. Data Stream as Disjoint Intervals （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a data stream input of non-negative integers a1, a2, ..., an, summarize the numbers seen so far as a list of disjoint intervals.&lt;br&gt;
+Implement the SummaryRanges class:&lt;br&gt;
+SummaryRanges() Initializes the object with an empty stream.&lt;br&gt;
+void addNum(int val) Adds the integer val to the stream.&lt;br&gt;
+int[][] getIntervals() Returns a summary of the integers in the stream currently as a list of disjoint intervals [starti, endi].&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class SummaryRanges:
+
+    def __init__(self):
+        &amp;quot;&amp;quot;&amp;quot;
+        Initialize your data structure here.
+        &amp;quot;&amp;quot;&amp;quot;
+        self.interval = [] # record the interval
+        self.s = set() # record the number we have added before
+        return 
+
+    def addNum(self, val: int) -&amp;gt; None:
+        if val in self.s:
+            return 
+        self.s.add(val)
+        index = bisect_left(self.interval,[val,val])
+
+        # check whether we could extend the interval on its left and right 
+        if index &amp;lt; len(self.interval) and self.interval[index][0]-1 == val:
+            self.interval[index][0] = self.interval[index][0] - 1
+        elif index &amp;gt; 0 and self.interval[index-1][1]+1 == val:
+            self.interval[index-1][1] = self.interval[index-1][1] + 1
+        else:
+            self.interval.insert(index, [val,val])
+
+    def getIntervals(self) -&amp;gt; List[List[int]]:
+        # update the intervals in getIntervals function 
+        connect = []
+        for x in self.interval:
+            if connect and connect[-1][1] == x[0]-1:
+                connect[-1][1] = x[1]
+            else:
+                connect.append(x)
+        self.interval = connect
+        return self.interval 
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;思路： binary search for interval， interval update when getIntervals。&lt;/p&gt;
+&lt;h1 id=&#34;353-design-snake-game-medium&#34;&gt;353. Design Snake Game （Medium）&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class SnakeGame:
+
+    def __init__(self, width: int, height: int, food: List[List[int]]):
+        self.food=food
+        self.w=width
+        self.h=height
+        self.score=0
+        self.body = [[0,0]]
+        self.pos=[0,0]
+
+    def move(self, direction: str) -&amp;gt; int:
+        #outofbound check
+        if direction==&#39;R&#39;:
+            self.pos[1]+=1
+        elif direction==&#39;L&#39;:
+            self.pos[1]-=1
+        elif direction==&#39;U&#39;:
+            self.pos[0]-=1
+        elif direction==&#39;D&#39;:
+            self.pos[0]+=1
+        
+        if not (self.h&amp;gt;self.pos[0]&amp;gt;=0): return -1
+        if not (self.w&amp;gt;self.pos[1]&amp;gt;=0): return -1
+        
+        #hadle food
+       
+        if not (self.food and self.pos==self.food[0]):
+            #no food
+            self.body.pop(0)
+            if self.pos in self.body: return -1
+            self.body.append(self.pos[:])
+        else:
+            #food
+            self.food.pop(0)
+            self.body.append(self.pos[:])
+            self.score+=1
+        return self.score
+            
+# Your SnakeGame object will be instantiated and called as such:
+# obj = SnakeGame(width, height, food)
+# param_1 = obj.move(direction)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred354-russian-doll-envelopes-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;354. Russian Doll Envelopes (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given a 2D array of integers envelopes where envelopes[i] = [wi, hi] represents the width and the height of an envelope.&lt;/p&gt;
+&lt;p&gt;One envelope can fit into another if and only if both the width and height of one envelope are greater than the other envelope&#39;s width and height.&lt;/p&gt;
+&lt;p&gt;Return the maximum number of envelopes you can Russian doll (i.e., put one inside the other).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from bisect import bisect_left
+class Solution:
+    def maxEnvelopes(self, envelopes: List[List[int]]) -&amp;gt; int:
+        arr = envelopes
+        arr.sort(key=lambda x: (x[0], -x[1]))
+
+        def lis(nums):
+            dp = []
+            for i in range(len(nums)):
+                idx = bisect_left(dp, nums[i])
+                if idx == len(dp):
+                    dp.append(nums[i])
+                else:
+                    dp[idx] = nums[i]
+            return len(dp)
+        # extract the second dimension and run the LIS
+        return lis([i[1] for i in arr])
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;尝试用greedy解决但失败了，感觉是个DP问题。。。思路看答案了。  2D longest increasing subsequence problem (LIS).  KEY： &#39;&#39;we also sort decreasing on the second dimension, so two envelopes that are equal in the first dimension can never be in the same increasing subsequence&#39;&#39; 关键是NlogN的 LIS 没用过。。。，需要记住写法。dp[i] 存储的是长度是i+1的LIS末尾元素。&lt;/p&gt;
+&lt;h1 id=&#34;355-design-twitter-medium&#34;&gt;355. Design Twitter （Medium）&lt;/h1&gt;
+&lt;p&gt;Design a simplified version of Twitter where users can post tweets, follow/unfollow another user, and is able to see the 10 most recent tweets in the user&#39;s news feed.&lt;br&gt;
+Implement the Twitter class:&lt;br&gt;
+Twitter() Initializes your twitter object.&lt;br&gt;
+void postTweet(int userId, int tweetId) Composes a new tweet with ID tweetId by the user userId. Each call to this function will be made with a unique tweetId.&lt;br&gt;
+List&lt;Integer&gt; getNewsFeed(int userId) Retrieves the 10 most recent tweet IDs in the user&#39;s news feed. Each item in the news feed must be posted by users who the user followed or by the user themself. Tweets must be ordered from most recent to least recent.&lt;br&gt;
+void follow(int followerId, int followeeId) The user with ID followerId started following the user with ID followeeId.&lt;br&gt;
+void unfollow(int followerId, int followeeId) The user with ID followerId started unfollowing the user with ID followeeId.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+class Twitter:
+
+    def __init__(self):
+        self.follows=collections.defaultdict(set)
+        self.tweets=collections.defaultdict(list)
+        self.time=0
+   
+
+    def postTweet(self, userId: int, tweetId: int) -&amp;gt; None:
+        self.tweets[userId].append([tweetId,self.time])
+        self.time+=1
+        
+
+    def getNewsFeed(self, userId: int) -&amp;gt; List[int]:
+        res=[]
+        followers=self.follows[userId]
+        for f in list(followers)+[userId]:
+            res.extend(self.tweets[f])
+        
+        return [ e[0] for e in sorted(res,key=lambda x:-x[1])][:10] 
+
+    def follow(self, followerId: int, followeeId: int) -&amp;gt; None:
+        self.follows[followerId].add(followeeId)
+    
+
+    def unfollow(self, followerId: int, followeeId: int) -&amp;gt; None:
+        if followeeId in self.follows[followerId]:
+            self.follows[followerId].remove(followeeId)
+        
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred356-line-reflection-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;356. Line Reflection (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given n points on a 2D plane, find if there is such a line parallel to the y-axis that reflects the given points symmetrically.&lt;/p&gt;
+&lt;p&gt;In other words, answer whether or not if there exists a line that after reflecting all points over the given line, the original points&#39; set is the same as the reflected ones.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def isReflected(self, points: List[List[int]]) -&amp;gt; bool:
+        s=set()
+        min_=float(&#39;inf&#39;)
+        max_=float(&#39;-inf&#39;)
+        for p in points:
+            min_=min(p[0],min_)
+            max_=max(p[0],max_)
+            s.add(tuple(p))
+        sum_=min_+max_
+        for p in points:
+            if s and (sum_-p[0],p[1]) not in s:
+                return False
+        return True
+        
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;思路竟然和two sum类似， 用一个set先保存点，然后找reflect点是否在set里。 中心位置一定是min+max的中点。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue357-count-numbers-with-unique-digits-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;357. Count Numbers with Unique Digits (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer n, return the count of all numbers with unique digits, x, where 0 &amp;lt;= x &amp;lt; 10n.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def countNumbersWithUniqueDigits(self, n: int) -&amp;gt; int:
+        #Let f(k) = count of numbers with unique digits with length equals k.
+        # f(1)=10
+        # f(2)=9*9   choose 1~9, choose 0~9 except first choose
+        # f(3)=9*9*8
+        # f(k)=9*9*8*...(9-k+2)
+        if n==0: return 1
+        if n==1: return 10 
+        if n==2: return 91
+        f=[0]*(n+1)
+        f[1]=10
+        f[2]=81
+        for i in range(3,n+1):
+            f[i]=f[i-1]*(9-i+2)
+        
+         
+        res=0
+        for j in range(1,n+1):
+            #print(j,f[j])
+            res+=f[j]
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;看了提示才做出来。。。 定义f（x） ，意思是长度为x的string，有多少种不同组合方式。答案就是f1+f2+。。。+fn&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-358-rearrange-string-k-distance-apart-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 358. Rearrange String k Distance Apart (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a string s and an integer k, rearrange s such that the same characters are at least distance k from each other. If it is not possible to rearrange the string, return an empty string &amp;quot;&amp;quot;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def rearrangeString(self, s: str, k: int) -&amp;gt; str:
+     
+        if k == 0:
+            return s
+        n = len(s)
+        count = collections.Counter(s)
+        max_val = max(count.values())
+        max_count = sum(1 for val in count.values() if val == max_val)
+        if (max_val-1)*k+max_count &amp;gt; n:
+            return &amp;quot;&amp;quot;
+        
+        buckets = [[] for _ in range(max_val)]
+        cnt = 0
+        for key in sorted(count, key = lambda x: -count[x]):
+            divisor = max_val if count[key] == max_val else max_val-1
+            for _ in range(count[key]):
+                buckets[cnt% divisor].append(key)
+                cnt += 1
+        return &amp;quot;&amp;quot;.join([&amp;quot;&amp;quot;.join(bucket) for bucket in buckets])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;刚开始想用bt做，看了答案用的是比较巧妙的bucket。 而且要从数目多的char到数目少的char来排。 排的位置如果是频率最大的，则能排到所有buket，否则只能排到n-1 buket。&lt;br&gt;
+aaabbcccd  k=2&lt;br&gt;
+count={a：3，c：3，b：2，d：1}&lt;br&gt;
+max_val=3 所以有3个buket&lt;br&gt;
+【】 【】 【】&lt;br&gt;
+先排a，divisor=3&lt;br&gt;
+【a】 【a】 【a】&lt;br&gt;
+再排c，divisor=3&lt;br&gt;
+【ac】【ac】【ac】&lt;br&gt;
+再排b，divisor=2 最后一个位置排满了&lt;br&gt;
+【acb】【acb】【ac】&lt;br&gt;
+再排d，divisor=2&lt;br&gt;
+【acbd】【acb】【ac】&lt;/p&gt;
+&lt;p&gt;这个思路比较难想出来。。。buket+变divisor。。。&lt;/p&gt;
+&lt;h1 id=&#34;359-logger-rate-limiter-easy&#34;&gt;359. Logger Rate Limiter （Easy）&lt;/h1&gt;
+&lt;p&gt;Design a logger system that receives a stream of messages along with their timestamps. Each unique message should only be printed at most every 10 seconds (i.e. a message printed at timestamp t will prevent other identical messages from being printed until timestamp t + 10).&lt;br&gt;
+All messages will come in chronological order. Several messages may arrive at the same timestamp.&lt;br&gt;
+Implement the Logger class:&lt;br&gt;
+Logger() Initializes the logger object.&lt;br&gt;
+bool shouldPrintMessage(int timestamp, string message) Returns true if the message should be printed in the given timestamp, otherwise returns false.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Logger:
+
+    def __init__(self):
+        self.dic=dict()
+        
+
+    def shouldPrintMessage(self, timestamp: int, message: str) -&amp;gt; bool:
+        res=True
+        if message in self.dic and timestamp-self.dic[message]&amp;lt;10:
+            res=False
+        if res:
+            self.dic[message]=timestamp
+        return res
+# Your Logger object will be instantiated and called as such:
+# obj = Logger()
+# param_1 = obj.shouldPrintMessage(timestamp,message)
+
+
+#ANSWER WAY OF WRITTING
+class Logger(object):
+
+    def __init__(self):
+        &amp;quot;&amp;quot;&amp;quot;
+        Initialize your data structure here.
+        &amp;quot;&amp;quot;&amp;quot;
+        self._msg_dict = {}
+    
+    def shouldPrintMessage(self, timestamp, message):
+        &amp;quot;&amp;quot;&amp;quot;
+        Returns true if the message should be printed in the given timestamp, otherwise returns false.
+        &amp;quot;&amp;quot;&amp;quot;
+        if message not in self._msg_dict:
+            # case 1). add the message to print
+            self._msg_dict[message] = timestamp
+            return True
+
+        if timestamp - self._msg_dict[message] &amp;gt;= 10:
+            # case 2). update the timestamp of the message
+            self._msg_dict[message] = timestamp
+            return True
+        else:
+            return False
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;360-sort-transformed-array-medium&#34;&gt;360. Sort Transformed Array (Medium)&lt;/h1&gt;
+&lt;p&gt;Given a sorted integer array nums and three integers a, b and c, apply a quadratic function of the form f(x) = ax2 + bx + c to each element nums[i] in the array, and return the array in a sorted order.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def sortTransformedArray(self, nums: List[int], a: int, b: int, c: int) -&amp;gt; List[int]:
+        #f(x)=ax**2+bx+c
+        #f(x)= a(x+b/2a)**2 -b**2/4a+c
+        #Therefore, sym axis=  -b/2a  
+        
+        
+        
+        f=lambda x: a*x**2+b*x+c
+        if a==0: return [f(i) for i in nums] if b&amp;gt;0 else  [f(i) for i in nums[::-1]]
+        
+        axis=-b/(2*a)
+        res=[]
+        ind=bisect.bisect_left(nums,axis)
+        l=ind-1
+        r=ind
+        while l&amp;gt;=0 and r&amp;lt;len(nums):
+            
+            if a&amp;gt;0: #fill left to right find smaller
+                if f(nums[l])&amp;lt;=f(nums[r]):
+                    res.append(f(nums[l]))
+                    l-=1
+                else:
+                    res.append(f(nums[r]))
+                    r+=1
+            
+            else:# fill right to left find larger
+                if f(nums[l])&amp;gt;=f(nums[r]):
+                    res=[f(nums[l])]+res
+                    l-=1
+                else:
+                    res= [f(nums[r])]+res
+                    r+=1
+        
+        #print(res)
+        while l&amp;gt;=0:
+            if a&amp;gt;0:
+                res.append(f(nums[l]))
+            else:
+                res=[f(nums[l])]+res
+            l-=1
+                
+        while r&amp;lt;len(nums):
+            if a&amp;gt;0:
+                res.append(f(nums[r]))
+            else:
+                res=[f(nums[r])]+res
+            r+=1
+        
+        return res
+        
+#ANSWER WAY
+class Solution:
+    def sortTransformedArray(self, nums: List[int], a: int, b: int, c: int) -&amp;gt; List[int]:
+ 
+        
+        f=lambda x: a*x**2+b*x+c
+        n=len(nums)
+        res=[&#39;NULL&#39;]*n
+        l=0
+        r=n-1
+        index= n-1 if a&amp;gt;=0 else 0
+        while l&amp;lt;=r:
+            if a&amp;gt;=0:
+                res[index]=f(nums[l]) if f(nums[l])&amp;gt;=f(nums[r]) else f(nums[r])
+                index-=1
+                if f(nums[l])&amp;gt;=f(nums[r]):
+                    l+=1
+                else:
+                    r-=1
+             
+            else:
+                res[index]=f(nums[r]) if f(nums[l])&amp;gt;=f(nums[r]) else f(nums[l])
+                index+=1
+                if f(nums[l])&amp;gt;=f(nums[r]):
+                    r-=1
+                else:
+                    l+=1
+        return res
+      
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;考二次函数，答案更精巧 用two pointer，关键点在于如果a大于0, 最大值肯定在head tail之间的一个，如果a小于0，最小值肯定在head tail中的一个。&lt;/p&gt;
+">Leetcode 2021-12-08</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-07/"" data-c="
