@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>二分法模板 | Lan&#39;s Blog</title>
+<title>Leetcode 2021-12-09 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1645424908676">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,8 @@
 
 
 
-  <meta name="description" content="二分法模板" />
-  <meta name="keywords" content="算法总结" />
+  <meta name="description" content="Leetcode 2021-12-09" />
+  <meta name="keywords" content="leetcode" />
 </head>
 
 <body>
@@ -223,9 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#1">1</a></li>
-<li><a href="#2">2</a></li>
-<li><a href="#3">3</a></li>
+<li><a href="#361-bomb-enemy-medium">361. Bomb Enemy （Medium）</a></li>
+<li><a href="#362-design-hit-counter-medium">362. Design Hit Counter （Medium）</a></li>
+<li><a href="#font-colorred-363-max-sum-of-rectangle-no-larger-than-k-hardfont"><font color='red'> 363. Max Sum of Rectangle No Larger Than K （Hard）</font></a></li>
+<li><a href="#364-nested-list-weight-sum-ii-medium">364. Nested List Weight Sum II （Medium）</a></li>
+<li><a href="#font-colorred365-water-and-jug-problem-mediumfont"><font color='red'>365. Water and Jug Problem （Medium）</font></a></li>
+<li><a href="#366-find-leaves-of-binary-tree-medium">366. Find Leaves of Binary Tree （Medium）</a></li>
+<li><a href="#367-valid-perfect-square-easy">367. Valid Perfect Square （Easy）</a></li>
+<li><a href="#font-colorred368-largest-divisible-subset-mediumfont"><font color='red'>368. Largest Divisible Subset （Medium）</font></a></li>
+<li><a href="#369-plus-one-linked-list-medium">369. Plus One Linked List （Medium）</a></li>
+<li><a href="#font-colorblue-370-range-addition-mediumfont"><font color='blue'> 370. Range Addition （Medium）</font></a></li>
 </ul>
 
   </div>
@@ -491,20 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/er-fen-fa-mo-ban/"> 二分法模板 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-12-09/"> Leetcode 2021-12-09 </a>
   </h1>
   <div class="post-meta">
-    
-    <span class="meta-item">
-      <i class="fa fa-thumb-tack"></i>
-      <span class="language" data-lan="top">置顶</span>
-      <span class="post-meta-divider">|</span>
-    </span>
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-10-29 19:47:51">2021-10-29</span>
+      <span class="publish-time" data-t="2021-12-09 00:25:59">2021-12-09</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -512,8 +513,8 @@
       <i class="fa fa-folder-o"></i>
       <span class="pc-show language" data-lan="category-in">标签:</span>
        
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/">
-        <span>算法总结</span>
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/">
+        <span>leetcode</span>
       </a>
        
     </span>
@@ -522,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >2<span class="language" data-lan="minute"
+        >23<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -531,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >223<span class="pc-show language" data-lan="words"
+        >3911<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -541,83 +542,764 @@
 </section>
 
             <div class="post-body next-md-body" id="post_body">
-              <p>Binary Search 模板总结</p>
-<!-- more -->
-<h1 id="1">1</h1>
-<pre><code class="language-python">def binarySearch(nums, target):
-    &quot;&quot;&quot;
-    :type nums: List[int]
-    :type target: int
-    :rtype: int
-    &quot;&quot;&quot;
-    if len(nums) == 0:
-        return -1
+              <!-- more -->
+<h1 id="361-bomb-enemy-medium">361. Bomb Enemy （Medium）</h1>
+<p>Given an m x n matrix grid where each cell is either a wall 'W', an enemy 'E' or empty '0', return the maximum enemies you can kill using one bomb. You can only place the bomb in an empty cell.</p>
+<p>The bomb kills all the enemies in the same row and column from the planted point until it hits the wall since it is too strong to be destroyed.</p>
+<pre><code class="language-python">class Solution:
+    def maxKilledEnemies(self, grid: List[List[str]]) -&gt; int:
+        m=len(grid)
+        n=len(grid[0])
+        dp=[[0]*n for _ in range(m) ]
+        #look from left for each row
+        for i in range(m):
+            c=0
+            for j in range(n):
+                dp[i][j]+=c
+                if grid[i][j]=='E':
+                    c+=1
+                elif grid[i][j]=='W':
+                    dp[i][j]=0
+                    c=0
+        #look from right for each row
+        for i in range(m):
+            c=0
+            for j in range(n-1,-1,-1):
+                dp[i][j]+=c
+                if grid[i][j]=='E':
+                    c+=1
+                elif grid[i][j]=='W':
+                    dp[i][j]=0
+                    c=0
+        #look from up for each col
+        for i in range(n):
+            c=0
+            for j in range(m):
+                dp[j][i]+=c
+                if grid[j][i]=='E':
+                    c+=1
+                elif grid[j][i]=='W':
+                    dp[j][i]=0
+                    c=0
+        #look from bottom for each col
+        for i in range(n):
+            c=0
+            for j in range(m-1,-1,-1):
+                dp[j][i]+=c
+                if grid[j][i]=='E':
+                    c+=1
+                elif grid[j][i]=='W':
+                    dp[j][i]=0
+                    c=0
+         
+        res=0
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j]=='0':
+                    res=max(res,dp[i][j])
+        return res
+                
+ #ANSWER
+ class Solution:
+    def maxKilledEnemies(self, grid: List[List[str]]) -&gt; int:
+        if len(grid) == 0:
+            return 0
 
-    left, right = 0, len(nums) - 1
-    while left &lt;= right:
-        mid = (left + right) // 2
-        if nums[mid] == target:
-            return mid
-        elif nums[mid] &lt; target:
-            left = mid + 1
-        else:
-            right = mid - 1
+        rows, cols = len(grid), len(grid[0])
 
-    # End Condition: left &gt; right
-    return -1
+        max_count = 0
+        row_hits = 0
+        col_hits = [0] * cols
+
+        for row in range(0, rows):
+            for col in range(0, cols):
+                # reset the hits on the row, if necessary.
+                if col == 0 or grid[row][col - 1] == 'W':
+                    row_hits = 0
+                    for k in range(col, cols):
+                        if grid[row][k] == 'W':
+                            # stop the scan when we hit the wall.
+                            break
+                        elif grid[row][k] == 'E':
+                            row_hits += 1
+
+                # reset the hits on the col, if necessary.
+                if row == 0 or grid[row - 1][col] == 'W':
+                    col_hits[col] = 0
+                    for k in range(row, rows):
+                        if grid[k][col] == 'W':
+                            break
+                        elif grid[k][col] == 'E':
+                            col_hits[col] += 1
+
+                # count the hits for each empty cell.
+                if grid[row][col] == '0':
+                    total_hits = row_hits + col_hits[col]
+                    max_count = max(max_count, total_hits)
+
+        return max_count       
 </code></pre>
-<h1 id="2">2</h1>
-<pre><code class="language-python">def binarySearch(nums, target):
+<p>和答案思路是一致的，写的更简洁些。</p>
+<h1 id="362-design-hit-counter-medium">362. Design Hit Counter （Medium）</h1>
+<p>Design a hit counter which counts the number of hits received in the past 5 minutes (i.e., the past 300 seconds).<br>
+Your system should accept a timestamp parameter (in seconds granularity), and you may assume that calls are being made to the system in chronological order (i.e., timestamp is monotonically increasing). Several hits may arrive roughly at the same time.<br>
+Implement the HitCounter class:<br>
+HitCounter() Initializes the object of the hit counter system.<br>
+void hit(int timestamp) Records a hit that happened at timestamp (in seconds). Several hits may happen at the same timestamp.<br>
+int getHits(int timestamp) Returns the number of hits in the past 5 minutes from timestamp (i.e., the past 300 seconds).</p>
+<pre><code class="language-python">#NOT WORKING DUE TO timestamp range up to 2*10^9
+class HitCounter:
+    class BIT:
+        def __init__(self,size):
+            self.size=size
+            self.tree=[0]*size
+            
+        def update(self,ind):
+            #index in BIT is 1 more than original index
+            while ind&lt;self.size:
+                self.tree[ind]+=1
+                ind+= ind&amp;-ind
+        def query(self,ind):
+            #index in BIT is 1 more than original index
+            res=0
+            while ind&gt;0:
+                res+=self.tree[ind]
+                ind-= ind&amp;-ind
+            return res
+
+
+    def __init__(self):
+        self.tree=self.BIT(2000)
+    def hit(self, timestamp: int) -&gt; None:
+        self.tree.update(timestamp)
+        
+
+    def getHits(self, timestamp: int) -&gt; int:
+        return self.tree.query(timestamp)-self.tree.query(timestamp-300 if timestamp-300&gt;0 else 0)
+        
+#ANOTHER WAY...
+class HitCounter:
+
+    def __init__(self):
+        self.data=[]
+        
+        
+
+    def hit(self, timestamp: int) -&gt; None:
+        self.data.append(timestamp)
+        
+
+    def getHits(self, timestamp: int) -&gt; int:
+        return bisect.bisect_right(self.data,timestamp)-bisect.bisect_left(self.data,timestamp-299)
+
+
+# Your HitCounter object will be instantiated and called as such:
+# obj = HitCounter()
+# obj.hit(timestamp)
+# param_2 = obj.getHits(timestamp)
+
+class HitCounter(object):
+
+def __init__(self):
     &quot;&quot;&quot;
-    :type nums: List[int]
-    :type target: int
+    Initialize your data structure here.
+    &quot;&quot;&quot;
+    self.deque = collections.deque()
+
+def hit(self, timestamp):
+    &quot;&quot;&quot;
+    Record a hit.
+    @param timestamp - The current timestamp (in seconds granularity).
+    :type timestamp: int
+    :rtype: None
+    &quot;&quot;&quot;
+    self.deque.append(timestamp)
+    
+
+def getHits(self, timestamp):
+    &quot;&quot;&quot;
+    Return the number of hits in the past 5 minutes.
+    @param timestamp - The current timestamp (in seconds granularity).
+    :type timestamp: int
     :rtype: int
     &quot;&quot;&quot;
-    if len(nums) == 0:
-        return -1
 
-    left, right = 0, len(nums)
-    while left &lt; right:
-        mid = (left + right) // 2
-        if nums[mid] == target:
-            return mid
-        elif nums[mid] &lt; target:
-            left = mid + 1
-        else:
-            right = mid
-
-    # Post-processing:
-    # End Condition: left == right
-    if left != len(nums) and nums[left] == target:
-        return left
-    return -1
+    while self.deque and timestamp - self.deque[0] &gt;= 300:
+        self.deque.popleft()
+    return len(self.deque)
 
 </code></pre>
-<h1 id="3">3</h1>
-<pre><code class="language-python">def binarySearch(nums, target):
-    &quot;&quot;&quot;
-    :type nums: List[int]
-    :type target: int
-    :rtype: int
-    &quot;&quot;&quot;
-    if len(nums) == 0:
-        return -1
+<p>感觉用Seg Tree 或者Binary Indexed Tree 但忘记怎么写。。。遇到memory out of bond 问题，因为timestamp 范围太大。。。换思路。。。直接用binary search。。。或者用queue</p>
+<h1 id="font-colorred-363-max-sum-of-rectangle-no-larger-than-k-hardfont"><font color='red'> 363. Max Sum of Rectangle No Larger Than K （Hard）</font></h1>
+<p>Given an m x n matrix matrix and an integer k, return the max sum of a rectangle in the matrix such that its sum is no larger than k.</p>
+<pre><code class="language-python">
+#TIME LIMIT EXCEEDED
+class Solution:
+    def maxSumSubmatrix(self, matrix: List[List[int]], k: int) -&gt; int:
+        m=len(matrix)
+        n=len(matrix[0])
+        res=[]
+        for i in range(m):
+            for j in range(n):
+                area=matrix[i][j]
+                if area&lt;=k:
+                    heapq.heappush(res,-area)
+                if i==0 and j==0:continue
+                if j&gt;0 and i==0 :
+                    matrix[i][j]+=matrix[i][j-1]
+                elif i&gt;0 and j==0:
+                    matrix[i][j]+=matrix[i-1][j]
+                else:
+                    matrix[i][j]+=matrix[i][j-1]+matrix[i-1][j]-matrix[i-1][j-1]
+                
+                area=matrix[i][j]
+                if area&lt;=k:
+                    heapq.heappush(res,-area)
+        
+        #for row in matrix:
+        #    print(row)
+        #print(res)
+   
+        for row in range(m):
+            for col in range(n):
+                for row_p in range(row):
+                    area=matrix[row][col]-matrix[row_p][col]
+                    if area&lt;=k:
+                            heapq.heappush(res,-area)
+                    for col_p in range(col):
+                        area=matrix[row][col]-matrix[row][col_p]
+                        if area&lt;=k:
+                            heapq.heappush(res,-area)
+                        area=matrix[row][col]-matrix[row_p][col]-matrix[row][col_p]+matrix[row_p][col_p]
+                        if area&lt;=k:
+                            heapq.heappush(res,-area)
 
-    left, right = 0, len(nums) - 1
-    while left + 1 &lt; right:
-        mid = (left + right) // 2
-        if nums[mid] == target:
-            return mid
-        elif nums[mid] &lt; target:
-            left = mid
+        return -heapq.heappop(res)
+
+#ANSWER
+import sortedcontainers
+class Solution:
+    def maxSumSubmatrix(self, matrix: List[List[int]], k: int) -&gt; int:
+        self.result=float('-inf')
+        def updateresult(nums,k):
+            sum=0
+            sortedsum=sortedcontainers.SortedSet()
+            sortedsum.add(0)
+            for num in nums:
+                #running sum
+                sum+=num
+                #get x where runningsum-x&lt;=k such that sum-x is closest to k
+                ind=bisect.bisect_left(sortedsum,sum-k)
+                try:
+                    x=sortedsum[ind]
+                except:
+                    x=None
+                if x is not None:
+                    self.result=max(self.result,sum-x)
+                sortedsum.add(sum)
+        
+        
+        for i in range(len(matrix)):
+            #start from ith row
+            rowsum=[0]*len(matrix[0])
+            for row in range(i,len(matrix)):
+                for col in range(len(matrix[0])):
+                    rowsum[col]+=matrix[row][col]
+                updateresult(rowsum,k)
+                
+                if self.result==k:
+                    return self.result
+        return self.result
+
+#ANSWER 
+import sortedcontainers
+class Solution:
+    
+    def maxSumSubmatrix(self, matrix: List[List[int]], k: int) -&gt; int:
+        self.result=float('-inf')
+        
+        def getmaxkadane(nums):
+            maxkadane=float('-inf')
+            currentmaxsum=0
+            for num in nums:
+                currentmaxsum=max(currentmaxsum+num,num)
+                maxkadane=max(maxkadane,currentmaxsum)
+            return maxkadane
+        def updateresult(nums,k):
+            kadanesum=getmaxkadane(nums)
+            if kadanesum&lt;=k:
+                self.result=max(self.result,kadanesum)
+                return
+            
+            
+            sum=0
+            sortedsum=sortedcontainers.SortedSet()
+            sortedsum.add(0)
+            for num in nums:
+                #running sum
+                sum+=num
+                #get x where runningsum-x&lt;=k such that sum-x is closest to k
+                ind=bisect.bisect_left(sortedsum,sum-k)
+                try:
+                    x=sortedsum[ind]
+                except:
+                    x=None
+                if x is not None:
+                    self.result=max(self.result,sum-x)
+                sortedsum.add(sum)
+        
+        
+        for i in range(len(matrix)):
+            #start from ith row
+            rowsum=[0]*len(matrix[0])
+            for row in range(i,len(matrix)):
+                for col in range(len(matrix[0])):
+                    rowsum[col]+=matrix[row][col]
+                updateresult(rowsum,k)
+                
+                if self.result==k:
+                    return self.result
+        return self.result
+                      
+</code></pre>
+<p>初次尝试heapq+cumsum time limit exceeded，因为还是属于暴力解法。。。看答案。答案用python去解也是TLE， 答案思路，先考虑1D问题，要寻找加和小于等于K的，相当于找当前的runningsum-X小于等于K，所以要寻找X大于等于runningsum-K，这样用orderedset和binary seasrch可以从runningsum中找到这个X，runningsum-X就是要求的小于等于K的累加和。 再还原成2d问题，对于每一个起始点为ith row的数据，初始化一个rowsum。然后每添加一个row就update一下答案。 Time complexity: O(m2nlog⁡n)<br>
+另一种方法增加改进用Kadane's algorithm gets the max possible sum of a sub-array in O(n) time，</p>
+<pre><code class="language-python">class Solution:
+    def maxSubArray(self, nums: List[int]) -&gt; int:
+        # Initialize our variables using the first element.
+        current_subarray = max_subarray = nums[0]
+        # Start with the 2nd element since we already used the first one.
+        for num in nums[1:]:
+            # If current_subarray is negative, throw it away. Otherwise, keep adding to it.
+            current_subarray = max(num, current_subarray + num)
+            max_subarray = max(max_subarray, current_subarray)
+        return max_subarray
+</code></pre>
+<p>一种DP的方法求maxsubarray。。。因为一个row如果maxsumarry已经小于等于K了就没必要用nlogn方法的updateresult再去求了，算一步时间复杂度上的小优化。这样写出来能pass。</p>
+<h1 id="364-nested-list-weight-sum-ii-medium">364. Nested List Weight Sum II （Medium）</h1>
+<p>You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists.<br>
+The depth of an integer is the number of lists that it is inside of. For example, the nested list [1,[2,2],[[3],2],1] has each integer's value set to its depth. Let maxDepth be the maximum depth of any integer.<br>
+The weight of an integer is maxDepth - (the depth of the integer) + 1.<br>
+Return the sum of each integer in nestedList multiplied by its weight.</p>
+<pre><code class="language-python"># &quot;&quot;&quot;
+# This is the interface that allows for creating nested lists.
+# You should not implement it, or speculate about its implementation
+# &quot;&quot;&quot;
+#class NestedInteger:
+#    def __init__(self, value=None):
+#        &quot;&quot;&quot;
+#        If value is not specified, initializes an empty list.
+#        Otherwise initializes a single integer equal to value.
+#        &quot;&quot;&quot;
+#
+#    def isInteger(self):
+#        &quot;&quot;&quot;
+#        @return True if this NestedInteger holds a single integer, rather than a nested list.
+#        :rtype bool
+#        &quot;&quot;&quot;
+#
+#    def add(self, elem):
+#        &quot;&quot;&quot;
+#        Set this NestedInteger to hold a nested list and adds a nested integer elem to it.
+#        :rtype void
+#        &quot;&quot;&quot;
+#
+#    def setInteger(self, value):
+#        &quot;&quot;&quot;
+#        Set this NestedInteger to hold a single integer equal to value.
+#        :rtype void
+#        &quot;&quot;&quot;
+#
+#    def getInteger(self):
+#        &quot;&quot;&quot;
+#        @return the single integer that this NestedInteger holds, if it holds a single integer
+#        Return None if this NestedInteger holds a nested list
+#        :rtype int
+#        &quot;&quot;&quot;
+#
+#    def getList(self):
+#        &quot;&quot;&quot;
+#        @return the nested list that this NestedInteger holds, if it holds a nested list
+#        Return None if this NestedInteger holds a single integer
+#        :rtype List[NestedInteger]
+#        &quot;&quot;&quot;
+
+class Solution:
+    def depthSumInverse(self, nestedList: List[NestedInteger]) -&gt; int:
+        #[[1,1],2,[1,1]]
+        
+        def depth(nestedList):
+            d=1
+            for li in nestedList:
+                if not li.isInteger():
+                    d=max(d,1+depth(li.getList()))
+            return d
+                    
+                    
+                
+        maxd=depth(nestedList)    
+        #print(maxd)
+    
+        
+        def helper(nestedList,depth):
+            res=0
+            for li in nestedList:
+                if li.isInteger():
+                    #print(li.getInteger(),(maxd-depth+1))
+                    res+=li.getInteger()*(maxd-depth+1)
+                else:
+                    
+                    res+=helper(li.getList(),depth+1)
+                   
+            return res
+        
+        return helper(nestedList,1)
+
+            
+        
+</code></pre>
+<p>算maxdepth时候卡壳了。。。。写出的算法同答案1，double DFS。 算法2，3用了math+BFS。</p>
+<h1 id="font-colorred365-water-and-jug-problem-mediumfont"><font color='red'>365. Water and Jug Problem （Medium）</font></h1>
+<p>ou are given two jugs with capacities jug1Capacity and jug2Capacity liters. There is an infinite amount of water supply available. Determine whether it is possible to measure exactly targetCapacity liters using these two jugs.</p>
+<p>If targetCapacity liters of water are measurable, you must have targetCapacity liters of water contained within one or both buckets by the end.</p>
+<p>Operations allowed:</p>
+<pre><code>Fill any of the jugs with water.
+Empty any of the jugs.
+Pour water from one jug into another till the other jug is completely full, or the first jug itself is empty.
+</code></pre>
+<pre><code class="language-python">class Solution:
+    def canMeasureWater(self, jug1Capacity: int, jug2Capacity: int, targetCapacity: int) -&gt; bool:
+     
+        x=jug1Capacity
+        y=jug2Capacity
+        z=targetCapacity
+        if x + y &lt; z: return False
+        if  x == z or y == z or x + y == z : return True
+        
+        def GCD(a,b):
+            while b:
+                a,b=b,a%b
+            return a
+        return z%GCD(x, y) == 0 
+
+#ANSWER BFS
+class Solution:
+    def canMeasureWater(self, jug1Capacity: int, jug2Capacity: int, targetCapacity: int) -&gt; bool:
+        x=jug1Capacity
+        y=jug2Capacity
+        z=targetCapacity
+     
+        if x&gt;y:
+            #make sure x&lt;y
+            x,y=y,x
+            
+        if z &gt; x + y: return False
+        
+        # set the initial state will empty jars;
+        queue = [(0, 0)]
+        visited = set((0, 0))
+        while queue:
+            a, b = queue.pop(0);
+            if a + b == z:
+                return True;
+            
+            states = set()
+            
+            states.add((x, b)) # fill jar x;
+            states.add((a, y)) # fill jar y;
+            states.add((0, b)) # empty jar x;
+            states.add((a, 0)) # empty jar y;
+            states.add((min(x, b + a), 0 if b &lt; x - a else b - (x - a))) # pour jar y to x;
+            states.add((0 if a + b &lt; y else a - (y - b), min(b + a, y))) # pour jar x to y;
+
+            for state in states:
+                if state in visited:
+                    continue;
+                queue.append(state)
+                visited.add(state);
+                
+        return False
+
+</code></pre>
+<p>一眼看上去好像是个dp问题。但提示是DFS，BFS, MATH。 答案用了 Bézout's identity and check if z is a multiple of GCD(x, y)<br>
+Bézout's identity (also called Bézout's lemma) is a theorem in the elementary theory of numbers:<br>
+let a and b be nonzero integers and let d be their greatest common divisor. Then there exist integers x and y such that ax+by=d，In addition, the greatest common divisor d is the smallest positive integer that can be written as ax + by every integer of the form ax + by is a multiple of the greatest common divisor d.<br>
+BFS解法也很经典</p>
+<h1 id="366-find-leaves-of-binary-tree-medium">366. Find Leaves of Binary Tree （Medium）</h1>
+<p>Given the root of a binary tree, collect a tree's nodes as if you were doing this:<br>
+Collect all the leaf nodes.<br>
+Remove all the leaf nodes.<br>
+Repeat until the tree is empty.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def findLeaves(self, root: Optional[TreeNode]) -&gt; List[List[int]]:
+        self.maxd=0
+        def depth(root):
+            if not root: return
+            if not root.left and not root.right:
+                root.d=0
+                return
+        
+            depth(root.left)
+            depth(root.right)
+            
+            if root.left and root.right:
+                root.d=max(root.left.d,root.right.d)+1
+            elif root.left:
+                root.d=root.left.d+1
+            else:
+                root.d=root.right.d+1
+            
+            self.maxd=max(self.maxd,root.d)
+                
+                    
+        depth(root)
+        res=[[] for _ in range(self.maxd+1)]
+        
+        def pre(root):
+            if not root: return 
+            res[root.d].append(root.val)
+            pre(root.left)
+            pre(root.right)
+        
+        pre(root)
+        return res 
+
+
+#ANSWER
+def findLeaves(self, root: TreeNode) -&gt; List[List[int]]:
+    output = collections.defaultdict(list)
+    
+    def dfs(node, layer):
+        if not node: 
+            return layer 
+        left = dfs(node.left, layer)
+        right = dfs(node.right, layer)
+        layer = max(left, right)
+        output[layer].append(node.val)
+        return layer + 1
+    
+    dfs(root, 0)
+    return output.values() 
+</code></pre>
+<p>先后序遍历给node标号，同时知道最大深度，然后初始化res，再前序遍历把val放到应该放的res位置。答案把所有的都放在后序遍历里了。</p>
+<h1 id="367-valid-perfect-square-easy">367. Valid Perfect Square （Easy）</h1>
+<p>Given a positive integer num, write a function which returns True if num is a perfect square else False.</p>
+<pre><code class="language-python">class Solution:
+    def isPerfectSquare(self, num: int) -&gt; bool:
+        l=1
+        r=num//2+1
+        while l&lt;=r:
+            m= (l+r)//2
+            if m*m==num:
+                return True
+            elif m*m&gt;num:
+                r=m-1
+            else:
+                l=m+1
+        return False
+#ANSWER
+class Solution:
+    def isPerfectSquare(self, num: int) -&gt; bool:
+        if num &lt; 2:
+            return True
+        
+        x = num // 2
+        while x * x &gt; num:
+            x = (x + num // x) // 2
+        return x * x == num
+</code></pre>
+<p>答案用了牛顿法，更快收敛比二分法。找出f（x）= x^2-num=0的根。 设一个猜测值Xk  ，f（Xk）是y值，f‘（Xk）是对比底，所以底= f（Xk）/f'(Xk)  新的猜测Xk+1= Xk- f（Xk）/f'(Xk) 所以 xk+1​=0.5*(xk​+num/xk​​)<br>
+牛顿法也是O(log⁡N)</p>
+<h1 id="font-colorred368-largest-divisible-subset-mediumfont"><font color='red'>368. Largest Divisible Subset （Medium）</font></h1>
+<p>Given a set of distinct positive integers nums, return the largest subset answer such that every pair (answer[i], answer[j]) of elements in this subset satisfies:<br>
+answer[i] % answer[j] == 0, or<br>
+answer[j] % answer[i] == 0<br>
+If there are multiple solutions, return any of them.</p>
+<pre><code class="language-python">class Solution:
+    def largestDivisibleSubset(self, nums: List[int]) -&gt; List[int]:
+        #dp[i]= maxsubset include nums[i] from 0 to i
+        # dp[i]=      nums[0] to nums[i] are divisible by nums[i] find max(dp)+1
+        nums.sort()
+        dp=[1]*len(nums)
+        for i in range(len(nums)):
+            for j in range(i):
+                if nums[i]%nums[j]==0 or nums[j]%nums[i]==0:
+                    dp[i]=max(dp[i],dp[j]+1)
+               
+        ind=dp.index(max(dp))
+        while ind+1&lt;len(dp) and dp[ind+1]==max(dp):
+            ind+=1
+        #print(nums)
+        #print(dp)
+        #reconstruct res
+        res=[]
+        cursize=max(dp)
+        curtail=nums[ind]
+        for i in range(ind,-1,-1):
+            if cursize==dp[i] and curtail%nums[i]==0:
+                res.append(nums[i])
+                cursize-=1
+                curtail=nums[i]
+        return res[::-1]
+
+ #ANSWER WAY OF WRITING        
+class Solution(object):
+    def largestDivisibleSubset(self, nums):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :rtype: List[int]
+        &quot;&quot;&quot;
+        # The container that holds all intermediate solutions.
+        # key: the largest element in a valid subset.
+        subsets = {-1: set()}
+        
+        for num in sorted(nums):
+            subsets[num] = max([subsets[k] for k in subsets if num % k == 0], key=len) | {num}
+        
+        return list(max(subsets.values(), key=len))
+</code></pre>
+<p>用dp可以算出长度，但没法正确给出一个result。问题出在了reconstruct这一步。 看了答案写出来了。<br>
+答案写出算法用了2个定理。假设【E，F，G】已经是从小到大排序好的而且是divisible subset，那么1）对于h大于G， h%G等于0则【E，F，G，h】满足divisible subset  2）对于 d小于E，若 E%d==0则【d，E，F，G】满足divisible subset。</p>
+<h1 id="369-plus-one-linked-list-medium">369. Plus One Linked List （Medium）</h1>
+<p>Given a non-negative integer represented as a linked list of digits, plus one to the integer.<br>
+The digits are stored such that the most significant digit is at the head of the list.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def plusOne(self, head: ListNode) -&gt; ListNode:
+        
+        def rev(head):
+            pre=None
+            while head:
+                headnext=head.next
+                head.next=pre
+                pre=head
+                head=headnext
+            return pre
+        
+        revlist_head = rev(head)
+        cur=revlist_head
+        first=True
+        carry=0
+        pre=None
+        while cur:
+            if first:
+                val=cur.val+carry+1
+                cur.val=val%10
+                carry=val//10
+                first=False
+            else:
+                val=cur.val+carry
+                cur.val=val%10
+                carry=val//10
+            pre=cur
+            cur=cur.next
+        
+        if carry:
+            pre.next=ListNode(val=carry)
+        
+        return rev(revlist_head)
+
+#ANSWER WAY OF WRITING
+class Solution:
+    def plusOne(self, head: ListNode) -&gt; ListNode:
+        
+        # sentinel head
+        sentinel = ListNode(0)
+        sentinel.next = head
+        not_nine = sentinel
+
+        # find the rightmost not-nine digit
+        while head:
+            if head.val != 9:
+                not_nine = head
+            head = head.next
+
+        # increase this rightmost not-nine digit by 1
+        not_nine.val += 1
+        not_nine = not_nine.next
+
+        # set all the following nines to zeros
+        while not_nine:
+            not_nine.val = 0
+            not_nine = not_nine.next
+
+        return sentinel if sentinel.val else sentinel.next
+
+</code></pre>
+<p>先rev了加1，然后再rev回去。<br>
+答案做法用哨兵0node，找到最右面不是9的node+1，后面是9的一律变0.</p>
+<h1 id="font-colorblue-370-range-addition-mediumfont"><font color='blue'> 370. Range Addition （Medium）</font></h1>
+<p>You are given an integer length and an array updates where updates[i] = [startIdxi, endIdxi, inci].</p>
+<p>You have an array arr of length length with all zeros, and you have some operation to apply on arr. In the ith operation, you should increment all the elements arr[startIdxi], arr[startIdxi + 1], ..., arr[endIdxi] by inci.</p>
+<p>Return arr after applying all the updates.</p>
+<pre><code class="language-python">class Solution:
+    def getModifiedArray(self, length: int, updates: List[List[int]]) -&gt; List[int]:
+        #brute force
+        res=[0]*length
+        for update in updates:
+            i,j,inc=update
+            res[i]+=inc
+            if j+1&lt;length:
+                res[j+1]+=-inc 
+            
+        for i in range(1,length):
+            res[i]+=res[i-1]
+        return res
+        
+
+</code></pre>
+<p>暴力解TLE。。 看了hint写出来了。。。第一个hint就是没必要用复杂数据结构，别想太多。<br>
+BIT,SEGMENTTREE</p>
+<pre><code class="language-python">tree=[0]*(2*size)   
+#####SEGMENT TREE
+#   1
+# 2   3
+#4 5 6 7
+# 1 2 3 4 5 6 7
+       
+def update(ind):
+    tree[ind]+=1
+    
+    while ind&gt;0:
+        left=ind
+        right=ind
+        if ind%2==0:
+            right+=1
         else:
-            right = mid
+            left-=1
+        if ind//2&gt;0:
+            tree[ind//2]=tree[left]+tree[right]
+        ind//=2
+#####
+#   1
+# 2   3
+#4 5 6 7
+# 1 2 3 4 5 6 7      
+def query(left,right):
+    res=0
+    while left&lt;=right:
+        if right%2==0:
+            res+=tree[right]
+            right-=1
+        if left%2==1:
+            res+=tree[left]
+            left+=1
 
-    # Post-processing:
-    # End Condition: left + 1 == right
-    if nums[left] == target: return left
-    if nums[right] == target: return right
-    return -1
+        left//=2
+        right//=2
+
+    return res
+
 </code></pre>
 
             </div>
@@ -631,7 +1313,7 @@
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/er-fen-fa-mo-ban/" title="二分法模板">https://headhuanglan.github.io/post/er-fen-fa-mo-ban/</a>
+      <a href="https://headhuanglan.github.io/post/leetcode-2021-12-09/" title="Leetcode 2021-12-09">https://headhuanglan.github.io/post/leetcode-2021-12-09/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -640,21 +1322,17 @@
   </ul>
   <div class="tags">
     
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/"># 算法总结</a>
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/"># leetcode</a>
     
   </div>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-01" href="https://headhuanglan.github.io/post/leetcode-2021-11-01/">Leetcode 2021-11-01</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-01" href="https://headhuanglan.github.io/post/leetcode-2021-11-01/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="大家来找茬(文字版)" href="https://headhuanglan.github.io/post/da-jia-lai-zhao-chi-wen-zi-ban/">大家来找茬(文字版)</a>
-        <a class="nav-mobile-next" title="大家来找茬(文字版)" href="https://headhuanglan.github.io/post/da-jia-lai-zhao-chi-wen-zi-ban/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2021-12-08" href="https://headhuanglan.github.io/post/leetcode-2021-12-08/">Leetcode 2021-12-08</a>
+        <a class="nav-mobile-next" title="Leetcode 2021-12-08" href="https://headhuanglan.github.io/post/leetcode-2021-12-08/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
