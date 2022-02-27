@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-02-21T06:28:36.055Z</updated>
+    <updated>2022-02-27T09:37:27.747Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,6 +10,493 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Lan&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2021-12-10]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-12-10/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-10/">
+        </link>
+        <updated>2021-12-09T17:33:22.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="font-colorred-371-sum-of-two-integers-medium-font"><font color='red'> 371. Sum of Two Integers （Medium） </font></h1>
+<p>Given two integers a and b, return the sum of the two integers without using the operators + and -.</p>
+<pre><code class="language-python">class Solution:
+    def getSum(self, a: int, b: int) -&gt; int:
+        x, y = abs(a), abs(b)
+        # ensure that abs(a) &gt;= abs(b)
+        if x &lt; y:
+            return self.getSum(b, a)
+        
+        # abs(a) &gt;= abs(b) --&gt; 
+        # a determines the sign
+        sign = 1 if a &gt; 0 else -1
+        
+        if a * b &gt;= 0:
+            # sum of two positive integers x + y
+            # where x &gt; y
+            while y:
+                answer = x ^ y
+                carry = (x &amp; y) &lt;&lt; 1
+                x, y = answer, carry
+        else:
+            # difference of two integers x - y
+            # where x &gt; y
+            while y:
+                answer = x ^ y
+                borrow = ((~x) &amp; y) &lt;&lt; 1
+                x, y = answer, borrow
+        
+        return x * sign
+#ANSWER
+class Solution:
+    def getSum(self, a: int, b: int) -&gt; int:
+        mask = 0xFFFFFFFF
+        
+        while b != 0:
+            a, b = (a ^ b) &amp; mask, ((a &amp; b) &lt;&lt; 1) &amp; mask
+        
+        max_int = 0x7FFFFFFF
+        return a if a &lt; max_int else ~(a ^ mask)
+</code></pre>
+<p>bit manipulation 初见感觉是。 但不知道怎么处理。思路，borrow 是 x&amp;y《《1， 没borrow的sum是x^y.</p>
+<h1 id="font-colorred-372-super-pow-medium-font"><font color='red'> 372. Super Pow (Medium) </font></h1>
+<p>Your task is to calculate a^b mod 1337 where a is a positive integer and b is an extremely large positive integer given in the form of an array.</p>
+<pre><code class="language-python">class Solution:
+    def superPow(self, a: int, b: List[int]) -&gt; int:
+        base=1337
+        def f(a,b):
+            res=1
+            for i in range(b):
+                res*=(a%base)
+                res%=base
+            return res
+        if not b: return 1
+        last_digit=b.pop()
+        return f(self.superPow(a, b), 10) * f(a, last_digit) % base;
+</code></pre>
+<p>mod 有结合律交换律吗？。。不太清楚。。。 答案用了1） ab % k = (a%k)(b%k)%k<br>
+2）a<sup>b%k=(a%k)</sup>b%k<br>
+推到递推关系：<br>
+a^1234567 % k = (a^1234560 a^7)%k= ((a^1234560)%k )  ((a^7)%k ) %k<br>
+= ((a<sup>123456)</sup>10)%k )  ((a^7)%k ) %k<br>
+= ((((a<sup>123456)%k)</sup>10 )% k)  ((a^7)%k ) %k<br>
+设 a^b%k=f(a,b)<br>
+f(a,1234567)=  f(f(a,123456),10) f(a,7)%k</p>
+<h1 id="font-colorred-373-find-k-pairs-with-smallest-sums-medium-font"><font color='red'> 373. Find K Pairs with Smallest Sums （Medium） </font></h1>
+<p>You are given two integer arrays nums1 and nums2 sorted in ascending order and an integer k.<br>
+Define a pair (u, v) which consists of one element from the first array and one element from the second array.<br>
+Return the k pairs (u1, v1), (u2, v2), ..., (uk, vk) with the smallest sums.</p>
+<pre><code class="language-python">class Solution:
+    def kSmallestPairs(self, nums1: List[int], nums2: List[int], k: int) -&gt; List[List[int]]:
+        res = []
+        if not nums1 or not nums2 or not k:
+            return res
+        
+        heap = []
+        visited = set()
+        
+        heapq.heappush(heap, (nums1[0] + nums2[0], 0, 0))
+        
+        visited.add((0, 0))
+        
+        while len(res) &lt; k and heap:
+            _, i, j = heapq.heappop(heap)
+            res.append([nums1[i], nums2[j]])
+            
+            if i+1 &lt; len(nums1) and (i+1, j) not in visited:
+                heapq.heappush(heap, (nums1[i+1] + nums2[j], i+1, j))
+                visited.add((i+1, j))
+            
+            if j+1 &lt; len(nums2) and (i, j+1) not in visited:
+                heapq.heappush(heap, (nums1[i] + nums2[j+1], i, j+1))
+                visited.add((i, j+1))
+        return res
+        
+           
+
+</code></pre>
+<p>暴力解肯定TLE。。。也想到了是k-way merge sort 但怎么写出来？直接抄答案了，用到了heapq.heappush, heapq.heappop, visited.  先从（0，0）开始push，然后是（1，0）（0，1）， i.e.   (i,j) then (i+1,j),(i,j+1)... 通过visited 去重。</p>
+<h1 id="374-guess-number-higher-or-lower-easy">374. Guess Number Higher or Lower （Easy）</h1>
+<p>We are playing the Guess Game. The game is as follows:<br>
+I pick a number from 1 to n. You have to guess which number I picked.<br>
+Every time you guess wrong, I will tell you whether the number I picked is higher or lower than your guess.<br>
+You call a pre-defined API int guess(int num), which returns three possible results:<br>
+-1: Your guess is higher than the number I picked (i.e. num &gt; pick).<br>
+1: Your guess is lower than the number I picked (i.e. num &lt; pick).<br>
+0: your guess is equal to the number I picked (i.e. num == pick).</p>
+<pre><code class="language-python"># The guess API is already defined for you.
+# @param num, your guess
+# @return -1 if my number is lower, 1 if my number is higher, otherwise return 0
+# def guess(num: int) -&gt; int:
+
+class Solution:
+    def guessNumber(self, n: int) -&gt; int:
+        l=1
+        r=n
+        while l&lt;=r:
+            m=(l+r)//2
+            if guess(m)==0:
+                return m
+            elif guess(m)==1:
+                l=m+1
+            else:
+                r=m-1
+# The guess API is already defined for you.
+# @param num, your guess
+# @return -1 if my number is lower, 1 if my number is higher, otherwise return 0
+# def guess(num: int) -&gt; int:
+
+class Solution:
+    def guessNumber(self, n: int) -&gt; int:
+        l=1
+        r=n
+        while l&lt;=r:
+            m1=l+(r-l)//3
+            m2=r-(r-l)//3
+            res1=guess(m1)
+            res2=guess(m2)
+            if res1==0:
+                return m1
+            if res2==0:
+                return m2
+            elif res1&lt;0:
+                r=m1-1
+            elif res2&gt;0:
+                l=m2+1
+            else:
+                l=m1+1
+                r=m2-1
+</code></pre>
+<p>二分法，三分法。。。</p>
+<h1 id="font-colorred375-guess-number-higher-or-lower-ii-mediumfont"><font color='red'>375. Guess Number Higher or Lower II （Medium）</font></h1>
+<p>We are playing the Guessing Game. The game will work as follows:<br>
+I pick a number between 1 and n.<br>
+You guess a number.<br>
+If you guess the right number, you win the game.<br>
+If you guess the wrong number, then I will tell you whether the number I picked is higher or lower, and you will continue guessing.<br>
+Every time you guess a wrong number x, you will pay x dollars. If you run out of money, you lose the game.<br>
+Given a particular n, return the minimum amount of money you need to guarantee a win regardless of what number I pick.</p>
+<pre><code class="language-python">class Solution:
+    def getMoneyAmount(self, n: int) -&gt; int:
+        #dp[i][j] will save the min cost guessing from i to j
+        dp=[[0]*(n+1) for _ in range(n+1)]
+         
+        def helper(start,end):
+            if start&gt;=end: return 0
+            if dp[start][end]!=0: return dp[start][end]
+            res=float('inf')
+            for x in range(start,end+1):
+                #try select x,the cost will be
+                tmp=x+max(helper(start,x-1),helper(x+1,end))
+                res=min(res,tmp)
+            dp[start][end]=res
+            return res
+            
+        return helper( 1, n)
+    
+</code></pre>
+<p>没思路。。。看答案，用了DP 关键是DP【i】【j】定义为从i猜到j，花费的最小cost。 那么如果X在i，j之间，选定了X，则cost为 X+max（dp【start】【x-1】，dp【x+1】【end】）因为dp这时候还没值，所以用helper（start，x-1），helper（x+1，end）代替，用max是因为不确定是左面还是右面，只能按照最坏情况准备钱。扫描所有X，然后最小的作为dp【i】【j】cost结果。</p>
+<h1 id="font-colorblue376-wiggle-subsequence-mediumfont"><font color='blue'>376. Wiggle Subsequence （Medium）</font></h1>
+<p>A wiggle sequence is a sequence where the differences between successive numbers strictly alternate between positive and negative. The first difference (if one exists) may be either positive or negative. A sequence with one element and a sequence with two non-equal elements are trivially wiggle sequences.<br>
+For example, [1, 7, 4, 9, 2, 5] is a wiggle sequence because the differences (6, -3, 5, -7, 3) alternate between positive and negative.<br>
+In contrast, [1, 4, 7, 2, 5] and [1, 7, 4, 5, 5] are not wiggle sequences. The first is not because its first two differences are positive, and the second is not because its last difference is zero.<br>
+A subsequence is obtained by deleting some elements (possibly zero) from the original sequence, leaving the remaining elements in their original order.<br>
+Given an integer array nums, return the length of the longest wiggle subsequence of nums.</p>
+<pre><code class="language-python">class Solution:
+    def wiggleMaxLength(self, nums: List[int]) -&gt; int:
+        #dp[i]   the max length of wiggle including nums[i]
+        # 1 17 5 10 13 15 10 5 16 8
+        # 0 +  - +  +   +  - - +  -
+        # 1 2  3 4  4   4  5 5 6  7   
+        
+        # 1 7 4 9 2 5
+        # 0 + - + - +
+        #sign[i] the sign of max length of nums[i-1] to nums[i] if increasing 1 decresasing -1
+        if len(nums)&lt;2: return len(nums)
+        if len(nums)==2 and nums[0]!=nums[1]:return 2
+        if len(nums)==2 and nums[0]==nums[1]:return 1
+        
+        
+        count_plus=0
+        count_minus=0
+        presign=None
+        for i in range(1,len(nums)):
+            if nums[i]==nums[i-1]: continue
+            sign= nums[i]-nums[i-1]&gt;0
+            if sign:
+                #positive
+                if presign is None:
+                    count_minus=1
+                
+                if presign!=sign:
+                    
+                    count_plus=count_minus+1
+            else:
+                #negtive
+                if presign is None:
+                    count_plus=1
+                if presign!=sign:
+                    count_minus=count_plus+1 
+            
+            presign=sign
+        
+        return max([1,count_plus,count_minus])
+
+#ANSWER DP O（n*n）
+class Solution:
+    def wiggleMaxLength(self, nums: List[int]) -&gt; int:
+        if len(nums)&lt;2: return len(nums)
+        up=[1]*len(nums)
+        down=[1]*len(nums)
+        for i in range(1,len(nums)):
+            for j in range(i):
+                if nums[i]&gt;nums[j]:
+                    up[i]=max(up[i],down[j]+1)
+                elif nums[i]&lt;nums[j]:
+                    down[i]=max(down[i],up[j]+1)
+        return max(up[-1],down[-1])
+
+#ANSWER DP O（n）
+class Solution:
+    def wiggleMaxLength(self, nums: List[int]) -&gt; int:
+        if len(nums)&lt;2: return len(nums)
+        up=[0]*len(nums)
+        down=[0]*len(nums)
+        up[0]=1
+        down[0]=1
+        for i in range(1,len(nums)):
+            if nums[i]&gt;nums[i-1]:
+                up[i]=down[i-1]+1
+                down[i]=down[i-1]
+            elif nums[i]&lt;nums[i-1]:
+                down[i]=up[i-1]+1
+                up[i]=up[i-1]
+            else:
+                down[i]=down[i-1]
+                up[i]=up[i-1]
+        return max(up[-1],down[-1])
+
+#ANSWER DP O（n） space O（1）
+class Solution:
+    def wiggleMaxLength(self, nums: List[int]) -&gt; int:
+        if len(nums)&lt;2: return len(nums)
+        up=1
+        down=1
+       
+        for i in range(1,len(nums)):
+            if nums[i]&gt;nums[i-1]:
+                up =down +1
+           
+            elif nums[i]&lt;nums[i-1]:
+                down =up +1
+              
+        return max(up ,down )
+
+#Greedy
+class Solution:
+    def wiggleMaxLength(self, nums: List[int]) -&gt; int:
+        if len(nums)&lt;2: return len(nums)
+        maxLen=1
+        sign=0
+        for i in range(1,len(nums)):
+            if nums[i]&lt;nums[i-1] and sign!=-1:
+                # find a peak nums[i-1] is peak, now it is a decreasing sequence sign=-1
+                sign=-1
+                maxLen+=1
+           
+            elif nums[i]&gt;nums[i-1] and sign!=1:
+                #valley
+                sign=1
+                maxLen+=1
+              
+        return maxLen
+         
+</code></pre>
+<p>本来想用DP做，但发现只用保持 count+ 和 count- 两个计数器就够了。  如果发现增加2元序列，count-加1. 如果发现减小2元序列，count+加1，最后返回count+,count-中最大的就可以了，注意corner case。答案用了多种方法，贴上来开阔思路。第三个方法和我的一样但是写的更简单</p>
+<h1 id="font-colorred-377-combination-sum-iv-mediumfont"><font color='red'> 377. Combination Sum IV （Medium）</font></h1>
+<p>Given an array of distinct integers nums and a target integer target, return the number of possible combinations that add up to target.<br>
+The test cases are generated so that the answer can fit in a 32-bit integer.</p>
+<pre><code class="language-python">class Solution:
+    def combinationSum4(self, nums: List[int], target: int) -&gt; int:
+        @lru_cache(None)
+        def dp(remain):
+            if remain==0:
+                return 1
+            res=0
+            for n in nums:
+                if remain-n&gt;=0:
+                    res+=dp(remain-n)
+            return res
+        return dp(target)
+    
+class Solution:
+    def combinationSum4(self, nums: List[int], target: int) -&gt; int:
+        # minor optimization
+        # nums.sort()
+        dp = [0 for i in range(target+1)]
+        dp[0] = 1
+
+        for comb_sum in range(target+1):
+
+            for num in nums:
+                if comb_sum - num &gt;= 0:
+                    dp[comb_sum] += dp[comb_sum-num]
+                # minor optimization, early stopping.
+                # else:
+                #    break
+        return dp[target]
+</code></pre>
+<p>知道是DP，而且知道DP【i】是能sum到i的组合个数，那么dp【i】=dp【i-n】+dp【n】为啥不对？？ n是添加的最后一个数。而且扫的是所有n in nums。 如果再拆分n，那么会有重复。<br>
+思路卡了， 应该是dp【i】+=dp【i-n】   要往组合里加n能到i，那么多出来的组合数就是dp【i-n】。应该求的是和。。。</p>
+<h1 id="379-design-phone-directory-medium">379. Design Phone Directory （Medium）</h1>
+<p>Design a phone directory that initially has maxNumbers empty slots that can store numbers. The directory should store numbers, check if a certain slot is empty or not, and empty a given slot.<br>
+Implement the PhoneDirectory class:<br>
+PhoneDirectory(int maxNumbers) Initializes the phone directory with the number of available slots maxNumbers.<br>
+int get() Provides a number that is not assigned to anyone. Returns -1 if no number is available.<br>
+bool check(int number) Returns true if the slot number is available and false otherwise.<br>
+void release(int number) Recycles or releases the slot number.</p>
+<pre><code class="language-python">class PhoneDirectory:
+
+    def __init__(self, maxNumbers: int):
+        self.n=maxNumbers
+        self.avaliable=set([i for i in range(self.n)])
+        self.used=set()
+        self.current=-1
+        
+
+    def get(self) -&gt; int:
+        if not self.avaliable: return -1
+        while not self.check(self.current):
+            self.current= (self.current+1)%self.n
+        
+        #current in self.avaliable
+        # remove from self.avaliable
+        self.avaliable.remove(self.current)
+        self.used.add(self.current)
+        
+        res = self.current
+        self.current= (self.current+1)%self.n
+        return res
+
+    def check(self, number: int) -&gt; bool:
+        return  number in self.avaliable 
+
+    def release(self, number: int) -&gt; None:
+        self.avaliable.add(number)
+        if number in self.used:
+            self.used.remove(number)
+        
+
+
+# Your PhoneDirectory object will be instantiated and called as such:
+# obj = PhoneDirectory(maxNumbers)
+# param_1 = obj.get()
+# param_2 = obj.check(number)
+# obj.release(number)
+
+   def __init__(self, maxNumbers):
+        self.available = set(range(maxNumbers))
+
+    def get(self):
+        return self.available.pop() if self.available else -1
+
+    def check(self, number):
+        return number in self.available
+
+    def release(self, number):
+        self.available.add(number)
+
+#ANSWER PERFECT
+class PhoneDirectory:
+
+    def __init__(self, maxNumbers: int):
+        self.pos=0
+        self.next=[0]*maxNumbers
+        for i in range(maxNumbers):
+            self.next[i]=(i+1)%maxNumbers
+        
+
+    def get(self) -&gt; int:
+        if self.next[self.pos]==-1: return -1
+        res=self.pos
+        self.pos=self.next[self.pos]
+        self.next[res]=-1
+        return res
+        
+
+    def check(self, number: int) -&gt; bool:
+        return self.next[number]!=-1
+
+    def release(self, number: int) -&gt; None:
+        if self.next[number]!=-1: return
+        self.next[number]=self.pos
+        self.pos=number
+        
+
+
+# Your PhoneDirectory object will be instantiated and called as such:
+# obj = PhoneDirectory(maxNumbers)
+# param_1 = obj.get()
+# param_2 = obj.check(number)
+# obj.release(number) int[] next;
+   
+  
+
+
+</code></pre>
+<p>答案很完美的写法：Use a linked list to track available numbers, and a pointer to head. If head is still available, get() would return it and move to the next available number. Release would re-add a node to the beginning of the linked list and update head</p>
+<h1 id="font-colorred-380-insert-delete-getrandom-o1-mediumfont"><font color='red'> 380. Insert Delete GetRandom O(1) （Medium）</font></h1>
+<p>Implement the RandomizedSet class:</p>
+<pre><code>RandomizedSet() Initializes the RandomizedSet object.
+bool insert(int val) Inserts an item val into the set if not present. Returns true if the item was not present, false otherwise.
+bool remove(int val) Removes an item val from the set if present. Returns true if the item was present, false otherwise.
+int getRandom() Returns a random element from the current set of elements (it's guaranteed that at least one element exists when this method is called). Each element must have the same probability of being returned.
+</code></pre>
+<p>You must implement the functions of the class such that each function works in average O(1) time complexity.</p>
+<pre><code class="language-python">from random import choice
+class RandomizedSet():
+    def __init__(self):
+        &quot;&quot;&quot;
+        Initialize your data structure here.
+        &quot;&quot;&quot;
+        self.dict = {}
+        self.list = []
+
+        
+    def insert(self, val: int) -&gt; bool:
+        &quot;&quot;&quot;
+        Inserts a value to the set. Returns true if the set did not already contain the specified element.
+        &quot;&quot;&quot;
+        if val in self.dict:
+            return False
+        self.dict[val] = len(self.list)
+        self.list.append(val)
+        return True
+        
+
+    def remove(self, val: int) -&gt; bool:
+        &quot;&quot;&quot;
+        Removes a value from the set. Returns true if the set contained the specified element.
+        &quot;&quot;&quot;
+        if val in self.dict:
+            # move the last element to the place idx of the element to delete
+            last_element, idx = self.list[-1], self.dict[val]
+            self.list[idx], self.dict[last_element] = last_element, idx
+            # delete the last element
+            self.list.pop()
+            del self.dict[val]
+            return True
+        return False
+
+    def getRandom(self) -&gt; int:
+        &quot;&quot;&quot;
+        Get a random element from the set.
+        &quot;&quot;&quot;
+        return choice(self.list)
+
+</code></pre>
+<p>这个思路好，用dic保存插入元素位置方便找出index， 删除时候找出index，然后和list中最后一个元素交换位置，然后pop list del dict【val】</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Leetcode 2021-12-09]]></title>
         <id>https://headhuanglan.github.io/post/leetcode-2021-12-09/</id>
@@ -4717,576 +5204,6 @@ def gameOfLife(self, board):
         return True
 </code></pre>
 <p>注意是一一映射，所以需要2个dict检查， 注意corner case。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-11-30]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-11-30/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-11-30/">
-        </link>
-        <updated>2021-11-30T03:53:48.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="271-encode-and-decode-strings-medium">271. Encode and Decode Strings (Medium)</h1>
-<p>Design an algorithm to encode a list of strings to a string. The encoded string is then sent over the network and is decoded back to the original list of strings.</p>
-<pre><code class="language-python">class Codec:
-    def encode(self, strs: [str]) -&gt; str:
-        &quot;&quot;&quot;Encodes a list of strings to a single string.
-        &quot;&quot;&quot;
-        candidate='a'
-        set_ = set()
-        for str in strs:
-            for s in str:
-                set_.add(s)
-        while candidate in set_:
-            candidate = chr(ord(candidate)+1)
-        return candidate + candidate.join(strs)
-        
-
-    def decode(self, s: str) -&gt; [str]:
-        &quot;&quot;&quot;Decodes a single string to a list of strings.
-        &quot;&quot;&quot;
-        candidate = s[0]
-        s = s[1:]
-        return s.split(candidate)
-        
-
-
-# Your Codec object will be instantiated and called as such:
-# codec = Codec()
-# codec.decode(codec.encode(strs))
-</code></pre>
-<h1 id="font-colorblue272-closest-binary-search-tree-value-ii-hard-font"><font color='blue'>272. Closest Binary Search Tree Value II (Hard) </font></h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def closestKValues(self, root: Optional[TreeNode], target: float, k: int) -&gt; List[int]:
-        stack  = []
-        s  =[]
-        while stack or root:
-            while root:
-                stack.append(root)
-                root=root.left
-            
-            root=stack.pop()
-            diff = abs(root.val-target)
-            if len(s)&lt;k:
-                s.append((diff,root.val))
-            else:
-                s.sort(key=lambda x:x[0])
-                if s and s[-1][0]&gt;diff:
-                    s.pop()
-                    s.append((diff,root.val))
-                    s.sort(key=lambda x:x[0])
-            
-            root=root.right
-        
-        return [e[1] for e in s]
-
-#ANSWER 1 Recursive Inorder + Sort, O(N log N) time
-class Solution:
-    def closestKValues(self, root: TreeNode, target: float, k: int) -&gt; List[int]:
-        def inorder(r: TreeNode):
-            return inorder(r.left) + [r.val] + inorder(r.right) if r else []
-        
-        nums = inorder(root)
-        nums.sort(key = lambda x: abs(x - target))
-        return nums[:k]
-
-#ANSWER 2 
-from heapq import heappush, heappop
-class Solution:
-    def closestKValues(self, root: TreeNode, target: float, k: int) -&gt; List[int]:
-        def inorder(r: TreeNode):
-            if not r:
-                return
-            
-            inorder(r.left)
-            heappush(heap, (- abs(r.val - target), r.val))
-            if len(heap) &gt; k:
-                heappop(heap)
-            inorder(r.right) 
-    
-        heap = []
-        inorder(root)
-        return [x for _, x in heap]
-
-#ANSWER 3 QuickSelect, O(N) time.
-class Solution:
-    def closestKValues(self, root: TreeNode, target: float, k: int) -&gt; List[int]:
-        def inorder(r: TreeNode):
-            return inorder(r.left) + [r.val] + inorder(r.right) if r else []
-        
-        def partition(pivot_idx, left, right):
-            pivot_dist = dist(pivot_idx)
-            
-            # 1. move pivot to end
-            nums[right], nums[pivot_idx] = nums[pivot_idx], nums[right]
-            store_idx = left
-            
-            # 2. move more close elements to the left
-            for i in range(left, right):
-                if dist(i) &lt; pivot_dist:
-                    nums[i], nums[store_idx] = nums[store_idx], nums[i]
-                    store_idx += 1
-                    
-            # 3. move pivot to its final place
-            nums[right], nums[store_idx] = nums[store_idx], nums[right]
-            
-            return store_idx
-            
-        def quickselect(left, right):
-            &quot;&quot;&quot;
-            Sort a list within left..right till kth less close element
-            takes its place.
-            &quot;&quot;&quot;
-            # base case: the list contains only one element
-            if left == right:
-                return 
-            
-            # select a random pivot_index
-            pivot_idx = randint(left, right)
-            
-            # find the pivot position in a sorted list
-            true_idx = partition(pivot_idx, left, right)
-            
-            # if the pivot is in its final sorted position
-            if true_idx == k:
-                return
-            
-            if true_idx &lt; k:
-                # go left
-                quickselect(true_idx, right)
-            else:
-                # go right
-                quickselect(left, true_idx)
-        
-        nums = inorder(root)
-        dist = lambda idx : abs(nums[idx] - target)
-        quickselect(0, len(nums) - 1)
-        return nums[:k]
-</code></pre>
-<p>虽然做出来了，但是感觉用minheap会更好。我的方法得一直sort，时间复杂度太高。  需要记住 from heapq import heappush，heappop 用法 heappush（heap，val） heappop（heap） 每次pop出来的是最小的元素。  O（n）方法用到了快排。</p>
-<h1 id="273-integer-to-english-words-hard">273. Integer to English Words （Hard）</h1>
-<p>Convert a non-negative integer num to its English words representation.</p>
-<pre><code class="language-python">class Solution:
-    def numberToWords(self, num: int) -&gt; str:
-      
-        nums = []
-      
-        if num==0: nums.append(0)
-        while num:
-            nums.append(num%1000)
-            num//=1000
-        
-    
-        res = []
-        l=len(nums)
-        dic = {0:'',1:'Thousand',2:'Million',3:'Billion',4:'Trillion'}
-        def helper(n):
-            if type(n)==str: return ''
-            s  = ''
-            dic = {0:'Zero',1:'One',2:'Two',3:'Three',4:'Four',5:'Five',6:'Six',7:'Seven',8:'Eight',9:'Nine',10:'Ten',11:'Eleven',12:'Twelve',13:'Thirteen',14:'Fourteen',15:'Fifteen',16:'Sixteen',17:'Seventeen',18:'Eighteen',19:'Nineteen',20:'Twenty',30:'Thirty',40:'Forty',50:'Fifty',60:'Sixty',70:'Seventy',80:'Eighty',90:'Ninety'}
-            
-            if n&lt;10: return dic[n]
-            if n&gt;99:
-                s+= dic[n//100]+' Hundred'
-            n = n%100
-            if n==0: return s
-            if n in dic:
-                s+= ' '+dic[n]
-                return s
-            else:
-                s+=' '+dic[10*(n//10)]
-                n=n%10
-                if n==0:
-                    return s
-                else:
-                    s+= ' '+ dic[n]
-                    return s
-       
-        tmp=[]
-        while nums:
-            if nums[0]==0:
-                nums.pop(0)
-                tmp.append('#')
-            else:
-                tmp.append(nums.pop(0))
-
-        nums=tmp
-        if nums==['#']:
-            nums=[0]
-        for i,number in enumerate(nums):
-            if number!='#':
-                res.append(helper(number)+ ' ' + dic[i])
-        return ' '.join([ e.strip() for e in res[::-1] if e.strip()])
-#ANSWER
-class Solution:
-    def numberToWords(self, num):
-        &quot;&quot;&quot;
-        :type num: int
-        :rtype: str
-        &quot;&quot;&quot;
-        def one(num):
-            switcher = {
-                1: 'One',
-                2: 'Two',
-                3: 'Three',
-                4: 'Four',
-                5: 'Five',
-                6: 'Six',
-                7: 'Seven',
-                8: 'Eight',
-                9: 'Nine'
-            }
-            return switcher.get(num)
-
-        def two_less_20(num):
-            switcher = {
-                10: 'Ten',
-                11: 'Eleven',
-                12: 'Twelve',
-                13: 'Thirteen',
-                14: 'Fourteen',
-                15: 'Fifteen',
-                16: 'Sixteen',
-                17: 'Seventeen',
-                18: 'Eighteen',
-                19: 'Nineteen'
-            }
-            return switcher.get(num)
-        
-        def ten(num):
-            switcher = {
-                2: 'Twenty',
-                3: 'Thirty',
-                4: 'Forty',
-                5: 'Fifty',
-                6: 'Sixty',
-                7: 'Seventy',
-                8: 'Eighty',
-                9: 'Ninety'
-            }
-            return switcher.get(num)
-        
-
-        def two(num):
-            if not num:
-                return ''
-            elif num &lt; 10:
-                return one(num)
-            elif num &lt; 20:
-                return two_less_20(num)
-            else:
-                tenner = num // 10
-                rest = num - tenner * 10
-                return ten(tenner) + ' ' + one(rest) if rest else ten(tenner)
-        
-        def three(num):
-            hundred = num // 100
-            rest = num - hundred * 100
-            if hundred and rest:
-                return one(hundred) + ' Hundred ' + two(rest) 
-            elif not hundred and rest: 
-                return two(rest)
-            elif hundred and not rest:
-                return one(hundred) + ' Hundred'
-        
-        billion = num // 1000000000
-        million = (num - billion * 1000000000) // 1000000
-        thousand = (num - billion * 1000000000 - million * 1000000) // 1000
-        rest = num - billion * 1000000000 - million * 1000000 - thousand * 1000
-        
-        if not num:
-            return 'Zero'
-        
-        result = ''
-        if billion:        
-            result = three(billion) + ' Billion'
-        if million:
-            result += ' ' if result else ''    
-            result += three(million) + ' Million'
-        if thousand:
-            result += ' ' if result else ''
-            result += three(thousand) + ' Thousand'
-        if rest:
-            result += ' ' if result else ''
-            result += three(rest)
-        return result
-
-</code></pre>
-<p>corner case 有点太多了。。。写出来是写出来了。</p>
-<h1 id="274-h-index-medium">274. H-Index （Medium）</h1>
-<p>Given an array of integers citations where citations[i] is the number of citations a researcher received for their ith paper, return compute the researcher's h-index.</p>
-<pre><code class="language-python">class Solution:
-    def hIndex(self, citations: List[int]) -&gt; int:
-        # [1,3,1]
-        # 
-        #  0 1 2 3
-        # []
-        
-        dp = [0]*(len(citations)+1)
-        for c in citations:
-            if c&gt;len(citations):
-                c=len(citations)
-            dp[c]+=1
-        
-        for i in range(len(dp)-2,-1,-1):
-            dp[i]=dp[i]+dp[i+1]
-        
-        hindex=[]
-        print(dp)
-        for ind, n in enumerate(dp):
-            if n&gt;=ind:
-                hindex.append(ind)
-        
-        return max(hindex)
-
-#ANSWER reverse SORT
-class Solution:
-    def hIndex(self, citations: List[int]) -&gt; int:
-    
-        citations.sort(reverse=True)
-        print(citations)
-        hindex=0
-        for ind, cit in enumerate(citations):
-            hindex_candidate = ind+1
-            if cit&gt;=hindex_candidate:
-                hindex = hindex_candidate
-                
-        return hindex
-
-</code></pre>
-<h1 id="font-colorblue275-h-index-ii-medium-font"><font color='blue'>275. H-Index II (Medium) </font></h1>
-<p>sorted citations O(lgn) time to solve</p>
-<pre><code class="language-python">class Solution:
-    def hIndex(self, citations: List[int]) -&gt; int:
-        # already sorterd so binary search
-        
-        #hindex=0
-        #for idx in range(len(citations)-1,-1,-1):
-        #    cit = citations[idx]
-        #    hidx =  len(citations)-idx 
-        #    if cit&gt;=hidx:
-        #        hindex=hidx
-        # 
-        #return hindex
-        
-        l=0
-        r=len(citations)-1
-        res = [0]
-        while l&lt;=r:
-            m=(l+r)//2
-            
-            cit=citations[m]
-            hidx=len(citations)-m
-            if cit&gt;=hidx:
-                res.append(hidx)
-                r=m-1
-            else:
-                l=m+1
-        
-        return max(res)
-
-#ANSWER
-class Solution:
-    def hIndex(self, citations):
-        &quot;&quot;&quot;
-        :type citations: List[int]
-        :rtype: int
-        &quot;&quot;&quot;
-        n = len(citations)
-        for idx, c in enumerate(citations):
-            if c &gt;= n - idx:
-                return n - idx
-        return 0
-#binary serach
-class Solution:
-    def hIndex(self, citations):
-        &quot;&quot;&quot;
-        :type citations: List[int]
-        :rtype: int
-        &quot;&quot;&quot;
-        n = len(citations)
-        left, right = 0, n - 1
-
-        # We need to find the rightmost 'index' such that: (citations[index] &lt;= n - index)
-        while left &lt;= right:
-            mid = left + (right - left) // 2
-
-            # There's (n - mid) papers with an equal or higher citation count than citations[mid]
-            # If (citations[mid] == n - mid) it's the optimal result and can be returned right away
-            if citations[mid] == n - mid:
-                return n - mid
-
-            # If citations[mid] is less than (n - mid), narrow down on the right half to look for a paper
-            # at a future index that meets the h-index criteria. Otherwise, narrow down on the left half
-            if citations[mid] &lt; n - mid:
-                left = mid + 1
-            else:
-                right = mid - 1
-
-        # We didn't find an exact match, so there's exactly (n - left) papers that have citations
-        # greater than or equal to citations[left] and that is our answer
-        return n - left
-</code></pre>
-<p>虽然做出来了，但是还是不熟。</p>
-<h1 id="font-colorred276-paint-fence-medium-font"><font color='red'>276. Paint Fence (Medium) </font></h1>
-<p>You are painting a fence of n posts with k different colors. You must paint the posts following these rules:<br>
-Every post must be painted exactly one color.<br>
-There cannot be three or more consecutive posts with the same color.<br>
-Given the two integers n and k, return the number of ways you can paint the fence.</p>
-<pre><code class="language-python">class Solution:
-    def numWays(self, n: int, k: int) -&gt; int:
-        # dp    
-        # n = 0    0  
-        # n = 1    k
-        # n = 2    k*k    
-        # n = 3    diff color  (k-1)*dp[i-1]   same color 1*  (k-1)*dp[i-2]  
-        # so, dp[i] = (k-1)dp[i-1]+(k-1)*dp[i-2]
-        
-        if n==1:
-            return k
-        if n==2:
-            return k*k
-        dp=[0]*(n+1)
-        dp[1]=k
-        dp[2]=k*k
-        for i in range(3,n+1):
-            dp[i] = (k-1)*(dp[i-1]+dp[i-2])
-        
-        return dp[n]
-</code></pre>
-<p>感觉是DP，递推关系是？ 已经想到了，但是没仔细去想。 当前颜色和前一个相同， 当前颜色和前一个不同。</p>
-<h1 id="font-colorred-277-find-the-celebrity-mediumfont"><font color='red'> 277. Find the Celebrity （Medium）</font></h1>
-<pre><code class="language-python">
-class Solution:
-    def findCelebrity(self, n: int) -&gt; int:
-        self.n = n
-        celebrity_candidate = 0
-        for i in range(1, n):
-            if knows(celebrity_candidate, i):
-                celebrity_candidate = i
-        if self.is_celebrity(celebrity_candidate):
-            return celebrity_candidate
-        return -1
-
-    def is_celebrity(self, i):
-        for j in range(self.n):
-            if i == j: continue
-            if knows(i, j) or not knows(j, i):
-                return False
-        return True
-</code></pre>
-<p>答案找possible candidate O（n）时间的方法第一次没想出来。。。</p>
-<h1 id="278-first-bad-version-easy">278. First Bad Version （Easy）</h1>
-<p>Suppose you have n versions [1, 2, ..., n] and you want to find out the first bad one, which causes all the following ones to be bad.</p>
-<p>You are given an API bool isBadVersion(version) which returns whether version is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.</p>
-<pre><code class="language-python"># The isBadVersion API is already defined for you.
-# @param version, an integer
-# @return an integer
-# def isBadVersion(version):
-
-class Solution:
-    def firstBadVersion(self, n):
-        &quot;&quot;&quot;
-        :type n: int
-        :rtype: int
-        &quot;&quot;&quot;
-        
-        l=1
-        r=n
-        while l&lt;=r:
-            m=(l+r)//2
-            if isBadVersion(m):
-                r=m-1
-            else:
-                l=m+1
-        return l
-
-</code></pre>
-<h1 id="font-colorred279-perfect-squares-medium-font"><font color='red'>279. Perfect Squares (Medium) </font></h1>
-<p>Given an integer n, return the least number of perfect square numbers that sum to n.</p>
-<pre><code class="language-python">class Solution:
-    def numSquares(self, n: int) -&gt; int:
-        #dp   1 2  3  4  5  6  7  8
-        #     1 2  3  1  2  3  4  2
-        if n&lt;=3: return n
-        def is_sqrt(num):
-            for i in range(1,num//2+1):
-                if i*i==num:
-                    return True
-            return False
-        dp = [float('inf')]*(n+1)
-        dp[0]=0
-        dp[1]=1
-        dp[2]=2
-        dp[3]=3
-        for i in range(4,n+1):
-            if is_sqrt(i):
-                dp[i]=1
-            else:
-                for ii in range(1,i//2+1):
-                    dp[i]=min(dp[i],dp[ii]+dp[i-ii])
-        
-        print(dp)
-        return dp[n]
-
-#ANSWER O（n*sqrt（n））
-class Solution(object):
-    def numSquares(self, n):
-        &quot;&quot;&quot;
-        :type n: int
-        :rtype: int
-        &quot;&quot;&quot;
-        square_nums = [i**2 for i in range(0, int(math.sqrt(n))+1)]
-        
-        dp = [float('inf')] * (n+1)
-        # bottom case
-        dp[0] = 0
-        
-        for i in range(1, n+1):
-            for square in square_nums:
-                if i &lt; square:
-                    break
-                dp[i] = min(dp[i], dp[i-square] + 1)
-        
-        return dp[-1]
-</code></pre>
-<p>第一次整了个time limit exceeded。 思路类似,答案pre calculate square_nums  省了很多时间也不用判断是否为完全平方数。</p>
-<h1 id="font-colorred280-wiggle-sort-mediumfont"><font color='red'>280. Wiggle Sort （Medium）</font></h1>
-<p>Given an integer array nums, reorder it such that nums[0] &lt;= nums[1] &gt;= nums[2] &lt;= nums[3]....<br>
-You may assume the input array always has a valid answer.</p>
-<pre><code class="language-python">class Solution:
-    def wiggleSort(self, nums: List[int]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify nums in-place instead.
-        &quot;&quot;&quot;
-        nums.sort()
-        for i in range(1,len(nums)-1,2):
-            nums[i],nums[i+1]=nums[i+1],nums[i]
-
-#ANSWER
-class Solution:
-    def wiggleSort(self, nums: List[int]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify nums in-place instead.
-        &quot;&quot;&quot;
-        less=True
-        for i in range(len(nums)-1):
-            if less:
-                if nums[i]&gt;nums[i+1]:
-                    nums[i],nums[i+1]=nums[i+1],nums[i]
-            else:
-                if nums[i]&lt;nums[i+1]:
-                    nums[i],nums[i+1]=nums[i+1],nums[i]
-            
-            less=not less
-</code></pre>
-<p>too late today。  思路1  sort first， 从第二个元素开始swap。 思路2，如果顺序不正确就纠正。</p>
 ]]></content>
     </entry>
 </feed>

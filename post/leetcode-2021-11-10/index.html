@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-10 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1645424908676">
+<link rel="shortcut icon" href="/favicon.ico?v=1645954556961">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">43</span>
+        <span class="site-item-stat-count">44</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1535,6 +1535,490 @@ The solution set must not contain duplicate subsets. Return the solution in any 
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-10/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;font-colorred-371-sum-of-two-integers-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 371. Sum of Two Integers （Medium） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given two integers a and b, return the sum of the two integers without using the operators + and -.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def getSum(self, a: int, b: int) -&amp;gt; int:
+        x, y = abs(a), abs(b)
+        # ensure that abs(a) &amp;gt;= abs(b)
+        if x &amp;lt; y:
+            return self.getSum(b, a)
+        
+        # abs(a) &amp;gt;= abs(b) --&amp;gt; 
+        # a determines the sign
+        sign = 1 if a &amp;gt; 0 else -1
+        
+        if a * b &amp;gt;= 0:
+            # sum of two positive integers x + y
+            # where x &amp;gt; y
+            while y:
+                answer = x ^ y
+                carry = (x &amp;amp; y) &amp;lt;&amp;lt; 1
+                x, y = answer, carry
+        else:
+            # difference of two integers x - y
+            # where x &amp;gt; y
+            while y:
+                answer = x ^ y
+                borrow = ((~x) &amp;amp; y) &amp;lt;&amp;lt; 1
+                x, y = answer, borrow
+        
+        return x * sign
+#ANSWER
+class Solution:
+    def getSum(self, a: int, b: int) -&amp;gt; int:
+        mask = 0xFFFFFFFF
+        
+        while b != 0:
+            a, b = (a ^ b) &amp;amp; mask, ((a &amp;amp; b) &amp;lt;&amp;lt; 1) &amp;amp; mask
+        
+        max_int = 0x7FFFFFFF
+        return a if a &amp;lt; max_int else ~(a ^ mask)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;bit manipulation 初见感觉是。 但不知道怎么处理。思路，borrow 是 x&amp;amp;y《《1， 没borrow的sum是x^y.&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-372-super-pow-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 372. Super Pow (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Your task is to calculate a^b mod 1337 where a is a positive integer and b is an extremely large positive integer given in the form of an array.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def superPow(self, a: int, b: List[int]) -&amp;gt; int:
+        base=1337
+        def f(a,b):
+            res=1
+            for i in range(b):
+                res*=(a%base)
+                res%=base
+            return res
+        if not b: return 1
+        last_digit=b.pop()
+        return f(self.superPow(a, b), 10) * f(a, last_digit) % base;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;mod 有结合律交换律吗？。。不太清楚。。。 答案用了1） ab % k = (a%k)(b%k)%k&lt;br&gt;
+2）a&lt;sup&gt;b%k=(a%k)&lt;/sup&gt;b%k&lt;br&gt;
+推到递推关系：&lt;br&gt;
+a^1234567 % k = (a^1234560 a^7)%k= ((a^1234560)%k )  ((a^7)%k ) %k&lt;br&gt;
+= ((a&lt;sup&gt;123456)&lt;/sup&gt;10)%k )  ((a^7)%k ) %k&lt;br&gt;
+= ((((a&lt;sup&gt;123456)%k)&lt;/sup&gt;10 )% k)  ((a^7)%k ) %k&lt;br&gt;
+设 a^b%k=f(a,b)&lt;br&gt;
+f(a,1234567)=  f(f(a,123456),10) f(a,7)%k&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-373-find-k-pairs-with-smallest-sums-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 373. Find K Pairs with Smallest Sums （Medium） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given two integer arrays nums1 and nums2 sorted in ascending order and an integer k.&lt;br&gt;
+Define a pair (u, v) which consists of one element from the first array and one element from the second array.&lt;br&gt;
+Return the k pairs (u1, v1), (u2, v2), ..., (uk, vk) with the smallest sums.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def kSmallestPairs(self, nums1: List[int], nums2: List[int], k: int) -&amp;gt; List[List[int]]:
+        res = []
+        if not nums1 or not nums2 or not k:
+            return res
+        
+        heap = []
+        visited = set()
+        
+        heapq.heappush(heap, (nums1[0] + nums2[0], 0, 0))
+        
+        visited.add((0, 0))
+        
+        while len(res) &amp;lt; k and heap:
+            _, i, j = heapq.heappop(heap)
+            res.append([nums1[i], nums2[j]])
+            
+            if i+1 &amp;lt; len(nums1) and (i+1, j) not in visited:
+                heapq.heappush(heap, (nums1[i+1] + nums2[j], i+1, j))
+                visited.add((i+1, j))
+            
+            if j+1 &amp;lt; len(nums2) and (i, j+1) not in visited:
+                heapq.heappush(heap, (nums1[i] + nums2[j+1], i, j+1))
+                visited.add((i, j+1))
+        return res
+        
+           
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;暴力解肯定TLE。。。也想到了是k-way merge sort 但怎么写出来？直接抄答案了，用到了heapq.heappush, heapq.heappop, visited.  先从（0，0）开始push，然后是（1，0）（0，1）， i.e.   (i,j) then (i+1,j),(i,j+1)... 通过visited 去重。&lt;/p&gt;
+&lt;h1 id=&#34;374-guess-number-higher-or-lower-easy&#34;&gt;374. Guess Number Higher or Lower （Easy）&lt;/h1&gt;
+&lt;p&gt;We are playing the Guess Game. The game is as follows:&lt;br&gt;
+I pick a number from 1 to n. You have to guess which number I picked.&lt;br&gt;
+Every time you guess wrong, I will tell you whether the number I picked is higher or lower than your guess.&lt;br&gt;
+You call a pre-defined API int guess(int num), which returns three possible results:&lt;br&gt;
+-1: Your guess is higher than the number I picked (i.e. num &amp;gt; pick).&lt;br&gt;
+1: Your guess is lower than the number I picked (i.e. num &amp;lt; pick).&lt;br&gt;
+0: your guess is equal to the number I picked (i.e. num == pick).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# The guess API is already defined for you.
+# @param num, your guess
+# @return -1 if my number is lower, 1 if my number is higher, otherwise return 0
+# def guess(num: int) -&amp;gt; int:
+
+class Solution:
+    def guessNumber(self, n: int) -&amp;gt; int:
+        l=1
+        r=n
+        while l&amp;lt;=r:
+            m=(l+r)//2
+            if guess(m)==0:
+                return m
+            elif guess(m)==1:
+                l=m+1
+            else:
+                r=m-1
+# The guess API is already defined for you.
+# @param num, your guess
+# @return -1 if my number is lower, 1 if my number is higher, otherwise return 0
+# def guess(num: int) -&amp;gt; int:
+
+class Solution:
+    def guessNumber(self, n: int) -&amp;gt; int:
+        l=1
+        r=n
+        while l&amp;lt;=r:
+            m1=l+(r-l)//3
+            m2=r-(r-l)//3
+            res1=guess(m1)
+            res2=guess(m2)
+            if res1==0:
+                return m1
+            if res2==0:
+                return m2
+            elif res1&amp;lt;0:
+                r=m1-1
+            elif res2&amp;gt;0:
+                l=m2+1
+            else:
+                l=m1+1
+                r=m2-1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;二分法，三分法。。。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred375-guess-number-higher-or-lower-ii-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;375. Guess Number Higher or Lower II （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;We are playing the Guessing Game. The game will work as follows:&lt;br&gt;
+I pick a number between 1 and n.&lt;br&gt;
+You guess a number.&lt;br&gt;
+If you guess the right number, you win the game.&lt;br&gt;
+If you guess the wrong number, then I will tell you whether the number I picked is higher or lower, and you will continue guessing.&lt;br&gt;
+Every time you guess a wrong number x, you will pay x dollars. If you run out of money, you lose the game.&lt;br&gt;
+Given a particular n, return the minimum amount of money you need to guarantee a win regardless of what number I pick.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def getMoneyAmount(self, n: int) -&amp;gt; int:
+        #dp[i][j] will save the min cost guessing from i to j
+        dp=[[0]*(n+1) for _ in range(n+1)]
+         
+        def helper(start,end):
+            if start&amp;gt;=end: return 0
+            if dp[start][end]!=0: return dp[start][end]
+            res=float(&#39;inf&#39;)
+            for x in range(start,end+1):
+                #try select x,the cost will be
+                tmp=x+max(helper(start,x-1),helper(x+1,end))
+                res=min(res,tmp)
+            dp[start][end]=res
+            return res
+            
+        return helper( 1, n)
+    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;没思路。。。看答案，用了DP 关键是DP【i】【j】定义为从i猜到j，花费的最小cost。 那么如果X在i，j之间，选定了X，则cost为 X+max（dp【start】【x-1】，dp【x+1】【end】）因为dp这时候还没值，所以用helper（start，x-1），helper（x+1，end）代替，用max是因为不确定是左面还是右面，只能按照最坏情况准备钱。扫描所有X，然后最小的作为dp【i】【j】cost结果。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue376-wiggle-subsequence-mediumfont&#34;&gt;&lt;font color=&#39;blue&#39;&gt;376. Wiggle Subsequence （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;A wiggle sequence is a sequence where the differences between successive numbers strictly alternate between positive and negative. The first difference (if one exists) may be either positive or negative. A sequence with one element and a sequence with two non-equal elements are trivially wiggle sequences.&lt;br&gt;
+For example, [1, 7, 4, 9, 2, 5] is a wiggle sequence because the differences (6, -3, 5, -7, 3) alternate between positive and negative.&lt;br&gt;
+In contrast, [1, 4, 7, 2, 5] and [1, 7, 4, 5, 5] are not wiggle sequences. The first is not because its first two differences are positive, and the second is not because its last difference is zero.&lt;br&gt;
+A subsequence is obtained by deleting some elements (possibly zero) from the original sequence, leaving the remaining elements in their original order.&lt;br&gt;
+Given an integer array nums, return the length of the longest wiggle subsequence of nums.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def wiggleMaxLength(self, nums: List[int]) -&amp;gt; int:
+        #dp[i]   the max length of wiggle including nums[i]
+        # 1 17 5 10 13 15 10 5 16 8
+        # 0 +  - +  +   +  - - +  -
+        # 1 2  3 4  4   4  5 5 6  7   
+        
+        # 1 7 4 9 2 5
+        # 0 + - + - +
+        #sign[i] the sign of max length of nums[i-1] to nums[i] if increasing 1 decresasing -1
+        if len(nums)&amp;lt;2: return len(nums)
+        if len(nums)==2 and nums[0]!=nums[1]:return 2
+        if len(nums)==2 and nums[0]==nums[1]:return 1
+        
+        
+        count_plus=0
+        count_minus=0
+        presign=None
+        for i in range(1,len(nums)):
+            if nums[i]==nums[i-1]: continue
+            sign= nums[i]-nums[i-1]&amp;gt;0
+            if sign:
+                #positive
+                if presign is None:
+                    count_minus=1
+                
+                if presign!=sign:
+                    
+                    count_plus=count_minus+1
+            else:
+                #negtive
+                if presign is None:
+                    count_plus=1
+                if presign!=sign:
+                    count_minus=count_plus+1 
+            
+            presign=sign
+        
+        return max([1,count_plus,count_minus])
+
+#ANSWER DP O（n*n）
+class Solution:
+    def wiggleMaxLength(self, nums: List[int]) -&amp;gt; int:
+        if len(nums)&amp;lt;2: return len(nums)
+        up=[1]*len(nums)
+        down=[1]*len(nums)
+        for i in range(1,len(nums)):
+            for j in range(i):
+                if nums[i]&amp;gt;nums[j]:
+                    up[i]=max(up[i],down[j]+1)
+                elif nums[i]&amp;lt;nums[j]:
+                    down[i]=max(down[i],up[j]+1)
+        return max(up[-1],down[-1])
+
+#ANSWER DP O（n）
+class Solution:
+    def wiggleMaxLength(self, nums: List[int]) -&amp;gt; int:
+        if len(nums)&amp;lt;2: return len(nums)
+        up=[0]*len(nums)
+        down=[0]*len(nums)
+        up[0]=1
+        down[0]=1
+        for i in range(1,len(nums)):
+            if nums[i]&amp;gt;nums[i-1]:
+                up[i]=down[i-1]+1
+                down[i]=down[i-1]
+            elif nums[i]&amp;lt;nums[i-1]:
+                down[i]=up[i-1]+1
+                up[i]=up[i-1]
+            else:
+                down[i]=down[i-1]
+                up[i]=up[i-1]
+        return max(up[-1],down[-1])
+
+#ANSWER DP O（n） space O（1）
+class Solution:
+    def wiggleMaxLength(self, nums: List[int]) -&amp;gt; int:
+        if len(nums)&amp;lt;2: return len(nums)
+        up=1
+        down=1
+       
+        for i in range(1,len(nums)):
+            if nums[i]&amp;gt;nums[i-1]:
+                up =down +1
+           
+            elif nums[i]&amp;lt;nums[i-1]:
+                down =up +1
+              
+        return max(up ,down )
+
+#Greedy
+class Solution:
+    def wiggleMaxLength(self, nums: List[int]) -&amp;gt; int:
+        if len(nums)&amp;lt;2: return len(nums)
+        maxLen=1
+        sign=0
+        for i in range(1,len(nums)):
+            if nums[i]&amp;lt;nums[i-1] and sign!=-1:
+                # find a peak nums[i-1] is peak, now it is a decreasing sequence sign=-1
+                sign=-1
+                maxLen+=1
+           
+            elif nums[i]&amp;gt;nums[i-1] and sign!=1:
+                #valley
+                sign=1
+                maxLen+=1
+              
+        return maxLen
+         
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;本来想用DP做，但发现只用保持 count+ 和 count- 两个计数器就够了。  如果发现增加2元序列，count-加1. 如果发现减小2元序列，count+加1，最后返回count+,count-中最大的就可以了，注意corner case。答案用了多种方法，贴上来开阔思路。第三个方法和我的一样但是写的更简单&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-377-combination-sum-iv-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 377. Combination Sum IV （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an array of distinct integers nums and a target integer target, return the number of possible combinations that add up to target.&lt;br&gt;
+The test cases are generated so that the answer can fit in a 32-bit integer.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def combinationSum4(self, nums: List[int], target: int) -&amp;gt; int:
+        @lru_cache(None)
+        def dp(remain):
+            if remain==0:
+                return 1
+            res=0
+            for n in nums:
+                if remain-n&amp;gt;=0:
+                    res+=dp(remain-n)
+            return res
+        return dp(target)
+    
+class Solution:
+    def combinationSum4(self, nums: List[int], target: int) -&amp;gt; int:
+        # minor optimization
+        # nums.sort()
+        dp = [0 for i in range(target+1)]
+        dp[0] = 1
+
+        for comb_sum in range(target+1):
+
+            for num in nums:
+                if comb_sum - num &amp;gt;= 0:
+                    dp[comb_sum] += dp[comb_sum-num]
+                # minor optimization, early stopping.
+                # else:
+                #    break
+        return dp[target]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;知道是DP，而且知道DP【i】是能sum到i的组合个数，那么dp【i】=dp【i-n】+dp【n】为啥不对？？ n是添加的最后一个数。而且扫的是所有n in nums。 如果再拆分n，那么会有重复。&lt;br&gt;
+思路卡了， 应该是dp【i】+=dp【i-n】   要往组合里加n能到i，那么多出来的组合数就是dp【i-n】。应该求的是和。。。&lt;/p&gt;
+&lt;h1 id=&#34;379-design-phone-directory-medium&#34;&gt;379. Design Phone Directory （Medium）&lt;/h1&gt;
+&lt;p&gt;Design a phone directory that initially has maxNumbers empty slots that can store numbers. The directory should store numbers, check if a certain slot is empty or not, and empty a given slot.&lt;br&gt;
+Implement the PhoneDirectory class:&lt;br&gt;
+PhoneDirectory(int maxNumbers) Initializes the phone directory with the number of available slots maxNumbers.&lt;br&gt;
+int get() Provides a number that is not assigned to anyone. Returns -1 if no number is available.&lt;br&gt;
+bool check(int number) Returns true if the slot number is available and false otherwise.&lt;br&gt;
+void release(int number) Recycles or releases the slot number.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class PhoneDirectory:
+
+    def __init__(self, maxNumbers: int):
+        self.n=maxNumbers
+        self.avaliable=set([i for i in range(self.n)])
+        self.used=set()
+        self.current=-1
+        
+
+    def get(self) -&amp;gt; int:
+        if not self.avaliable: return -1
+        while not self.check(self.current):
+            self.current= (self.current+1)%self.n
+        
+        #current in self.avaliable
+        # remove from self.avaliable
+        self.avaliable.remove(self.current)
+        self.used.add(self.current)
+        
+        res = self.current
+        self.current= (self.current+1)%self.n
+        return res
+
+    def check(self, number: int) -&amp;gt; bool:
+        return  number in self.avaliable 
+
+    def release(self, number: int) -&amp;gt; None:
+        self.avaliable.add(number)
+        if number in self.used:
+            self.used.remove(number)
+        
+
+
+# Your PhoneDirectory object will be instantiated and called as such:
+# obj = PhoneDirectory(maxNumbers)
+# param_1 = obj.get()
+# param_2 = obj.check(number)
+# obj.release(number)
+
+   def __init__(self, maxNumbers):
+        self.available = set(range(maxNumbers))
+
+    def get(self):
+        return self.available.pop() if self.available else -1
+
+    def check(self, number):
+        return number in self.available
+
+    def release(self, number):
+        self.available.add(number)
+
+#ANSWER PERFECT
+class PhoneDirectory:
+
+    def __init__(self, maxNumbers: int):
+        self.pos=0
+        self.next=[0]*maxNumbers
+        for i in range(maxNumbers):
+            self.next[i]=(i+1)%maxNumbers
+        
+
+    def get(self) -&amp;gt; int:
+        if self.next[self.pos]==-1: return -1
+        res=self.pos
+        self.pos=self.next[self.pos]
+        self.next[res]=-1
+        return res
+        
+
+    def check(self, number: int) -&amp;gt; bool:
+        return self.next[number]!=-1
+
+    def release(self, number: int) -&amp;gt; None:
+        if self.next[number]!=-1: return
+        self.next[number]=self.pos
+        self.pos=number
+        
+
+
+# Your PhoneDirectory object will be instantiated and called as such:
+# obj = PhoneDirectory(maxNumbers)
+# param_1 = obj.get()
+# param_2 = obj.check(number)
+# obj.release(number) int[] next;
+   
+  
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案很完美的写法：Use a linked list to track available numbers, and a pointer to head. If head is still available, get() would return it and move to the next available number. Release would re-add a node to the beginning of the linked list and update head&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-380-insert-delete-getrandom-o1-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 380. Insert Delete GetRandom O(1) （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Implement the RandomizedSet class:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;RandomizedSet() Initializes the RandomizedSet object.
+bool insert(int val) Inserts an item val into the set if not present. Returns true if the item was not present, false otherwise.
+bool remove(int val) Removes an item val from the set if present. Returns true if the item was present, false otherwise.
+int getRandom() Returns a random element from the current set of elements (it&#39;s guaranteed that at least one element exists when this method is called). Each element must have the same probability of being returned.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You must implement the functions of the class such that each function works in average O(1) time complexity.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from random import choice
+class RandomizedSet():
+    def __init__(self):
+        &amp;quot;&amp;quot;&amp;quot;
+        Initialize your data structure here.
+        &amp;quot;&amp;quot;&amp;quot;
+        self.dict = {}
+        self.list = []
+
+        
+    def insert(self, val: int) -&amp;gt; bool:
+        &amp;quot;&amp;quot;&amp;quot;
+        Inserts a value to the set. Returns true if the set did not already contain the specified element.
+        &amp;quot;&amp;quot;&amp;quot;
+        if val in self.dict:
+            return False
+        self.dict[val] = len(self.list)
+        self.list.append(val)
+        return True
+        
+
+    def remove(self, val: int) -&amp;gt; bool:
+        &amp;quot;&amp;quot;&amp;quot;
+        Removes a value from the set. Returns true if the set contained the specified element.
+        &amp;quot;&amp;quot;&amp;quot;
+        if val in self.dict:
+            # move the last element to the place idx of the element to delete
+            last_element, idx = self.list[-1], self.dict[val]
+            self.list[idx], self.dict[last_element] = last_element, idx
+            # delete the last element
+            self.list.pop()
+            del self.dict[val]
+            return True
+        return False
+
+    def getRandom(self) -&amp;gt; int:
+        &amp;quot;&amp;quot;&amp;quot;
+        Get a random element from the set.
+        &amp;quot;&amp;quot;&amp;quot;
+        return choice(self.list)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个思路好，用dic保存插入元素位置方便找出index， 删除时候找出index，然后和list中最后一个元素交换位置，然后pop list del dict【val】&lt;/p&gt;
+">Leetcode 2021-12-10</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-09/"" data-c="
