@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-02-27T09:37:27.747Z</updated>
+    <updated>2022-02-28T18:56:15.360Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,6 +10,494 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Lan&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2021-12-11]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-12-11/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-11/">
+        </link>
+        <updated>2021-12-10T20:41:58.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="font-colorred-381-insert-delete-getrandom-o1-duplicates-allowed-hardfont"><font color='red'> 381. Insert Delete GetRandom O(1) - Duplicates allowed （Hard）</font></h1>
+<p>RandomizedCollection is a data structure that contains a collection of numbers, possibly duplicates (i.e., a multiset). It should support inserting and removing specific elements and also removing a random element.<br>
+Implement the RandomizedCollection class:<br>
+RandomizedCollection() Initializes the empty RandomizedCollection object.<br>
+bool insert(int val) Inserts an item val into the multiset, even if the item is already present. Returns true if the item is not present, false otherwise.<br>
+bool remove(int val) Removes an item val from the multiset if present. Returns true if the item is present, false otherwise. Note that if val has multiple occurrences in the multiset, we only remove one of them.<br>
+int getRandom() Returns a random element from the current multiset of elements. The probability of each element being returned is linearly related to the number of same values the multiset contains.<br>
+You must implement the functions of the class such that each function works on average O(1) time complexity.</p>
+<pre><code class="language-python">class RandomizedCollection:
+
+    def __init__(self):
+        self.lst = []
+        self.idx = defaultdict(set)
+        
+
+    def insert(self, val: int) -&gt; bool:
+        self.idx[val].add(len(self.lst))
+        self.lst.append(val)
+        return len(self.idx[val]) == 1
+
+    def remove(self, val: int) -&gt; bool:
+        if not self.idx[val]: return False
+        remove, last = self.idx[val].pop(), self.lst[-1]
+        self.lst[remove] = last
+        self.idx[last].add(remove)
+        self.idx[last].remove(len(self.lst) - 1)
+
+        self.lst.pop()
+        return True
+
+    def getRandom(self) -&gt; int:
+        return choice(self.lst)
+
+
+# Your RandomizedCollection object will be instantiated and called as such:
+# obj = RandomizedCollection()
+# param_1 = obj.insert(val)
+# param_2 = obj.remove(val)
+# param_3 = obj.getRandom()
+
+</code></pre>
+<p>思路是对的，但写不出来， 崩溃，看答案。。。用list和defaultdict（set），insert很简单，难的是remove。 先找出remove val的index并从dict中pop，和array last 元素交换， array last元素的dict添加index，array last 元素dict.remove(len(self.lst) - 1）, len(self.lst) - 1是last元素的idx。</p>
+<h1 id="font-colorblue-382-linked-list-random-node-mediumfont"><font color='blue'> 382. Linked List Random Node （Medium）</font></h1>
+<p>Given a singly linked list, return a random node's value from the linked list. Each node must have the same probability of being chosen.<br>
+Implement the Solution class:<br>
+Solution(ListNode head) Initializes the object with the head of the singly-linked list head.<br>
+int getRandom() Chooses a node randomly from the list and returns its value. All the nodes of the list should be equally likely to be chosen.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+
+    def __init__(self, head: Optional[ListNode]):
+        self.dic=dict()
+        ind=0
+        while head:
+            self.dic[ind]=head.val
+            ind+=1
+            head=head.next
+        self.ind=ind
+        
+
+    def getRandom(self) -&gt; int:
+        return self.dic[random.randint(0,self.ind-1)]  
+
+#ANSER of Reservor sampling      
+class Solution:
+
+    def __init__(self, head: Optional[ListNode]):
+        self.head = head
+        
+
+    def getRandom(self) -&gt; int:
+        scope = 1
+        chosen_value = 0
+        curr = self.head
+
+        while curr:
+            # decide whether to include the element in reservoir
+            if random.random() &lt; 1 / scope:
+                chosen_value = curr.val
+            # move on to the next node
+            curr = curr.next
+            scope += 1
+        return chosen_value
+        
+
+</code></pre>
+<p>follow up说如果linkedlist很大而且不知道长度。。。如何random 取样。。。<br>
+忘记了有一个随机取样法 Reservoir sampling，需要复习, 当rand小于1/scope时候，说明当前值可以以1/scope的概率保留下来：</p>
+<pre><code class="language-python"># S has items to sample, R will contain the result
+def ReservoirSample(S[1..n], R[1..k])
+  # fill the reservoir array
+  for i := 1 to k
+      R[i] := S[i]
+
+  # replace elements with gradually decreasing probability
+  for i := k+1 to n
+    # randomInteger(a, b) generates a uniform integer
+    #   from the inclusive range {a, ..., b} *)
+    j := randomInteger(1, i)
+    if j &lt;= k
+        R[j] := S[i]
+</code></pre>
+<h1 id="383-ransom-note-easy">383. Ransom Note （Easy）</h1>
+<p>Given two strings ransomNote and magazine, return true if ransomNote can be constructed from magazine and false otherwise.<br>
+Each letter in magazine can only be used once in ransomNote.</p>
+<pre><code class="language-python">class Solution:
+    def canConstruct(self, ransomNote: str, magazine: str) -&gt; bool:
+        a = Counter(ransomNote)
+        b = Counter(magazine)
+        for k,v in a.items():
+            if k not in b or b[k]&lt;v:
+                return False
+        return  True
+</code></pre>
+<h1 id="font-colorred384-shuffle-an-array-medium-font"><font color='red'>384. Shuffle an Array (Medium) </font></h1>
+<p>Given an integer array nums, design an algorithm to randomly shuffle the array. All permutations of the array should be equally likely as a result of the shuffling.<br>
+Implement the Solution class:<br>
+Solution(int[] nums) Initializes the object with the integer array nums.<br>
+int[] reset() Resets the array to its original configuration and returns it.<br>
+int[] shuffle() Returns a random shuffling of the array.</p>
+<pre><code class="language-python">class Solution:
+
+    def __init__(self, nums: List[int]):
+        self.array = nums
+        self.original = nums[:]
+       
+ 
+    def reset(self) -&gt; List[int]:
+        self.array = self.original
+        self.original = self.original[:]
+        return self.array
+   
+    def shuffle(self) -&gt; List[int]:
+        aux = self.array[:]
+
+        for idx in range(len(self.array)):
+            remove_idx = random.randint(0,len(aux)-1)
+            self.array[idx] = aux.pop(remove_idx)
+
+        return self.array
+
+#BEST ANSWER  Fisher-Yates Algorithm
+class Solution:
+
+    def __init__(self, nums: List[int]):
+        self.array = nums
+        self.original = nums[:]
+       
+ 
+    def reset(self) -&gt; List[int]:
+        self.array = self.original
+        self.original = self.original[:]
+        return self.array
+   
+    def shuffle(self) -&gt; List[int]:
+        for idx in range(len(self.array)):
+            swap_idx=random.randint(idx,len(self.array)-1)
+            self.array[idx],self.array[swap_idx]=self.array[swap_idx],self.array[idx]
+        return self.array
+
+</code></pre>
+<p>感觉思路是找到以n！为base的数，然后还原出suffled array但是写不出来。。。想的过于复杂了。这个就是个随机算法。 元素e在第k轮被抽中概率是  k在前k-1轮不中但在k轮中。 (n-1/n ) (n-2/n-1)...(n-k)/(n-k+1))* 1/n-k = 1/n   所以按照  剩下的有效数字中选1个的概率去组成array就可以保证每个数字是等概率选取。这样总体就是random shuffle了。</p>
+<h1 id="font-colorred385-mini-parser-mediumfont"><font color='red'>385. Mini Parser （Medium）</font></h1>
+<p>Given a string s represents the serialization of a nested list, implement a parser to deserialize it and return the deserialized NestedInteger.<br>
+Each element is either an integer or a list whose elements may also be integers or other lists.</p>
+<pre><code class="language-python"># &quot;&quot;&quot;
+# This is the interface that allows for creating nested lists.
+# You should not implement it, or speculate about its implementation
+# &quot;&quot;&quot;
+#class NestedInteger:
+#    def __init__(self, value=None):
+#        &quot;&quot;&quot;
+#        If value is not specified, initializes an empty list.
+#        Otherwise initializes a single integer equal to value.
+#        &quot;&quot;&quot;
+#
+#    def isInteger(self):
+#        &quot;&quot;&quot;
+#        @return True if this NestedInteger holds a single integer, rather than a nested list.
+#        :rtype bool
+#        &quot;&quot;&quot;
+#
+#    def add(self, elem):
+#        &quot;&quot;&quot;
+#        Set this NestedInteger to hold a nested list and adds a nested integer elem to it.
+#        :rtype void
+#        &quot;&quot;&quot;
+#
+#    def setInteger(self, value):
+#        &quot;&quot;&quot;
+#        Set this NestedInteger to hold a single integer equal to value.
+#        :rtype void
+#        &quot;&quot;&quot;
+#
+#    def getInteger(self):
+#        &quot;&quot;&quot;
+#        @return the single integer that this NestedInteger holds, if it holds a single integer
+#        Return None if this NestedInteger holds a nested list
+#        :rtype int
+#        &quot;&quot;&quot;
+#
+#    def getList(self):
+#        &quot;&quot;&quot;
+#        @return the nested list that this NestedInteger holds, if it holds a nested list
+#        Return None if this NestedInteger holds a single integer
+#        :rtype List[NestedInteger]
+#        &quot;&quot;&quot;
+
+class Solution:
+    def deserialize(self, s: str) -&gt; NestedInteger:
+        # '-1' is not digit
+        if s and s[-1].isdigit():
+            return  NestedInteger(int(s))
+
+        nested_integer = None
+        digits = ''
+        stack = []
+        for c in s:
+            if c.isdigit() or c == '-':
+                digits += c
+            elif c == '[':
+                if nested_integer:
+                    stack.append(nested_integer)
+                nested_integer = NestedInteger()
+            elif c == ']':
+                if digits:
+                    nested_integer.add(NestedInteger(int(digits)))
+                    digits = ''
+                if stack:
+                    previous_nested_integer = stack.pop()
+                    previous_nested_integer.add(nested_integer)
+                    nested_integer = previous_nested_integer
+            elif c == ',':
+                if digits:
+                    nested_integer.add(NestedInteger(int(digits)))
+                    digits = ''
+
+        return nested_integer
+
+#作弊写法用eval
+def deserialize(self, s):
+    def nestedInteger(x):
+        if isinstance(x, int):
+            return NestedInteger(x)
+        lst = NestedInteger()
+        for y in x:
+            lst.add(nestedInteger(y))
+        return lst
+    return nestedInteger(eval(s))
+</code></pre>
+<p>想写正确并不容易。。。</p>
+<h1 id="font-colorblue386-lexicographical-numbers-median-font"><font color='blue'>386. Lexicographical Numbers （median） </font></h1>
+<p>Given an integer n, return all the numbers in the range [1, n] sorted in lexicographical order.<br>
+You must write an algorithm that runs in O(n) time and uses O(1) extra space.</p>
+<pre><code class="language-python">class Solution:
+    def lexicalOrder(self, n: int) -&gt; List[int]:
+        
+        class trie:
+            def __init__(self):
+                self.childer=dict()
+                self.isnumber=False
+            
+            def insert(self,n):
+                if len( n )==1:
+                    first= n 
+                    if first not in self.childer:
+                        self.childer[first]=trie()
+                    self.childer[first].isnumber=True
+                else:
+                    first= n[0] 
+                    rest =  n[1:] 
+                    if first not in self.childer:
+                        self.childer[first]=trie()
+                    self.childer[first].insert(rest)
+               
+        tr=trie()
+        for i in range(1,n+1):
+            tr.insert(str(i))
+        
+        res=[]
+        
+        def preorder(tr,tmp):
+            for key in tr.childer:
+                temp=tmp+key
+                if tr.childer[key].isnumber:
+                    res.append(temp)
+                preorder(tr.childer[key],temp)
+            
+        preorder(tr,'')
+        return map(int,res)
+
+#ANSWER DFS
+class Solution:
+    def lexicalOrder(self, n: int) -&gt; List[int]:
+        self.res = []
+        for i in range(1, 10):
+            self.helper(i, n)
+        return self.res
+    
+    def helper(self, start, end):
+        if start &gt; end:
+            return
+        self.res.append(start)
+        for i in range(0, 10):
+            if 10 * start + i &gt; end:
+                return
+            self.helper(10 * start + i, end)
+
+</code></pre>
+<p>用的trie做出来的，写的磕磕绊绊。。。<br>
+答案用的DFS， 很好的思路。。。<br>
+The idea is pretty simple. If we look at the order we can find out we just keep adding digit from 0 to 9 to every digit and make it a tree.<br>
+Then we visit every node in pre-order.<br>
+1        2        3    ...<br>
+/\        /\       /<br>
+10 ...19  20...29  30...39   ....</p>
+<h1 id="387-first-unique-character-in-a-string-easy">387. First Unique Character in a String （Easy）</h1>
+<p>Given a string s, find the first non-repeating character in it and return its index. If it does not exist, return -1.</p>
+<pre><code class="language-python">class Solution:
+    def firstUniqChar(self, s: str) -&gt; int:
+        c=Counter(s)
+        for i,char in enumerate(s):
+            if c[char]==1:
+                return i
+        return -1
+</code></pre>
+<h1 id="font-colorred388-longest-absolute-file-path-medium-font"><font color='red'>388. Longest Absolute File Path (Medium) </font></h1>
+<p>Suppose we have a file system that stores both files and directories. An example of one system is represented in the following picture:<br>
+Here, we have dir as the only directory in the root. dir contains two subdirectories, subdir1 and subdir2. subdir1 contains a file file1.ext and subdirectory subsubdir1. subdir2 contains a subdirectory subsubdir2, which contains a file file2.ext.</p>
+<p>In text form, it looks like this (with ⟶ representing the tab character):</p>
+<p>dir<br>
+⟶ subdir1<br>
+⟶ ⟶ file1.ext<br>
+⟶ ⟶ subsubdir1<br>
+⟶ subdir2<br>
+⟶ ⟶ subsubdir2<br>
+⟶ ⟶ ⟶ file2.ext</p>
+<p>If we were to write this representation in code, it will look like this: &quot;dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext&quot;. Note that the '\n' and '\t' are the new-line and tab characters.<br>
+Every file and directory has a unique absolute path in the file system, which is the order of directories that must be opened to reach the file/directory itself, all concatenated by '/'s. Using the above example, the absolute path to file2.ext is &quot;dir/subdir2/subsubdir2/file2.ext&quot;. Each directory name consists of letters, digits, and/or spaces. Each file name is of the form name.extension, where name and extension consist of letters, digits, and/or spaces.<br>
+Given a string input representing the file system in the explained format, return the length of the longest absolute path to a file in the abstracted file system. If there is no file in the system, return 0.</p>
+<pre><code class="language-python">class Solution:
+    def lengthLongestPath(self, input: str) -&gt; int:
+        maxlen = 0
+        pathlen = {0: 0}
+        for line in input.split('\n'):
+            depth = line.count('\t')
+            name = line.lstrip('\t')
+            if '.' in name:
+                maxlen = max(maxlen, pathlen[depth] + len(name))
+            else:
+                pathlen[depth + 1] = pathlen[depth] + len(name) + 1
+        return maxlen
+
+
+</code></pre>
+<p>coner case 太多，自己写的太复杂，还不能完全pass。。。看答案了。。。</p>
+<h1 id="389-find-the-difference-easy">389. Find the Difference （Easy）</h1>
+<p>You are given two strings s and t.<br>
+String t is generated by random shuffling string s and then add one more letter at a random position.<br>
+Return the letter that was added to t.</p>
+<pre><code class="language-python">class Solution:
+    def findTheDifference(self, s: str, t: str) -&gt; str:
+        s=Counter(s)
+        t=Counter(t)
+        for key in s:
+            t[key]-=s[key]
+            if t[key]==0:
+                del t[key]
+        
+        return  list(t.keys())[0]
+
+#ANSER NLOGN
+class Solution:
+    def findTheDifference(self, s: str, t: str) -&gt; str:
+
+        # Sort both the strings
+        sorted_s = sorted(s)
+        sorted_t = sorted(t)
+
+        # Character by character comparison
+        i = 0
+        while i &lt; len(s):
+            if sorted_s[i] != sorted_t[i]:
+                return sorted_t[i]
+            i += 1
+
+        return sorted_t[i]
+
+#DICT O(n)
+from collections import Counter
+
+class Solution:
+    def findTheDifference(self, s: str, t: str) -&gt; str:
+        # Prepare a counter for string s.
+        # This holds the characters as keys and respective frequency as value.
+        counter_s = Counter(s)
+
+        # Iterate through string t and find the character which is not in s.
+        for ch in t:
+            if ch not in counter_s or counter_s[ch] == 0:
+                return ch
+            else:
+                # Once a match is found we reduce frequency left.
+                # This eliminates the possibility of a false match later.
+                counter_s[ch] -= 1
+
+#XOR O（n）
+class Solution:
+    def findTheDifference(self, s: str, t: str) -&gt; str:
+
+        # Initialize ch with 0, because 0 ^ X = X
+        # 0 when XORed with any bit would not change the bits value.
+        ch = 0
+
+        # XOR all the characters of both s and t.
+        for char_ in s:
+            ch ^= ord(char_)
+
+        for char_ in t:
+            ch ^= ord(char_)
+
+        # What is left after XORing everything is the difference.
+        return chr(ch)
+</code></pre>
+<h1 id="font-colorred-390-elimination-game-medium-font"><font color='red'> 390. Elimination Game （Medium) </font></h1>
+<p>You have a list arr of all integers in the range [1, n] sorted in a strictly increasing order. Apply the following algorithm on arr:<br>
+Starting from left to right, remove the first number and every other number afterward until you reach the end of the list.<br>
+Repeat the previous step again, but this time from right to left, remove the rightmost number and every other number from the remaining numbers.<br>
+Keep repeating the steps again, alternating left to right and right to left, until a single number remains.<br>
+Given the integer n, return the last number that remains in arr.</p>
+<pre><code class="language-python">
+#Navie not work memery exceeded
+class Solution:
+    def lastRemaining(self, n: int) -&gt; int:
+        li = [i for i in range(1,n+1)]
+        
+        def helper(li,forward=True):
+            if len(li)==1: return li[0]
+            if forward:
+                #print(li[1::2],not forward)
+                return helper(li[1::2],not forward)
+            else:
+                li=li[::-1]
+                li=li[1::2]
+                #print(li[::-1],not forward)
+                return helper(li[::-1],not forward)
+                
+        return helper(li,True)
+
+
+#Perfect ANSWER
+class Solution:
+    def lastRemaining(self, n: int) -&gt; int:
+ 
+        head, left, step, remaining = 1, True, 1, n
+        while remaining &gt; 1:
+            if left or remaining % 2: 
+                #when to update head
+                #go from left or remaining is odd
+                head += step
+            left = not left
+            step *= 2
+            remaining //= 2
+        return head
+</code></pre>
+<p>按照题目意思直接搞时间复杂度和空间复杂度都太大。。，<br>
+看答案：<br>
+update and record head in each turn. when the total number becomes 1, head is the only number left.</p>
+<p>When will head be updated?</p>
+<pre><code>if we move from left
+if we move from right and the total remaining number % 2 == 1
+like 2 4 6 8 10, we move from 10, we will take out 10, 6 and 2, head is deleted and move to 4
+like 2 4 6 8 10 12, we move from 12, we will take out 12, 8, 4, head is still remaining 2
+</code></pre>
+<p>then we find a rule to update our head.</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Leetcode 2021-12-10]]></title>
         <id>https://headhuanglan.github.io/post/leetcode-2021-12-10/</id>
@@ -4660,550 +5148,6 @@ class Solution:
         return max(dp)
 </code></pre>
 <p>classical DP problem O(n^2)</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-12-01]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-12-01/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-01/">
-        </link>
-        <updated>2021-11-30T05:36:09.000Z</updated>
-        <summary type="html"><![CDATA[<p>依然在补进度，而且没有复习之前刷的题目， 12月底补12月初进度。 立个flag，明年一月结束要刷到900. 二月全面复习二刷。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>依然在补进度，而且没有复习之前刷的题目， 12月底补12月初进度。 立个flag，明年一月结束要刷到900. 二月全面复习二刷。</p>
-<!-- more -->
-<h1 id="281-zigzag-iterator-medium">281. Zigzag Iterator （Medium）</h1>
-<p>Given two vectors of integers v1 and v2, implement an iterator to return their elements alternately.</p>
-<pre><code class="language-python">class ZigzagIterator:
-    def __init__(self, v1: List[int], v2: List[int]):
-        li=[v1,v2]
-        self.li = [[v,len(v)] for v in li if v]
-        self.select = 0
-    
-    def next(self) -&gt; int:
-        if self.li[self.select][1]&gt;0:
-            self.li[self.select][1]-=1
-            val= self.li[self.select][0].pop(0)
-            if self.li[self.select][1]==0:
-                self.li.pop(self.select)
-            self.select=(self.select+1)%len(self.li) if self.li else 0
-            return val
-         
-    def hasNext(self) -&gt; bool:
-        return sum([e[1] for e in self.li])&gt;0
-        
-        
-
-# Your ZigzagIterator object will be instantiated and called as such:
-# i, v = ZigzagIterator(v1, v2), []
-# while i.hasNext(): v.append(i.next())
-</code></pre>
-<h1 id="282-expression-add-operators-hard">282. Expression Add Operators (Hard)</h1>
-<p>Given a string num that contains only digits and an integer target, return all possibilities to insert the binary operators '+', '-', and/or '*' between the digits of num so that the resultant expression evaluates to the target value.Note that operands in the returned expressions should not contain leading zeros.</p>
-<pre><code class="language-python">class Solution:
-    def addOperators(self, num: 'str', target: 'int') -&gt; 'List[str]':
-
-        N = len(num)
-        answers = []
-        def recurse(index, prev_operand, current_operand, value, string):
-
-            # Done processing all the digits in num
-            if index == N:
-
-                # If the final value == target expected AND
-                # no operand is left unprocessed
-                if value == target and current_operand == 0:
-                    answers.append(&quot;&quot;.join(string[1:]))
-                return
-
-            # Extending the current operand by one digit
-            current_operand = current_operand*10 + int(num[index])
-            str_op = str(current_operand)
-
-            # To avoid cases where we have 1 + 05 or 1 * 05 since 05 won't be a
-            # valid operand. Hence this check
-            if current_operand &gt; 0:
-
-                # NO OP recursion
-                recurse(index + 1, prev_operand, current_operand, value, string)
-
-            # ADDITION
-            string.append('+'); string.append(str_op)
-            recurse(index + 1, current_operand, 0, value + current_operand, string)
-            string.pop();string.pop()
-
-            # Can subtract or multiply only if there are some previous operands
-            if string:
-
-                # SUBTRACTION
-                string.append('-'); string.append(str_op)
-                recurse(index + 1, -current_operand, 0, value - current_operand, string)
-                string.pop();string.pop()
-
-                # MULTIPLICATION
-                string.append('*'); string.append(str_op)
-                recurse(index + 1, current_operand * prev_operand, 0, value - prev_operand + (current_operand * prev_operand), string)
-                string.pop();string.pop()
-        recurse(0, 0, 0, 0, [])    
-        return answers
-</code></pre>
-<p>第一眼感觉是用backtracking，写出了第一版，但是没考虑1） number 可以是1位可以是2位，3位 etc， 2）乘法的优先级高于加减，所以需要tracking operator是什么。 3）不可以backtracking到最后eval结果，太费时间。 直接看答案了。。。答案： 关键在于除了加减乘以外，增加一个不操作operator， 12--&gt;123  是 12乘以10+3     extending 当前值12 by one digit， 12乘以10。  看了答案还是懵逼。细节太多但都符合逻辑。</p>
-<h1 id="283-move-zeroes-easy">283. Move Zeroes （Easy）</h1>
-<p>Given an integer array nums, move all 0's to the end of it while maintaining the relative order of the non-zero elements.</p>
-<pre><code class="language-python">class Solution:
-    def moveZeroes(self, nums: List[int]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify nums in-place instead.
-        &quot;&quot;&quot;
-    
-        pos=0
-        for i,n in enumerate(nums):
-            if n!=0:
-                nums[pos]=n
-                pos+=1
-        while pos&lt;len(nums):
-            nums[pos]=0
-            pos+=1
-
-#SWAP is a better solution
-class Solution:
-    def moveZeroes(self, nums: List[int]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify nums in-place instead.
-        &quot;&quot;&quot;
-    
-        pos=0
-        for i,n in enumerate(nums):
-            if n!=0:
-                nums[pos],nums[i] = nums[i],nums[pos]
-                pos+=1
-     
-</code></pre>
-<h1 id="284-peeking-iterator-medium">284. Peeking Iterator (Medium)</h1>
-<pre><code class="language-python"># Below is the interface for Iterator, which is already defined for you.
-#
-# class Iterator:
-#     def __init__(self, nums):
-#         &quot;&quot;&quot;
-#         Initializes an iterator object to the beginning of a list.
-#         :type nums: List[int]
-#         &quot;&quot;&quot;
-#
-#     def hasNext(self):
-#         &quot;&quot;&quot;
-#         Returns true if the iteration has more elements.
-#         :rtype: bool
-#         &quot;&quot;&quot;
-#
-#     def next(self):
-#         &quot;&quot;&quot;
-#         Returns the next element in the iteration.
-#         :rtype: int
-#         &quot;&quot;&quot;
-
-class PeekingIterator:
-    def __init__(self, iterator):
-        &quot;&quot;&quot;
-        Initialize your data structure here.
-        :type iterator: Iterator
-        &quot;&quot;&quot;
-        self.iterator=iterator
-        self.peekval=None
-
-    def peek(self):
-        &quot;&quot;&quot;
-        Returns the next element in the iteration without advancing the iterator.
-        :rtype: int
-        &quot;&quot;&quot;
-        if self.peekval:
-            return self.peekval
-        else:
-            self.peekval=self.iterator.next()
-            return self.peekval
-        
-
-    def next(self):
-        &quot;&quot;&quot;
-        :rtype: int
-        &quot;&quot;&quot;
-        if self.peekval is not None:
-            peekval=self.peekval
-            self.peekval=None
-            return peekval
-        else:
-            return self.iterator.next()
-        
-
-    def hasNext(self):
-        &quot;&quot;&quot;
-        :rtype: bool
-        &quot;&quot;&quot;
-        return self.iterator.hasNext() or self.peekval is not None
-        
-
-# Your PeekingIterator object will be instantiated and called as such:
-# iter = PeekingIterator(Iterator(nums))
-# while iter.hasNext():
-#     val = iter.peek()   # Get the next element but not advance the iterator.
-#     iter.next()         # Should return the same value as [val].
-
-</code></pre>
-<h1 id="285-inorder-successor-in-bst-medium">285. Inorder Successor in BST (Medium)</h1>
-<p>Given the root of a binary search tree and a node p in it, return the in-order successor of that node in the BST. If the given node has no in-order successor in the tree, return null.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-
-class Solution:
-    def inorderSuccessor(self, root: 'TreeNode', p: 'TreeNode') -&gt; 'Optional[TreeNode]':
-        stack = []
-        while root and root.val!=p.val:
-            stack.append(root)
-            if p.val&lt;root.val:
-                root=root.left
-            else:
-                root=root.right
-        
-        if p.right:
-            node=p.right
-            while node.left:
-                node=node.left
-            return node
-                
-        else:
-            while stack:
-                node=stack.pop()
-                if node.val&gt;p.val:
-                    return node
-            return None
-
-
-#ANSWER
-class Solution:
-    
-    def inorderSuccessor(self, root: 'TreeNode', p: 'TreeNode') -&gt; 'TreeNode':
-        
-        successor = None
-        
-        while root:
-            
-            if p.val &gt;= root.val:
-                root = root.right
-            else:
-                successor = root
-                root = root.left
-                
-        return successor
-
-</code></pre>
-<p>答案更巧妙。</p>
-<h1 id="286-walls-and-gates-medium">286. Walls and Gates （Medium）</h1>
-<p>You are given an m x n grid rooms initialized with these three possible values.</p>
-<pre><code>-1 A wall or an obstacle.
-0 A gate.
-INF Infinity means an empty room. We use the value 231 - 1 = 2147483647 to represent INF as you may assume that the distance to a gate is less than 2147483647.
-</code></pre>
-<p>Fill each empty room with the distance to its nearest gate. If it is impossible to reach a gate, it should be filled with INF.</p>
-<pre><code class="language-python">class Solution:
-    def wallsAndGates(self, rooms: List[List[int]]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify rooms in-place instead.
-        &quot;&quot;&quot;
-        from collections import deque
-        m=len(rooms)
-        n=len(rooms[0])
-        INF=2**31-1
-        q = deque()
-        for i in range(m):
-            for j in range(n):
-                if rooms[i][j]==0:
-                    q.append((i,j))
-        level=0
-        visited = set()
-        while q:
-            level+=1
-            for _ in range(len(q)):
-                i,j = q.popleft()
-                visited.add((i,j))
-                for ii,jj in [(i+1,j),(i-1,j),(i,j+1),(i,j-1)]:
-                    if ii&gt;=0 and ii&lt;m and jj&gt;=0 and jj&lt;n and (ii,jj) not in visited:
-                        if rooms[ii][jj]!=0 and rooms[ii][jj]!=-1:
-                            rooms[ii][jj] = level
-                            q.append((ii,jj))
-                            visited.add((ii,jj))
-
-#ANSWER
-class Solution:
-    def wallsAndGates(self, rooms: List[List[int]]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify rooms in-place instead.
-        &quot;&quot;&quot;
-        from collections import deque
-        m=len(rooms)
-        n=len(rooms[0])
-        INF=2**31-1
-        q = deque()
-        for i in range(m):
-            for j in range(n):
-                if rooms[i][j]==0:
-                    q.append((i,j))
-        level=0
-        while q:
-            for _ in range(len(q)):
-                i,j = q.popleft()
-                for ii,jj in [(i+1,j),(i-1,j),(i,j+1),(i,j-1)]:
-                    if ii&gt;=0 and ii&lt;m and jj&gt;=0 and jj&lt;n and  rooms[ii][jj]==INF :
-                        rooms[ii][jj] = rooms[i][j]+1
-                        q.append((ii,jj))
-                           
-</code></pre>
-<p>第一眼感觉用bfs做，从gates 处扫不是墙和gate的rooms距离。 差点忘了bfs 要for _ in range(len(queue))  .....   答案不用visited level 解决， 因为BFS所以只要INF 变成距离就是最短距离， 从什么地方变得距离？就是rooms[ii][jj] = rooms[i][j]+1</p>
-<h1 id="font-colorred-287-find-the-duplicate-number-mediumfont"><font color='red'> 287. Find the Duplicate Number （Medium）</font></h1>
-<p>Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive.<br>
-There is only one repeated number in nums, return this repeated number.<br>
-You must solve the problem without modifying the array nums and uses only constant extra space.</p>
-<pre><code class="language-python">class Solution:
-    def findDuplicate(self, nums: List[int]) -&gt; int:
-        for num in nums:
-            cur = abs(num)
-            if nums[cur] &lt; 0:
-                duplicate = cur
-                break
-            nums[cur] = -nums[cur]
-
-        # Restore numbers
-        for i in range(len(nums)):
-            nums[i] = abs(nums[i])
-
-        return duplicate
-
-#ANSWER
-class Solution:
-    def findDuplicate(self, nums: List[int]) -&gt; int:
-        duplicate = 0
-        n = len(nums)
-        bits = n.bit_length()
-        for bit in range(bits):
-            mask = 1 &lt;&lt; bit
-            base_count = 0
-            nums_count = 0
-            for i in range(n):
-                # If bit is set in number (i) then add 1 to base_count
-                if i &amp; mask:
-                    base_count += 1
-                    
-                # If bit is set in nums[i] then add 1 to nums_count
-                if nums[i] &amp; mask:
-                    nums_count += 1
-                    
-            # If the current bit is more frequently set in nums than it is in 
-            # the range [1, 2, ..., n] then it must also be set in the duplicate number.
-            if nums_count - base_count &gt; 0:
-                duplicate |= mask
-                
-        return duplicate
-
-#ANSWER
-class Solution:
-    def findDuplicate(self, nums: 'List[int]') -&gt; 'int':
-        
-        low = 1
-        high = len(nums)-1
-        
-        while low &lt; high:
-            mid = low+(high-low)//2
-            count = 0
-            for i in nums:
-                if i &lt;= mid:
-                    count+=1
-            if count &lt;= mid:
-                low = mid+1
-            else:
-                high = mid
-        return low
-
-#ANSWER
-class Solution:
-    def findDuplicate(self, nums: List[int]) -&gt; int:
-        
-        #who can think it as cycled two pointer problem?
-        
-        slow = nums[0]
-        fast = nums[0]
-        
-        while True:
-            slow =  nums[slow]
-            fast = nums[nums[fast]]
-            if slow==fast:
-                break
-        
-        fast = nums[0]
-        while slow!=fast:
-            slow=nums[slow]
-            fast=nums[fast]
-        return slow
-</code></pre>
-<p>一堆double数中找single容易，用xor就可以， 但一堆single中找double。。。 答案思路： 思路1）标负。符号所在位置表示数出现过没。 nums[cur]小于0表示 cur这个数出现过。 2）bitmask 3）binary search 4）Cycle Detection，这个方法最妙。</p>
-<h1 id="288-unique-word-abbreviation-medium">288. Unique Word Abbreviation （Medium）</h1>
-<p>The abbreviation of a word is a concatenation of its first letter, the number of characters between the first and last letter, and its last letter. If a word has only two characters, then it is an abbreviation of itself.</p>
-<pre><code class="language-python">class ValidWordAbbr:
-    
-    
-    def __init__(self, dictionary: List[str]):
-        import collections 
-        self.dic= collections.defaultdict(set)
-        for w in dictionary:
-            key=self.sort(w)
-            self.dic[key].add(w)
-        #print(self.dic)
-        
-    def sort(self,w):
-        if len(w)&lt;=2:
-            key=w
-        else:
-            key=w[0]+str(len(w[1:-1])) +w[-1]
-        return key
-    
-    def isUnique(self, word: str) -&gt; bool:
-        key=self.sort(word)
-        if key not in self.dic or (len(self.dic[key])==1 and list(self.dic[key])[0]==word):
-            return True
-        return False
-
-
-# Your ValidWordAbbr object will be instantiated and called as such:
-# obj = ValidWordAbbr(dictionary)
-# param_1 = obj.isUnique(word)
-
-#Better solution
-class ValidWordAbbr(object):
-    
-    def getkey(self,word):
-        if len(word)&lt;=2: 
-            return word
-        else:
-            return word[0]+str(len(word[1:-1]))+word[-1]
-        
-    
-    def __init__(self, dictionary):
-        &quot;&quot;&quot;
-        :type dictionary: List[str]
-        &quot;&quot;&quot;
-         
-        self.dic=dict()
-        for word in dictionary:
-            key=self.getkey(word)
-            if key in self.dic and word!=self.dic[key]:
-                self.dic[key]='#'
-            else:
-                self.dic[key]=word
-        
-
-    def isUnique(self, word):
-        &quot;&quot;&quot;
-        :type word: str
-        :rtype: bool
-        &quot;&quot;&quot;
-
-        key=self.getkey(word)
-        
-        if key in self.dic and self.dic[key]==word:
-            return True
-        elif key not in self.dic:
-            return True
-        return False
-</code></pre>
-<h1 id="289-game-of-life-medium">289. Game of Life (Medium)</h1>
-<pre><code class="language-python">class Solution:
-    def gameOfLife(self, board: List[List[int]]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify board in-place instead.
-        &quot;&quot;&quot;
-        m=len(board)
-        n=len(board[0])
-        #solve it in-place
-        #rule
-        #  live cell =1
-        #            #nei &lt;2      die
-        #            #nei 2 or 3  live
-        #            #nei &gt;3      die
-        #  dead cell = 0
-        #            #nei 3       live
-        #
-        #  save live die in next round with (X//10)%2   if live save as 10+old
-        #                                               if die  save as 20+old
-        #  when get old value   old = old%10
-        
-        for i in range(m):
-            for j in range(n):
-                live=0
-                old=board[i][j]%10
-                if old==1:
-                    livecell=True
-                else:
-                    livecell=False
-                    
-                for nei in [(i+1,j),(i-1,j),(i,j+1),(i,j-1),(i+1,j+1),(i+1,j-1),(i-1,j+1),(i-1,j-1)]:
-                    ii,jj=nei
-                    if ii&lt;m and ii&gt;=0 and jj&lt;n and jj&gt;=0:
-                        live+=board[ii][jj]%10
-                
-                if livecell:
-                    if live==2 or live==3:
-                        board[i][j]= 10+old
-                    else:
-                        board[i][j]= 20+old
-                else:
-                    if live==3:
-                        board[i][j] = 10+old
-                        
-        for i in range(m):
-            for j in range(n):
-                board[i][j] = (board[i][j]//10)%2
-        
-#INF CASE
-def gameOfLifeInfinite(self, live):
-    ctr = collections.Counter((I, J)
-                              for i, j in live
-                              for I in range(i-1, i+2)
-                              for J in range(j-1, j+2)
-                              if I != i or J != j)
-    return {ij
-            for ij in ctr
-            if ctr[ij] == 3 or ctr[ij] == 2 and ij in live}
-
-def gameOfLife(self, board):
-    live = {(i, j) for i, row in enumerate(board) for j, live in enumerate(row) if live}
-    live = self.gameOfLifeInfinite(live)
-    for i, row in enumerate(board):
-        for j in range(len(row)):
-            row[j] = int((i, j) in live)
-</code></pre>
-<h1 id="290-word-pattern-easy">290. Word Pattern （Easy）</h1>
-<pre><code class="language-python">class Solution:
-    def wordPattern(self, pattern: str, s: str) -&gt; bool:
-        
-        dic1=dict()
-        dic2=dict()
-        if len(pattern)!=len(s.split()): return False
-        for k,v in zip(s.split(),pattern):
-            if k not in dic1:
-                dic1[k]=v
-            else:
-                if dic1[k]!=v:
-                    return False
-            
-            if v not in dic2:
-                dic2[v]=k
-            else:
-                if dic2[v]!=k:
-                    return False
-        return True
-</code></pre>
-<p>注意是一一映射，所以需要2个dict检查， 注意corner case。</p>
 ]]></content>
     </entry>
 </feed>

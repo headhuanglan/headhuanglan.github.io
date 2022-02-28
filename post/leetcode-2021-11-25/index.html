@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-25 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1645954556961">
+<link rel="shortcut icon" href="/favicon.ico?v=1646074567181">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">44</span>
+        <span class="site-item-stat-count">45</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1705,6 +1705,491 @@ class Solution:
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-11/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;font-colorred-381-insert-delete-getrandom-o1-duplicates-allowed-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 381. Insert Delete GetRandom O(1) - Duplicates allowed （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;RandomizedCollection is a data structure that contains a collection of numbers, possibly duplicates (i.e., a multiset). It should support inserting and removing specific elements and also removing a random element.&lt;br&gt;
+Implement the RandomizedCollection class:&lt;br&gt;
+RandomizedCollection() Initializes the empty RandomizedCollection object.&lt;br&gt;
+bool insert(int val) Inserts an item val into the multiset, even if the item is already present. Returns true if the item is not present, false otherwise.&lt;br&gt;
+bool remove(int val) Removes an item val from the multiset if present. Returns true if the item is present, false otherwise. Note that if val has multiple occurrences in the multiset, we only remove one of them.&lt;br&gt;
+int getRandom() Returns a random element from the current multiset of elements. The probability of each element being returned is linearly related to the number of same values the multiset contains.&lt;br&gt;
+You must implement the functions of the class such that each function works on average O(1) time complexity.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class RandomizedCollection:
+
+    def __init__(self):
+        self.lst = []
+        self.idx = defaultdict(set)
+        
+
+    def insert(self, val: int) -&amp;gt; bool:
+        self.idx[val].add(len(self.lst))
+        self.lst.append(val)
+        return len(self.idx[val]) == 1
+
+    def remove(self, val: int) -&amp;gt; bool:
+        if not self.idx[val]: return False
+        remove, last = self.idx[val].pop(), self.lst[-1]
+        self.lst[remove] = last
+        self.idx[last].add(remove)
+        self.idx[last].remove(len(self.lst) - 1)
+
+        self.lst.pop()
+        return True
+
+    def getRandom(self) -&amp;gt; int:
+        return choice(self.lst)
+
+
+# Your RandomizedCollection object will be instantiated and called as such:
+# obj = RandomizedCollection()
+# param_1 = obj.insert(val)
+# param_2 = obj.remove(val)
+# param_3 = obj.getRandom()
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;思路是对的，但写不出来， 崩溃，看答案。。。用list和defaultdict（set），insert很简单，难的是remove。 先找出remove val的index并从dict中pop，和array last 元素交换， array last元素的dict添加index，array last 元素dict.remove(len(self.lst) - 1）, len(self.lst) - 1是last元素的idx。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue-382-linked-list-random-node-mediumfont&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 382. Linked List Random Node （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a singly linked list, return a random node&#39;s value from the linked list. Each node must have the same probability of being chosen.&lt;br&gt;
+Implement the Solution class:&lt;br&gt;
+Solution(ListNode head) Initializes the object with the head of the singly-linked list head.&lt;br&gt;
+int getRandom() Chooses a node randomly from the list and returns its value. All the nodes of the list should be equally likely to be chosen.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+
+    def __init__(self, head: Optional[ListNode]):
+        self.dic=dict()
+        ind=0
+        while head:
+            self.dic[ind]=head.val
+            ind+=1
+            head=head.next
+        self.ind=ind
+        
+
+    def getRandom(self) -&amp;gt; int:
+        return self.dic[random.randint(0,self.ind-1)]  
+
+#ANSER of Reservor sampling      
+class Solution:
+
+    def __init__(self, head: Optional[ListNode]):
+        self.head = head
+        
+
+    def getRandom(self) -&amp;gt; int:
+        scope = 1
+        chosen_value = 0
+        curr = self.head
+
+        while curr:
+            # decide whether to include the element in reservoir
+            if random.random() &amp;lt; 1 / scope:
+                chosen_value = curr.val
+            # move on to the next node
+            curr = curr.next
+            scope += 1
+        return chosen_value
+        
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;follow up说如果linkedlist很大而且不知道长度。。。如何random 取样。。。&lt;br&gt;
+忘记了有一个随机取样法 Reservoir sampling，需要复习, 当rand小于1/scope时候，说明当前值可以以1/scope的概率保留下来：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# S has items to sample, R will contain the result
+def ReservoirSample(S[1..n], R[1..k])
+  # fill the reservoir array
+  for i := 1 to k
+      R[i] := S[i]
+
+  # replace elements with gradually decreasing probability
+  for i := k+1 to n
+    # randomInteger(a, b) generates a uniform integer
+    #   from the inclusive range {a, ..., b} *)
+    j := randomInteger(1, i)
+    if j &amp;lt;= k
+        R[j] := S[i]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;383-ransom-note-easy&#34;&gt;383. Ransom Note （Easy）&lt;/h1&gt;
+&lt;p&gt;Given two strings ransomNote and magazine, return true if ransomNote can be constructed from magazine and false otherwise.&lt;br&gt;
+Each letter in magazine can only be used once in ransomNote.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def canConstruct(self, ransomNote: str, magazine: str) -&amp;gt; bool:
+        a = Counter(ransomNote)
+        b = Counter(magazine)
+        for k,v in a.items():
+            if k not in b or b[k]&amp;lt;v:
+                return False
+        return  True
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred384-shuffle-an-array-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;384. Shuffle an Array (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums, design an algorithm to randomly shuffle the array. All permutations of the array should be equally likely as a result of the shuffling.&lt;br&gt;
+Implement the Solution class:&lt;br&gt;
+Solution(int[] nums) Initializes the object with the integer array nums.&lt;br&gt;
+int[] reset() Resets the array to its original configuration and returns it.&lt;br&gt;
+int[] shuffle() Returns a random shuffling of the array.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+
+    def __init__(self, nums: List[int]):
+        self.array = nums
+        self.original = nums[:]
+       
+ 
+    def reset(self) -&amp;gt; List[int]:
+        self.array = self.original
+        self.original = self.original[:]
+        return self.array
+   
+    def shuffle(self) -&amp;gt; List[int]:
+        aux = self.array[:]
+
+        for idx in range(len(self.array)):
+            remove_idx = random.randint(0,len(aux)-1)
+            self.array[idx] = aux.pop(remove_idx)
+
+        return self.array
+
+#BEST ANSWER  Fisher-Yates Algorithm
+class Solution:
+
+    def __init__(self, nums: List[int]):
+        self.array = nums
+        self.original = nums[:]
+       
+ 
+    def reset(self) -&amp;gt; List[int]:
+        self.array = self.original
+        self.original = self.original[:]
+        return self.array
+   
+    def shuffle(self) -&amp;gt; List[int]:
+        for idx in range(len(self.array)):
+            swap_idx=random.randint(idx,len(self.array)-1)
+            self.array[idx],self.array[swap_idx]=self.array[swap_idx],self.array[idx]
+        return self.array
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;感觉思路是找到以n！为base的数，然后还原出suffled array但是写不出来。。。想的过于复杂了。这个就是个随机算法。 元素e在第k轮被抽中概率是  k在前k-1轮不中但在k轮中。 (n-1/n ) (n-2/n-1)...(n-k)/(n-k+1))* 1/n-k = 1/n   所以按照  剩下的有效数字中选1个的概率去组成array就可以保证每个数字是等概率选取。这样总体就是random shuffle了。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred385-mini-parser-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;385. Mini Parser （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a string s represents the serialization of a nested list, implement a parser to deserialize it and return the deserialized NestedInteger.&lt;br&gt;
+Each element is either an integer or a list whose elements may also be integers or other lists.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# &amp;quot;&amp;quot;&amp;quot;
+# This is the interface that allows for creating nested lists.
+# You should not implement it, or speculate about its implementation
+# &amp;quot;&amp;quot;&amp;quot;
+#class NestedInteger:
+#    def __init__(self, value=None):
+#        &amp;quot;&amp;quot;&amp;quot;
+#        If value is not specified, initializes an empty list.
+#        Otherwise initializes a single integer equal to value.
+#        &amp;quot;&amp;quot;&amp;quot;
+#
+#    def isInteger(self):
+#        &amp;quot;&amp;quot;&amp;quot;
+#        @return True if this NestedInteger holds a single integer, rather than a nested list.
+#        :rtype bool
+#        &amp;quot;&amp;quot;&amp;quot;
+#
+#    def add(self, elem):
+#        &amp;quot;&amp;quot;&amp;quot;
+#        Set this NestedInteger to hold a nested list and adds a nested integer elem to it.
+#        :rtype void
+#        &amp;quot;&amp;quot;&amp;quot;
+#
+#    def setInteger(self, value):
+#        &amp;quot;&amp;quot;&amp;quot;
+#        Set this NestedInteger to hold a single integer equal to value.
+#        :rtype void
+#        &amp;quot;&amp;quot;&amp;quot;
+#
+#    def getInteger(self):
+#        &amp;quot;&amp;quot;&amp;quot;
+#        @return the single integer that this NestedInteger holds, if it holds a single integer
+#        Return None if this NestedInteger holds a nested list
+#        :rtype int
+#        &amp;quot;&amp;quot;&amp;quot;
+#
+#    def getList(self):
+#        &amp;quot;&amp;quot;&amp;quot;
+#        @return the nested list that this NestedInteger holds, if it holds a nested list
+#        Return None if this NestedInteger holds a single integer
+#        :rtype List[NestedInteger]
+#        &amp;quot;&amp;quot;&amp;quot;
+
+class Solution:
+    def deserialize(self, s: str) -&amp;gt; NestedInteger:
+        # &#39;-1&#39; is not digit
+        if s and s[-1].isdigit():
+            return  NestedInteger(int(s))
+
+        nested_integer = None
+        digits = &#39;&#39;
+        stack = []
+        for c in s:
+            if c.isdigit() or c == &#39;-&#39;:
+                digits += c
+            elif c == &#39;[&#39;:
+                if nested_integer:
+                    stack.append(nested_integer)
+                nested_integer = NestedInteger()
+            elif c == &#39;]&#39;:
+                if digits:
+                    nested_integer.add(NestedInteger(int(digits)))
+                    digits = &#39;&#39;
+                if stack:
+                    previous_nested_integer = stack.pop()
+                    previous_nested_integer.add(nested_integer)
+                    nested_integer = previous_nested_integer
+            elif c == &#39;,&#39;:
+                if digits:
+                    nested_integer.add(NestedInteger(int(digits)))
+                    digits = &#39;&#39;
+
+        return nested_integer
+
+#作弊写法用eval
+def deserialize(self, s):
+    def nestedInteger(x):
+        if isinstance(x, int):
+            return NestedInteger(x)
+        lst = NestedInteger()
+        for y in x:
+            lst.add(nestedInteger(y))
+        return lst
+    return nestedInteger(eval(s))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;想写正确并不容易。。。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue386-lexicographical-numbers-median-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;386. Lexicographical Numbers （median） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer n, return all the numbers in the range [1, n] sorted in lexicographical order.&lt;br&gt;
+You must write an algorithm that runs in O(n) time and uses O(1) extra space.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def lexicalOrder(self, n: int) -&amp;gt; List[int]:
+        
+        class trie:
+            def __init__(self):
+                self.childer=dict()
+                self.isnumber=False
+            
+            def insert(self,n):
+                if len( n )==1:
+                    first= n 
+                    if first not in self.childer:
+                        self.childer[first]=trie()
+                    self.childer[first].isnumber=True
+                else:
+                    first= n[0] 
+                    rest =  n[1:] 
+                    if first not in self.childer:
+                        self.childer[first]=trie()
+                    self.childer[first].insert(rest)
+               
+        tr=trie()
+        for i in range(1,n+1):
+            tr.insert(str(i))
+        
+        res=[]
+        
+        def preorder(tr,tmp):
+            for key in tr.childer:
+                temp=tmp+key
+                if tr.childer[key].isnumber:
+                    res.append(temp)
+                preorder(tr.childer[key],temp)
+            
+        preorder(tr,&#39;&#39;)
+        return map(int,res)
+
+#ANSWER DFS
+class Solution:
+    def lexicalOrder(self, n: int) -&amp;gt; List[int]:
+        self.res = []
+        for i in range(1, 10):
+            self.helper(i, n)
+        return self.res
+    
+    def helper(self, start, end):
+        if start &amp;gt; end:
+            return
+        self.res.append(start)
+        for i in range(0, 10):
+            if 10 * start + i &amp;gt; end:
+                return
+            self.helper(10 * start + i, end)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用的trie做出来的，写的磕磕绊绊。。。&lt;br&gt;
+答案用的DFS， 很好的思路。。。&lt;br&gt;
+The idea is pretty simple. If we look at the order we can find out we just keep adding digit from 0 to 9 to every digit and make it a tree.&lt;br&gt;
+Then we visit every node in pre-order.&lt;br&gt;
+1        2        3    ...&lt;br&gt;
+/\        /\       /&lt;br&gt;
+10 ...19  20...29  30...39   ....&lt;/p&gt;
+&lt;h1 id=&#34;387-first-unique-character-in-a-string-easy&#34;&gt;387. First Unique Character in a String （Easy）&lt;/h1&gt;
+&lt;p&gt;Given a string s, find the first non-repeating character in it and return its index. If it does not exist, return -1.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def firstUniqChar(self, s: str) -&amp;gt; int:
+        c=Counter(s)
+        for i,char in enumerate(s):
+            if c[char]==1:
+                return i
+        return -1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred388-longest-absolute-file-path-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;388. Longest Absolute File Path (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Suppose we have a file system that stores both files and directories. An example of one system is represented in the following picture:&lt;br&gt;
+Here, we have dir as the only directory in the root. dir contains two subdirectories, subdir1 and subdir2. subdir1 contains a file file1.ext and subdirectory subsubdir1. subdir2 contains a subdirectory subsubdir2, which contains a file file2.ext.&lt;/p&gt;
+&lt;p&gt;In text form, it looks like this (with ⟶ representing the tab character):&lt;/p&gt;
+&lt;p&gt;dir&lt;br&gt;
+⟶ subdir1&lt;br&gt;
+⟶ ⟶ file1.ext&lt;br&gt;
+⟶ ⟶ subsubdir1&lt;br&gt;
+⟶ subdir2&lt;br&gt;
+⟶ ⟶ subsubdir2&lt;br&gt;
+⟶ ⟶ ⟶ file2.ext&lt;/p&gt;
+&lt;p&gt;If we were to write this representation in code, it will look like this: &amp;quot;dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext&amp;quot;. Note that the &#39;\n&#39; and &#39;\t&#39; are the new-line and tab characters.&lt;br&gt;
+Every file and directory has a unique absolute path in the file system, which is the order of directories that must be opened to reach the file/directory itself, all concatenated by &#39;/&#39;s. Using the above example, the absolute path to file2.ext is &amp;quot;dir/subdir2/subsubdir2/file2.ext&amp;quot;. Each directory name consists of letters, digits, and/or spaces. Each file name is of the form name.extension, where name and extension consist of letters, digits, and/or spaces.&lt;br&gt;
+Given a string input representing the file system in the explained format, return the length of the longest absolute path to a file in the abstracted file system. If there is no file in the system, return 0.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def lengthLongestPath(self, input: str) -&amp;gt; int:
+        maxlen = 0
+        pathlen = {0: 0}
+        for line in input.split(&#39;\n&#39;):
+            depth = line.count(&#39;\t&#39;)
+            name = line.lstrip(&#39;\t&#39;)
+            if &#39;.&#39; in name:
+                maxlen = max(maxlen, pathlen[depth] + len(name))
+            else:
+                pathlen[depth + 1] = pathlen[depth] + len(name) + 1
+        return maxlen
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;coner case 太多，自己写的太复杂，还不能完全pass。。。看答案了。。。&lt;/p&gt;
+&lt;h1 id=&#34;389-find-the-difference-easy&#34;&gt;389. Find the Difference （Easy）&lt;/h1&gt;
+&lt;p&gt;You are given two strings s and t.&lt;br&gt;
+String t is generated by random shuffling string s and then add one more letter at a random position.&lt;br&gt;
+Return the letter that was added to t.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findTheDifference(self, s: str, t: str) -&amp;gt; str:
+        s=Counter(s)
+        t=Counter(t)
+        for key in s:
+            t[key]-=s[key]
+            if t[key]==0:
+                del t[key]
+        
+        return  list(t.keys())[0]
+
+#ANSER NLOGN
+class Solution:
+    def findTheDifference(self, s: str, t: str) -&amp;gt; str:
+
+        # Sort both the strings
+        sorted_s = sorted(s)
+        sorted_t = sorted(t)
+
+        # Character by character comparison
+        i = 0
+        while i &amp;lt; len(s):
+            if sorted_s[i] != sorted_t[i]:
+                return sorted_t[i]
+            i += 1
+
+        return sorted_t[i]
+
+#DICT O(n)
+from collections import Counter
+
+class Solution:
+    def findTheDifference(self, s: str, t: str) -&amp;gt; str:
+        # Prepare a counter for string s.
+        # This holds the characters as keys and respective frequency as value.
+        counter_s = Counter(s)
+
+        # Iterate through string t and find the character which is not in s.
+        for ch in t:
+            if ch not in counter_s or counter_s[ch] == 0:
+                return ch
+            else:
+                # Once a match is found we reduce frequency left.
+                # This eliminates the possibility of a false match later.
+                counter_s[ch] -= 1
+
+#XOR O（n）
+class Solution:
+    def findTheDifference(self, s: str, t: str) -&amp;gt; str:
+
+        # Initialize ch with 0, because 0 ^ X = X
+        # 0 when XORed with any bit would not change the bits value.
+        ch = 0
+
+        # XOR all the characters of both s and t.
+        for char_ in s:
+            ch ^= ord(char_)
+
+        for char_ in t:
+            ch ^= ord(char_)
+
+        # What is left after XORing everything is the difference.
+        return chr(ch)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred-390-elimination-game-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 390. Elimination Game （Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You have a list arr of all integers in the range [1, n] sorted in a strictly increasing order. Apply the following algorithm on arr:&lt;br&gt;
+Starting from left to right, remove the first number and every other number afterward until you reach the end of the list.&lt;br&gt;
+Repeat the previous step again, but this time from right to left, remove the rightmost number and every other number from the remaining numbers.&lt;br&gt;
+Keep repeating the steps again, alternating left to right and right to left, until a single number remains.&lt;br&gt;
+Given the integer n, return the last number that remains in arr.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+#Navie not work memery exceeded
+class Solution:
+    def lastRemaining(self, n: int) -&amp;gt; int:
+        li = [i for i in range(1,n+1)]
+        
+        def helper(li,forward=True):
+            if len(li)==1: return li[0]
+            if forward:
+                #print(li[1::2],not forward)
+                return helper(li[1::2],not forward)
+            else:
+                li=li[::-1]
+                li=li[1::2]
+                #print(li[::-1],not forward)
+                return helper(li[::-1],not forward)
+                
+        return helper(li,True)
+
+
+#Perfect ANSWER
+class Solution:
+    def lastRemaining(self, n: int) -&amp;gt; int:
+ 
+        head, left, step, remaining = 1, True, 1, n
+        while remaining &amp;gt; 1:
+            if left or remaining % 2: 
+                #when to update head
+                #go from left or remaining is odd
+                head += step
+            left = not left
+            step *= 2
+            remaining //= 2
+        return head
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;按照题目意思直接搞时间复杂度和空间复杂度都太大。。，&lt;br&gt;
+看答案：&lt;br&gt;
+update and record head in each turn. when the total number becomes 1, head is the only number left.&lt;/p&gt;
+&lt;p&gt;When will head be updated?&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;if we move from left
+if we move from right and the total remaining number % 2 == 1
+like 2 4 6 8 10, we move from 10, we will take out 10, 6 and 2, head is deleted and move to 4
+like 2 4 6 8 10 12, we move from 12, we will take out 12, 8, 4, head is still remaining 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;then we find a rule to update our head.&lt;/p&gt;
+">Leetcode 2021-12-11</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-10/"" data-c="
