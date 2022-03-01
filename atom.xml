@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-02-28T18:56:15.360Z</updated>
+    <updated>2022-03-01T22:16:04.124Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,6 +10,522 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Lan&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2021-12-12]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2021-12-12/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-12/">
+        </link>
+        <updated>2021-12-12T03:58:54.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="font-colorred391-perfect-rectangle-hardfont"><font color='red'>391. Perfect Rectangle （Hard）</font></h1>
+<p>Given an array rectangles where rectangles[i] = [xi, yi, ai, bi] represents an axis-aligned rectangle. The bottom-left point of the rectangle is (xi, yi) and the top-right point of it is (ai, bi).<br>
+Return true if all the rectangles together form an exact cover of a rectangular region.</p>
+<pre><code class="language-python">class Solution:
+    def isRectangleCover(self, rectangles: List[List[int]]) -&gt; bool:
+        x1 = float('inf')
+        y1 = float('inf')
+        x2 = float('-inf')
+        y2 = float('-inf')
+        _set = set()
+        
+        area = 0
+        for rect in rectangles:
+            x1 = min(x1, rect[0])
+            y1 = min(y1, rect[1])
+            x2 = max(x2, rect[2])
+            y2 = max(y2, rect[3])
+            
+            area += (rect[2] - rect[0]) * (rect[3] - rect[1])
+            
+            for x, y in [(rect[0],rect[1]),(rect[0],rect[3]),(rect[2],rect[3]),(rect[2],rect[1])]:
+                if (x, y) in _set:
+                    _set.remove((x, y))
+                else:
+                    _set.add((x, y))
+        return all((x, y) in _set for x, y in [(x1,y1),(x2,y2),(x1,y2),(x2,y1)]) and len(_set) == 4 and area == (x2 - x1) * (y2 - y1)
+
+</code></pre>
+<p>没啥思路。。。答案思路:<br>
+要是exact cover of rectangular region 1）大的rectangle面积是所有小rectangle面积和 2） 所有的图中的点应该是偶数个，除了边界的4个点。</p>
+<h1 id="392-is-subsequence-easy">392. Is Subsequence (Easy)</h1>
+<p>Given two strings s and t, return true if s is a subsequence of t, or false otherwise.<br>
+A subsequence of a string is a new string that is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (i.e., &quot;ace&quot; is a subsequence of &quot;abcde&quot; while &quot;aec&quot; is not).</p>
+<pre><code class="language-python">class Solution:
+    def isSubsequence(self, s: str, t: str) -&gt; bool:
+        if not s: return True
+        p1=0
+        p2=0
+        while p1&lt;len(s):
+            
+            while p2&lt;len(t) and s[p1]!=t[p2]:
+                p2+=1
+            
+            if p2==len(t): return False
+            
+            if s[p1]==t[p2]:
+                p1+=1
+                p2+=1
+            
+            if p1==len(s):return True
+ #ANSWER           
+class Solution:
+    def isSubsequence(self, s: str, t: str) -&gt; bool:
+        if not s: return True
+        p1=0
+        p2=0
+        while p1&lt;len(s) and p2&lt;len(t):
+            if s[p1]==t[p2]:
+                p1+=1
+            p2+=1
+        if p1==len(s):
+            return True
+        return False
+                     
+</code></pre>
+<p>这题竟然卡了，用了two pointer。。 答案写的更好。 只有相等时候s的pointer才跳，t的pointer一直跳，判断s的pointer到头就可以了。</p>
+<h1 id="font-colorred393-utf-8-validation-mediumfont"><font color='red'>393. UTF-8 Validation （Medium）</font></h1>
+<p>Given an integer array data representing the data, return whether it is a valid UTF-8 encoding.<br>
+A character in UTF8 can be from 1 to 4 bytes long, subjected to the following rules:<br>
+For a 1-byte character, the first bit is a 0, followed by its Unicode code.<br>
+For an n-bytes character, the first n bits are all one's, the n + 1 bit is 0, followed by n - 1 bytes with the most significant 2 bits being 10.</p>
+<p>This is how the UTF-8 encoding would work:</p>
+<p>Char. number range  |        UTF-8 octet sequence<br>
+(hexadecimal)    |              (binary)<br>
+--------------------+---------------------------------------------<br>
+0000 0000-0000 007F | 0xxxxxxx<br>
+0000 0080-0000 07FF | 110xxxxx 10xxxxxx<br>
+0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx<br>
+0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</p>
+<p>Note: The input is an array of integers. Only the least significant 8 bits of each integer is used to store the data. This means each integer represents only 1 byte of data.</p>
+<pre><code class="language-python">class Solution:
+    def validUtf8(self, data: List[int]) -&gt; bool:
+        
+        # Number of bytes in the current UTF-8 character
+        n_bytes = 0
+
+        # For each integer in the data array.
+        for num in data:
+
+            # Get the binary representation. We only need the least significant 8 bits
+            # for any given number.
+            bin_rep = format(num, '#010b')[-8:]
+
+            # If this is the case then we are to start processing a new UTF-8 character.
+            if n_bytes == 0:
+
+                # Get the number of 1s in the beginning of the string.
+                for bit in bin_rep:
+                    if bit == '0': break
+                    n_bytes += 1
+
+                # 1 byte characters
+                if n_bytes == 0:
+                    continue
+
+                # Invalid scenarios according to the rules of the problem.
+                if n_bytes == 1 or n_bytes &gt; 4:
+                    return False
+            else:
+                # Else, we are processing integers which represent bytes which are a part of
+                # a UTF-8 character. So, they must adhere to the pattern `10xxxxxx`.
+                if not (bin_rep[0] == '1' and bin_rep[1] == '0'):
+                    return False
+
+            # We reduce the number of bytes to process by 1 after each integer.
+            n_bytes -= 1
+
+        # This is for the case where we might not have the complete data for
+        # a particular UTF-8 character.
+        return n_bytes == 0  
+
+
+
+#ANSWER BIT 
+class Solution:
+    def validUtf8(self, data):
+        &quot;&quot;&quot;
+        :type data: List[int]
+        :rtype: bool
+        &quot;&quot;&quot;
+
+        # Number of bytes in the current UTF-8 character
+        n_bytes = 0
+
+        # Mask to check if the most significant bit (8th bit from the left) is set or not
+        mask1 = 1 &lt;&lt; 7
+
+        # Mask to check if the second most significant bit is set or not
+        mask2 = 1 &lt;&lt; 6
+        for num in data:
+
+            # Get the number of set most significant bits in the byte if
+            # this is the starting byte of an UTF-8 character.
+            mask = 1 &lt;&lt; 7
+            if n_bytes == 0:
+                while mask &amp; num:
+                    n_bytes += 1
+                    mask = mask &gt;&gt; 1
+
+                # 1 byte characters
+                if n_bytes == 0:
+                    continue
+
+                # Invalid scenarios according to the rules of the problem.
+                if n_bytes == 1 or n_bytes &gt; 4:
+                    return False
+            else:
+
+                # If this byte is a part of an existing UTF-8 character, then we
+                # simply have to look at the two most significant bits and we make
+                # use of the masks we defined before.
+                if not (num &amp; mask1 and not (num &amp; mask2)):
+                    return False
+            n_bytes -= 1
+        return n_bytes == 0     
+</code></pre>
+<p>看答案了，down vote比较多不是什么好题</p>
+<h1 id="394-decode-string-medium">394. Decode String （Medium）</h1>
+<p>Given an encoded string, return its decoded string.<br>
+The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly k times. Note that k is guaranteed to be a positive integer.<br>
+You may assume that the input string is always valid; there are no extra white spaces, square brackets are well-formed, etc.<br>
+Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k. For example, there will not be input like 3a or 2[4].</p>
+<pre><code class="language-python">class Solution:
+    def decodeString(self, s: str) -&gt; str:
+        # 3[a2[c]]
+        #
+        # stack=[]
+        #       [3]
+        #       [3 [ a 2 [ c   ] 
+        # 
+        
+        dig=''
+        stack=[]
+        for char in s:
+            if char.isdigit():
+                dig+=char
+            elif char=='[':
+                if dig:
+                    stack.append(int(dig))
+                stack.append('[')
+                dig=''
+            elif char==']':
+                string=[]
+                while stack[-1]!='[':
+                    string.append(stack.pop())
+                string=''.join(string[::-1])
+                stack.pop() #pop掉【
+                if type(stack[-1])==int:
+                    string=stack.pop()*string
+                stack.append(string)
+                
+                
+            else:
+                stack.append(char)
+        
+        return ''.join(stack)
+
+
+
+ #3年前的答案估计是看的别人的一样的思路
+ class Solution(object):
+    def decodeString(self, s):
+        &quot;&quot;&quot;
+        :type s: str
+        :rtype: str
+        &quot;&quot;&quot;
+        num='0123456789'
+        s=[e for e in s]
+        
+        stack=[]
+        
+        while s:
+            
+            cur=s.pop(0)
+            if cur in num:
+                stack.append(int(cur))
+            elif cur=='[':
+                stack.append(cur)
+            elif cur==']':
+                temp=[]
+                while stack and stack[-1]!='[':
+                    me=stack.pop()
+                    temp.append(me)
+                stack.pop()
+                temp=''.join(temp[::-1])
+                number=0
+                time=1
+                while stack and type(stack[-1])==int:
+                    number+=stack.pop()*time
+                    time*=10
+                stack.append(temp*number)
+            else:
+                stack.append(cur)
+        return ''.join(stack)           
+</code></pre>
+<p>感觉是用stack的确写出来了~~</p>
+<h1 id="font-colorred-395-longest-substring-with-at-least-k-repeating-characters-mediumfont"><font color='red'> 395. Longest Substring with At Least K Repeating Characters （Medium）</font></h1>
+<p>Given a string s and an integer k, return the length of the longest substring of s such that the frequency of each character in this substring is greater than or equal to k.</p>
+<pre><code class="language-python">class Solution:
+    def longestSubstring(self, s: str, k: int) -&gt; int:
+        
+        def helper(start,end):
+            if end&lt;k:return 0
+            countMap=[0]*26
+            for i in range(start,end):
+                countMap[ord(s[i])-ord('a')]+=1
+            for mid in range(start,end):
+                if countMap[ord(s[mid])-ord('a')]&gt;=k: continue
+                midnext=mid+1
+                while midnext&lt;end and countMap[ord(s[midnext])-ord('a')]&lt;k:
+                    midnext+=1
+                return max(helper(start,mid),helper(midnext,end))
+            return end-start
+        
+        return helper(0,len(s))
+            
+#Perfect ANSWER
+class Solution:
+    def longestSubstring(self, s: str, k: int) -&gt; int:
+        for c in set(s):
+            if s.count(c) &lt; k:
+                return max(self.longestSubstring(t, k) for t in s.split(c))
+        return len(s)
+
+#Sliding WIndow
+class Solution:
+    def longestSubstring(self, s: str, k: int) -&gt; int:
+        
+        maxunique=len(set(s))
+        res=0
+        for cur_unique in range(1,maxunique+1):
+            countmap=[0]*26
+            start=end=unique=idx=countAtLeasetK=0
+            while end &lt;len(s):
+                #expanding sliding window
+                if unique&lt;=cur_unique:
+                    idx=ord(s[end])-ord('a')
+                    if countmap[idx]==0:
+                        unique+=1
+                    countmap[idx]+=1
+                    if countmap[idx]==k:
+                        countAtLeasetK+=1
+                    end+=1
+                else:
+                    #shrink sliding window
+                    idx=ord(s[start])-ord('a')
+                    if countmap[idx]==k:
+                        countAtLeasetK-=1
+                    countmap[idx]-=1
+                    if countmap[idx]==0:
+                        unique-=1
+                    start+=1
+                
+                if unique==cur_unique and unique==countAtLeasetK:
+                    res=max(res,end-start)
+        return res
+
+</code></pre>
+<p>答案的分治法很好，<br>
+的确是tow pointer啊，但写不出来。。。思路：第一层for loop 用来扫 cur_unique 。 while  end 小于len(s)； 当unique小于cur_unique而且不到s末尾时， expand。记录unique he countAtLeastK大小，否则当unique大于cur_unique就收缩， 更新countAtLeastK和unique。 如果unique等于cur_unique 而且unique等于countAtLeastK，更新结果。<br>
+最简单的是方法2解法，如果count（char)小于K就用char作为分界char，recursive call function。</p>
+<h1 id="396-rotate-function-medium">396. Rotate Function （Medium）</h1>
+<p>You are given an integer array nums of length n.<br>
+Assume arrk to be an array obtained by rotating nums by k positions clock-wise. We define the rotation function F on nums as follow:<br>
+F(k) = 0 * arrk[0] + 1 * arrk[1] + ... + (n - 1) * arrk[n - 1].<br>
+Return the maximum value of F(0), F(1), ..., F(n-1).</p>
+<pre><code class="language-python">class Solution:
+    def maxRotateFunction(self, nums: List[int]) -&gt; int:
+        #nums = [4,3,2,6]
+        #F(0) = (0 * 4) + (1 * 3) + (2 * 2) + (3 * 6) = 0 + 3 + 4 + 18 = 25
+        #F(1) = (0 * 6) + (1 * 4) + (2 * 3) + (3 * 2) = 0 + 4 + 6 + 6 = 16
+        #     = F[0]+sum-4*6
+        #F(2) = (0 * 2) + (1 * 6) + (2 * 4) + (3 * 3) = 0 + 6 + 8 + 9 = 23
+        #     = F[1]+sum-4*2
+        #F(3) = (0 * 3) + (1 * 2) + (2 * 6) + (3 * 4) = 0 + 2 + 12 + 12 = 26
+        #     = F[2]+sum-4*3
+        
+        f0=0
+        sum_=0
+        for i,n in enumerate(nums):
+            f0+=i*n
+            sum_+=n
+        res=f0
+        for j in range(len(nums)-1,0,-1):
+            f1=f0+sum_-len(nums)*nums[j]
+            res=max(res,f1)
+            f0=f1
+        return res
+</code></pre>
+<h1 id="397-integer-replacement-medium">397. Integer Replacement (Medium)</h1>
+<p>Given a positive integer n, you can apply one of the following operations:<br>
+If n is even, replace n with n / 2.<br>
+If n is odd, replace n with either n + 1 or n - 1.<br>
+Return the minimum number of operations needed for n to become 1.</p>
+<pre><code class="language-python">class Solution:
+    def integerReplacement(self, n: int) -&gt; int:
+        def helper(n):
+            if n==1:
+                return 0
+            step=0
+            if n%2==0:
+                n=n//2
+                step=1+helper(n)
+            else:
+                step=1+min(helper(n+1),helper(n-1))
+            return step
+        
+        return helper(n)
+        
+</code></pre>
+<p>能加个@lru_cache(None)去优化下。。。不过已经pass autograder了</p>
+<h1 id="398-random-pick-index-medium">398. Random Pick Index （Medium）</h1>
+<p>Given an integer array nums with possible duplicates, randomly output the index of a given target number. You can assume that the given target number must exist in the array.<br>
+Implement the Solution class:<br>
+Solution(int[] nums) Initializes the object with the array nums.<br>
+int pick(int target) Picks a random index i from nums where nums[i] == target. If there are multiple valid i's, then each index should have an equal probability of returning.</p>
+<pre><code class="language-python">class Solution:
+
+    def __init__(self, nums: List[int]):
+        self.dic=collections.defaultdict(list)
+        for i,n in enumerate(nums):
+            self.dic[n].append(i)
+        
+
+    def pick(self, target: int) -&gt; int:
+        return random.choice(self.dic[target])
+    
+</code></pre>
+<h1 id="font-colorred-399-evaluate-division-medium-font"><font color='red'> 399. Evaluate Division (Medium) </font></h1>
+<p>ou are given an array of variable pairs equations and an array of real numbers values, where equations[i] = [Ai, Bi] and values[i] represent the equation Ai / Bi = values[i]. Each Ai or Bi is a string that represents a single variable.<br>
+You are also given some queries, where queries[j] = [Cj, Dj] represents the jth query where you must find the answer for Cj / Dj = ?.<br>
+Return the answers to all queries. If a single answer cannot be determined, return -1.0.</p>
+<pre><code class="language-python">class Solution:
+    def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -&gt; List[float]:
+        
+        # a-val-&gt;b--val-&gt;c
+        
+
+        graph = defaultdict(defaultdict)
+
+        def backtrack_evaluate(curr_node, target_node, acc_product, visited):
+            visited.add(curr_node)
+            ret = -1.0
+            neighbors = graph[curr_node]
+            if target_node in neighbors:
+                ret = acc_product * neighbors[target_node]
+            else:
+                for neighbor, value in neighbors.items():
+                    if neighbor in visited:
+                        continue
+                    ret = backtrack_evaluate(
+                        neighbor, target_node, acc_product * value, visited)
+                    if ret != -1.0:
+                        break
+            visited.remove(curr_node)
+            return ret
+
+        # Step 1). build the graph from the equations
+        for (dividend, divisor), value in zip(equations, values):
+            # add nodes and two edges into the graph
+            graph[dividend][divisor] = value
+            graph[divisor][dividend] = 1 / value
+
+        # Step 2). Evaluate each query via backtracking (DFS)
+        #  by verifying if there exists a path from dividend to divisor
+        results = []
+        for dividend, divisor in queries:
+            if dividend not in graph or divisor not in graph:
+                # case 1): either node does not exist
+                ret = -1.0
+            elif dividend == divisor:
+                # case 2): origin and destination are the same node
+                ret = 1.0
+            else:
+                visited = set()
+                ret = backtrack_evaluate(dividend, divisor, 1, visited)
+            results.append(ret)
+
+        return results
+
+
+###UNIONFIND 变种
+class Solution:
+    def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -&gt; List[float]:
+
+        gid_weight = {}
+
+        def find(node_id):
+            if node_id not in gid_weight:
+                gid_weight[node_id] = (node_id, 1)
+            group_id, node_weight = gid_weight[node_id]
+            # The above statements are equivalent to the following one
+            #group_id, node_weight = gid_weight.setdefault(node_id, (node_id, 1))
+
+            if group_id != node_id:
+                # found inconsistency, trigger chain update
+                new_group_id, group_weight = find(group_id)
+                gid_weight[node_id] =  (new_group_id, node_weight * group_weight)
+            return gid_weight[node_id]
+
+        def union(dividend, divisor, value):
+            dividend_gid, dividend_weight = find(dividend)
+            divisor_gid, divisor_weight = find(divisor)
+            if dividend_gid != divisor_gid:
+                # merge the two groups together,
+                # by attaching the dividend group to the one of divisor
+                gid_weight[dividend_gid] =  (divisor_gid, divisor_weight * value / dividend_weight)
+
+        # Step 1). build the union groups
+        for (dividend, divisor), value in zip(equations, values):
+            union(dividend, divisor, value)
+
+        results = []
+        # Step 2). run the evaluation, with &quot;lazy&quot; updates in find() function
+        for (dividend, divisor) in queries:
+            if dividend not in gid_weight or divisor not in gid_weight:
+                # case 1). at least one variable did not appear before
+                results.append(-1.0)
+            else:
+                dividend_gid, dividend_weight = find(dividend)
+                divisor_gid, divisor_weight = find(divisor)
+                if dividend_gid != divisor_gid:
+                    # case 2). the variables do not belong to the same chain/group
+                    results.append(-1.0)
+                else:
+                    # case 3). there is a chain/path between the variables
+                    results.append(dividend_weight / divisor_weight)
+        return results
+</code></pre>
+<p>看提示，是graph问题， 一开始就偏了。。。若是graph问题，则a-val-》b-val-》c，<br>
+那么a-》c就是val1*val2，如果是c-》a找不到，就找a-c然后1/结果. 如果node不在里面就return -1，如果是自己-》自己return1<br>
+还是第一种方法graph比较标准用DFS。</p>
+<h1 id="font-colorred400-nth-digit-mediumfont"><font color='red'>400. Nth Digit （Medium）</font></h1>
+<p>Given an integer n, return the nth digit of the infinite integer sequence [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...].</p>
+<pre><code class="language-python">class Solution:
+    def findNthDigit(self, n: int) -&gt; int:
+        #1 ~ 9 include 9 one digit number;
+        #10 ~ 99 include 90 two digits number;
+        #100 ~ 999 include 900 three digits number;
+        #1000 ~ 9999 include 9000 four digits number;
+        #...
+        #length is how many digits:1 or 2 or 3 ..., range is 9 or 90 or 900 ...
+        
+        length = 1
+        num = 1 
+        range_ = 9
+        while n &gt; length * range_:
+            n -= length * range_
+            length+=1
+            range_ *= 10
+            num *= 10
+        num += (n - 1) // length
+        return str(num)[ (n-1)%length]
+		 
+
+</code></pre>
+<p>知道思路，写时候卡。。。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Leetcode 2021-12-11]]></title>
         <id>https://headhuanglan.github.io/post/leetcode-2021-12-11/</id>
@@ -1757,7 +2273,7 @@ def query(left,right):
         <id>https://headhuanglan.github.io/post/leetcode-2021-12-08/</id>
         <link href="https://headhuanglan.github.io/post/leetcode-2021-12-08/">
         </link>
-        <updated>2021-12-07T16:32:01.000Z</updated>
+        <updated>2021-12-08T03:32:01.000Z</updated>
         <content type="html"><![CDATA[<!-- more -->
 <h1 id="font-colorred351-android-unlock-patterns-medium-font"><font color='red'>351. Android Unlock Patterns (Medium) </font></h1>
 <p>Android devices have a special lock screen with a 3 x 3 grid of dots. Users can set an &quot;unlock pattern&quot; by connecting the dots in a specific sequence, forming a series of joined line segments where each segment's endpoints are two consecutive dots in the sequence. A sequence of k dots is a valid unlock pattern if both of the following are true:<br>
@@ -4837,317 +5353,6 @@ After you sell your stock, you cannot buy stock on the next day (i.e., cooldown 
     
 </code></pre>
 <p>看一下hint才做出来，思路topological sort，leaves 直接砍掉。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-12-02]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-12-02/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-02/">
-        </link>
-        <updated>2021-12-02T06:05:58.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="291-word-pattern-ii-medium">291. Word Pattern II （Medium）</h1>
-<p>Given a pattern and a string s, return true if s matches the pattern.<br>
-A string s matches a pattern if there is some bijective mapping of single characters to strings such that if each character in pattern is replaced by the string it maps to, then the resulting string is s. A bijective mapping means that no two characters map to the same string, and no character maps to two different strings.</p>
-<pre><code class="language-python">class Solution:
-    def wordPatternMatch(self, pattern: str, s: str) -&gt; bool:
-        
-        
-        
-        def helper(pattern,s,dic1,dic2):
-            if not s: return not pattern
-            if not pattern: return not s
-            key = pattern[0]
-            res=False
-            for i in range(1,len(s)+1):
-                dic1_copy=dic1.copy() 
-                dic2_copy=dic2.copy()
-                s_val = s[:i]
-                
-                #print(key,s_val)
-                if key in dic1_copy and dic1_copy[key]!=s_val: 
-                    res=res or False
-                    continue
-                else:
-                    dic1_copy[key]=s_val
-                
-                if s_val in dic2_copy and dic2_copy[s_val]!=key: 
-                    res=res or False
-                    continue
-                else:
-                    dic2_copy[s_val]=key
-                    
-                s_rest = s[i:]
-                res = res or helper(pattern[1:],s_rest,dic1_copy,dic2_copy)
-            #if res:
-            #    print(pattern,s)
-            return res
-        
-        return helper(pattern,s,dict(),dict())
-</code></pre>
-<p>知道使用backtracking，但是得小心 dic1 dic2 copy问题，以及res = res or False， 既然当前s[:i] 已经是False了就skip，所以用cotinue。</p>
-<h1 id="292-nim-game-easy">292. Nim Game （Easy）</h1>
-<p>You are playing the following Nim Game with your friend:<br>
-Initially, there is a heap of stones on the table.<br>
-You and your friend will alternate taking turns, and you go first.<br>
-On each turn, the person whose turn it is will remove 1 to 3 stones from the heap.<br>
-The one who removes the last stone is the winner.</p>
-<pre><code class="language-python">class Solution:
-    def canWinNim(self, n: int) -&gt; bool:
-        # dp [0]   [1]     [2]   [3]    [4]     [5]
-        #    True   True   True  True   False  
-        
-        dp = [False] * (n+1)
-        if n&lt;=3: return True
-        dp[0]=True
-        dp[1]=True
-        dp[2]=True
-        dp[3]=True
-        for nn in range(2,n+1):
-            for i_select in [1,2,3]:
-                dp[nn] = dp[nn] or  (not dp[nn-i_select])
-        
-        #print(dp)
-        return dp[n]
-    
-class Solution:
-    def canWinNim(self, n: int) -&gt; bool:
-        # 只要对方等于4个 对方必然输。
-        # 我先开始，如何让对方等于4个
-        # n=4 我输
-        # n=5 我选1
-        # n=6 我选2
-        # n=7 我选3
-        # n=8 我选1 不行 我选2 不行 我选3 还是不行
-        # n=9 选1
-        # n=10 选2
-        # n=11 选3
-        # n=12 都不行
-        
-        return  not n%4==0
-
-</code></pre>
-<p>用dp写了一个答案，但time limit exceeded。 逐渐发现规律。。。就是是否被4整除。</p>
-<h1 id="293-flip-game-easy">293. Flip Game （Easy）</h1>
-<p>You are playing a Flip Game with your friend.<br>
-You are given a string currentState that contains only '+' and '-'. You and your friend take turns to flip two consecutive &quot;++&quot; into &quot;--&quot;. The game ends when a person can no longer make a move, and therefore the other person will be the winner.<br>
-Return all possible states of the string currentState after one valid move. You may return the answer in any order. If there is no valid move, return an empty list [].</p>
-<pre><code class="language-python">class Solution:
-    def generatePossibleNextMoves(self, currentState: str) -&gt; List[str]:
-        res= []
-        for i in range(len(currentState)-1):
-            if currentState[i]=='+' and currentState[i+1]=='+':
-                res.append(currentState[:i]+'--'+currentState[i+2:])
-        return res
-</code></pre>
-<h1 id="font-colorred294-flip-game-ii-medium-font"><font color='red'>294. Flip Game II (Medium) </font></h1>
-<p>You are playing a Flip Game with your friend.<br>
-You are given a string currentState that contains only '+' and '-'. You and your friend take turns to flip two consecutive &quot;++&quot; into &quot;--&quot;. The game ends when a person can no longer make a move, and therefore the other person will be the winner.<br>
-Return true if the starting player can guarantee a win, and false otherwise.</p>
-<pre><code class="language-python">class Solution:
-    def canWin(self, currentState: str) -&gt; bool:
-            return any(currentState[i:i+2] == '++' and not self.canWin(currentState[:i] + '--' + currentState[i+2:])  for i in range(len(currentState)))
-#ANSWER
-class Solution(object):
-    _memo = {}
-    def canWin(self, s):
-        memo = self._memo
-        if s not in memo:
-            memo[s] = any(s[i:i+2] == '++' and not self.canWin(s[:i] + '--' + s[i+2:])
-                          for i in range(len(s)))
-        return memo[s]
-
-#ANSWER
-class Solution(object):
-    def canWin(self, s):
-        memo = {}
-        def can(s):
-            if s not in memo:
-                memo[s] = any(s[i:i+2] == '++' and not can(s[:i] + '--' + s[i+2:])
-                              for i in range(len(s)))
-            return memo[s]
-        return can(s)
-
-</code></pre>
-<p>没思路。。 。。。backtracking with mem。。。。</p>
-<h1 id="font-colorred295-find-median-from-data-stream-hardfont"><font color='red'>295. Find Median from Data Stream （Hard）</font></h1>
-<pre><code class="language-python">from heapq import *
-
-
-class MedianFinder:
-    def __init__(self):
-        self.small = []  # the smaller half of the list, max heap (invert min-heap)
-        self.large = []  # the larger half of the list, min heap
-
-    def addNum(self, num):
-        if len(self.small) == len(self.large):
-            heappush(self.large, -heappushpop(self.small, -num))
-        else:
-            heappush(self.small, -heappushpop(self.large, num))
-
-    def findMedian(self):
-        if len(self.small) == len(self.large):
-            return float(self.large[0] - self.small[0]) / 2.0
-        else:
-            return float(self.large[0])
-
-</code></pre>
-<p>最简单方法的是sort， 复杂点的比如答案，用了min heap。 思路： small 保存较小的，large保存较大的， 由于需要small的最大元素，minheap头是最小元素，所以push到small要反向。  large能最多比small多存一个元素。 heappushpop同时 push一个元素取出一个元素。TimeCoplex O(logn).</p>
-<h1 id="296-best-meeting-point-hard">296. Best Meeting Point （Hard）</h1>
-<p>Given an m x n binary grid grid where each 1 marks the home of one friend, return the minimal total travel distance.<br>
-The total travel distance is the sum of the distances between the houses of the friends and the meeting point.<br>
-The distance is calculated using Manhattan Distance</p>
-<pre><code class="language-python">class Solution:
-    def minTotalDistance(self, grid: List[List[int]]) -&gt; int:
-        
-        m=len(grid)
-        n=len(grid[0])
-        rows=[]
-        cols=[]
-        for row in range(m):
-            for col in range(n):
-                if grid[row][col]==1:
-                    rows.append(row)
-                    cols.append(col)
-        
-        rows = sorted(rows)
-        cols = sorted(cols)
-        row=rows[len(rows)//2]
-        col=cols[len(cols)//2]
-        
-        def mindis1d(points,origin):
-            distance=0
-            for point in points:
-                distance += abs(point-origin)
-            return distance
-        
-        return mindis1d(rows,row)+mindis1d(cols,col)
-                    
-
-</code></pre>
-<p>第一想法多次BFS。。。一次cost mn   最差情况有mn个1， 所以最差有O（mmnn）。 不可行。 答案思路：1）分解成2个1d的问题，最小值点出现在median位置。  O(mnlog⁡mn)    2）只要不sort，时间复杂度还能降低到O(mn) 。 拉出来行和列分别遍历即可。</p>
-<h1 id="font-colorred-297-serialize-and-deserialize-binary-tree-hard-font"><font color='red'> 297. Serialize and Deserialize Binary Tree （Hard） </font></h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-
-class Codec:
-
-    def serialize(self, root):
-        &quot;&quot;&quot;Encodes a tree to a single string.
-        
-        :type root: TreeNode
-        :rtype: str
-        &quot;&quot;&quot;
-        res = []
-        def pre(root):
-            if not root:
-                res.append('#')
-                return  
-            res.append(str(root.val))
-            pre(root.left)
-            pre(root.right)
-        pre(root)
-         
-        return '@'.join(res)
-        
-
-    def deserialize(self, data):
-        &quot;&quot;&quot;Decodes your encoded data to tree.
-        
-        :type data: str
-        :rtype: TreeNode
-        &quot;&quot;&quot;
-        
-        data = [ e.strip() for e in data.split('@')  ]
-        
-        def deser(data):
-            if not data: return None
-            if data[0]=='#':
-                data.pop(0)
-                return None
-            
-            root=TreeNode(int(data.pop(0))) 
-            root.left=deser(data)
-            root.right=deser(data)
-            return root
-        
-        return deser(data)
-        
-        
-
-# Your Codec object will be instantiated and called as such:
-# ser = Codec()
-# deser = Codec()
-# ans = deser.deserialize(ser.serialize(root))
-
-</code></pre>
-<p>有个什么儿子兄弟表示法，但忘记了。。。这个题目只用了preorder。 但要注意递归时候，传入data必须是list，这样随着递归list本身会变化，要是str会出错。</p>
-<h1 id="font-colorred298-binary-tree-longest-consecutive-sequence-mediumfont"><font color='red'>298. Binary Tree Longest Consecutive Sequence （Medium）</font></h1>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def longestConsecutive(self, root: Optional[TreeNode]) -&gt; int:
-        res=[0]
-        def pre(root,parent, length):
-            if not root:
-                return 
-            if parent and root.val==parent.val+1:
-                length+=1
-            else:
-                length=1
-            res[0]=max(res[0],length)
-            pre(root.left,root,length)
-            pre(root.right,root,length)
-        pre(root,None,0)
-        
-        return res[0]
-         
-</code></pre>
-<p>太晚了，应该能做出来，直接看答案改写。 pre order， 如果 parent+1=current ， length+=1 else length=1</p>
-<h1 id="299-bulls-and-cows-medium">299. Bulls and Cows （Medium）</h1>
-<pre><code class="language-python">class Solution:
-    def getHint(self, secret: str, guess: str) -&gt; str:
-        aaa=0
-        dic1=dict()
-        dic2=dict()
-        for a,b in zip(secret,guess):
-            if a==b:
-                aaa+=1
-            dic1[a]=dic1.get(a,0)+1
-            dic2[b]=dic2.get(b,0)+1
-        bbb=0
-        for k in dic1:
-            if k in dic2:
-                bbb+=min(dic1[k],dic2[k])
-        
-        bbb=bbb-aaa
-        
-        return str(aaa)+'A'+str(bbb)+'B'
-</code></pre>
-<h1 id="font-colorblue300-longest-increasing-subsequence-medium-font"><font color='blue'>300. Longest Increasing Subsequence (Medium) </font></h1>
-<pre><code class="language-python">class Solution:
-    def lengthOfLIS(self, nums: List[int]) -&gt; int:
-        # dp[i] means the LIS till ith number including i
-        # dp[i] =  max(dp[i],dp[j]+1)   j&lt;i and nums[j]&lt;nums[i]
-        if not nums: return 0
-        if len(nums)==1: return 1
-        dp = [1]*len(nums)
-        for i in range(1,len(nums)):
-            for j in range(i):
-                if nums[j]&lt;nums[i]:
-                    dp[i]=max(dp[i],dp[j]+1)
-        
-        return max(dp)
-</code></pre>
-<p>classical DP problem O(n^2)</p>
 ]]></content>
     </entry>
 </feed>
