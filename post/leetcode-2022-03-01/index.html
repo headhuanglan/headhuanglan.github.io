@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>BFS DFS 模板总结 | Lan&#39;s Blog</title>
+<title>Leetcode 2022-03-01 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1646898100770">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,8 @@
 
 
 
-  <meta name="description" content="BFS DFS 模板总结" />
-  <meta name="keywords" content="算法总结" />
+  <meta name="description" content="Leetcode 2022-03-01" />
+  <meta name="keywords" content="leetcode" />
 </head>
 
 <body>
@@ -223,18 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#bfs-template">BFS - Template</a>
-<ul>
-<li><a href="#template-i">template I</a></li>
-<li><a href="#template-ii">template II</a></li>
-</ul>
-</li>
-<li><a href="#dfs-template">DFS - Template</a>
-<ul>
-<li><a href="#template-i-2">template I</a></li>
-<li><a href="#template-ii-2">template II</a></li>
-</ul>
-</li>
+<li><a href="#font-colorred-401-binary-watch-easy-font"><font color='red'> 401. Binary Watch (Easy) </font></a></li>
+<li><a href="#font-colorred-402-remove-k-digits-mediumfont"><font color='red'> 402. Remove K Digits （Medium）</font></a></li>
+<li><a href="#403-frog-jump-hard">403. Frog Jump （Hard）</a></li>
+<li><a href="#404-sum-of-left-leaves-easy">404. Sum of Left Leaves （Easy）</a></li>
+<li><a href="#405-convert-a-number-to-hexadecimal-easy">405. Convert a Number to Hexadecimal (Easy)</a></li>
+<li><a href="#font-colorred-406-queue-reconstruction-by-height-medium-font"><font color='red'> 406. Queue Reconstruction by Height (Medium) </font></a></li>
+<li><a href="#font-colorred-407-trapping-rain-water-ii-hardfont"><font color='red'> 407. Trapping Rain Water II （Hard）</font></a></li>
+<li><a href="#408-valid-word-abbreviation-easy">408. Valid Word Abbreviation （Easy）</a></li>
+<li><a href="#font-colorred-409-longest-palindrome-easy-font"><font color='red'> 409. Longest Palindrome (Easy) </font></a></li>
+<li><a href="#font-colorred-410-split-array-largest-sum-hard-font"><font color='red'> 410. Split Array Largest Sum （Hard） </font></a></li>
 </ul>
 
   </div>
@@ -500,20 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-14/"> BFS DFS 模板总结 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2022-03-01/"> Leetcode 2022-03-01 </a>
   </h1>
   <div class="post-meta">
-    
-    <span class="meta-item">
-      <i class="fa fa-thumb-tack"></i>
-      <span class="language" data-lan="top">置顶</span>
-      <span class="post-meta-divider">|</span>
-    </span>
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-12 09:18:20">2021-11-12</span>
+      <span class="publish-time" data-t="2022-03-01 09:53:54">2022-03-01</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -521,8 +513,8 @@
       <i class="fa fa-folder-o"></i>
       <span class="pc-show language" data-lan="category-in">标签:</span>
        
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/">
-        <span>算法总结</span>
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/">
+        <span>leetcode</span>
       </a>
        
     </span>
@@ -531,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >3<span class="language" data-lan="minute"
+        >17<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -540,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >415<span class="pc-show language" data-lan="words"
+        >2670<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -550,105 +542,470 @@
 </section>
 
             <div class="post-body next-md-body" id="post_body">
-              <p>BFS DFS 模板总结</p>
-<!-- more -->
-<h1 id="bfs-template">BFS - Template</h1>
-<h2 id="template-i">template I</h2>
-<pre><code class="language-java">/**
- * Return the length of the shortest path between root and target node.
- */
-int BFS(Node root, Node target) {
-    Queue&lt;Node&gt; queue;  // store all nodes which are waiting to be processed
-    int step = 0;       // number of steps neeeded from root to current node
-    // initialize
-    add root to queue;
-    // BFS
-    while (queue is not empty) {
-        step = step + 1;
-        // iterate the nodes which are already in the queue
-        int size = queue.size();
-        for (int i = 0; i &lt; size; ++i) {
-            Node cur = the first node in queue;
-            return step if cur is target;
-            for (Node next : the neighbors of cur) {
-                add next to queue;
-            }
-            remove the first node from queue;
-        }
-    }
-    return -1;          // there is no path from root to target
-}
+              <!-- more -->
+<p>中间搞laser project浪费了不少时间~~~ 争取3月刷300到700. system design 也该看了。</p>
+<h1 id="font-colorred-401-binary-watch-easy-font"><font color='red'> 401. Binary Watch (Easy) </font></h1>
+<p>A binary watch has 4 LEDs on the top which represent the hours (0-11), and the 6 LEDs on the bottom represent the minutes (0-59). Each LED represents a zero or one, with the least significant bit on the right.<br>
+Given an integer turnedOn which represents the number of LEDs that are currently on, return all possible times the watch could represent. You may return the answer in any order.</p>
+<pre><code class="language-python">class Solution:
+    def readBinaryWatch(self, turnedOn: int) -&gt; List[str]:
+        return ['{}:{}'.format(h, str(m).zfill(2))  for h in range(12) for m in range(60) if (bin(h) + bin(m)).count('1') == turnedOn]
+
+#Backtracking way of answer it
+class Solution:
+    def readBinaryWatch(self, turnedOn: int) -&gt; List[str]:
+        res=set()
+        nums1=[8,4,2,1]
+        nums2=[32,16,8,4,2,1]
+        
+        
+        def generateDigs(nums,count):
+            res=set()
+            def helper(c,pos,sum_):
+                if c==0:
+                    res.add(sum_)
+                    return
+                for i in range(pos,len(nums)):
+                    helper(c-1,i+1,sum_+nums[i])
+            helper(count,0,0)
+            return res
+        
+        for i in range(turnedOn+1):
+            list1=generateDigs(nums1,i)
+            list2=generateDigs(nums2,turnedOn-i)
+            for num1 in list1:
+                if num1&gt;=12: continue
+                for num2 in list2:
+                    if num2&gt;=60: continue
+                    res.add('{}:{}'.format(num1,str(num2).zfill(2)))
+        return res
 </code></pre>
-<h2 id="template-ii">template II</h2>
-<pre><code class="language-java">/**
- * Return the length of the shortest path between root and target node.
- */
-int BFS(Node root, Node target) {
-    Queue&lt;Node&gt; queue;  // store all nodes which are waiting to be processed
-    Set&lt;Node&gt; visited;  // store all the nodes that we've visited
-    int step = 0;       // number of steps neeeded from root to current node
-    // initialize
-    add root to queue;
-    add root to visited;
-    // BFS
-    while (queue is not empty) {
-        step = step + 1;
-        // iterate the nodes which are already in the queue
-        int size = queue.size();
-        for (int i = 0; i &lt; size; ++i) {
-            Node cur = the first node in queue;
-            return step if cur is target;
-            for (Node next : the neighbors of cur) {
-                if (next is not in used) {
-                    add next to queue;
-                    add next to visited;
-                }
-            }
-            remove the first node from queue;
-        }
-    }
-    return -1;          // there is no path from root to target
-}
+<p>是一个backtracking问题， 写起来难度很大，然而是一个easy问题。。。直接暴力解即可。<br>
+但用backtracking就是一个比较难的问题了。</p>
+<h1 id="font-colorred-402-remove-k-digits-mediumfont"><font color='red'> 402. Remove K Digits （Medium）</font></h1>
+<p>Given string num representing a non-negative integer num, and an integer k, return the smallest possible integer after removing k digits from num.</p>
+<pre><code class="language-python">class Solution:
+    def removeKdigits(self, num: str, k: int) -&gt; str:
+        #
+        # 2     1    4
+        # left  cur
+        # if cur&lt;left, we know left must be removed
+        
+        stack=[]
+        for n in num:
+            while k and stack and n&lt;stack[-1]:
+                stack.pop()
+                k-=1
+            stack.append(n)
+        
+        #truncate remaining k digits at the end
+        # if k==0 return entire list
+        final_stack=stack[:-k] if k else stack
+        
+        return ''.join(final_stack).lstrip('0') or '0'
+</code></pre>
+<p>greedy+stack 这个方法第一次比较难想到，需要考虑corner case。</p>
+<h1 id="403-frog-jump-hard">403. Frog Jump （Hard）</h1>
+<p>A frog is crossing a river. The river is divided into some number of units, and at each unit, there may or may not exist a stone. The frog can jump on a stone, but it must not jump into the water.<br>
+Given a list of stones' positions (in units) in sorted ascending order, determine if the frog can cross the river by landing on the last stone. Initially, the frog is on the first stone and assumes the first jump must be 1 unit.<br>
+If the frog's last jump was k units, its next jump must be either k - 1, k, or k + 1 units. The frog can only jump in the forward direction.</p>
+<pre><code class="language-python">class Solution:
+    def canCross(self, stones: List[int]) -&gt; bool:
+       
+        dp=[False]*len(stones)
+        dic={s:i for i,s in enumerate(stones)}
+        
+        @lru_cache(None)
+        def can(ith,k):
+            if k&lt;=0: return
+            if ith==0:
+                dp[0]=True
+                if stones[0]+1 in dic:
+                    jth=dic[stones[0]+1] 
+                    can(jth,1)
+            else:
+                for i,step in enumerate([k+1,k,k-1]):
+                    if stones[ith]+step in dic:
+                        stone_ind=dic[stones[ith]+step]
+                        dp[stone_ind]=True
+                        can(stone_ind,[k+1,k,k-1][i])
+            
+        can(0,1)
+        return dp[-1]
+
+#ANSWER
+class Solution:
+    def canCross(self, stones: List[int]) -&gt; bool:
+        
+        dic=dict()
+        for s in stones:
+            dic[s]=set()
+        dic[0].add(0)
+        
+        for i in range(len(stones)):
+            for k in dic[stones[i]]:
+                for step in range(k-1,k+2):
+                    if step&gt;0 and stones[i]+step in dic:
+                        dic[stones[i]+step].add(step)
+                        
+        return len(dic[stones[-1]])&gt;0
+
+#ANSWER
+class Solution:
+    def canCross(self, stones: List[int]) -&gt; bool:
+        
+        seen = set()
+        stoneSet = set(stones)
+        end = stones[-1]
+        stack = [(0, 0)]
+        while len(stack) &gt; 0:
+            loc, steps = stack.pop()
+            if (loc, steps) in seen:
+                continue
+            seen.add((loc, steps))
+            if loc == end:
+                return True
+            elif loc &lt; end:
+                for i in range(steps-1, steps+2):
+                    if i &lt;= 0:
+                        continue
+                    if loc + i in stoneSet:
+                        stack.append((loc+i, i))
+        return False
+</code></pre>
+<p>没想到做出来了。。。。。dp  with mem。。。<br>
+答案更好。答案3思路： each node has 3 children. The goal is to check if we can reach to the end along the edges. We can do it with a Depth First Search with a Hashtable(to avoid redundant calculation)</p>
+<h1 id="404-sum-of-left-leaves-easy">404. Sum of Left Leaves （Easy）</h1>
+<p>Given the root of a binary tree, return the sum of all left leaves.</p>
+<pre><code class="language-python">class Solution:
+    def sumOfLeftLeaves(self, root: Optional[TreeNode]) -&gt; int:
+        if not root: return 0
+        if root.left and root.left.left is None and root.left.right is None:
+            return root.left.val+self.sumOfLeftLeaves(root.right)
+        return  self.sumOfLeftLeaves(root.left)+self.sumOfLeftLeaves(root.right)
+</code></pre>
+<h1 id="405-convert-a-number-to-hexadecimal-easy">405. Convert a Number to Hexadecimal (Easy)</h1>
+<p>Given an integer num, return a string representing its hexadecimal representation. For negative integers, two’s complement method is used.<br>
+All the letters in the answer string should be lowercase characters, and there should not be any leading zeros in the answer except for the zero itself.</p>
+<pre><code class="language-python">class Solution:
+    def toHex(self, num: int) -&gt; str:
+        if num&lt;0:
+            num=4294967295 +num+1
+        map=['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f']
+        res=''
+        while num:
+            ind=num%16
+            res+=map[ind]
+            num=num//16
+        #26=1a  16 11
+        return res[::-1]   if res else '0'  
+</code></pre>
+<h1 id="font-colorred-406-queue-reconstruction-by-height-medium-font"><font color='red'> 406. Queue Reconstruction by Height (Medium) </font></h1>
+<p>You are given an array of people, people, which are the attributes of some people in a queue (not necessarily in order). Each people[i] = [hi, ki] represents the ith person of height hi with exactly ki other people in front who have a height greater than or equal to hi.<br>
+Reconstruct and return the queue that is represented by the input array people. The returned queue should be formatted as an array queue, where queue[j] = [hj, kj] is the attributes of the jth person in the queue (queue[0] is the person at the front of the queue).</p>
+<pre><code class="language-python">class Solution:
+    def reconstructQueue(self, people: List[List[int]]) -&gt; List[List[int]]:
+        people.sort(key = lambda x: (-x[0], x[1]))
+        output = []
+        for p in people:
+            output.insert(p[1], p)
+        return output
 
 </code></pre>
-<h1 id="dfs-template">DFS - Template</h1>
-<h2 id="template-i-2">template I</h2>
-<pre><code class="language-java">/*
- * Return true if there is a path from cur to target.
- */
-boolean DFS(Node cur, Node target, Set&lt;Node&gt; visited) {
-    return true if cur is target;
-    for (next : each neighbor of cur) {
-        if (next is not in visited) {
-            add next to visted;
-            return true if DFS(next, target, visited) == true;
-        }
-    }
-    return false;
-}
+<p>思路：最高的sort完了，插入次高的，插入位置？</p>
+<h1 id="font-colorred-407-trapping-rain-water-ii-hardfont"><font color='red'> 407. Trapping Rain Water II （Hard）</font></h1>
+<p>Given an m x n integer matrix heightMap representing the height of each unit cell in a 2D elevation map, return the volume of water it can trap after raining.</p>
+<pre><code class="language-python">class Solution:
+    def trapRainWater(self, heightMap: List[List[int]]) -&gt; int:
+        
+        class Cell:
+            def __init__(self,row,col,h):
+                self.row=row
+                self.col=col
+                self.h=h
+            
+            def __lt__(self,other):
+                return self.h&lt;other.h
+            
+        
+        if not heightMap or len(heightMap)==0 or len(heightMap[0])==0:
+            return 0
+        
+        q=[]
+        m=len(heightMap)
+        n=len(heightMap[0])
+        visited=[[False]*n for _ in range(m)]
+        #Initially, add all the Cells which are on borders to the queue.
+        for i in range(m):
+            visited[i][0]=True
+            visited[i][n-1]=True
+            heapq.heappush(q, Cell(i,0,heightMap[i][0]))
+            heapq.heappush(q, Cell(i,n-1,heightMap[i][n-1]))
+        for j in range(n):
+            visited[0][j]=True
+            visited[m-1][j]=True
+            heapq.heappush(q, Cell(0,j,heightMap[0][j]))
+            heapq.heappush(q, Cell(m-1,j,heightMap[m-1][j]))
+        #from the borders, pick the shortest cell visited and check its neighbors: if the neighbor is shorter, collect the water it can trap and update its height as its height plus the water trapped add all its neighbors to the queue.
+        dirs = [[-1,0],[1,0],[0,-1],[0,1]]
+        res=0
+        while q:
+            cur_cell=heapq.heappop(q)
+            for dir in dirs:
+                row=cur_cell.row+dir[0]
+                col=cur_cell.col+dir[1]
+                if row&gt;=0 and row&lt;m and col&gt;=0 and col&lt;n and not visited[row][col]:
+                    visited[row][col]=True
+                    res+=max(0,cur_cell.h-heightMap[row][col])
+                    heapq.heappush(q,Cell(row,col,max(cur_cell.h,heightMap[row][col])))
+                    
+        
+        return res
+                    
+#ANSWER
+class Solution(object):
+    def trapRainWater(self, heightMap):
+        if not heightMap or not heightMap[0]:
+            return 0
+        
+        import heapq    
+        m, n = len(heightMap), len(heightMap[0])
+        heap = []
+        visited = [[0]*n for _ in xrange(m)]
+
+        # Push all the block on the border into heap
+        for i in xrange(m):
+            for j in xrange(n):
+                if i == 0 or j == 0 or i == m-1 or j == n-1:
+                    heapq.heappush(heap, (heightMap[i][j], i, j))
+                    visited[i][j] = 1
+        
+        result = 0
+        while heap:
+            height, i, j = heapq.heappop(heap)    
+            for x, y in ((i+1, j), (i-1, j), (i, j+1), (i, j-1)):
+                if 0 &lt;= x &lt; m and 0 &lt;= y &lt; n and not visited[x][y]:
+                    result += max(0, height-heightMap[x][y])
+                    heapq.heappush(heap, (max(heightMap[x][y], height), x, y))
+                    visited[x][y] = 1
+        return result      
+        
 </code></pre>
-<h2 id="template-ii-2">template II</h2>
-<pre><code class="language-java">/*
- * Return true if there is a path from cur to target.
- */
-boolean DFS(int root, int target) {
-    Set&lt;Node&gt; visited;
-    Stack&lt;Node&gt; stack;
-    add root to stack;
-    while (stack is not empty) {
-        Node cur = the top element in stack;
-        remove the cur from the stack;
-        return true if cur is target;
-        for (Node next : the neighbors of cur) {
-            if (next is not in visited) {
-                add next to visited;
-                add next to stack;
-            }
-        }
-    }
-    return false;
-}
+<p>思路：边界最低的板子是开始点，BFS，如果邻居低说明能存水，做计算，然后埋土。</p>
+<h1 id="408-valid-word-abbreviation-easy">408. Valid Word Abbreviation （Easy）</h1>
+<p>A string can be abbreviated by replacing any number of non-adjacent, non-empty substrings with their lengths. The lengths should not have leading zeros.<br>
+For example, a string such as &quot;substitution&quot; could be abbreviated as (but not limited to):<br>
+&quot;s10n&quot; (&quot;s ubstitutio n&quot;)<br>
+&quot;sub4u4&quot; (&quot;sub stit u tion&quot;)<br>
+&quot;12&quot; (&quot;substitution&quot;)<br>
+&quot;su3i1u2on&quot; (&quot;su bst i t u ti on&quot;)<br>
+&quot;substitution&quot; (no substrings replaced)<br>
+The following are not valid abbreviations:<br>
+&quot;s55n&quot; (&quot;s ubsti tutio n&quot;, the replaced substrings are adjacent)<br>
+&quot;s010n&quot; (has leading zeros)<br>
+&quot;s0ubstitution&quot; (replaces an empty substring)<br>
+Given a string word and an abbreviation abbr, return whether the string matches the given abbreviation.<br>
+A substring is a contiguous non-empty sequence of characters within a string.</p>
+<pre><code class="language-python">class Solution:
+    def validWordAbbreviation(self, word: str, abbr: str) -&gt; bool:
+        
+        dig=0
+        while abbr:
+            
+            if abbr[0].isdigit():
+                if dig==0 and abbr[0]=='0': return False
+                dig=dig*10+int(abbr[0])
+                abbr=abbr[1:]
+            else:
+                if dig!=0:
+                    if len(word)&lt;dig: return False
+                    word=word[dig:]
+                    dig=0
+                else:
+                    if not word: return False
+                    if abbr[0]!=word[0]: return False
+                    abbr=abbr[1:]
+                    word=word[1:]
+        if dig:
+            if len(word)&lt;dig: return False
+            if not word: return False
+            word=word[dig:]
+         
+        return not abbr and not word
+
+
 </code></pre>
+<h1 id="font-colorred-409-longest-palindrome-easy-font"><font color='red'> 409. Longest Palindrome (Easy) </font></h1>
+<p>Given a string s which consists of lowercase or uppercase letters, return the length of the longest palindrome that can be built with those letters.<br>
+Letters are case sensitive, for example, &quot;Aa&quot; is not considered a palindrome here.</p>
+<pre><code class="language-python">class Solution:
+    def longestPalindrome(self, s: str) -&gt; int:
+        dic=Counter(s)
+        res=0
+        for k,v in dic.items():
+            res+=v//2*2
+            if res%2==0 and v%2==1:
+                res+=1
+        return res
+</code></pre>
+<p>找到能组成palindrom的最长组合方式，如果是奇数个，可以变成偶数个，比如bbb只用bb。 但当res%2==0时候，遇到奇数情况可以加1.</p>
+<h1 id="font-colorred-410-split-array-largest-sum-hard-font"><font color='red'> 410. Split Array Largest Sum （Hard） </font></h1>
+<p>Given an array nums which consists of non-negative integers and an integer m, you can split the array into m non-empty continuous subarrays.<br>
+Write an algorithm to minimize the largest sum among these m subarrays.</p>
+<pre><code class="language-python">class Solution:
+    def splitArray(self, nums: List[int], m: int) -&gt; int:
+        # F[currIndex, subarrayCount] = 
+        #  min(max(sum[currIndex, i], F[i + 1, subarrayCount - 1]))
+        #        For all i in range [currIndex, n - subarrayCount]
+        
+        n=len(nums)
+        prefix_sum=nums[:]
+        for i in range(1,len(prefix_sum)):
+            prefix_sum[i]+=prefix_sum[i-1]
+        prefix_sum=[0]+prefix_sum
+        
+        @lru_cache(None)
+        def get_min_largest_split_sum(cur_ind, m):
+            if m==1:
+                return prefix_sum[n]-prefix_sum[cur_ind]
+            
+            minimum_largest_split_sum=prefix_sum[n]
+            for i in range(cur_ind,n-m+1):
+                # Store the sum of the first subarray.
+                first_split_sum=prefix_sum[i+1]-prefix_sum[cur_ind]
+                # find the maxinum subaray sum ffor current frist split
+                largest_split_sum=max(first_split_sum,get_min_largest_split_sum(i+1,m-1))
+                #find the minum among all possible combinations
+                minimum_largest_split_sum=min(minimum_largest_split_sum,largest_split_sum)
+                
+                if first_split_sum &gt;= minimum_largest_split_sum: break
+            
+            return minimum_largest_split_sum
+        
+        return get_min_largest_split_sum(0,m)
+
+
+#。。。。
+class Solution:
+    def splitArray(self, nums: List[int], m: int) -&gt; int:
+        n = len(nums)
+        memo = [[0] * (m + 1) for _ in range(n)]
+        
+        # Create a prefix sum array of nums.
+        prefix_sum = [0] + list(itertools.accumulate(nums))
+        
+        for subarray_count in range(1, m + 1):
+            for curr_index in range(n):
+                # Base Case: If there is only one subarray left, then all of the remaining numbers
+                # must go in the current subarray. So return the sum of the remaining numbers.
+                if subarray_count == 1:
+                    memo[curr_index][subarray_count] = prefix_sum[n] - prefix_sum[curr_index]
+                    continue
+
+                # Otherwise, use the recurrence relation to determine the minimum largest subarray sum
+                # between curr_index and the end of the array with subarray_count subarrays remaining.
+                minimum_largest_split_sum = prefix_sum[n]
+                for i in range(curr_index, n - subarray_count + 1):
+                    # Store the sum of the first subarray.
+                    first_split_sum = prefix_sum[i + 1] - prefix_sum[curr_index]
+
+                    # Find the maximum subarray sum for the current first split.
+                    largest_split_sum = max(first_split_sum, memo[i + 1][subarray_count - 1])
+
+                    # Find the minimum among all possible combinations.
+                    minimum_largest_split_sum = min(minimum_largest_split_sum, largest_split_sum)
+
+                    if first_split_sum &gt;= minimum_largest_split_sum:
+                        break
+            
+                memo[curr_index][subarray_count] = minimum_largest_split_sum
+        
+        return memo[0][m]
+
+#。。。。。。。。。。。。。。。。。
+class Solution:
+    def splitArray(self, nums: List[int], m: int) -&gt; int:
+        
+        def min_subarrays_required(max_sum_allowed: int) -&gt; int:
+            current_sum = 0
+            splits_required = 0
+            
+            for element in nums:
+                # Add element only if the sum doesn't exceed max_sum_allowed
+                if current_sum + element &lt;= max_sum_allowed:
+                    current_sum += element
+                else:
+                    # If the element addition makes sum more than max_sum_allowed
+                    # Increment the splits required and reset sum
+                    current_sum = element
+                    splits_required += 1
+
+            # Return the number of subarrays, which is the number of splits + 1
+            return splits_required + 1
+        
+        # Define the left and right boundary of binary search
+        left = max(nums)
+        right = sum(nums)
+        while left &lt;= right:
+            # Find the mid value
+            max_sum_allowed = (left + right) // 2
+            
+            # Find the minimum splits. If splits_required is less than
+            # or equal to m move towards left i.e., smaller values
+            if min_subarrays_required(max_sum_allowed) &lt;= m:
+                right = max_sum_allowed - 1
+                minimum_largest_split_sum = max_sum_allowed
+            else:
+                # Move towards right if splits_required is more than m
+                left = max_sum_allowed + 1
+        
+        return minimum_largest_split_sum
+###Binary Seasrch
+
+
+class Solution(object):
+    def splitArray(self, nums, m):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :type m: int
+        :rtype: int
+        https://leetcode.com/explore/learn/card/binary-search/146/more-practices-ii/1042/discuss/89817/Clear-Explanation:-8ms-Binary-Search-Java?page=1
+        &quot;&quot;&quot;
+ 
+        max_ = sum=0
+        for  num in nums:
+            max_ = max(num, max_);
+            sum += num
+            
+            
+        def valid(target, nums, m):
+            count = 1
+            total = 0
+            for num in nums:
+                total += num
+                if total &gt; target: 
+                    total = num
+                    count+=1
+                    if count &gt; m:
+                        return False
+                    
+            return True
+        
+        if m == 1: return sum
+        #binary search
+        l = max_ 
+        r = sum
+        while l &lt;= r:
+            mid = (l + r)// 2;
+            if  valid(mid, nums, m): 
+                r = mid - 1 
+            else: 
+                l = mid + 1
+            
+        return l
+</code></pre>
+<p>无思路。。。m=2时候很容易，sort然后找到左右平衡点。m=3，4？<br>
+DP很好， bianry search是最优解法。</p>
 
             </div>
             
@@ -661,7 +1018,7 @@ boolean DFS(int root, int target) {
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-14/" title="BFS DFS 模板总结">https://headhuanglan.github.io/post/leetcode-2021-11-14/</a>
+      <a href="https://headhuanglan.github.io/post/leetcode-2022-03-01/" title="Leetcode 2022-03-01">https://headhuanglan.github.io/post/leetcode-2022-03-01/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -670,21 +1027,17 @@ boolean DFS(int root, int target) {
   </ul>
   <div class="tags">
     
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/"># 算法总结</a>
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/"># leetcode</a>
     
   </div>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-13" href="https://headhuanglan.github.io/post/leetcode-2021-11-13/">Leetcode 2021-11-13</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-13" href="https://headhuanglan.github.io/post/leetcode-2021-11-13/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2021-11-12" href="https://headhuanglan.github.io/post/leetcode-2021-11-12/">Leetcode 2021-11-12</a>
-        <a class="nav-mobile-next" title="Leetcode 2021-11-12" href="https://headhuanglan.github.io/post/leetcode-2021-11-12/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2021-12-12" href="https://headhuanglan.github.io/post/leetcode-2021-12-12/">Leetcode 2021-12-12</a>
+        <a class="nav-mobile-next" title="Leetcode 2021-12-12" href="https://headhuanglan.github.io/post/leetcode-2021-12-12/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>

@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-03-01T22:16:04.124Z</updated>
+    <updated>2022-03-10T07:41:53.238Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -11,11 +11,483 @@
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Lan&apos;s Blog</rights>
     <entry>
+        <title type="html"><![CDATA[Leetcode 2022-03-01]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2022-03-01/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2022-03-01/">
+        </link>
+        <updated>2022-03-01T14:53:54.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<p>中间搞laser project浪费了不少时间~~~ 争取3月刷300到700. system design 也该看了。</p>
+<h1 id="font-colorred-401-binary-watch-easy-font"><font color='red'> 401. Binary Watch (Easy) </font></h1>
+<p>A binary watch has 4 LEDs on the top which represent the hours (0-11), and the 6 LEDs on the bottom represent the minutes (0-59). Each LED represents a zero or one, with the least significant bit on the right.<br>
+Given an integer turnedOn which represents the number of LEDs that are currently on, return all possible times the watch could represent. You may return the answer in any order.</p>
+<pre><code class="language-python">class Solution:
+    def readBinaryWatch(self, turnedOn: int) -&gt; List[str]:
+        return ['{}:{}'.format(h, str(m).zfill(2))  for h in range(12) for m in range(60) if (bin(h) + bin(m)).count('1') == turnedOn]
+
+#Backtracking way of answer it
+class Solution:
+    def readBinaryWatch(self, turnedOn: int) -&gt; List[str]:
+        res=set()
+        nums1=[8,4,2,1]
+        nums2=[32,16,8,4,2,1]
+        
+        
+        def generateDigs(nums,count):
+            res=set()
+            def helper(c,pos,sum_):
+                if c==0:
+                    res.add(sum_)
+                    return
+                for i in range(pos,len(nums)):
+                    helper(c-1,i+1,sum_+nums[i])
+            helper(count,0,0)
+            return res
+        
+        for i in range(turnedOn+1):
+            list1=generateDigs(nums1,i)
+            list2=generateDigs(nums2,turnedOn-i)
+            for num1 in list1:
+                if num1&gt;=12: continue
+                for num2 in list2:
+                    if num2&gt;=60: continue
+                    res.add('{}:{}'.format(num1,str(num2).zfill(2)))
+        return res
+</code></pre>
+<p>是一个backtracking问题， 写起来难度很大，然而是一个easy问题。。。直接暴力解即可。<br>
+但用backtracking就是一个比较难的问题了。</p>
+<h1 id="font-colorred-402-remove-k-digits-mediumfont"><font color='red'> 402. Remove K Digits （Medium）</font></h1>
+<p>Given string num representing a non-negative integer num, and an integer k, return the smallest possible integer after removing k digits from num.</p>
+<pre><code class="language-python">class Solution:
+    def removeKdigits(self, num: str, k: int) -&gt; str:
+        #
+        # 2     1    4
+        # left  cur
+        # if cur&lt;left, we know left must be removed
+        
+        stack=[]
+        for n in num:
+            while k and stack and n&lt;stack[-1]:
+                stack.pop()
+                k-=1
+            stack.append(n)
+        
+        #truncate remaining k digits at the end
+        # if k==0 return entire list
+        final_stack=stack[:-k] if k else stack
+        
+        return ''.join(final_stack).lstrip('0') or '0'
+</code></pre>
+<p>greedy+stack 这个方法第一次比较难想到，需要考虑corner case。</p>
+<h1 id="403-frog-jump-hard">403. Frog Jump （Hard）</h1>
+<p>A frog is crossing a river. The river is divided into some number of units, and at each unit, there may or may not exist a stone. The frog can jump on a stone, but it must not jump into the water.<br>
+Given a list of stones' positions (in units) in sorted ascending order, determine if the frog can cross the river by landing on the last stone. Initially, the frog is on the first stone and assumes the first jump must be 1 unit.<br>
+If the frog's last jump was k units, its next jump must be either k - 1, k, or k + 1 units. The frog can only jump in the forward direction.</p>
+<pre><code class="language-python">class Solution:
+    def canCross(self, stones: List[int]) -&gt; bool:
+       
+        dp=[False]*len(stones)
+        dic={s:i for i,s in enumerate(stones)}
+        
+        @lru_cache(None)
+        def can(ith,k):
+            if k&lt;=0: return
+            if ith==0:
+                dp[0]=True
+                if stones[0]+1 in dic:
+                    jth=dic[stones[0]+1] 
+                    can(jth,1)
+            else:
+                for i,step in enumerate([k+1,k,k-1]):
+                    if stones[ith]+step in dic:
+                        stone_ind=dic[stones[ith]+step]
+                        dp[stone_ind]=True
+                        can(stone_ind,[k+1,k,k-1][i])
+            
+        can(0,1)
+        return dp[-1]
+
+#ANSWER
+class Solution:
+    def canCross(self, stones: List[int]) -&gt; bool:
+        
+        dic=dict()
+        for s in stones:
+            dic[s]=set()
+        dic[0].add(0)
+        
+        for i in range(len(stones)):
+            for k in dic[stones[i]]:
+                for step in range(k-1,k+2):
+                    if step&gt;0 and stones[i]+step in dic:
+                        dic[stones[i]+step].add(step)
+                        
+        return len(dic[stones[-1]])&gt;0
+
+#ANSWER
+class Solution:
+    def canCross(self, stones: List[int]) -&gt; bool:
+        
+        seen = set()
+        stoneSet = set(stones)
+        end = stones[-1]
+        stack = [(0, 0)]
+        while len(stack) &gt; 0:
+            loc, steps = stack.pop()
+            if (loc, steps) in seen:
+                continue
+            seen.add((loc, steps))
+            if loc == end:
+                return True
+            elif loc &lt; end:
+                for i in range(steps-1, steps+2):
+                    if i &lt;= 0:
+                        continue
+                    if loc + i in stoneSet:
+                        stack.append((loc+i, i))
+        return False
+</code></pre>
+<p>没想到做出来了。。。。。dp  with mem。。。<br>
+答案更好。答案3思路： each node has 3 children. The goal is to check if we can reach to the end along the edges. We can do it with a Depth First Search with a Hashtable(to avoid redundant calculation)</p>
+<h1 id="404-sum-of-left-leaves-easy">404. Sum of Left Leaves （Easy）</h1>
+<p>Given the root of a binary tree, return the sum of all left leaves.</p>
+<pre><code class="language-python">class Solution:
+    def sumOfLeftLeaves(self, root: Optional[TreeNode]) -&gt; int:
+        if not root: return 0
+        if root.left and root.left.left is None and root.left.right is None:
+            return root.left.val+self.sumOfLeftLeaves(root.right)
+        return  self.sumOfLeftLeaves(root.left)+self.sumOfLeftLeaves(root.right)
+</code></pre>
+<h1 id="405-convert-a-number-to-hexadecimal-easy">405. Convert a Number to Hexadecimal (Easy)</h1>
+<p>Given an integer num, return a string representing its hexadecimal representation. For negative integers, two’s complement method is used.<br>
+All the letters in the answer string should be lowercase characters, and there should not be any leading zeros in the answer except for the zero itself.</p>
+<pre><code class="language-python">class Solution:
+    def toHex(self, num: int) -&gt; str:
+        if num&lt;0:
+            num=4294967295 +num+1
+        map=['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f']
+        res=''
+        while num:
+            ind=num%16
+            res+=map[ind]
+            num=num//16
+        #26=1a  16 11
+        return res[::-1]   if res else '0'  
+</code></pre>
+<h1 id="font-colorred-406-queue-reconstruction-by-height-medium-font"><font color='red'> 406. Queue Reconstruction by Height (Medium) </font></h1>
+<p>You are given an array of people, people, which are the attributes of some people in a queue (not necessarily in order). Each people[i] = [hi, ki] represents the ith person of height hi with exactly ki other people in front who have a height greater than or equal to hi.<br>
+Reconstruct and return the queue that is represented by the input array people. The returned queue should be formatted as an array queue, where queue[j] = [hj, kj] is the attributes of the jth person in the queue (queue[0] is the person at the front of the queue).</p>
+<pre><code class="language-python">class Solution:
+    def reconstructQueue(self, people: List[List[int]]) -&gt; List[List[int]]:
+        people.sort(key = lambda x: (-x[0], x[1]))
+        output = []
+        for p in people:
+            output.insert(p[1], p)
+        return output
+
+</code></pre>
+<p>思路：最高的sort完了，插入次高的，插入位置？</p>
+<h1 id="font-colorred-407-trapping-rain-water-ii-hardfont"><font color='red'> 407. Trapping Rain Water II （Hard）</font></h1>
+<p>Given an m x n integer matrix heightMap representing the height of each unit cell in a 2D elevation map, return the volume of water it can trap after raining.</p>
+<pre><code class="language-python">class Solution:
+    def trapRainWater(self, heightMap: List[List[int]]) -&gt; int:
+        
+        class Cell:
+            def __init__(self,row,col,h):
+                self.row=row
+                self.col=col
+                self.h=h
+            
+            def __lt__(self,other):
+                return self.h&lt;other.h
+            
+        
+        if not heightMap or len(heightMap)==0 or len(heightMap[0])==0:
+            return 0
+        
+        q=[]
+        m=len(heightMap)
+        n=len(heightMap[0])
+        visited=[[False]*n for _ in range(m)]
+        #Initially, add all the Cells which are on borders to the queue.
+        for i in range(m):
+            visited[i][0]=True
+            visited[i][n-1]=True
+            heapq.heappush(q, Cell(i,0,heightMap[i][0]))
+            heapq.heappush(q, Cell(i,n-1,heightMap[i][n-1]))
+        for j in range(n):
+            visited[0][j]=True
+            visited[m-1][j]=True
+            heapq.heappush(q, Cell(0,j,heightMap[0][j]))
+            heapq.heappush(q, Cell(m-1,j,heightMap[m-1][j]))
+        #from the borders, pick the shortest cell visited and check its neighbors: if the neighbor is shorter, collect the water it can trap and update its height as its height plus the water trapped add all its neighbors to the queue.
+        dirs = [[-1,0],[1,0],[0,-1],[0,1]]
+        res=0
+        while q:
+            cur_cell=heapq.heappop(q)
+            for dir in dirs:
+                row=cur_cell.row+dir[0]
+                col=cur_cell.col+dir[1]
+                if row&gt;=0 and row&lt;m and col&gt;=0 and col&lt;n and not visited[row][col]:
+                    visited[row][col]=True
+                    res+=max(0,cur_cell.h-heightMap[row][col])
+                    heapq.heappush(q,Cell(row,col,max(cur_cell.h,heightMap[row][col])))
+                    
+        
+        return res
+                    
+#ANSWER
+class Solution(object):
+    def trapRainWater(self, heightMap):
+        if not heightMap or not heightMap[0]:
+            return 0
+        
+        import heapq    
+        m, n = len(heightMap), len(heightMap[0])
+        heap = []
+        visited = [[0]*n for _ in xrange(m)]
+
+        # Push all the block on the border into heap
+        for i in xrange(m):
+            for j in xrange(n):
+                if i == 0 or j == 0 or i == m-1 or j == n-1:
+                    heapq.heappush(heap, (heightMap[i][j], i, j))
+                    visited[i][j] = 1
+        
+        result = 0
+        while heap:
+            height, i, j = heapq.heappop(heap)    
+            for x, y in ((i+1, j), (i-1, j), (i, j+1), (i, j-1)):
+                if 0 &lt;= x &lt; m and 0 &lt;= y &lt; n and not visited[x][y]:
+                    result += max(0, height-heightMap[x][y])
+                    heapq.heappush(heap, (max(heightMap[x][y], height), x, y))
+                    visited[x][y] = 1
+        return result      
+        
+</code></pre>
+<p>思路：边界最低的板子是开始点，BFS，如果邻居低说明能存水，做计算，然后埋土。</p>
+<h1 id="408-valid-word-abbreviation-easy">408. Valid Word Abbreviation （Easy）</h1>
+<p>A string can be abbreviated by replacing any number of non-adjacent, non-empty substrings with their lengths. The lengths should not have leading zeros.<br>
+For example, a string such as &quot;substitution&quot; could be abbreviated as (but not limited to):<br>
+&quot;s10n&quot; (&quot;s ubstitutio n&quot;)<br>
+&quot;sub4u4&quot; (&quot;sub stit u tion&quot;)<br>
+&quot;12&quot; (&quot;substitution&quot;)<br>
+&quot;su3i1u2on&quot; (&quot;su bst i t u ti on&quot;)<br>
+&quot;substitution&quot; (no substrings replaced)<br>
+The following are not valid abbreviations:<br>
+&quot;s55n&quot; (&quot;s ubsti tutio n&quot;, the replaced substrings are adjacent)<br>
+&quot;s010n&quot; (has leading zeros)<br>
+&quot;s0ubstitution&quot; (replaces an empty substring)<br>
+Given a string word and an abbreviation abbr, return whether the string matches the given abbreviation.<br>
+A substring is a contiguous non-empty sequence of characters within a string.</p>
+<pre><code class="language-python">class Solution:
+    def validWordAbbreviation(self, word: str, abbr: str) -&gt; bool:
+        
+        dig=0
+        while abbr:
+            
+            if abbr[0].isdigit():
+                if dig==0 and abbr[0]=='0': return False
+                dig=dig*10+int(abbr[0])
+                abbr=abbr[1:]
+            else:
+                if dig!=0:
+                    if len(word)&lt;dig: return False
+                    word=word[dig:]
+                    dig=0
+                else:
+                    if not word: return False
+                    if abbr[0]!=word[0]: return False
+                    abbr=abbr[1:]
+                    word=word[1:]
+        if dig:
+            if len(word)&lt;dig: return False
+            if not word: return False
+            word=word[dig:]
+         
+        return not abbr and not word
+
+
+</code></pre>
+<h1 id="font-colorred-409-longest-palindrome-easy-font"><font color='red'> 409. Longest Palindrome (Easy) </font></h1>
+<p>Given a string s which consists of lowercase or uppercase letters, return the length of the longest palindrome that can be built with those letters.<br>
+Letters are case sensitive, for example, &quot;Aa&quot; is not considered a palindrome here.</p>
+<pre><code class="language-python">class Solution:
+    def longestPalindrome(self, s: str) -&gt; int:
+        dic=Counter(s)
+        res=0
+        for k,v in dic.items():
+            res+=v//2*2
+            if res%2==0 and v%2==1:
+                res+=1
+        return res
+</code></pre>
+<p>找到能组成palindrom的最长组合方式，如果是奇数个，可以变成偶数个，比如bbb只用bb。 但当res%2==0时候，遇到奇数情况可以加1.</p>
+<h1 id="font-colorred-410-split-array-largest-sum-hard-font"><font color='red'> 410. Split Array Largest Sum （Hard） </font></h1>
+<p>Given an array nums which consists of non-negative integers and an integer m, you can split the array into m non-empty continuous subarrays.<br>
+Write an algorithm to minimize the largest sum among these m subarrays.</p>
+<pre><code class="language-python">class Solution:
+    def splitArray(self, nums: List[int], m: int) -&gt; int:
+        # F[currIndex, subarrayCount] = 
+        #  min(max(sum[currIndex, i], F[i + 1, subarrayCount - 1]))
+        #        For all i in range [currIndex, n - subarrayCount]
+        
+        n=len(nums)
+        prefix_sum=nums[:]
+        for i in range(1,len(prefix_sum)):
+            prefix_sum[i]+=prefix_sum[i-1]
+        prefix_sum=[0]+prefix_sum
+        
+        @lru_cache(None)
+        def get_min_largest_split_sum(cur_ind, m):
+            if m==1:
+                return prefix_sum[n]-prefix_sum[cur_ind]
+            
+            minimum_largest_split_sum=prefix_sum[n]
+            for i in range(cur_ind,n-m+1):
+                # Store the sum of the first subarray.
+                first_split_sum=prefix_sum[i+1]-prefix_sum[cur_ind]
+                # find the maxinum subaray sum ffor current frist split
+                largest_split_sum=max(first_split_sum,get_min_largest_split_sum(i+1,m-1))
+                #find the minum among all possible combinations
+                minimum_largest_split_sum=min(minimum_largest_split_sum,largest_split_sum)
+                
+                if first_split_sum &gt;= minimum_largest_split_sum: break
+            
+            return minimum_largest_split_sum
+        
+        return get_min_largest_split_sum(0,m)
+
+
+#。。。。
+class Solution:
+    def splitArray(self, nums: List[int], m: int) -&gt; int:
+        n = len(nums)
+        memo = [[0] * (m + 1) for _ in range(n)]
+        
+        # Create a prefix sum array of nums.
+        prefix_sum = [0] + list(itertools.accumulate(nums))
+        
+        for subarray_count in range(1, m + 1):
+            for curr_index in range(n):
+                # Base Case: If there is only one subarray left, then all of the remaining numbers
+                # must go in the current subarray. So return the sum of the remaining numbers.
+                if subarray_count == 1:
+                    memo[curr_index][subarray_count] = prefix_sum[n] - prefix_sum[curr_index]
+                    continue
+
+                # Otherwise, use the recurrence relation to determine the minimum largest subarray sum
+                # between curr_index and the end of the array with subarray_count subarrays remaining.
+                minimum_largest_split_sum = prefix_sum[n]
+                for i in range(curr_index, n - subarray_count + 1):
+                    # Store the sum of the first subarray.
+                    first_split_sum = prefix_sum[i + 1] - prefix_sum[curr_index]
+
+                    # Find the maximum subarray sum for the current first split.
+                    largest_split_sum = max(first_split_sum, memo[i + 1][subarray_count - 1])
+
+                    # Find the minimum among all possible combinations.
+                    minimum_largest_split_sum = min(minimum_largest_split_sum, largest_split_sum)
+
+                    if first_split_sum &gt;= minimum_largest_split_sum:
+                        break
+            
+                memo[curr_index][subarray_count] = minimum_largest_split_sum
+        
+        return memo[0][m]
+
+#。。。。。。。。。。。。。。。。。
+class Solution:
+    def splitArray(self, nums: List[int], m: int) -&gt; int:
+        
+        def min_subarrays_required(max_sum_allowed: int) -&gt; int:
+            current_sum = 0
+            splits_required = 0
+            
+            for element in nums:
+                # Add element only if the sum doesn't exceed max_sum_allowed
+                if current_sum + element &lt;= max_sum_allowed:
+                    current_sum += element
+                else:
+                    # If the element addition makes sum more than max_sum_allowed
+                    # Increment the splits required and reset sum
+                    current_sum = element
+                    splits_required += 1
+
+            # Return the number of subarrays, which is the number of splits + 1
+            return splits_required + 1
+        
+        # Define the left and right boundary of binary search
+        left = max(nums)
+        right = sum(nums)
+        while left &lt;= right:
+            # Find the mid value
+            max_sum_allowed = (left + right) // 2
+            
+            # Find the minimum splits. If splits_required is less than
+            # or equal to m move towards left i.e., smaller values
+            if min_subarrays_required(max_sum_allowed) &lt;= m:
+                right = max_sum_allowed - 1
+                minimum_largest_split_sum = max_sum_allowed
+            else:
+                # Move towards right if splits_required is more than m
+                left = max_sum_allowed + 1
+        
+        return minimum_largest_split_sum
+###Binary Seasrch
+
+
+class Solution(object):
+    def splitArray(self, nums, m):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :type m: int
+        :rtype: int
+        https://leetcode.com/explore/learn/card/binary-search/146/more-practices-ii/1042/discuss/89817/Clear-Explanation:-8ms-Binary-Search-Java?page=1
+        &quot;&quot;&quot;
+ 
+        max_ = sum=0
+        for  num in nums:
+            max_ = max(num, max_);
+            sum += num
+            
+            
+        def valid(target, nums, m):
+            count = 1
+            total = 0
+            for num in nums:
+                total += num
+                if total &gt; target: 
+                    total = num
+                    count+=1
+                    if count &gt; m:
+                        return False
+                    
+            return True
+        
+        if m == 1: return sum
+        #binary search
+        l = max_ 
+        r = sum
+        while l &lt;= r:
+            mid = (l + r)// 2;
+            if  valid(mid, nums, m): 
+                r = mid - 1 
+            else: 
+                l = mid + 1
+            
+        return l
+</code></pre>
+<p>无思路。。。m=2时候很容易，sort然后找到左右平衡点。m=3，4？<br>
+DP很好， bianry search是最优解法。</p>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Leetcode 2021-12-12]]></title>
         <id>https://headhuanglan.github.io/post/leetcode-2021-12-12/</id>
         <link href="https://headhuanglan.github.io/post/leetcode-2021-12-12/">
         </link>
-        <updated>2021-12-12T03:58:54.000Z</updated>
+        <updated>2021-12-12T14:58:54.000Z</updated>
         <content type="html"><![CDATA[<!-- more -->
 <h1 id="font-colorred391-perfect-rectangle-hardfont"><font color='red'>391. Perfect Rectangle （Hard）</font></h1>
 <p>Given an array rectangles where rectangles[i] = [xi, yi, ai, bi] represents an axis-aligned rectangle. The bottom-left point of the rectangle is (xi, yi) and the top-right point of it is (ai, bi).<br>
@@ -2691,7 +3163,7 @@ class Solution:
         <id>https://headhuanglan.github.io/post/leetcode-2021-12-07/</id>
         <link href="https://headhuanglan.github.io/post/leetcode-2021-12-07/">
         </link>
-        <updated>2021-12-07T11:31:40.000Z</updated>
+        <updated>2021-12-06T22:31:40.000Z</updated>
         <content type="html"><![CDATA[<!-- more -->
 <h1 id="font-colorred341-flatten-nested-list-iterator-mediumfont"><font color='red'>341. Flatten Nested List Iterator （Medium）</font></h1>
 <p>You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists. Implement an iterator to flatten it.</p>
@@ -4612,747 +5084,6 @@ class Solution:
         return res
 </code></pre>
 <p>初次尝试time limit exceeded。。。但这题只能backtracking解。 time complexity应该是相同的，看答案的backtracking写的很完美。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-12-03]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-12-03/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-03/">
-        </link>
-        <updated>2021-12-02T07:07:47.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="font-colorred301-remove-invalid-parentheses-hard-font"><font color='red'>301. Remove Invalid Parentheses (Hard) </font></h1>
-<p>Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.<br>
-Return all the possible results. You may return the answer in any order.</p>
-<pre><code class="language-python">class Solution(object):
-    def removeInvalidParentheses(self, s):
-        &quot;&quot;&quot;
-        :type s: str
-        :rtype: List[str]
-        &quot;&quot;&quot;
-        
-        res=[] 
-        if not s: return [s]
-        visited=set()
-        q=[]
-        
-        q.append(s)
-        visited.add(s)
-        
-      
-        
-        def isValid(s):
-            c=0
-            for e in s:
-                if e=='(':c+=1
-                if e==')':c-=1
-                
-                if c&lt;0: return False
-            return c==0
-
-        found=False
-        
-        while q:
-            s=q.pop(0)
-            
-            if isValid(s):
-                res.append(s)
-                found=True
-            
-            if found: continue
-            
-            for i in range(len(s)):
-                if s[i]!='(' and s[i]!=')': continue
-                t=s[:i]+s[i+1:]
-                
-                if not t in visited:
-                    q.append(t)
-                    visited.add(t)
-        
-        return res
-    
-#         def valid(s):
-#             stack=[]
-#             ss=[ i for i in s if (i in '()') ]
-#             for e in ss:
-#                 if e==')':
-#                     if (not stack) or (not stack.pop()=='('):
-#                         return False
-#                 else:
-#                     stack.append(e)
-#             return not stack
-
-#ANSWER
-class Solution:
-    
-  
-    
-    def removeInvalidParentheses(self, s: str) -&gt; List[str]:
-        #based on hint 
-        #1) figure out how many misplaced left and right parenthesis
-        left=0
-        right=0
-        for i,p in enumerate(s):
-            if p=='(':
-                left+=1
-            elif p==')':
-                if left&gt;0:
-                    left-=1
-                else:
-                    right+=1
-        
-        #2)recursion process 
-        res =set()
-        def bt(left_rem,right_rem,left,right,tmp,index):
-            #left_rem is the left error position ( remained
-            #right_rem is the right error position ) remained
-            #left is # of ( in current expression tmp
-            #right is # of ) in current expression tmp
-            #tmp is current expression
-            #index is the index of char in original string s
-            
-            #BASE CASE
-            if index==len(s):     
-                #print(left_rem,right_rem,left,right,tmp)
-                if left_rem==0 and right_rem==0:
-                    res.add(&quot;&quot;.join(tmp))
-                return
-            
-            #discard current
-            if (s[index]=='(' and left_rem&gt;0) or (s[index]==')' and right_rem&gt;0):
-                bt(left_rem-(s[index]=='('),right_rem-(s[index]==')'),left,right,tmp,index+1)
-
-            #add current
-            tmp.append(s[index])
-
-            #if current is not in {()}
-            if s[index] not in [&quot;(&quot;,&quot;)&quot;]:
-                bt(left_rem,right_rem,left,right,tmp,index+1)
-            elif s[index]=='(':
-                #consider an opening bracket
-                bt(left_rem,right_rem,left+1,right,tmp,index+1)
-            elif s[index]==')' and left&gt;right:
-                # consider a closing bracket
-                bt(left_rem,right_rem,left,right+1,tmp,index+1)
-
-            tmp.pop()                 
-
-         
-        bt(left,right,0,0,[],0)
-        return list(res)
-
-</code></pre>
-<p>思路1 最快最吊炸天） 类似bfs，用queue 做，验证每一个可能的结果。但为了找到最少的变动就能valid的string，所以一旦找到remove后可以valid的string就不在queue中添加后续元素了。 2）backtracking，先计算错位的left right 括号个数。需要track的， left_remain,right_remain,left_counter,right_counter, tmp=[], index.  比较复杂。</p>
-<h1 id="302-smallest-rectangle-enclosing-black-pixels-hard">302. Smallest Rectangle Enclosing Black Pixels （Hard）</h1>
-<p>You are given an m x n binary matrix image where 0 represents a white pixel and 1 represents a black pixel.<br>
-The black pixels are connected (i.e., there is only one black region). Pixels are connected horizontally and vertically.<br>
-Given two integers x and y that represents the location of one of the black pixels, return the area of the smallest (axis-aligned) rectangle that encloses all black pixels.<br>
-You must write an algorithm with less than O(mn) runtime complexity</p>
-<pre><code class="language-python">class Solution:
-    minx=float('inf')
-    miny=float('inf')
-    maxx=float('-inf')
-    maxy=float('-inf')
-    def minArea(self, image: List[List[str]], x: int, y: int) -&gt; int:
-        
-        m=len(image)
-        n=len(image[0])
-        def dfs(x,y):
-            self.minx=min(self.minx,x)
-            self.miny=min(self.miny,y)
-            self.maxx=max(self.maxx,x)
-            self.maxy=max(self.maxy,y)
-            image[x][y]='#'
-            for xx,yy in [(x+1,y),(x-1,y),(x,y+1),(x,y-1)]:
-                if xx&gt;=0 and xx&lt;m and yy&gt;=0 and yy&lt;n and image[xx][yy]=='1':
-                    dfs(xx,yy)
-        dfs(x,y)
-        return (self.maxx-self.minx+1)*(self.maxy-self.miny+1)
-</code></pre>
-<p>除了bfs ，dfs外 答案给出了一种project 图片到1D，然后用binary search 找上下界，来算面积。</p>
-<h1 id="303-range-sum-query-immutable-easy">303. Range Sum Query - Immutable （Easy）</h1>
-<pre><code class="language-python">class NumArray:
-
-    def __init__(self, nums: List[int]):
-        
-        for i,n in enumerate(nums):
-            if i==0: continue
-            nums[i]+=nums[i-1]
-        self.cumsum=nums
-
-    def sumRange(self, left: int, right: int) -&gt; int:
-        # 1 2 3
-        # 1 3 6
-        return self.cumsum[right]-self.cumsum[left-1] if left-1&gt;=0 else self.cumsum[right]
-
-
-# Your NumArray object will be instantiated and called as such:
-# obj = NumArray(nums)
-# param_1 = obj.sumRange(left,right)
-
-#OR ANSWER WAY OF WRITTEN
-class NumArray(object):
-
-    def __init__(self, nums):
-        &quot;&quot;&quot;
-        :type nums: List[int]
-        &quot;&quot;&quot;
-        
-        nums = [0] + nums
-        
-        for i in range(1,len(nums)):
-            nums[i] +=nums[i-1]
-        
-        self.nums=nums
-     
-
-    def sumRange(self, i, j):
-        &quot;&quot;&quot;
-        :type i: int
-        :type j: int
-        :rtype: int
-        &quot;&quot;&quot;
-        return self.nums[j+1]-self.nums[i]
-</code></pre>
-<h1 id="304-range-sum-query-2d-immutable-medium">304. Range Sum Query 2D - Immutable (Medium)</h1>
-<p>Given a 2D matrix matrix, handle multiple queries of the following type:<br>
-Calculate the sum of the elements of matrix inside the rectangle defined by its upper left corner (row1, col1) and lower right corner (row2, col2).</p>
-<pre><code class="language-python">class NumMatrix:
-
-    def __init__(self, matrix: List[List[int]]):
-        # original matrix
-        # 1 2 3
-        # 4 5 6
-        # 7 8 9
-        #
-        #cumsum matrix
-        #             c1
-        #        0 0  0    0
-        #        0 1  3    6
-        # row1   0 5  #12  21
-        # row2   0 12 27  #45 
-        #                 c2
-        # do cumsum on row
-        # do cumsum on col
-        #
-        #  row2,col2 -(row1-1)col2 - row2(col1-1) + (row1-1)(col1-1)
-        self.matrix = [[0]*(len(matrix[0])+1)]
-        for row in matrix:
-            self.matrix.append([0]+row)
-        
-    
-        for row in range(1,len(matrix)+1):
-            for col in range(1,len(matrix[0])+1):
-                self.matrix[row][col]+=self.matrix[row][col-1]
-        
-        for row in range(1,len(matrix)+1):
-            for col in range(1,len(matrix[0])+1):
-                self.matrix[row][col]+=self.matrix[row-1][col]
-        
-        
-        
-        
-    def sumRegion(self, row1: int, col1: int, row2: int, col2: int) -&gt; int:
-        return self.matrix[row2+1][col2+1]-self.matrix[row1][col2+1]-self.matrix[row2+1][col1]+self.matrix[row1][col1]
-        
-
-
-# Your NumMatrix object will be instantiated and called as such:
-# obj = NumMatrix(matrix)
-# param_1 = obj.sumRegion(row1,col1,row2,col2)
-</code></pre>
-<h1 id="font-colorred305-number-of-islands-ii-hard-font"><font color='red'>305. Number of Islands II (Hard) </font></h1>
-<p>You are given an empty 2D binary grid grid of size m x n. The grid represents a map where 0's represent water and 1's represent land. Initially, all the cells of grid are water cells (i.e., all the cells are 0's).<br>
-We may perform an add land operation which turns the water at position into a land. You are given an array positions where positions[i] = [ri, ci] is the position (ri, ci) at which we should operate the ith operation.<br>
-Return an array of integers answer where answer[i] is the number of islands after turning the cell (ri, ci) into a land.</p>
-<pre><code class="language-python">class Solution:
-    
-    class unionfind:
-        
-        def __init__(self,m,n):
-            self.m=m
-            self.n=n
-            self.parent=[-1]*(m*n) 
-            self.rank = [0]*(m*n)
-            self.counter=0
-           
-        def isvalid(self,row,col):
-            ind=row*self.n+col
-            return self.parent[ind]&gt;=0
-        
-        def setparent(self,row,col):
-            ind=row*self.n+col
-            if self.parent[ind]==-1:
-                self.parent[ind]=ind
-                self.counter+=1
-            
-        def find(self,row,col):
-            ind= row*self.n+col
-            if self.parent[ind]!=ind:
-                new_col = self.parent[ind]%self.n
-                new_row = (self.parent[ind]-new_col)//self.n
-                self.parent[ind]=self.find(new_row,new_col)
-            return self.parent[ind]
-            
-            
-        def union(self,p1,p2):
-            x1,y1=p1
-            x2,y2=p2
-            root1=self.find(x1,y1)
-            root2=self.find(x2,y2)
-            if root1!=root2:
-                self.counter-=1
-                if self.rank[root1]&gt;self.rank[root2]:
-                    self.parent[root2]=root1
-                elif self.rank[root1]&lt;self.rank[root2]:
-                    self.parent[root1]=root2
-                else:
-                    self.parent[root1]=root2
-                    self.rank[root2]+=1
-                    
-        def getcount(self):
-            return self.counter
-         
-                    
-                
-            
-    
-    def numIslands2(self, m: int, n: int, positions: List[List[int]]) -&gt; List[int]:
-        
-       
-        res=[]
-        
-        uf=self.unionfind(m,n)
-    
-        def get_nei(pos,uf):
-            nei = []
-            x,y=pos
-            for xx,yy in [(x+1,y),(x-1,y),(x,y+1),(x,y-1)]:
-                if xx&gt;=0 and xx&lt;m and yy&gt;=0 and yy&lt;n:
-                    if uf.isvalid(xx,yy):
-                        nei.append((xx,yy))
-            return nei
-    
-        for pos in positions:
-            uf.setparent(*pos)
-            for nei in get_nei(pos,uf):
-                uf.union(nei,pos)
-            res.append(uf.getcount())
-            
-        return res
-            
-            
-   
-
-</code></pre>
-<p>试过用neighbor_list做，但是无法分辨新加入的点是否会引起2个或3个不同island合并。 思路不正确， 感觉是用UNIONFIND做。还是不能顺畅写出UNIONFIND calss。这次的unionfind class是个变种。 注意增加相同点的时候，setparent做check，必须self.parent[i]==-1 才能做self.conter+=1 。 思路： 每次增加一个点，做setparent，counter++，找这个点所有valid neighbors，然后做union。没发现以个union则counter--。</p>
-<h1 id="font-colorblue-306-additive-number-mediumfont"><font color='blue'> 306. Additive Number （Medium）</font></h1>
-<p>An additive number is a string whose digits can form an additive sequence.<br>
-A valid additive sequence should contain at least three numbers. Except for the first two numbers, each subsequent number in the sequence must be the sum of the preceding two.<br>
-Given a string containing only digits, return true if it is an additive number or false otherwise.</p>
-<pre><code class="language-python">class Solution:
-    def isAdditiveNumber(self, num: str) -&gt; bool:
-        if not num or len(num)&lt;3: 
-            return False
-        
-        mem=dict()
-        def helper(num):
-            if not num: return True
-            if num in mem: return mem[num]
-            Found=False
-            for len_a in range(1,len(num)):
-                if len_a&gt;1 and num[0]=='0': continue
-                for len_b in range(1,len(num)):
-                    if len_b&gt;1 and num[len_a]=='0': continue
-                    temp_flag=False
-                    if len_a+len_b&gt;=len(num):continue
-                    a = num[:len_a]
-                    b = num[len_a:len_a+len_b]
-                    c = str(int(a)+int(b))
-                    #print(a,b,c)
-                    len_c= len(c)
-                    if len_a+len_b+len_c&gt;len(num):continue
-                    if len_a+len_b+len_c==len(num) and num[len_a+len_b:len_a+len_b+len_c]==c:
-                        return True
-                    elif num[len_a+len_b:len_a+len_b+len_c]==c:
-                        temp_flag = True and helper(num[len_a:])
-                    Found=Found or temp_flag
-            mem[num]=Found
-            print(num,Found)
-            return Found
-        
-        return helper(num)
-        
-#ANSWER WAY
-def isAdditiveNumber(self, num):
-    n = len(num)
-    for i, j in itertools.combinations(range(1, n), 2):
-        a, b = num[:i], num[i:j]
-        if a != str(int(a)) or b != str(int(b)):
-            continue
-        while j &lt; n:
-            c = str(int(a) + int(b))
-            if not num.startswith(c, j):
-                break
-            j += len(c)
-            a, b = b, c
-        if j == n:
-            return True
-    return False                
-
-</code></pre>
-<p>自己通过recursion with mem解决的，头部为0问题用2个continue 判断去解决。<br>
-答案大神用了itertools.combinatons i 是a的长度，j是 a+b的长度，确定了a，b可以算出来c，如果不满足条件跳出while，如果满足条件，则j+len（c），前进一位做下一次判断。 推出时候如果j==n说明找到了。</p>
-<h1 id="font-colorred-307-range-sum-query-mutable-medium-font"><font color='red'> 307. Range Sum Query - Mutable (Medium) </font></h1>
-<p>Given an integer array nums, handle multiple queries of the following types:<br>
-Update the value of an element in nums.<br>
-Calculate the sum of the elements of nums between indices left and right inclusive where left &lt;= right.</p>
-<pre><code class="language-python">
-#TIME LIMIT EXCEEDED
-class NumArray:
-
-    def __init__(self, nums: List[int]):
-        self.nums=nums
-        self.cumsum=nums[:]
-        for i in range(1,len(nums)):
-            self.cumsum[i]+=self.cumsum[i-1]
- 
-    def update(self, index: int, val: int) -&gt; None:
-        diff=val-self.nums[index]
-        self.nums[index]=val
-        for i in range(index,len(self.cumsum)):
-            self.cumsum[i]+=diff
-    def sumRange(self, left: int, right: int) -&gt; int:
-        
-        return self.cumsum[right]-self.cumsum[left-1] if left-1&gt;=0 else self.cumsum[right]
-#METHOD 1  SQRT DECOMPOSTION
-class NumArray:
-
-    def __init__(self, nums: List[int]):
-        self.nums=nums
-        self.len =  len(nums)//int(math.sqrt(len(nums)))+1 
-        self.b=[0]*self.len
-        for i,n in enumerate(nums):
-            self.b[i//self.len]+=n
-         
-
-    def update(self, index: int, val: int) -&gt; None:
-        block_index = index//self.len
-        self.b[block_index] = self.b[block_index] - self.nums[index]+val
-        self.nums[index]=val
-
-    def sumRange(self, left: int, right: int) -&gt; int:
-        res=0
-        startblock=left//self.len
-        endblock=right//self.len
-        if startblock==endblock:
-            for ind in range(left,right+1):
-                res+=self.nums[ind]
-        else:
-            for ind in range(left,(startblock+1)*self.len):
-                res+=self.nums[ind]
-            for block_ind in range(startblock+1,endblock):
-                res+=self.b[block_ind]
-            for ind in range(endblock*self.len,right+1):
-                res+=self.nums[ind]
-        return res
-        
-# METHOD 2 ＳＥＧＭＥＮＴ　ＴＲＥＥ
-class NumArray:
-
-    def __init__(self, nums: List[int]):
-        self.n=len(nums)
-        self.tree=['#']*(2*self.n)
-        self.buildtree(nums)
-        print(self.tree)
-    
-    def buildtree(self,nums):
-        #populate leaves
-        j=0
-        for i in range(self.n,2*self.n):
-            self.tree[i]=nums[j]
-            j+=1
-        #populate parent nodes
-        for i in range(self.n-1,0,-1):
-            self.tree[i]=self.tree[i*2]+self.tree[i*2+1]
-        
-
-    def update(self, index: int, val: int) -&gt; None:
-        #    1
-        # 2     3
-        #4  5  6  7
-        # 0  1  2  3  4  5  6   7  
-        #     22 9 13 4  5  6   7
-        pos = index+self.n
-        self.tree[pos]=val
-        while pos&gt;0:
-            left=pos
-            right=pos
-            #这里比较巧妙，tree变成数组后可以理解。
-            if pos%2==0:
-                right=pos+1
-            else:
-                left=pos-1
-            
-            if left&gt;0:
-                self.tree[pos//2] = self.tree[left]+self.tree[right]
-            pos //=2
-        
-
-    def sumRange(self, left: int, right: int) -&gt; int:
-        #    1
-        # 2     3
-        #4  5  6  7
-        # 0  1  2  3  4  5  6   7  
-        # #  22 9  13 4  5  6   7
-        l = left+self.n
-        r = right+self.n
-        res=0
-        while l&lt;=r:
-            if l%2==1:
-                res+=self.tree[l]
-                l+=1
-            if r%2==0:
-                res+=self.tree[r]
-                r-=1
-            l//=2
-            r//=2
-        return res
-        
-　
-
-</code></pre>
-<p>第一版本用cumsum，time limit exceeded。原因在于update时候，要更新所有后续影响的cumsum值。 看答案了。思路1） Sqrt Decomposition，把nums分成 sqrt（len）个block求和。 思路2） Segment Tree。 这个没见过，是最优解。  构造方法很巧妙。可能需要记住．</p>
-<h1 id="font-colorred308-range-sum-query-2d-mutable-hard-font"><font color='red'>308. Range Sum Query 2D - Mutable (Hard) </font></h1>
-<p>1D to 2D of rang sum Query</p>
-<pre><code class="language-python">class NumMatrix:
-
-    def __init__(self, matrix: List[List[int]]):
-        self.matrix=matrix
-        self.m=len(matrix)
-        self.n=len(matrix[0])
-        self.trees=[self.buildtree(nums) for nums in matrix]
-        
-        #for tree in self.trees:
-        #    print(tree)
-    
-    def buildtree(self,nums):
-        #   1
-        #  2  3
-        # 4 5 6 7
-        # 1 2 3 4 5 6 7
-        tree=['#']*self.n*2
-        for i,n in enumerate(nums):
-            ind=i+self.n
-            tree[ind]=n
-        
-        for ind in range(self.n-1,0,-1):
-            tree[ind]=tree[2*ind]+tree[2*ind+1]
-        return tree
-    
-    def update(self, row: int, col: int, val: int) -&gt; None:
-        tree=self.trees[row]
-        #   1
-        #  2  3
-        # 4 5 6 7
-        # 1   2  3  4 5 6 7
-        # 22  9  13 4 5 6 7
-        ind = self.n+col
-        self.matrix[row][col]=val
-        tree[ind]=val
-        while ind&gt;0:
-            left=ind
-            right=ind
-            if ind%2==0:
-                right+=1
-            else:
-                left-=1
-            if ind//2&gt;0:
-                tree[ind//2]=tree[left]+tree[right]
-            ind=ind//2
-        self.trees[row]=tree
-      
-
-    def sumRegion(self, row1: int, col1: int, row2: int, col2: int) -&gt; int:
-        res = 0
-        for row in range(row1,row2+1):
-            tree=self.trees[row]
-            #   1
-            #  2  3
-            # 4 5 6 7
-            # 1   2  3  4 5 6 7
-            # 22  9  13 4 5 6 7
-            l=col1+self.n
-            r=col2+self.n
-            while l&lt;=r:
-                if l%2==1:
-                    res+=tree[l]
-                    l+=1
-                if r%2==0:
-                    res+=tree[r]
-                    r-=1
-                l//=2
-                r//=2
-        return res
-            
-# Your NumMatrix object will be instantiated and called as such:
-# obj = NumMatrix(matrix)
-# obj.update(row,col,val)
-# param_2 = obj.sumRegion(row1,col1,row2,col2)
-
-#ANSWER
-class NumMatrix:
-    
-    def lsb(self,n):
-        return n&amp;-n
-    
-    def updateBIT(self,r,c,val):
-        i=r
-        while i&lt;=self.m:
-            j=c
-            while j&lt;=self.n:
-                self.bit[i][j]+=val
-                j+=self.lsb(j)
-            i+=self.lsb(i)
-    
-    def queryBIT(self,r,c):
-        res=0
-        i=r
-        while i&gt;0:
-            j=c
-            while j&gt;0:
-                res+=self.bit[i][j]
-                j-=self.lsb(j)
-            i-=self.lsb(i)
-        return res
-    def buildBIT(self,matrix):
-        for i in range(1,self.m+1):
-            for j in range(1,self.n+1):
-                val=matrix[i-1][j-1]
-                self.updateBIT(i,j,val)
-    
-    def __init__(self, matrix: List[List[int]]):
-        self.matrix=matrix
-        self.m=len(matrix)
-        self.n=len(matrix[0])
-        self.bit= [[0]*(self.n+1) for _ in range(self.m+1)]
-        self.buildBIT(matrix)
-        
-    def update(self, row: int, col: int, val: int) -&gt; None:
-        old_val=self.sumRegion(row,col,row,col)
-        #handling 1-based indexing
-        row+=1
-        col+=1
-        diff=val-old_val
-        self.updateBIT(row,col,diff)
-        
-    def sumRegion(self, row1: int, col1: int, row2: int, col2: int) -&gt; int:
-        #handling 1-based indexing
-        row1+=1;col1+=1;row2+=1;col2+=1
-        a=self.queryBIT(row2,col2)
-        b=self.queryBIT(row1-1,col1-1)
-        c=self.queryBIT(row2,col1-1)
-        d=self.queryBIT(row1-1,col2)
-        return a-c-d+b
-    
-
-
-# Your NumMatrix object will be instantiated and called as such:
-# obj = NumMatrix(matrix)
-# obj.update(row,col,val)
-# param_2 = obj.sumRegion(row1,col1,row2,col2)
-</code></pre>
-<p>自己套用之前的1d segment tree用在2d问题，可以pass。 但不是最优解。 答案用了 Fenwick Tree (Binary Index Tree)  https://www.youtube.com/watch?v=uSFzHCZ4E-8  没见过。而且最终还是用的2D版本的 Binary Index Tree。bit操作下，X，Y不影响，bit位置是bit，保存的值是partial sum。</p>
-<h1 id="font-colorred309-best-time-to-buy-and-sell-stock-with-cooldown-mediumfont"><font color='red'>309. Best Time to Buy and Sell Stock with Cooldown （Medium）</font></h1>
-<p>You are given an array prices where prices[i] is the price of a given stock on the ith day.<br>
-Find the maximum profit you can achieve. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times) with the following restrictions:<br>
-After you sell your stock, you cannot buy stock on the next day (i.e., cooldown one day).</p>
-<pre><code class="language-python">class Solution:
-    def maxProfit(self, prices: List[int]) -&gt; int: 
-        
-    
-        &quot;&quot;&quot;
-        state machine  
-                  O held    -sell-&gt;  sold 
-                    /\                |
-                    |_ buy_ O reset &lt;-rest
-       
-       O is self loop
-       
-       DP:
-         sold[i]=held[i-1]+price[i]
-         held[i]=max(held[i-1],reset[i-1]-price[i])
-         reset[i]=max(rest[i-1],sold[i-1])
-         
-         return max(reset[n],sold[n]
-         &quot;&quot;&quot;
-        sold, held, reset = float('-inf'), float('-inf'), 0
-        for price in prices:
-            pre_sold = sold
-            sold = held + price               #sell operation
-            held = max(held, reset - price)   #buy operation
-            reset = max(reset, pre_sold)      # do nothing operation
-            
-        return max(sold, reset)
- 
-        #309 直接看答案了
-        # profit on ith day kth transanction 0 means 0 stock at our hand after the end of ith day， 1 means 1 stock at our hand after the end of ith day
-        #T[i][k][0] = max(T[i-1][k][0], T[i-1][k][1] + prices[i]) #sell
-        #T[i][k][1] = max(T[i-1][k][1], T[i-2][k][0] - prices[i])  # buy 
-        #Base cases:
-        # T[-1][k][0] = 0, T[-1][k][1] = -Infinity
-        # T[i][0][0] = 0, T[i][0][1] = -Infinity
-        #constain to cooldown
-        
-        T_ik0=0
-        T_ik0_pre=0
-        T_ik1=-float('inf')
-        
-        for p in prices:
-            T_ik0_old=T_ik0
-            T_ik0 = max(T_ik0, T_ik1+p)
-            T_ik1 = max(T_ik1, T_ik0_pre-p)
-            T_ik0_pre=T_ik0_old
-        
-        return T_ik0
-
-
-</code></pre>
-<p>这是一类问题，很多变种。。。。https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/discuss/75924/Most-consistent-ways-of-dealing-with-the-series-of-stock-problems 答案的state machine 思维方法很有意思。</p>
-<h1 id="310-minimum-height-trees-medium">310. Minimum Height Trees （Medium）</h1>
-<p>A tree is an undirected graph in which any two vertices are connected by exactly one path. In other words, any connected graph without simple cycles is a tree.</p>
-<p>Given a tree of n nodes labelled from 0 to n - 1, and an array of n - 1 edges where edges[i] = [ai, bi] indicates that there is an undirected edge between the two nodes ai and bi in the tree, you can choose any node of the tree as the root. When you select a node x as the root, the result tree has height h. Among all possible rooted trees, those with minimum height (i.e. min(h))  are called minimum height trees (MHTs).</p>
-<p>Return a list of all MHTs' root labels. You can return the answer in any order.</p>
-<pre><code class="language-python">class Solution:
-    def findMinHeightTrees(self, n: int, edges: List[List[int]]) -&gt; List[int]:
-        #remove those leafves what left is root 
-        
-        
-        dic={i:[] for i in range(n)}
-        q = []
-        for edge in edges:
-            n1,n2=edge
-            dic[n1].append(n2)
-            dic[n2].append(n1)
-        
-        for i in range(n):
-            if len(dic[i])==1:
-                q.append(i)
-                
-        res=q
-        while q:
-            l=len(q)
-            res=q[:]
-            for _ in range(l):
-                cur=q.pop(0)
-                for nei in dic[cur]:
-                    dic[nei].remove(cur)
-                if len(dic[nei])==1:
-                    q.append(nei)
-        return res if res else [0]
-    
-</code></pre>
-<p>看一下hint才做出来，思路topological sort，leaves 直接砍掉。</p>
 ]]></content>
     </entry>
 </feed>
