@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-12-10 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1646898100770">
+<link rel="shortcut icon" href="/favicon.ico?v=1647232932811">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">47</span>
+        <span class="site-item-stat-count">48</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1606,6 +1606,485 @@ class RandomizedSet():
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-02/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;font-colorred-411-minimum-unique-word-abbreviation-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 411. Minimum Unique Word Abbreviation （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;A string can be abbreviated by replacing any number of non-adjacent substrings with their lengths. For example, a string such as &amp;quot;substitution&amp;quot; could be abbreviated as (but not limited to):&lt;br&gt;
+&amp;quot;s10n&amp;quot; (&amp;quot;s ubstitutio n&amp;quot;)&lt;br&gt;
+&amp;quot;sub4u4&amp;quot; (&amp;quot;sub stit u tion&amp;quot;)&lt;br&gt;
+&amp;quot;12&amp;quot; (&amp;quot;substitution&amp;quot;)&lt;br&gt;
+&amp;quot;su3i1u2on&amp;quot; (&amp;quot;su bst i t u ti on&amp;quot;)&lt;br&gt;
+&amp;quot;substitution&amp;quot; (no substrings replaced)&lt;br&gt;
+Note that &amp;quot;s55n&amp;quot; (&amp;quot;s ubsti tutio n&amp;quot;) is not a valid abbreviation of &amp;quot;substitution&amp;quot; because the replaced substrings are adjacent.&lt;br&gt;
+The length of an abbreviation is the number of letters that were not replaced plus the number of substrings that were replaced. For example, the abbreviation &amp;quot;s10n&amp;quot; has a length of 3 (2 letters + 1 substring) and &amp;quot;su3i1u2on&amp;quot; has a length of 9 (6 letters + 3 substrings).&lt;br&gt;
+Given a target string target and an array of strings dictionary, return an abbreviation of target with the shortest possible length such that it is not an abbreviation of any string in dictionary. If there are multiple shortest abbreviations, return any of them.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def minAbbreviation(self, target: str, dictionary: List[str]) -&amp;gt; str:
+
+        def abbr(target, num):
+            word, count = &#39;&#39;, 0
+            for w in target:
+                if num &amp;amp; 1 == 1:
+                    if count:
+                        word += str(count)
+                        count = 0
+                    word += w
+                else:
+                    count += 1
+
+                num &amp;gt;&amp;gt;= 1
+            if count:
+                word += str(count)
+            return word
+
+        m = len(target)
+
+        # Figure out the different bits for a same length word in the dictionary
+        diffs = []
+        for word in dictionary:
+            if len(word) != m:
+                continue
+
+            # The encoding is opposite
+            bits = 0
+            for i, char in enumerate(word):
+                if char != target[i]:
+                    bits += 2 ** i
+            diffs.append(bits)
+
+        # No word in dictionary has same length, return the shortest
+        if not diffs:
+            return str(m)        
+
+        abbrs = []
+        for i in range(2 ** m):
+            # This abbreviation at least has one word different to every words in the dictionary
+            if all(d &amp;amp; i for d in diffs):
+                abbrs.append(abbr(target, i))
+
+        return min(abbrs, key=lambda x: len(x))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;思路是bit manipulation。 1）找出在字典里同长度但字符和target不同的bit。 然后所有的encoding是0到2^m， 所以  all（encoding&amp;amp;dif for dif in diffs）  encoding的bit能和所有dif bits有交集则是个可能的候选，把 encoding bit转换为string然后加入到abbrs中，最后找出长度最小的abbrs就可以了。&lt;/p&gt;
+&lt;h1 id=&#34;412-fizz-buzz-easy&#34;&gt;412. Fizz Buzz （Easy）&lt;/h1&gt;
+&lt;p&gt;Given an integer n, return a string array answer (1-indexed) where:&lt;br&gt;
+answer[i] == &amp;quot;FizzBuzz&amp;quot; if i is divisible by 3 and 5.&lt;br&gt;
+answer[i] == &amp;quot;Fizz&amp;quot; if i is divisible by 3.&lt;br&gt;
+answer[i] == &amp;quot;Buzz&amp;quot; if i is divisible by 5.&lt;br&gt;
+answer[i] == i (as a string) if none of the above conditions are true.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def fizzBuzz(self, n: int) -&amp;gt; List[str]:
+        def helper(n):
+            if n%3==0 and n%5==0:
+                return &#39;FizzBuzz&#39;
+            elif n%3==0:
+                return &#39;Fizz&#39;
+            elif n%5==0:
+                return &#39;Buzz&#39;
+            else:
+                return str(n)
+        
+        return [helper(i) for i in range(1,n+1)]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;413-arithmetic-slices-medium&#34;&gt;413. Arithmetic Slices (Medium)&lt;/h1&gt;
+&lt;p&gt;An integer array is called arithmetic if it consists of at least three elements and if the difference between any two consecutive elements is the same.&lt;br&gt;
+For example, [1,3,5,7,9], [7,7,7,7], and [3,-1,-5,-9] are arithmetic sequences.&lt;br&gt;
+Given an integer array nums, return the number of arithmetic subarrays of nums.&lt;br&gt;
+A subarray is a contiguous subsequence of the array.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def numberOfArithmeticSlices(self, nums: List[int]) -&amp;gt; int:
+        #   [1,3,5,7,9]
+        # dp 0 0 1 
+        #          2
+        #            3  
+        # dp is the number of subarays ending in ith
+        if len(nums)&amp;lt;3: return 0
+        dp=[0]*len(nums)
+        if nums[0]-nums[1]==nums[1]-nums[2]:
+            dp[2]=1
+        
+        if len(nums)==3: return dp[2]
+        for i in range(3,len(nums)):
+            if nums[i]-nums[i-1]==nums[i-1]-nums[i-2]:
+                dp[i]=1+dp[i-1]
+        return sum(dp)
+#ANSWER
+class Solution:
+    def numberOfArithmeticSlices(self, nums: List[int]) -&amp;gt; int:
+        dp=0
+        res=0
+        for i in range(2,len(nums)):
+            if nums[i]-nums[i-1]==nums[i-1]-nums[i-2]:
+                dp=1+dp
+                res+=dp
+            else:
+                dp=0
+        return res        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;思路和答案一致，DP解决。&lt;/p&gt;
+&lt;h1 id=&#34;414-third-maximum-number-easy&#34;&gt;414. Third Maximum Number （Easy）&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums, return the third distinct maximum number in this array. If the third maximum does not exist, return the maximum number.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def thirdMax(self, nums: List[int]) -&amp;gt; int:
+        if len(set(nums))&amp;lt;3: return max(nums)
+        if len(set(nums))==3: return sorted(set(nums))[0]
+        res=[]
+        for n in set(nums):
+            heapq.heappush(res,-n)
+        heapq.heappop(res)
+        heapq.heappop(res)
+        return -heapq.heappop(res)
+
+#
+class Solution:
+    def thirdMax(self, nums: List[int]) -&amp;gt; int:
+        maximums = set()
+        for num in nums:
+            maximums.add(num)
+            if len(maximums) &amp;gt; 3:
+                maximums.remove(min(maximums))
+        if len(maximums) == 3:
+            return min(maximums)
+        return max(maximums)
+#
+class Solution:
+    def thirdMax(self, nums: List[int]) -&amp;gt; int:
+        min_heap = []
+        for num in nums:
+            if num in min_heap:
+                continue
+            if len(min_heap) &amp;lt; 3:
+                heapq.heappush(min_heap, num)
+            elif len(min_heap) == 3:
+                heapq.heappushpop(min_heap, num)        
+        
+        if len(min_heap) == 3:
+            return heapq.heappop(min_heap)
+        else:
+            while min_heap:
+                result = heapq.heappop(min_heap)
+            return result
+
+#3pointer...
+class Solution:
+    def thirdMax(self, nums: List[int]) -&amp;gt; int:
+        max=float(&#39;-inf&#39;)
+        max2=float(&#39;-inf&#39;)
+        max3=float(&#39;-inf&#39;)
+        s=set()
+        for n in nums:
+            if n in s: continue
+            if n&amp;gt;max:
+                max3=max2
+                max2=max
+                max=n
+            elif n&amp;gt;max2:
+                max3=max2
+                max2=n
+            elif n&amp;gt;max3:
+                max3=n
+                
+            s.add(n)
+         
+        return max3 if len(s)&amp;gt;=3 else max
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;415-add-strings-easy&#34;&gt;415. Add Strings (Easy)&lt;/h1&gt;
+&lt;p&gt;Given two non-negative integers, num1 and num2 represented as string, return the sum of num1 and num2 as a string.&lt;br&gt;
+You must solve the problem without using any built-in library for handling large integers (such as BigInteger). You must also not convert the inputs to integers directly.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def addStrings(self, num1: str, num2: str) -&amp;gt; str:
+        
+        n1=[int(e) for e in num1]
+        n2=[int(e) for e in num2]
+        res=[]
+        carry=0
+        while n1 or n2:
+            a=n1.pop() if n1 else 0
+            b=n2.pop() if n2 else 0
+            val=(a+b+carry)%10
+            carry=(a+b+carry)//10
+            res.append(val)
+        if carry:
+            res.append(carry)
+        
+        return &#39;&#39;.join(map(str,res[::-1]))
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred-416-partition-equal-subset-sum-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 416. Partition Equal Subset Sum (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a non-empty array nums containing only positive integers, find if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def canPartition(self, nums: List[int]) -&amp;gt; bool:
+        @lru_cache(None)
+        def dfs(n,subset_sum):
+            if subset_sum==0:
+                return True
+            if n==0 or subset_sum&amp;lt;0:
+                return False
+            result = dfs(n-1,subset_sum-nums[n-1]) or dfs(n-1,subset_sum)
+            return result
+        
+        total_sum=sum(nums)
+        if total_sum%2==1: return False
+        subset_sum=total_sum//2
+        n=len(nums)
+        return dfs(n,subset_sum)
+###DP
+class Solution:
+    def canPartition(self, nums: List[int]) -&amp;gt; bool:
+        # find sum of array elements
+        total_sum = sum(nums)
+
+        # if total_sum is odd, it cannot be partitioned into equal sum subsets
+        if total_sum % 2 != 0:
+            return False
+        subset_sum = total_sum // 2
+        n = len(nums)
+
+        # construct a dp table of size (n+1) x (subset_sum + 1)
+        # dp[n][subsetsum] up to nth num can sum to subsetsum
+        dp = [[False] * (subset_sum + 1) for _ in range(n + 1)]
+        dp[0][0] = True
+        for i in range(1, n + 1):
+            curr = nums[i - 1]
+            for j in range(subset_sum + 1):
+                if j &amp;lt; curr:
+                    # subset_sum&amp;lt; nums[i-1]   so, subsetsum not include nums[i-1]
+                    dp[i][j] = dp[i - 1][j]
+                else:
+                    # could not include or include nums[i-1] 
+                    dp[i][j] = dp[i - 1][j] or dp[i - 1][j - curr]
+        return dp[n][subset_sum]
+
+#DP
+class Solution:
+    def canPartition(self, nums: List[int]) -&amp;gt; bool:
+        # find sum of array elements
+        total_sum = sum(nums)
+
+        # if total_sum is odd, it cannot be partitioned into equal sum subsets
+        if total_sum % 2 != 0:
+            return False
+        subset_sum = total_sum // 2
+
+        # construct a dp table of size (subset_sum + 1)
+        dp = [False] * (subset_sum + 1)
+        dp[0] = True
+        for curr in nums:
+            for j in range(subset_sum,curr-1,-1):
+                dp[j] = dp[j] or dp[j - curr]
+
+        return dp[subset_sum]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;没思路。。。 有两种情况，1) num in subset_sum  2) num not in subset_sum 所以dfs&lt;/p&gt;
+&lt;h1 id=&#34;417-pacific-atlantic-water-flow-medium&#34;&gt;417. Pacific Atlantic Water Flow （Medium）&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -&amp;gt; List[List[int]]:
+        
+        #two bfs from boundy if hight is higher..
+        
+        visited=set()
+        q=[]
+        m=len(heights)
+        n=len(heights[0])
+        for row in range(m):
+            visited.add((row,0))
+            q.append((row,0))
+        for col in range(1,n):
+            visited.add((0,col))
+            q.append((0,col))
+        
+        while q:
+            r,c = q.pop()
+            for row,col in [(r+1,c),(r-1,c),(r,c+1),(r,c-1)]:
+                if m&amp;gt;row&amp;gt;=0  and n&amp;gt;col&amp;gt;=0 and (row,col) not in visited and heights[row][col]&amp;gt;=heights[r][c]:
+                    visited.add((row,col))
+                    q.append((row,col))
+        
+        
+        visited2=set()
+        q=[]
+        for row in range(m):
+            visited2.add((row,n-1))
+            q.append((row,n-1))
+        for col in range(n-1):
+            visited2.add((m-1,col))
+            q.append((m-1,col))
+        while q:
+            r,c = q.pop()
+            for row,col in [(r+1,c),(r-1,c),(r,c+1),(r,c-1)]:
+                if m&amp;gt;row&amp;gt;=0  and n&amp;gt;col&amp;gt;=0 and (row,col) not in visited2 and heights[row][col]&amp;gt;=heights[r][c]:
+                    visited2.add((row,col))
+                    q.append((row,col))
+        
+        return visited&amp;amp;visited2
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;思路，从边界处做两次BFS，相交地方就是结果。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-418-sentence-screen-fitting-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 418. Sentence Screen Fitting （Medium） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a rows x cols screen and a sentence represented as a list of strings, return the number of times the given sentence can be fitted on the screen.&lt;br&gt;
+The order of words in the sentence must remain unchanged, and a word cannot be split into two lines. A single space must separate two consecutive words in a line.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#TIME LIMIT EXCEEDED
+class Solution:
+    def wordsTyping(self, sentence: List[str], rows: int, cols: int) -&amp;gt; int:
+        sentence=[len(w) for w in sentence]
+        r=0
+        c_row=0
+        res=0
+        i=0
+        while r&amp;lt;rows:
+            
+            l=sentence[i]
+            #print(r,c_row,l)
+            if c_row+l&amp;lt;cols:
+                c_row = c_row+l+1
+                if c_row==cols:
+                    c_row=0
+                    r+=1
+                    if r&amp;gt;=rows:
+                        if i==len(sentence)-1: res+=1
+                        break
+            elif c_row+l==cols:
+                c_row=0
+                r+=1
+            elif c_row+l&amp;gt;cols:
+                c_row=l+1
+                r+=1
+                if r&amp;gt;=rows:
+                    break
+                #print(&#39;#&#39;,c_row,r)
+            if i==len(sentence)-1: res+=1
+            i=(i+1)%len(sentence)
+        return res
+
+#ANSWER
+#case 1: sentence_ptr at the end of the screen falls on space in the sentence. Go to the next letter sentence_ptr+1 in the next row of the screen.
+#case 2: sentence_ptr at the end of the screen falls on the last letter of a word. We skip the space in the sentence as the last letter coincides with the screen end: sentence_ptr+2
+#case 3: sentence_ptr points in the middle of a word at the end of the screen: roll back sentence_ptr till there&#39;s a space in the sentence. his corresponds to starting to fill the word in the next row, as it does not fit into the current. sentence_ptr &amp;gt; 0 is needed for the case when a word is longer than cols; sentence_ptr will be &amp;lt; len(s)
+
+#Code with the comments and the variable change:
+
+    def wordsTyping(self, sentence: List[str], rows: int, cols: int) -&amp;gt; int:
+        s = &#39; &#39;.join(sentence) + &#39; &#39;
+        sentence_ptr = 0
+        for i in range(rows):
+            sentence_ptr += cols - 1
+            # case 1: sentence_ptr at the end of screen falls exactly on the space
+            if s[sentence_ptr % len(s)] == &#39; &#39;:
+                sentence_ptr += 1
+            # case 2: sentence_ptr at the end of screen coincides with the last letter of a word (next is space)
+            elif s[(sentence_ptr + 1) % len(s)] == &#39; &#39;:
+                sentence_ptr += 2
+            else:
+                # case 3: sentence_ptr at the end of screen falls in the middle of a word; roll back
+                while sentence_ptr &amp;gt; 0 and s[(sentence_ptr - 1) % len(s)] != &#39; &#39;:
+                    sentence_ptr -= 1
+        return sentence_ptr // len(s)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;初次尝试是TLE。。。 直接暴力解即使考虑全了cornercase也还是过不了。&lt;br&gt;
+答案思路，先组成一个句子 s=‘ ‘.join（sentence）+’‘。  定义sentence_ptr 每过一行，sentence_ptr+= cols-1 这时候分3种情况， 1） 如果恰巧sentence_ptr落的位置是空格，senternce_ptr+1 2)如果 sentence_ptr+1位置是空格，sentence_ptr+=2 3)sentence_ptr落在字符上，那么sentence_ptr得往回缩直到遇到空格。&lt;/p&gt;
+&lt;h1 id=&#34;419-battleships-in-a-board-medium&#34;&gt;419. Battleships in a Board （Medium）&lt;/h1&gt;
+&lt;p&gt;Given an m x n matrix board where each cell is a battleship &#39;X&#39; or empty &#39;.&#39;, return the number of the battleships on board.&lt;br&gt;
+Battleships can only be placed horizontally or vertically on board. In other words, they can only be made of the shape 1 x k (1 row, k columns) or k x 1 (k rows, 1 column), where k can be of any size. At least one horizontal or vertical cell separates between two battleships (i.e., there are no adjacent battleships).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def countBattleships(self, board: List[List[str]]) -&amp;gt; int:
+        
+        m=len(board)
+        n=len(board[0])
+        
+        visited=set()
+        
+        
+        def dfs(row,col):
+            #print(row,col)
+            if row&amp;lt;0 or col&amp;lt;0 or row&amp;gt;=m or col&amp;gt;=n or (row,col) in visited: return
+            visited.add((row,col))
+            if board[row][col]==&#39;X&#39;:
+                board[row][col]=&#39;.&#39;
+                dfs(row+1,col)
+                dfs(row-1,col)
+                dfs(row,col+1)
+                dfs(row,col-1)
+
+        res=0
+        for i in range(m):
+            for j in range(n):
+                if board[i][j]==&#39;X&#39;:
+                    res+=1
+                    dfs(i,j)
+                    
+        
+        return res
+#ANSWER
+class Solution:
+    def countBattleships(self, board: List[List[str]]) -&amp;gt; int:
+ 
+        total = 0
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if board[i][j] == &#39;X&#39;:
+                    flag = 1
+                    if j &amp;gt; 0 and board[i][j-1] == &#39;X&#39;: flag = 0
+                    if i &amp;gt; 0 and board[i-1][j] == &#39;X&#39;: flag = 0
+                    total += flag
+        return total
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案没用DFS or BFS 但是很完美的解决了，因为只有横的竖的是叫做Battleships，所以如果不是左上角的X就不是一个qualified battlesships。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-420-strong-password-checker-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 420. Strong Password Checker （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;A password is considered strong if the below conditions are all met:&lt;br&gt;
+It has at least 6 characters and at most 20 characters.&lt;br&gt;
+It contains at least one lowercase letter, at least one uppercase letter, and at least one digit.&lt;br&gt;
+It does not contain three repeating characters in a row (i.e., &amp;quot;...aaa...&amp;quot; is weak, but &amp;quot;...aa...a...&amp;quot; is strong, assuming other conditions are met).&lt;br&gt;
+Given a string password, return the minimum number of steps required to make password strong. if password is already strong, return 0.&lt;br&gt;
+In one step, you can:&lt;br&gt;
+Insert one character to password,&lt;br&gt;
+Delete one character from password, or&lt;br&gt;
+Replace one character of password with another character.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def strongPasswordChecker(self,s: str) -&amp;gt; int:
+        
+        missing_type = 3
+        if any(&#39;a&#39; &amp;lt;= c &amp;lt;= &#39;z&#39; for c in s): missing_type -= 1
+        if any(&#39;A&#39; &amp;lt;= c &amp;lt;= &#39;Z&#39; for c in s): missing_type -= 1
+        if any(c.isdigit() for c in s): missing_type -= 1
+
+        change = 0
+        one = two = 0
+        p = 2
+        while p &amp;lt; len(s):
+            if s[p] == s[p-1] == s[p-2]:
+                length = 2
+                while p &amp;lt; len(s) and s[p] == s[p-1]:
+                    length += 1
+                    p += 1
+                    
+                change += length // 3
+                if length % 3 == 0: one += 1
+                elif length % 3 == 1: two += 1
+            else:
+                p += 1
+        
+        if len(s) &amp;lt; 6:
+            return max(missing_type, 6 - len(s))
+        elif len(s) &amp;lt;= 20:
+            return max(missing_type, change)
+        else:
+            delete = len(s) - 20
+            
+            change -= min(delete, one)
+            change -= min(max(delete - one, 0), two * 2) // 2
+            change -= max(delete - one - 2 * two, 0) // 3
+                
+            return delete + max(missing_type, change)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;看到这题就头疼~，直接看答案了。&lt;br&gt;
+当有20+chars，必须delete=len（s）-20.但是我们能用这些delete中的一部分来处理3char rule violation。&lt;br&gt;
+1） aaa ... 这种violation可以del最后一个a。所以， 需要从change里减去这些del。change -= min(delete, one)&lt;br&gt;
+2）aaaa ... 这种violation可以del最后2个a。因为已经用了1）中的deletions，所以需要调整,   min(max(delete - one, 0), two * 2) // 2  意思是，如果残留 max(delete - one, 0) 个dels，那么，用这些dels来处理case2的violation。 因为必须del 2 chars  to resolve each violation, 所以只能用 dels // 2&lt;br&gt;
+3）aaaaa ...这种 violation可以del最后3个a。   max(delete - one - 2 * two, 0) // 3&lt;/p&gt;
+">Leetcode 2022-03-02</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-01/"" data-c="
