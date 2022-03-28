@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>Leetcode 2021-11-13 | Lan&#39;s Blog</title>
+<title>Leetcode 2022-03-03 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1648433305943">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,7 +41,7 @@
 
 
 
-  <meta name="description" content="Leetcode 2021-11-13" />
+  <meta name="description" content="Leetcode 2022-03-03" />
   <meta name="keywords" content="leetcode" />
 </head>
 
@@ -223,16 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#111-minimum-depth-of-binary-tree-easy">111. Minimum Depth of Binary Tree (Easy)</a></li>
-<li><a href="#112-path-sum-easy">112. Path Sum （Easy）</a></li>
-<li><a href="#113-path-sum-ii-medium">113. Path Sum II (Medium)</a></li>
-<li><a href="#114-flatten-binary-tree-to-linked-list-medium">114. Flatten Binary Tree to Linked List （Medium）</a></li>
-<li><a href="#font-colorred115-distinct-subsequences-hard-font"><font color='red'>115. Distinct Subsequences (Hard) </font></a></li>
-<li><a href="#116-populating-next-right-pointers-in-each-node-medium">116. Populating Next Right Pointers in Each Node （Medium）</a></li>
-<li><a href="#117-populating-next-right-pointers-in-each-node-ii-medium">117. Populating Next Right Pointers in Each Node II (Medium)</a></li>
-<li><a href="#118-pascals-triangle-easy">118. Pascal's Triangle （Easy）</a></li>
-<li><a href="#119-pascals-triangle-ii-easy">119. Pascal's Triangle II （Easy）</a></li>
-<li><a href="#120-triangle-medium">120. Triangle （Medium）</a></li>
+<li><a href="#font-colorred-421-maximum-xor-of-two-numbers-in-an-array-mediumfont"><font color='red'> 421. Maximum XOR of Two Numbers in an Array （Medium）</font></a></li>
+<li><a href="#422-valid-word-square-easy">422. Valid Word Square (Easy)</a></li>
+<li><a href="#font-colorred-423-reconstruct-original-digits-from-english-medium-font"><font color='red'> 423. Reconstruct Original Digits from English （Medium) </font></a></li>
+<li><a href="#font-colorred-424-longest-repeating-character-replacement-mediumfont"><font color='red'> 424. Longest Repeating Character Replacement （Medium）</font></a></li>
+<li><a href="#font-colorblue-425-word-squares-hard-font"><font  color='blue'> 425. Word Squares (Hard) </font></a></li>
+<li><a href="#426-convert-binary-search-tree-to-sorted-doubly-linked-list-medium">426. Convert Binary Search Tree to Sorted Doubly Linked List (Medium)</a></li>
+<li><a href="#427-construct-quad-tree-medium">427. Construct Quad Tree （Medium）</a></li>
+<li><a href="#font-colorred-428-serialize-and-deserialize-n-ary-tree-hard-font"><font color='red'> 428. Serialize and Deserialize N-ary Tree (Hard) </font></a></li>
+<li><a href="#429-n-ary-tree-level-order-traversal-medium">429. N-ary Tree Level Order Traversal (Medium)</a></li>
+<li><a href="#430-flatten-a-multilevel-doubly-linked-list-medium">430. Flatten a Multilevel Doubly Linked List (Medium)</a></li>
 </ul>
 
   </div>
@@ -498,14 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-13/"> Leetcode 2021-11-13 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2022-03-03/"> Leetcode 2022-03-03 </a>
   </h1>
   <div class="post-meta">
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-12 19:10:41">2021-11-12</span>
+      <span class="publish-time" data-t="2022-03-02 11:44:15">2022-03-02</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -523,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >10<span class="language" data-lan="minute"
+        >20<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -532,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >1554<span class="pc-show language" data-lan="words"
+        >3150<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -543,305 +543,636 @@
 
             <div class="post-body next-md-body" id="post_body">
               <!-- more -->
-<h1 id="111-minimum-depth-of-binary-tree-easy">111. Minimum Depth of Binary Tree (Easy)</h1>
-<p>Given a binary tree, find its minimum depth.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    #      2
-    #        3
-    #          4
-    #            5 
-    #             6
-    
-    def minDepth(self, root: Optional[TreeNode]) -&gt; int:
-        if not root: return 0
-        min_ = float('inf')
-        if root.left:
-            min_ = min(min_,self.minDepth(root.left))
-        if root.right:
-            min_ = min(min_,self.minDepth(root.right))
+<h1 id="font-colorred-421-maximum-xor-of-two-numbers-in-an-array-mediumfont"><font color='red'> 421. Maximum XOR of Two Numbers in an Array （Medium）</font></h1>
+<p>Given an integer array nums, return the maximum result of nums[i] XOR nums[j], where 0 &lt;= i &lt;= j &lt; n.</p>
+<pre><code class="language-python"> class Solution:
+    def findMaximumXOR(self, nums: List[int]) -&gt; int:
+        res=0
+        L=len(bin(max(nums)))-2
+        for i in range(L-1,-1,-1):
+            res &lt;&lt;=1
+            cur_xor = res | 1
+            prefixes = {n &gt;&gt; i  for n in nums}
+            res |= any(cur_xor^p in prefixes for p in prefixes)
+        return res
         
-        if not root.left and not root.right:
-            min_=0
-        return 1+min_
+class Solution:
+    def findMaximumXOR(self, nums: List[int]) -&gt; int:
+        L = len(bin(max(nums))) - 2
+        max_xor = 0
+        
+        for i in reversed(range(L)):
+            max_xor &lt;&lt;= 1
+            # Set comprehension is used for speed purposes
+            # List comprehension is what most pythonic users are used too imo
+            prefixes = {num &gt;&gt; i for num in nums}
+            curr_xor = max_xor | 1
+            
+            for p in prefixes:
+                # if p1 ^ p2 == curr_xor then
+                # p1 ^ curr_xor == p2 ( p2 is in prefixes)
+                if p ^ curr_xor in prefixes:
+                    # Set the last bit to 1
+                    max_xor |= 1
+                    
+            
+        return max_xor
+</code></pre>
+<p>没思路，看答案。</p>
+<h1 id="422-valid-word-square-easy">422. Valid Word Square (Easy)</h1>
+<p>Given an array of strings words, return true if it forms a valid word square.<br>
+A sequence of strings forms a valid word square if the kth row and column read the same string, where 0 &lt;= k &lt; max(numRows, numColumns).</p>
+<pre><code class="language-python">class Solution:
+    def validWordSquare(self, words: List[str]) -&gt; bool:
+        rows=len(words)
+        cols=max(map(len,words))
+        for i,w in enumerate(words):
+            if len(w)!=cols:
+                words[i]=w+'#'*(cols-len(w))
+        if rows!=cols: return False   
+        
+        for row in range(rows):
+            for col in range(cols):
+                if row&gt;col:
+                    if words[row][col]!=words[col][row]:
+                        return False
+        return True
 
-#answer way of writting
-class Solution:
-    def minDepth(self, root: TreeNode) -&gt; int:
-         
-        if not root:
-            return 0
-        if root.left is None:
-            return self.minDepth(root.right)+1
-        if root.right is None:
-            return self.minDepth(root.left)+1
-        return min(self.minDepth(root.left),self.minDepth(root.right))+1
+
+public class Solution {
+    public boolean validWordSquare(List&lt;String&gt; words) {
+        if(words == null || words.size() == 0){
+            return true;
+        }
+        int n = words.size();
+        for(int i=0; i&lt;n; i++){
+            for(int j=0; j&lt;words.get(i).length(); j++){
+                if(j &gt;= n || words.get(j).length() &lt;= i || words.get(j).charAt(i) != words.get(i).charAt(j))
+                    return false;
+            }
+        }
+        return true;
+    }
+}
 </code></pre>
-<p>注意special case 全是右斜。    直接写成 if not root: return 0 ， return 1+min(self.minDepth(root.left),self.minDepth(root.right))是不对的。全右斜情况root.left直接是空，所以会返回0+1. 应该多一个判断，左右子树是否存在，存在再更新值。</p>
-<h1 id="112-path-sum-easy">112. Path Sum （Easy）</h1>
-<p>Given the root of a binary tree and an integer targetSum, return true if the tree has a root-to-leaf path such that adding up all the values along the path equals targetSum.<br>
-A leaf is a node with no children.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -&gt; bool:
-        if not root: return False 
+<p>有corner case。。。Java 答案更正确</p>
+<h1 id="font-colorred-423-reconstruct-original-digits-from-english-medium-font"><font color='red'> 423. Reconstruct Original Digits from English （Medium) </font></h1>
+<p>Given a string s containing an out-of-order English representation of digits 0-9, return the digits in ascending order.</p>
+<pre><code class="language-python">class Solution:
+    def originalDigits(self, s: 'str') -&gt; 'str':
+        # building hashmap letter -&gt; its frequency
+        count = collections.Counter(s)
         
-        if (not root.left) and not (root.right) and (targetSum==root.val):
-            return True
-        
-        if  (not root.left) and not (root.right) and (targetSum!=root.val):
-            return False
-        
-        return self.hasPathSum(root.left,targetSum-root.val) or self.hasPathSum(root.right,targetSum-root.val)
+        # building hashmap digit -&gt; its frequency 
+        out = {}
+        # letter &quot;z&quot; is present only in &quot;zero&quot;
+        out[&quot;0&quot;] = count[&quot;z&quot;]
+        # letter &quot;w&quot; is present only in &quot;two&quot;
+        out[&quot;2&quot;] = count[&quot;w&quot;]
+        # letter &quot;u&quot; is present only in &quot;four&quot;
+        out[&quot;4&quot;] = count[&quot;u&quot;]
+        # letter &quot;x&quot; is present only in &quot;six&quot;
+        out[&quot;6&quot;] = count[&quot;x&quot;]
+        # letter &quot;g&quot; is present only in &quot;eight&quot;
+        out[&quot;8&quot;] = count[&quot;g&quot;]
+        # letter &quot;h&quot; is present only in &quot;three&quot; and &quot;eight&quot;
+        out[&quot;3&quot;] = count[&quot;h&quot;] - out[&quot;8&quot;]
+        # letter &quot;f&quot; is present only in &quot;five&quot; and &quot;four&quot;
+        out[&quot;5&quot;] = count[&quot;f&quot;] - out[&quot;4&quot;]
+        # letter &quot;s&quot; is present only in &quot;seven&quot; and &quot;six&quot;
+        out[&quot;7&quot;] = count[&quot;s&quot;] - out[&quot;6&quot;]
+        # letter &quot;i&quot; is present in &quot;nine&quot;, &quot;five&quot;, &quot;six&quot;, and &quot;eight&quot;
+        out[&quot;9&quot;] = count[&quot;i&quot;] - out[&quot;5&quot;] - out[&quot;6&quot;] - out[&quot;8&quot;]
+        # letter &quot;n&quot; is present in &quot;one&quot;, &quot;nine&quot;, and &quot;seven&quot;
+        out[&quot;1&quot;] = count[&quot;n&quot;] - out[&quot;7&quot;] - 2 * out[&quot;9&quot;]
+
+        # building output string
+        output = [key * out[key] for key in sorted(out.keys())]
+        return &quot;&quot;.join(output)
 </code></pre>
-<h1 id="113-path-sum-ii-medium">113. Path Sum II (Medium)</h1>
-<p>Given the root of a binary tree and an integer targetSum, return all root-to-leaf paths where the sum of the node values in the path equals targetSum. Each path should be returned as a list of the node values, not node references.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def pathSum(self, root: Optional[TreeNode], targetSum: int) -&gt; List[List[int]]:
+<p>直接做会出现是否要再次使用当前数字然后继续，或者直接使用下个数字，当前数字不重复使用的问题。<br>
+解决方法。。。醉了</p>
+<pre><code>Letter &quot;z&quot; is present only in &quot;zero&quot;.
+Letter &quot;w&quot; is present only in &quot;two&quot;.
+Letter &quot;u&quot; is present only in &quot;four&quot;.
+Letter &quot;x&quot; is present only in &quot;six&quot;.
+Letter &quot;g&quot; is present only in &quot;eight&quot;.
+
+Hence there is a good way to count even numbers.
+</code></pre>
+<p>That is actually the key how to count 3s, 5s and 7s since some letters are present only in one odd and one even number (and all even numbers has already been counted) :</p>
+<pre><code>Letter &quot;h&quot; is present only in &quot;three&quot; and &quot;eight&quot;.
+Letter &quot;f&quot; is present only in &quot;five&quot; and &quot;four&quot;.
+Letter &quot;s&quot; is present only in &quot;seven&quot; and &quot;six&quot;.
+</code></pre>
+<p>Now one needs to count 9s and 1s only, and the logic is basically the same :</p>
+<pre><code>Letter &quot;i&quot; is present in &quot;nine&quot;, &quot;five&quot;, &quot;six&quot;, and &quot;eight&quot;.
+Letter &quot;n&quot; is present in &quot;one&quot;, &quot;seven&quot;, and &quot;nine&quot;.
+</code></pre>
+<h1 id="font-colorred-424-longest-repeating-character-replacement-mediumfont"><font color='red'> 424. Longest Repeating Character Replacement （Medium）</font></h1>
+<p>You are given a string s and an integer k. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most k times.<br>
+Return the length of the longest substring containing the same letter you can get after performing the above operations.</p>
+<pre><code class="language-python">class Solution:
+    def characterReplacement(self, s: str, k: int) -&gt; int:
+        #   p
+        # AABCBBA  k=2
+        #       p
+        #
+        l = len(s)
+        count = [0]*26
+        start = 0
+        maxCount = 0
+        maxLength = 0
+        for end in range(l):
+            count[ord(s[end]) - ord('A')]+=1
+            maxCount = max(maxCount, count[ord(s[end]) - ord('A')])
+            while end - start + 1 - maxCount &gt; k:
+                count[ord(s[start]) - ord('A')]-=1
+                start+=1
+            
+            maxLength = max(maxLength, end - start + 1);
         
-        res = []
-        if not root: return res
-        def ps(root,target,tmp):
-            if not root.left and not root.right and root.val==target:
-                tmp.append(root.val)
+        return maxLength
+</code></pre>
+<p>感觉用dp的。。 感觉不对好像，提示是用two pointer sliding window， 不死磕看答案。<br>
+end-start+1 = size of the current window<br>
+maxCount = largest count of a single, unique character in the current window<br>
+The main equation is: end-start+1-maxCount</p>
+<h1 id="font-colorblue-425-word-squares-hard-font"><font  color='blue'> 425. Word Squares (Hard) </font></h1>
+<p>Given an array of unique strings words, return all the word squares you can build from words. The same word from words can be used multiple times. You can return the answer in any order.<br>
+A sequence of strings forms a valid word square if the kth row and column read the same string, where 0 &lt;= k &lt; max(numRows, numColumns).<br>
+For example, the word sequence [&quot;ball&quot;,&quot;area&quot;,&quot;lead&quot;,&quot;lady&quot;] forms a word square because each word reads the same both horizontally and vertically.</p>
+<pre><code class="language-python">class Solution:
+    def wordSquares(self, words: List[str]) -&gt; List[List[str]]:
+        # a b c d
+        # b d e f
+        # c e g h 
+        # d f h k
+        
+        # select abcd
+        # next must select b
+        # select abcd
+        #        bdef
+        # next must select ce
+        # select abcd
+        #        bdef
+        #        cegh
+        # next must selct dfh
+        # select abcd
+        #        bdef
+        #        cegh
+        #        dfhk
+        #
+        # need a trie tree to find prefix is valid or not
+        # if valid prefix, for childern path, need to explore all possible combinations using bt
+        
+        class Trie:
+            def __init__(self):
+                self.children=dict()
+                self.words=set()
+                
+            def search(self,string):
+                if not string: return True
+                if string[0] not in self.children:
+                    return False
+                return self.children[string[0]].search(string[1:])
+            
+            def getwords(self,string):
+                if string is False: return True
+                if len(string)==1:
+                    return self.children[string].words
+                
+                return self.children[string[0]].getwords(string[1:])
+                
+                
+        trie=Trie()
+        #insert words to trie
+        for word in words:
+            cur=trie
+            for w in word:
+                if w not in cur.children:
+                    cur.children[w] = Trie()
+                cur.words.add(word)
+                cur=cur.children[w]
+            
+        
+        res=[]
+        size=len(words[0])
+        
+        def bt(tmp,words):
+            #backtracking to generate all possible word squares
+            if len(tmp)==size:
                 res.append(tmp[:])
-                
-            if root:
-                tmp.append(root.val)
-                
-                if root.left:
-                    ps(root.left,target-root.val,tmp[:])
-                
-                if root.right:
-                    ps(root.right,target-root.val,tmp[:])
+                return
+            if not words: return
+            
+            for word in words:
+                tmp.append(word)
+                level=len(tmp)
+                searchkey=''.join([e[level] for e in tmp]) if level&lt;size else False
+                if trie.search(searchkey):
+                    validwords=trie.getwords(searchkey)
+                    bt(tmp,validwords)
+                tmp.pop()
         
-        ps(root,targetSum,[])
+        bt([],set(words))
+        
+        return res
+
+#ANSWER is faster...
+class Solution:
+    def wordSquares(self, words: 'List[str]') -&gt; 'List[List[str]]':
+        
+        dic= collections.defaultdict(list)
+        n=len(words[0])
+        for word in words:
+            for i in range(1,n):
+                key=word[:i]
+                dic[key].append(word)
+        
+        res=[]        
+        def build(squre):
+            #print(len(squre))
+            if len(squre)==n:
+                res.append(squre)
+                return
+            #print(n,len(squre),squre)
+            for word in dic[''.join(list(zip(*squre))[len(squre)])]:
+                new=squre[:]
+                new.append(word)
+                build(new)
+        
+        for word in words:
+            build([word])
+        
         return res
 </code></pre>
-<p>定义帮助函数保存path。</p>
-<h1 id="114-flatten-binary-tree-to-linked-list-medium">114. Flatten Binary Tree to Linked List （Medium）</h1>
-<p>Given the root of a binary tree, flatten the tree into a &quot;linked list&quot;<br>
-The &quot;linked list&quot; should use the same TreeNode class where the right child pointer points to the next node in the list and the left child pointer is always null.<br>
-The &quot;linked list&quot; should be in the same order as a pre-order traversal of the binary tree.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def flatten(self, root: Optional[TreeNode]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify root in-place instead.
-        &quot;&quot;&quot;
-   
-        res = []
-        stack = []
-        head=None
-        cur=None
-        while root or stack:
-            while root:
-                res.append(root)  
-                stack.append(root)
-                root=root.left
-            
-            node = stack.pop()
-            root=node.right
-        
-        pre=None
-        for node in res:
-            if pre:
-                pre.left = None
-                pre.right = node
-            
-            pre = node
-        
-        if pre:
-            pre.left=None
-</code></pre>
-<h1 id="font-colorred115-distinct-subsequences-hard-font"><font color='red'>115. Distinct Subsequences (Hard) </font></h1>
-<p>Given two strings s and t, return the number of distinct subsequences of s which equals t</p>
-<pre><code class="language-python">class Solution:
-    def numDistinct(self, s: str, t: str) -&gt; int:
-        
-        if len(t)&gt;len(s): return 0
-        
-        m=len(t)
-        n=len(s)
-        
-        dp=[[0]*(n+1) for _ in range(m+1)]
-        
-        # fill row 0:
-        for i in range(n+1):
-            dp[0][i]=1
-        
-        for i in range(1,m+1):
-            for j in range(1,n+1):
-                if t[i-1]==s[j-1]:
-                    dp[i][j]=dp[i-1][j-1]+dp[i][j-1]
-                else:
-                    dp[i][j]=dp[i][j-1]
-        
-        return dp[m][n]
-        
-#               S
-#           #  b a b g b a g
-#    T  #   1  1 1 1 1 1 1 1
-#       b   0  1 1 2 2 3 3 3 
-#       a   0  0 1 1 1 1 4 4
-#       g   0  0 0 0 1 1 1 5
-        
-</code></pre>
-<p>感觉应该用dp做。找递推关系。。。。<br>
-如果s和t末尾字符一样， dp[i][j] = dp[i-1][j-1] + dp[i][j-1]  是t，s都drop末尾+只有s drop末尾，因为是t去匹配s。 如果s和末尾字符不一样 dp[i][j] = dp[i][j-1]。 注意初始条件，空字符串匹配s可能的方式为1.</p>
-<h1 id="116-populating-next-right-pointers-in-each-node-medium">116. Populating Next Right Pointers in Each Node （Medium）</h1>
-<p>You are given a perfect binary tree where all leaves are on the same level, and every parent has two children. The binary tree has the following definition:struct Node {<br>
-int val;<br>
-Node *left;<br>
-Node *right;<br>
-Node *next;<br>
-}<br>
-Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.<br>
-Initially, all next pointers are set to NULL</p>
+<p>很明显backtracking问题。。。unbelievable 做出来了。。。</p>
+<h1 id="426-convert-binary-search-tree-to-sorted-doubly-linked-list-medium">426. Convert Binary Search Tree to Sorted Doubly Linked List (Medium)</h1>
+<p>Convert a Binary Search Tree to a sorted Circular Doubly-Linked List in place.<br>
+You can think of the left and right pointers as synonymous to the predecessor and successor pointers in a doubly-linked list. For a circular doubly linked list, the predecessor of the first element is the last element, and the successor of the last element is the first element.<br>
+We want to do the transformation in place. After the transformation, the left pointer of the tree node should point to its predecessor, and the right pointer should point to its successor. You should return the pointer to the smallest element of the linked list.</p>
 <pre><code class="language-python">&quot;&quot;&quot;
 # Definition for a Node.
 class Node:
-    def __init__(self, val: int = 0, left: 'Node' = None, right: 'Node' = None, next: 'Node' = None):
+    def __init__(self, val, left=None, right=None):
         self.val = val
         self.left = left
         self.right = right
-        self.next = next
 &quot;&quot;&quot;
 
 class Solution:
-    def connect(self, root: 'Node') -&gt; 'Node':
-        
+    def treeToDoublyList(self, root: 'Optional[Node]') -&gt; 'Optional[Node]':
         if not root: return root
-        queue = [root]
-        
-        while queue:
-            level=[]
-            l=len(queue)
-            for _ in range(l):
-                cur = queue.pop(0)
-                level.append(cur)
-                if cur.left:
-                    queue.append(cur.left)
-                if cur.right:
-                    queue.append(cur.right)
+        stack=[]
+        head=None
+        pre=None
+        while stack or root:
+            while root:
+                stack.append(root)
+                root=root.left
             
-            pre=None
-            for node in level:
-                if pre:
-                    pre.next=node
-                pre = node
-        
-        return root
-</code></pre>
-<p>bfs level order transversal ...</p>
-<h1 id="117-populating-next-right-pointers-in-each-node-ii-medium">117. Populating Next Right Pointers in Each Node II (Medium)</h1>
-<p>解决方法同上</p>
-<h1 id="118-pascals-triangle-easy">118. Pascal's Triangle （Easy）</h1>
-<p>Given an integer numRows, return the first numRows of Pascal's triangle.</p>
-<pre><code class="language-python">class Solution:
-    def generate(self, numRows: int) -&gt; List[List[int]]:
-        
-        
-        if numRows==1:
-            return [[1]]
-        if numRows==2:
-            return [[1],[1,1]]
-        res = [[1],[1,1]]
-        
-        for _ in range(numRows-2):
-            level = [1,]
-            prev_level = res[-1]
-            for i in range(len(prev_level)-1):
-                val = prev_level[i]+prev_level[i+1]
-                level.append(val)
+            cur=stack.pop()
+            if head is None: head=cur
+            cur.left=pre
+            if pre:
+                pre.right=cur 
+            pre=cur
             
-            level.append(1)
-            res.append(level)
+            root=cur.right
         
-        return res
-</code></pre>
-<p>杨辉三角</p>
-<h1 id="119-pascals-triangle-ii-easy">119. Pascal's Triangle II （Easy）</h1>
-<p>Given an integer rowIndex, return the rowIndexth (0-indexed) row of the Pascal's triangle.</p>
-<pre><code class="language-python">class Solution:
-    def getRow(self, rowIndex: int) -&gt; List[int]:
-       
-        res = [1]*(rowIndex+1)
         
-        if rowIndex&lt;=1:
-            return res
+        #print(head.val, pre.val)
         
-        for i in range(rowIndex):
-            length = 2+i
-            res_copy = res[:]
-            for j in range(1,length-1):
-                res[j]=res_copy[j]+res_copy[j-1]
-                
-        return res
-</code></pre>
-<p>还是杨辉三角，要细心。</p>
-<h1 id="120-triangle-medium">120. Triangle （Medium）</h1>
-<p>Given a triangle array, return the minimum path sum from top to bottom.<br>
-For each step, you may move to an adjacent number of the row below. More formally, if you are on index i on the current row, you may move to either index i or index i + 1 on the next row.</p>
-<pre><code class="language-python">class Solution:
-    def minimumTotal(self, triangle: List[List[int]]) -&gt; int:
-        def mintotal(triangle, i):
-            if not triangle:
-                return 0
-            root = triangle[0][i]
-            triangle.pop(0)
-            return root+min(mintotal(triangle[:],i),mintotal(triangle[:],i+1))
-        return mintotal(triangle,0)
+        head.left=pre
+        pre.right=head
+        
+        return head
 
- # second pass solution
- class Solution:
-    def minimumTotal(self, triangle: List[List[int]]) -&gt; int:
-        
-        mem=dict()
-        def mintotal(triangle, i,level):
-            if (level,i) in mem: return mem[(level,i)]
-            if not triangle:
-                return 0
-            root = triangle[0][i]
-            triangle.pop(0)
-            res= root+min(mintotal(triangle[:],i,level+1),mintotal(triangle[:],i+1,level+1))
-            mem[(level,i)]=res
-            return res
-        return mintotal(triangle,0,0)
 
-#answer way of writting
+#ANSER RECURSION METHOD
 class Solution:
-    def minimumTotal(self, triangle: List[List[int]]) -&gt; int:
-        rows=len(triangle)
-        minlen=triangle[-1][:]
-        for layer in range(rows-2,-1,-1):
-            for i in range(layer+1):
-                minlen[i]=min(minlen[i],minlen[i+1])+triangle[layer][i]
-        return minlen[0]
+    def treeToDoublyList(self, root: 'Node') -&gt; 'Node':
+        def helper(node):
+            &quot;&quot;&quot;
+            Performs standard inorder traversal:
+            left -&gt; node -&gt; right
+            and links all nodes into DLL
+            &quot;&quot;&quot;
+            nonlocal last, first
+            if node:
+                # left
+                helper(node.left)
+                # node 
+                if last:
+                    # link the previous node (last)
+                    # with the current one (node)
+                    last.right = node
+                    node.left = last
+                else:
+                    # keep the smallest node
+                    # to close DLL later on
+                    first = node        
+                last = node
+                # right
+                helper(node.right)
         
+        if not root:
+            return None
+        
+        # the smallest (first) and the largest (last) nodes
+        first, last = None, None
+        helper(root)
+        # close DLL
+        last.right = first
+        first.left = last
+        return first
 </code></pre>
-<p>first try, time limit exceeded.  add mem, nailed it. 答案用DP方法也很巧妙，因为最后一行就是所有可能性，慢慢回溯去求结果。root是 minlen[0].</p>
+<p>corner case 要想清楚。。 而且node要call right left时候node必须存在。</p>
+<h1 id="427-construct-quad-tree-medium">427. Construct Quad Tree （Medium）</h1>
+<p>Given a n * n matrix grid of 0's and 1's only. We want to represent the grid with a Quad-Tree.<br>
+Return the root of the Quad-Tree representing the grid.</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a QuadTree node.
+class Node:
+    def __init__(self, val, isLeaf, topLeft, topRight, bottomLeft, bottomRight):
+        self.val = val
+        self.isLeaf = isLeaf
+        self.topLeft = topLeft
+        self.topRight = topRight
+        self.bottomLeft = bottomLeft
+        self.bottomRight = bottomRight
+&quot;&quot;&quot;
+
+class Solution:
+    def construct(self, grid: List[List[int]]) -&gt; 'Node':
+        size=len(grid)
+        if len({e for row in grid for e in row})==1:
+            val=grid[0][0]==1
+            isLeaf=True
+            topLeft=None
+            topRight=None
+            bottomLeft=None
+            bottomRight=None
+            return Node(val,isLeaf,topLeft,topRight,bottomLeft,bottomRight)
+        else:
+            isLeaf=False
+            val=True
+            topLeft=self.construct([row[:size//2] for row in grid[:size//2]])
+            topRight=self.construct([row[size//2:] for row in grid[:size//2]])
+            bottomLeft=self.construct([row[:size//2] for row in grid[size//2:]])
+            bottomRight=self.construct([row[size//2:] for row in grid[size//2:]])
+            return Node(val,isLeaf,topLeft,topRight,bottomLeft,bottomRight)
+
+</code></pre>
+<h1 id="font-colorred-428-serialize-and-deserialize-n-ary-tree-hard-font"><font color='red'> 428. Serialize and Deserialize N-ary Tree (Hard) </font></h1>
+<p>Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.<br>
+Design an algorithm to serialize and deserialize an N-ary tree. An N-ary tree is a rooted tree in which each node has no more than N children. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that an N-ary tree can be serialized to a string and this string can be deserialized to the original tree structure.</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+&quot;&quot;&quot;
+
+&quot;&quot;&quot;
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+&quot;&quot;&quot;
+
+class Codec:
+    def serialize(self, root):
+        &quot;&quot;&quot;Encodes a tree to a single string.
+        
+        :type root: Node
+        :rtype: str
+        &quot;&quot;&quot;
+        r=[]
+        if not root: return r
+        q=[root]
+        while q:
+            node=q.pop(0)
+            if node !=',':
+                r.append(str(node.val))
+                for child in node.children:
+                    q.append(child)
+                q.append(',')
+            else:
+                r.append(',')
+                
+        return '#'.join(r)
+        
+ 
+    
+    def deserialize(self, data):
+        &quot;&quot;&quot;Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: Node
+        &quot;&quot;&quot;
+        if not data: return None
+        pieces=data.split('#')
+        root = Node(int(pieces[0]), [])
+        idx = 1
+        q=[root]
+        while q:
+            node=q.pop(0)
+            while pieces[idx] != ',':
+                child=Node(int(pieces[idx]), [])
+                node.children.append(child)
+                q.append(child)
+                idx += 1
+            idx += 1
+        return root
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.deserialize(codec.serialize(root))
+</code></pre>
+<p>first try failed， 若val可以重复，以val为key找parent的方法不再适用。 看答案。</p>
+<h1 id="429-n-ary-tree-level-order-traversal-medium">429. N-ary Tree Level Order Traversal (Medium)</h1>
+<p>Given an n-ary tree, return the level order traversal of its nodes' values.<br>
+Nary-Tree input serialization is represented in their level order traversal, each group of children is separated by the null value (See examples).</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a Node.
+class Node:
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+&quot;&quot;&quot;
+
+class Solution:
+    def levelOrder(self, root: 'Node') -&gt; List[List[int]]:
+        if not root: return []
+        q=[root]
+        res=[]
+        while q:
+            l=len(q)
+            level=[]
+            for _ in range(l):
+                cur=q.pop(0)
+                level.append(cur.val)
+                for child in cur.children:
+                    q.append(child)
+            res.append(level)
+        return res
+
+#RECURSION ANSWER
+class Solution:
+    def levelOrder(self, root: 'Node') -&gt; List[List[int]]:
+
+        def traverse_node(node, level):
+            if len(result) == level:
+                result.append([])
+            result[level].append(node.val)
+            for child in node.children:
+                traverse_node(child, level + 1)
+
+        result = []
+
+        if root is not None:
+            traverse_node(root, 0)
+        return result
+</code></pre>
+<p>BFS</p>
+<h1 id="430-flatten-a-multilevel-doubly-linked-list-medium">430. Flatten a Multilevel Doubly Linked List (Medium)</h1>
+<p>You are given a doubly linked list, which contains nodes that have a next pointer, a previous pointer, and an additional child pointer. This child pointer may or may not point to a separate doubly linked list, also containing these special nodes. These child lists may have one or more children of their own, and so on, to produce a multilevel data structure as shown in the example below.<br>
+Given the head of the first level of the list, flatten the list so that all the nodes appear in a single-level, doubly linked list. Let curr be a node with a child list. The nodes in the child list should appear after curr and before curr.next in the flattened list.<br>
+Return the head of the flattened list. The nodes in the list must have all of their child pointers set to null.</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a Node.
+class Node:
+    def __init__(self, val, prev, next, child):
+        self.val = val
+        self.prev = prev
+        self.next = next
+        self.child = child
+&quot;&quot;&quot;
+
+class Solution:
+    def flatten(self, head: 'Optional[Node]') -&gt; 'Optional[Node]':
+        
+        stack=[]
+        cur=head
+        pre=None
+        while cur or stack:
+            if not cur:
+                cur=stack.pop()
+                cur.prev=pre
+                pre.next=cur
+                
+            while cur.child:
+                if cur.next:
+                    stack.append(cur.next)
+                curnext=cur.child
+                curchild=cur.child
+                cur.child=None
+                curchild.prev=cur
+                cur.next=curnext
+                cur=curnext
+               
+            if not cur.child:
+                pre=cur
+                cur=cur.next
+                
+            
+        return head
+
+
+#
+
+class Solution:
+    def flatten(self, head: 'Node') -&gt; 'Node':
+        
+        #DFS...
+        curr=head
+        tempStack = []
+        while curr:
+            if curr.child:
+                if curr.next:
+                    tempStack.append(curr.next);
+                curr.next, curr.child.prev, curr.child = curr.child, curr, None;
+            if not curr.next and len(tempStack):
+                temp = tempStack.pop();
+                temp.prev, curr.next = curr, temp
+            curr = curr.next
+        return head
+
+
+ #ANSWER PREORDER   child is left tree next is right tree
+ &quot;&quot;&quot;
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val, prev, next, child):
+        self.val = val
+        self.prev = prev
+        self.next = next
+        self.child = child
+&quot;&quot;&quot;
+class Solution(object):
+
+    def flatten(self, head):
+        if not head:
+            return head
+
+        # pseudo head to ensure the `prev` pointer is never none
+        pseudoHead = Node(None, None, head, None)
+        self.flatten_dfs(pseudoHead, head)
+
+        # detach the pseudo head from the real head
+        pseudoHead.next.prev = None
+        return pseudoHead.next
+
+
+    def flatten_dfs(self, prev, curr):
+        &quot;&quot;&quot; return the tail of the flatten list &quot;&quot;&quot;
+        if not curr:
+            return prev
+
+        curr.prev = prev
+        prev.next = curr
+
+        # the curr.next would be tempered in the recursive function
+        tempNext = curr.next
+        tail = self.flatten_dfs(curr, curr.child)
+        curr.child = None
+        return self.flatten_dfs(tail, tempNext)        
+
+#preorder interative 
+class Solution(object):
+    def flatten(self, head):
+        if not head:
+            return
+
+        pseudoHead = Node(0,None,head,None)
+        prev = pseudoHead
+
+        stack = []
+        stack.append(head)
+
+        while stack:
+            curr = stack.pop()
+
+            prev.next = curr
+            curr.prev = prev
+
+            if curr.next:
+                stack.append(curr.next)
+ 
+            if curr.child:
+                stack.append(curr.child)
+                # don't forget to remove all child pointers.
+                curr.child = None
+
+            prev = curr
+        # detach the pseudo head node from the result.
+        pseudoHead.next.prev = None
+        return pseudoHead.next
+</code></pre>
+<p>差点没做出来 写的比答案复杂</p>
 
             </div>
             
@@ -854,7 +1185,7 @@ class Solution:
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-13/" title="Leetcode 2021-11-13">https://headhuanglan.github.io/post/leetcode-2021-11-13/</a>
+      <a href="https://headhuanglan.github.io/post/leetcode-2022-03-03/" title="Leetcode 2022-03-03">https://headhuanglan.github.io/post/leetcode-2022-03-03/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -869,15 +1200,11 @@ class Solution:
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-15" href="https://headhuanglan.github.io/post/leetcode-2021-11-15/">Leetcode 2021-11-15</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-15" href="https://headhuanglan.github.io/post/leetcode-2021-11-15/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="BFS DFS 模板总结" href="https://headhuanglan.github.io/post/leetcode-2021-11-14/">BFS DFS 模板总结</a>
-        <a class="nav-mobile-next" title="BFS DFS 模板总结" href="https://headhuanglan.github.io/post/leetcode-2021-11-14/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2022-03-02" href="https://headhuanglan.github.io/post/leetcode-2022-03-02/">Leetcode 2022-03-02</a>
+        <a class="nav-mobile-next" title="Leetcode 2022-03-02" href="https://headhuanglan.github.io/post/leetcode-2022-03-02/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>

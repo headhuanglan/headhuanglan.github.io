@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-03-14T04:42:21.070Z</updated>
+    <updated>2022-03-28T02:08:35.215Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,6 +10,645 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Lan&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2022-03-03]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2022-03-03/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2022-03-03/">
+        </link>
+        <updated>2022-03-02T16:44:15.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="font-colorred-421-maximum-xor-of-two-numbers-in-an-array-mediumfont"><font color='red'> 421. Maximum XOR of Two Numbers in an Array （Medium）</font></h1>
+<p>Given an integer array nums, return the maximum result of nums[i] XOR nums[j], where 0 &lt;= i &lt;= j &lt; n.</p>
+<pre><code class="language-python"> class Solution:
+    def findMaximumXOR(self, nums: List[int]) -&gt; int:
+        res=0
+        L=len(bin(max(nums)))-2
+        for i in range(L-1,-1,-1):
+            res &lt;&lt;=1
+            cur_xor = res | 1
+            prefixes = {n &gt;&gt; i  for n in nums}
+            res |= any(cur_xor^p in prefixes for p in prefixes)
+        return res
+        
+class Solution:
+    def findMaximumXOR(self, nums: List[int]) -&gt; int:
+        L = len(bin(max(nums))) - 2
+        max_xor = 0
+        
+        for i in reversed(range(L)):
+            max_xor &lt;&lt;= 1
+            # Set comprehension is used for speed purposes
+            # List comprehension is what most pythonic users are used too imo
+            prefixes = {num &gt;&gt; i for num in nums}
+            curr_xor = max_xor | 1
+            
+            for p in prefixes:
+                # if p1 ^ p2 == curr_xor then
+                # p1 ^ curr_xor == p2 ( p2 is in prefixes)
+                if p ^ curr_xor in prefixes:
+                    # Set the last bit to 1
+                    max_xor |= 1
+                    
+            
+        return max_xor
+</code></pre>
+<p>没思路，看答案。</p>
+<h1 id="422-valid-word-square-easy">422. Valid Word Square (Easy)</h1>
+<p>Given an array of strings words, return true if it forms a valid word square.<br>
+A sequence of strings forms a valid word square if the kth row and column read the same string, where 0 &lt;= k &lt; max(numRows, numColumns).</p>
+<pre><code class="language-python">class Solution:
+    def validWordSquare(self, words: List[str]) -&gt; bool:
+        rows=len(words)
+        cols=max(map(len,words))
+        for i,w in enumerate(words):
+            if len(w)!=cols:
+                words[i]=w+'#'*(cols-len(w))
+        if rows!=cols: return False   
+        
+        for row in range(rows):
+            for col in range(cols):
+                if row&gt;col:
+                    if words[row][col]!=words[col][row]:
+                        return False
+        return True
+
+
+public class Solution {
+    public boolean validWordSquare(List&lt;String&gt; words) {
+        if(words == null || words.size() == 0){
+            return true;
+        }
+        int n = words.size();
+        for(int i=0; i&lt;n; i++){
+            for(int j=0; j&lt;words.get(i).length(); j++){
+                if(j &gt;= n || words.get(j).length() &lt;= i || words.get(j).charAt(i) != words.get(i).charAt(j))
+                    return false;
+            }
+        }
+        return true;
+    }
+}
+</code></pre>
+<p>有corner case。。。Java 答案更正确</p>
+<h1 id="font-colorred-423-reconstruct-original-digits-from-english-medium-font"><font color='red'> 423. Reconstruct Original Digits from English （Medium) </font></h1>
+<p>Given a string s containing an out-of-order English representation of digits 0-9, return the digits in ascending order.</p>
+<pre><code class="language-python">class Solution:
+    def originalDigits(self, s: 'str') -&gt; 'str':
+        # building hashmap letter -&gt; its frequency
+        count = collections.Counter(s)
+        
+        # building hashmap digit -&gt; its frequency 
+        out = {}
+        # letter &quot;z&quot; is present only in &quot;zero&quot;
+        out[&quot;0&quot;] = count[&quot;z&quot;]
+        # letter &quot;w&quot; is present only in &quot;two&quot;
+        out[&quot;2&quot;] = count[&quot;w&quot;]
+        # letter &quot;u&quot; is present only in &quot;four&quot;
+        out[&quot;4&quot;] = count[&quot;u&quot;]
+        # letter &quot;x&quot; is present only in &quot;six&quot;
+        out[&quot;6&quot;] = count[&quot;x&quot;]
+        # letter &quot;g&quot; is present only in &quot;eight&quot;
+        out[&quot;8&quot;] = count[&quot;g&quot;]
+        # letter &quot;h&quot; is present only in &quot;three&quot; and &quot;eight&quot;
+        out[&quot;3&quot;] = count[&quot;h&quot;] - out[&quot;8&quot;]
+        # letter &quot;f&quot; is present only in &quot;five&quot; and &quot;four&quot;
+        out[&quot;5&quot;] = count[&quot;f&quot;] - out[&quot;4&quot;]
+        # letter &quot;s&quot; is present only in &quot;seven&quot; and &quot;six&quot;
+        out[&quot;7&quot;] = count[&quot;s&quot;] - out[&quot;6&quot;]
+        # letter &quot;i&quot; is present in &quot;nine&quot;, &quot;five&quot;, &quot;six&quot;, and &quot;eight&quot;
+        out[&quot;9&quot;] = count[&quot;i&quot;] - out[&quot;5&quot;] - out[&quot;6&quot;] - out[&quot;8&quot;]
+        # letter &quot;n&quot; is present in &quot;one&quot;, &quot;nine&quot;, and &quot;seven&quot;
+        out[&quot;1&quot;] = count[&quot;n&quot;] - out[&quot;7&quot;] - 2 * out[&quot;9&quot;]
+
+        # building output string
+        output = [key * out[key] for key in sorted(out.keys())]
+        return &quot;&quot;.join(output)
+</code></pre>
+<p>直接做会出现是否要再次使用当前数字然后继续，或者直接使用下个数字，当前数字不重复使用的问题。<br>
+解决方法。。。醉了</p>
+<pre><code>Letter &quot;z&quot; is present only in &quot;zero&quot;.
+Letter &quot;w&quot; is present only in &quot;two&quot;.
+Letter &quot;u&quot; is present only in &quot;four&quot;.
+Letter &quot;x&quot; is present only in &quot;six&quot;.
+Letter &quot;g&quot; is present only in &quot;eight&quot;.
+
+Hence there is a good way to count even numbers.
+</code></pre>
+<p>That is actually the key how to count 3s, 5s and 7s since some letters are present only in one odd and one even number (and all even numbers has already been counted) :</p>
+<pre><code>Letter &quot;h&quot; is present only in &quot;three&quot; and &quot;eight&quot;.
+Letter &quot;f&quot; is present only in &quot;five&quot; and &quot;four&quot;.
+Letter &quot;s&quot; is present only in &quot;seven&quot; and &quot;six&quot;.
+</code></pre>
+<p>Now one needs to count 9s and 1s only, and the logic is basically the same :</p>
+<pre><code>Letter &quot;i&quot; is present in &quot;nine&quot;, &quot;five&quot;, &quot;six&quot;, and &quot;eight&quot;.
+Letter &quot;n&quot; is present in &quot;one&quot;, &quot;seven&quot;, and &quot;nine&quot;.
+</code></pre>
+<h1 id="font-colorred-424-longest-repeating-character-replacement-mediumfont"><font color='red'> 424. Longest Repeating Character Replacement （Medium）</font></h1>
+<p>You are given a string s and an integer k. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most k times.<br>
+Return the length of the longest substring containing the same letter you can get after performing the above operations.</p>
+<pre><code class="language-python">class Solution:
+    def characterReplacement(self, s: str, k: int) -&gt; int:
+        #   p
+        # AABCBBA  k=2
+        #       p
+        #
+        l = len(s)
+        count = [0]*26
+        start = 0
+        maxCount = 0
+        maxLength = 0
+        for end in range(l):
+            count[ord(s[end]) - ord('A')]+=1
+            maxCount = max(maxCount, count[ord(s[end]) - ord('A')])
+            while end - start + 1 - maxCount &gt; k:
+                count[ord(s[start]) - ord('A')]-=1
+                start+=1
+            
+            maxLength = max(maxLength, end - start + 1);
+        
+        return maxLength
+</code></pre>
+<p>感觉用dp的。。 感觉不对好像，提示是用two pointer sliding window， 不死磕看答案。<br>
+end-start+1 = size of the current window<br>
+maxCount = largest count of a single, unique character in the current window<br>
+The main equation is: end-start+1-maxCount</p>
+<h1 id="font-colorblue-425-word-squares-hard-font"><font  color='blue'> 425. Word Squares (Hard) </font></h1>
+<p>Given an array of unique strings words, return all the word squares you can build from words. The same word from words can be used multiple times. You can return the answer in any order.<br>
+A sequence of strings forms a valid word square if the kth row and column read the same string, where 0 &lt;= k &lt; max(numRows, numColumns).<br>
+For example, the word sequence [&quot;ball&quot;,&quot;area&quot;,&quot;lead&quot;,&quot;lady&quot;] forms a word square because each word reads the same both horizontally and vertically.</p>
+<pre><code class="language-python">class Solution:
+    def wordSquares(self, words: List[str]) -&gt; List[List[str]]:
+        # a b c d
+        # b d e f
+        # c e g h 
+        # d f h k
+        
+        # select abcd
+        # next must select b
+        # select abcd
+        #        bdef
+        # next must select ce
+        # select abcd
+        #        bdef
+        #        cegh
+        # next must selct dfh
+        # select abcd
+        #        bdef
+        #        cegh
+        #        dfhk
+        #
+        # need a trie tree to find prefix is valid or not
+        # if valid prefix, for childern path, need to explore all possible combinations using bt
+        
+        class Trie:
+            def __init__(self):
+                self.children=dict()
+                self.words=set()
+                
+            def search(self,string):
+                if not string: return True
+                if string[0] not in self.children:
+                    return False
+                return self.children[string[0]].search(string[1:])
+            
+            def getwords(self,string):
+                if string is False: return True
+                if len(string)==1:
+                    return self.children[string].words
+                
+                return self.children[string[0]].getwords(string[1:])
+                
+                
+        trie=Trie()
+        #insert words to trie
+        for word in words:
+            cur=trie
+            for w in word:
+                if w not in cur.children:
+                    cur.children[w] = Trie()
+                cur.words.add(word)
+                cur=cur.children[w]
+            
+        
+        res=[]
+        size=len(words[0])
+        
+        def bt(tmp,words):
+            #backtracking to generate all possible word squares
+            if len(tmp)==size:
+                res.append(tmp[:])
+                return
+            if not words: return
+            
+            for word in words:
+                tmp.append(word)
+                level=len(tmp)
+                searchkey=''.join([e[level] for e in tmp]) if level&lt;size else False
+                if trie.search(searchkey):
+                    validwords=trie.getwords(searchkey)
+                    bt(tmp,validwords)
+                tmp.pop()
+        
+        bt([],set(words))
+        
+        return res
+
+#ANSWER is faster...
+class Solution:
+    def wordSquares(self, words: 'List[str]') -&gt; 'List[List[str]]':
+        
+        dic= collections.defaultdict(list)
+        n=len(words[0])
+        for word in words:
+            for i in range(1,n):
+                key=word[:i]
+                dic[key].append(word)
+        
+        res=[]        
+        def build(squre):
+            #print(len(squre))
+            if len(squre)==n:
+                res.append(squre)
+                return
+            #print(n,len(squre),squre)
+            for word in dic[''.join(list(zip(*squre))[len(squre)])]:
+                new=squre[:]
+                new.append(word)
+                build(new)
+        
+        for word in words:
+            build([word])
+        
+        return res
+</code></pre>
+<p>很明显backtracking问题。。。unbelievable 做出来了。。。</p>
+<h1 id="426-convert-binary-search-tree-to-sorted-doubly-linked-list-medium">426. Convert Binary Search Tree to Sorted Doubly Linked List (Medium)</h1>
+<p>Convert a Binary Search Tree to a sorted Circular Doubly-Linked List in place.<br>
+You can think of the left and right pointers as synonymous to the predecessor and successor pointers in a doubly-linked list. For a circular doubly linked list, the predecessor of the first element is the last element, and the successor of the last element is the first element.<br>
+We want to do the transformation in place. After the transformation, the left pointer of the tree node should point to its predecessor, and the right pointer should point to its successor. You should return the pointer to the smallest element of the linked list.</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a Node.
+class Node:
+    def __init__(self, val, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+&quot;&quot;&quot;
+
+class Solution:
+    def treeToDoublyList(self, root: 'Optional[Node]') -&gt; 'Optional[Node]':
+        if not root: return root
+        stack=[]
+        head=None
+        pre=None
+        while stack or root:
+            while root:
+                stack.append(root)
+                root=root.left
+            
+            cur=stack.pop()
+            if head is None: head=cur
+            cur.left=pre
+            if pre:
+                pre.right=cur 
+            pre=cur
+            
+            root=cur.right
+        
+        
+        #print(head.val, pre.val)
+        
+        head.left=pre
+        pre.right=head
+        
+        return head
+
+
+#ANSER RECURSION METHOD
+class Solution:
+    def treeToDoublyList(self, root: 'Node') -&gt; 'Node':
+        def helper(node):
+            &quot;&quot;&quot;
+            Performs standard inorder traversal:
+            left -&gt; node -&gt; right
+            and links all nodes into DLL
+            &quot;&quot;&quot;
+            nonlocal last, first
+            if node:
+                # left
+                helper(node.left)
+                # node 
+                if last:
+                    # link the previous node (last)
+                    # with the current one (node)
+                    last.right = node
+                    node.left = last
+                else:
+                    # keep the smallest node
+                    # to close DLL later on
+                    first = node        
+                last = node
+                # right
+                helper(node.right)
+        
+        if not root:
+            return None
+        
+        # the smallest (first) and the largest (last) nodes
+        first, last = None, None
+        helper(root)
+        # close DLL
+        last.right = first
+        first.left = last
+        return first
+</code></pre>
+<p>corner case 要想清楚。。 而且node要call right left时候node必须存在。</p>
+<h1 id="427-construct-quad-tree-medium">427. Construct Quad Tree （Medium）</h1>
+<p>Given a n * n matrix grid of 0's and 1's only. We want to represent the grid with a Quad-Tree.<br>
+Return the root of the Quad-Tree representing the grid.</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a QuadTree node.
+class Node:
+    def __init__(self, val, isLeaf, topLeft, topRight, bottomLeft, bottomRight):
+        self.val = val
+        self.isLeaf = isLeaf
+        self.topLeft = topLeft
+        self.topRight = topRight
+        self.bottomLeft = bottomLeft
+        self.bottomRight = bottomRight
+&quot;&quot;&quot;
+
+class Solution:
+    def construct(self, grid: List[List[int]]) -&gt; 'Node':
+        size=len(grid)
+        if len({e for row in grid for e in row})==1:
+            val=grid[0][0]==1
+            isLeaf=True
+            topLeft=None
+            topRight=None
+            bottomLeft=None
+            bottomRight=None
+            return Node(val,isLeaf,topLeft,topRight,bottomLeft,bottomRight)
+        else:
+            isLeaf=False
+            val=True
+            topLeft=self.construct([row[:size//2] for row in grid[:size//2]])
+            topRight=self.construct([row[size//2:] for row in grid[:size//2]])
+            bottomLeft=self.construct([row[:size//2] for row in grid[size//2:]])
+            bottomRight=self.construct([row[size//2:] for row in grid[size//2:]])
+            return Node(val,isLeaf,topLeft,topRight,bottomLeft,bottomRight)
+
+</code></pre>
+<h1 id="font-colorred-428-serialize-and-deserialize-n-ary-tree-hard-font"><font color='red'> 428. Serialize and Deserialize N-ary Tree (Hard) </font></h1>
+<p>Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.<br>
+Design an algorithm to serialize and deserialize an N-ary tree. An N-ary tree is a rooted tree in which each node has no more than N children. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that an N-ary tree can be serialized to a string and this string can be deserialized to the original tree structure.</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+&quot;&quot;&quot;
+
+&quot;&quot;&quot;
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+&quot;&quot;&quot;
+
+class Codec:
+    def serialize(self, root):
+        &quot;&quot;&quot;Encodes a tree to a single string.
+        
+        :type root: Node
+        :rtype: str
+        &quot;&quot;&quot;
+        r=[]
+        if not root: return r
+        q=[root]
+        while q:
+            node=q.pop(0)
+            if node !=',':
+                r.append(str(node.val))
+                for child in node.children:
+                    q.append(child)
+                q.append(',')
+            else:
+                r.append(',')
+                
+        return '#'.join(r)
+        
+ 
+    
+    def deserialize(self, data):
+        &quot;&quot;&quot;Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: Node
+        &quot;&quot;&quot;
+        if not data: return None
+        pieces=data.split('#')
+        root = Node(int(pieces[0]), [])
+        idx = 1
+        q=[root]
+        while q:
+            node=q.pop(0)
+            while pieces[idx] != ',':
+                child=Node(int(pieces[idx]), [])
+                node.children.append(child)
+                q.append(child)
+                idx += 1
+            idx += 1
+        return root
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.deserialize(codec.serialize(root))
+</code></pre>
+<p>first try failed， 若val可以重复，以val为key找parent的方法不再适用。 看答案。</p>
+<h1 id="429-n-ary-tree-level-order-traversal-medium">429. N-ary Tree Level Order Traversal (Medium)</h1>
+<p>Given an n-ary tree, return the level order traversal of its nodes' values.<br>
+Nary-Tree input serialization is represented in their level order traversal, each group of children is separated by the null value (See examples).</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a Node.
+class Node:
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+&quot;&quot;&quot;
+
+class Solution:
+    def levelOrder(self, root: 'Node') -&gt; List[List[int]]:
+        if not root: return []
+        q=[root]
+        res=[]
+        while q:
+            l=len(q)
+            level=[]
+            for _ in range(l):
+                cur=q.pop(0)
+                level.append(cur.val)
+                for child in cur.children:
+                    q.append(child)
+            res.append(level)
+        return res
+
+#RECURSION ANSWER
+class Solution:
+    def levelOrder(self, root: 'Node') -&gt; List[List[int]]:
+
+        def traverse_node(node, level):
+            if len(result) == level:
+                result.append([])
+            result[level].append(node.val)
+            for child in node.children:
+                traverse_node(child, level + 1)
+
+        result = []
+
+        if root is not None:
+            traverse_node(root, 0)
+        return result
+</code></pre>
+<p>BFS</p>
+<h1 id="430-flatten-a-multilevel-doubly-linked-list-medium">430. Flatten a Multilevel Doubly Linked List (Medium)</h1>
+<p>You are given a doubly linked list, which contains nodes that have a next pointer, a previous pointer, and an additional child pointer. This child pointer may or may not point to a separate doubly linked list, also containing these special nodes. These child lists may have one or more children of their own, and so on, to produce a multilevel data structure as shown in the example below.<br>
+Given the head of the first level of the list, flatten the list so that all the nodes appear in a single-level, doubly linked list. Let curr be a node with a child list. The nodes in the child list should appear after curr and before curr.next in the flattened list.<br>
+Return the head of the flattened list. The nodes in the list must have all of their child pointers set to null.</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a Node.
+class Node:
+    def __init__(self, val, prev, next, child):
+        self.val = val
+        self.prev = prev
+        self.next = next
+        self.child = child
+&quot;&quot;&quot;
+
+class Solution:
+    def flatten(self, head: 'Optional[Node]') -&gt; 'Optional[Node]':
+        
+        stack=[]
+        cur=head
+        pre=None
+        while cur or stack:
+            if not cur:
+                cur=stack.pop()
+                cur.prev=pre
+                pre.next=cur
+                
+            while cur.child:
+                if cur.next:
+                    stack.append(cur.next)
+                curnext=cur.child
+                curchild=cur.child
+                cur.child=None
+                curchild.prev=cur
+                cur.next=curnext
+                cur=curnext
+               
+            if not cur.child:
+                pre=cur
+                cur=cur.next
+                
+            
+        return head
+
+
+#
+
+class Solution:
+    def flatten(self, head: 'Node') -&gt; 'Node':
+        
+        #DFS...
+        curr=head
+        tempStack = []
+        while curr:
+            if curr.child:
+                if curr.next:
+                    tempStack.append(curr.next);
+                curr.next, curr.child.prev, curr.child = curr.child, curr, None;
+            if not curr.next and len(tempStack):
+                temp = tempStack.pop();
+                temp.prev, curr.next = curr, temp
+            curr = curr.next
+        return head
+
+
+ #ANSWER PREORDER   child is left tree next is right tree
+ &quot;&quot;&quot;
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val, prev, next, child):
+        self.val = val
+        self.prev = prev
+        self.next = next
+        self.child = child
+&quot;&quot;&quot;
+class Solution(object):
+
+    def flatten(self, head):
+        if not head:
+            return head
+
+        # pseudo head to ensure the `prev` pointer is never none
+        pseudoHead = Node(None, None, head, None)
+        self.flatten_dfs(pseudoHead, head)
+
+        # detach the pseudo head from the real head
+        pseudoHead.next.prev = None
+        return pseudoHead.next
+
+
+    def flatten_dfs(self, prev, curr):
+        &quot;&quot;&quot; return the tail of the flatten list &quot;&quot;&quot;
+        if not curr:
+            return prev
+
+        curr.prev = prev
+        prev.next = curr
+
+        # the curr.next would be tempered in the recursive function
+        tempNext = curr.next
+        tail = self.flatten_dfs(curr, curr.child)
+        curr.child = None
+        return self.flatten_dfs(tail, tempNext)        
+
+#preorder interative 
+class Solution(object):
+    def flatten(self, head):
+        if not head:
+            return
+
+        pseudoHead = Node(0,None,head,None)
+        prev = pseudoHead
+
+        stack = []
+        stack.append(head)
+
+        while stack:
+            curr = stack.pop()
+
+            prev.next = curr
+            curr.prev = prev
+
+            if curr.next:
+                stack.append(curr.next)
+ 
+            if curr.child:
+                stack.append(curr.child)
+                # don't forget to remove all child pointers.
+                curr.child = None
+
+            prev = curr
+        # detach the pseudo head node from the result.
+        pseudoHead.next.prev = None
+        return pseudoHead.next
+</code></pre>
+<p>差点没做出来 写的比答案复杂</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Leetcode 2022-03-02]]></title>
         <id>https://headhuanglan.github.io/post/leetcode-2022-03-02/</id>
@@ -4581,450 +5220,6 @@ class Solution:
         return max_len
 </code></pre>
 <p>典型的two pointer 写的磕磕绊绊 但写出来了。。。dic存放window中遇到字符的个数，  case1）如果目前dic有内容而且当前char不在dic而且window已经达到容量，start得向前移动，每前进一位，dic中s【start】数目减少一个，如果减少到0需要删除key。 退出while循环现在len（dic）小于k，后续这个不在dic中的char会加入dic。 case2）char in dic and len（dic）小于等于k，直接算结果 case3） len（dic）小于k，res+1.  答案方法思路也差不多。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-12-05]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-12-05/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-05/">
-        </link>
-        <updated>2021-12-05T10:46:30.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="font-colorred321-create-maximum-number-hard-font"><font color='red'>321. Create Maximum Number (Hard) </font></h1>
-<p>You are given two integer arrays nums1 and nums2 of lengths m and n respectively. nums1 and nums2 represent the digits of two numbers. You are also given an integer k.<br>
-Create the maximum number of length k &lt;= m + n from digits of the two numbers. The relative order of the digits from the same array must be preserved.<br>
-Return an array of the k digits representing the answer.<br>
-Example<br>
-Input: nums1 = [3,4,6,5], nums2 = [9,1,2,5,8,3], k = 5<br>
-Output: [9,8,6,5,3]</p>
-<pre><code class="language-python">class Solution:
-    def maxNumber(self, nums1: List[int], nums2: List[int], k: int) -&gt; List[int]:
-        # 思路。。。
-        # 最大需要每个位置数字最大，
-        # 但选择最大的数字有顺序约束
-        # 而且当可选最大数字相同时，需要程序tracking 2种不同结果。
-        
-
-        def prep(nums, k):
-            drop = len(nums) - k
-            out = []
-            for num in nums:
-                while drop and out and out[-1] &lt; num:
-                    out.pop()
-                    drop -= 1
-                out.append(num)
-            return out[:k]
-
-        def merge(a, b):
-            return [max(a, b).pop(0) for _ in a+b]
-
-        return max(merge(prep(nums1, i), prep(nums2, k-i))  for i in range(k+1)   if i &lt;= len(nums1) and k-i &lt;= len(nums2))
-
-</code></pre>
-<p>没思路。。。看到答案用了greedy方法。。。  prep function只是在一个数组中按照顺序找出K个最大的数。先算一下需要drop多少个数， 如果当前值大于栈顶元素，说明需要更新栈顶。  merge function这一步是按照a，b的lexcial顺序找到最大的元素，a+b总共有K个元素，所以pop k次。 最后return所有K+1个分割可能产生的结果取最大的。基本不可能现想出来解法。</p>
-<h1 id="322-coin-change-medium">322. Coin Change （Medium）</h1>
-<p>You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.<br>
-Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.<br>
-You may assume that you have an infinite number of each kind of coin.</p>
-<pre><code class="language-python">class Solution:
-    def coinChange(self, coins: List[int], amount: int) -&gt; int:
-        if amount==0: return 0 if coins else -1
-        dp = dict()
-        for c in coins:
-            dp[c]=1
-        for a in range(1,amount+1):
-            for c in coins:
-                if a+c&lt;=amount and a in dp:
-                    if a+c in dp:
-                        dp[a+c]=min(dp[a+c],dp[a]+1) 
-                    else:
-                        dp[a+c]=dp[a]+1
-        return dp[amount] if   amount in dp else -1
-
-#ANSWER
-class Solution:
-    def coinChange(self, coins: List[int], amount: int) -&gt; int:
-        dp = [float('inf')] * (amount + 1)
-        dp[0] = 0
-        
-        for coin in coins:
-            for x in range(coin, amount + 1):
-                dp[x] = min(dp[x], dp[x - coin] + 1)
-        return dp[amount] if dp[amount] != float('inf') else -1 
-</code></pre>
-<p>感觉是个DP问题，递归关系？  dp【i】是需要达到amount i需要的次数。 初始coins值的dp【coins_val】=1.   对于每一个有dp值的位置，都用coints_val 更新， dp【i+val】=min（dp【i+val】，dp【i】+1）直到amount。 由于不能开过大内存，所以dp变成dict。<br>
-答案写法更标准， dp【x】=min（dp【x】，dp【x-coin】+1） x大于等于coin小于等于amount。</p>
-<h1 id="323-number-of-connected-components-in-an-undirected-graph-medium">323. Number of Connected Components in an Undirected Graph （Medium）</h1>
-<p>You have a graph of n nodes. You are given an integer n and an array edges where edges[i] = [ai, bi] indicates that there is an edge between ai and bi in the graph.<br>
-Return the number of connected components in the graph.</p>
-<pre><code class="language-python">class Solution:
-    def countComponents(self, n: int, edges: List[List[int]]) -&gt; int:
-        #  BFS
-        neis = collections.defaultdict(list)
-        for edge in edges:
-            neis[edge[0]].append(edge[1])
-            neis[edge[1]].append(edge[0])
-        
-        
-        res=0
-        visited=set()
-        while len(visited)!=n:
-            res+=1
-            for i in range(n):
-                if i not in visited:
-                    visited.add(i)
-                    q=[i]
-                    break     
-            while q:
-                l=len(q)
-                for _ in range(l):
-                    cur=q.pop(0)
-                    for nei in neis[cur]:
-                        if nei not in visited:
-                            visited.add(nei)
-                            q.append(nei)
-        return res
-#UNIONFIND
-class Solution:
-    
-    class UnionFind:
-        def __init__(self,n):
-            self.parent=[i for i in range(n)]
-            self.rank=[0]*n
-            self.n=n
-        def find(self,x):
-            if x!=self.parent[x]:
-                self.parent[x]=self.find(self.parent[x])
-            return self.parent[x]
-        
-        def union(self,x,y):
-            px=self.find(x)
-            py=self.find(y)
-            if px!=py:
-                self.n-=1
-                if self.rank[px]&lt;self.rank[py]:
-                    self.parent[px]=py
-                elif self.rank[px]&gt;self.rank[py]:
-                    self.parent[py]=px
-                else:
-                    self.parent[py]=px
-                    self.rank[px]+=1
-                    
-    def countComponents(self, n: int, edges: List[List[int]]) -&gt; int:
-        uf=self.UnionFind(n)
-        for edge in edges:
-            uf.union(*edge)
-        return uf.n
-
-</code></pre>
-<p>注意unionfind中   if x!=self.parent[x]   爸爸=找爸爸（爸爸）  self.parent[x]=self.find(self.parent[x])， union只有rank相同时候才需要+rank。</p>
-<h1 id="font-colorred324-wiggle-sort-ii-mediumfont"><font color='red'>324. Wiggle Sort II （Medium）</font></h1>
-<p>Given an integer array nums, reorder it such that nums[0] &lt; nums[1] &gt; nums[2] &lt; nums[3]....<br>
-You may assume the input array always has a valid answer.</p>
-<pre><code class="language-python">     def wiggleSort(self, nums):
-        count = [0]*5001
-        
-        for n in nums:
-            count[n]+=1
-        
-        odd = 1
-        even = 0
-        for n in range(5000,-1,-1):
-            if odd &gt;= len(nums) and even &gt;= len(nums):
-                break
-                
-            if count[n] == 0:
-                continue
-            
-            while count[n] and (odd &lt; len(nums) or even &lt; len(nums)):
-                count[n]-=1
-                if odd &lt; len(nums):
-                    nums[odd] = n
-                    odd+=2
-                else:
-                    nums[even] = n
-                    even+=2
-        
- class Solution(object):
-    def wiggleSort(self, nums):
-        &quot;&quot;&quot;
-        :type nums: List[int]
-        :rtype: void Do not return anything, modify nums in-place instead.
-        &quot;&quot;&quot;
-      
-        arr = sorted(nums)
-        for i in range(1, len(nums), 2): nums[i] = arr.pop() 
-        for i in range(0, len(nums), 2): nums[i] = arr.pop() 
-
-class Solution:
-    def wiggleSort(self, A: List[int]) -&gt; None:        
-        N = len(A)                    
-        count = [0] * 5001        
-        self.curr_val = A[0]
-        
-        for v in A:
-            count[v] += 1
-            self.curr_val = max(self.curr_val, v)
-        
-        def next_val():
-            while count[self.curr_val] == 0: self.curr_val -= 1            
-            count[self.curr_val] -= 1
-            return self.curr_val
-                            
-        for i in range(1, N, 2): A[i] = next_val()     
-        for i in range(0, N, 2): A[i] = next_val() 
-</code></pre>
-<p>思路：从sorted 最大到最小，奇数位置放置，然后偶数位置放置数字。时间要降低到O（n）只能用count sort了。</p>
-<h1 id="font-colorred325-maximum-size-subarray-sum-equals-k-mediumfont"><font color='red'>325. Maximum Size Subarray Sum Equals k （Medium）</font></h1>
-<p>Given an integer array nums and an integer k, return the maximum length of a subarray that sums to k. If there isn't one, return 0 instead.</p>
-<pre><code class="language-python">class Solution:
-    def maxSubArrayLen(self, nums: List[int], k: int) -&gt; int:
-        
-        prefix_sum = 0 
-        res = 0
-        indices = dict()
-        
-        for i,n in enumerate(nums):
-            prefix_sum+=n
-            
-            if prefix_sum==k:
-                res=i+1
-            
-            if prefix_sum-k in indices:
-                res=max(res,i-indices[prefix_sum-k])
-            
-            if prefix_sum not in indices:
-                indices[prefix_sum]=i
-        
-        return res
-
-</code></pre>
-<p>没思路，直接看答案了。看错题目了，题目是subarray。。。是连续的字符串，并不是sublist。。。。<br>
-思路：用到了prefix sum和 two sum的解法。 因为是subarray，prefix【j】-prefix【i】==k 就是一个答案。  具体扫predix过程借鉴two sum，在predix-k在 dict中，更新res。 不在dict中，更新dict。 不能无条件更新dict，因为prefix在dict中与之间prefix重复，应该保留更早的index使长度更长。</p>
-<h1 id="326-power-of-three-easy">326. Power of Three （Easy）</h1>
-<p>Given an integer n, return true if it is a power of three. Otherwise, return false.<br>
-An integer n is a power of three, if there exists an integer x such that n == 3x.</p>
-<pre><code class="language-python">class Solution:
-    def isPowerOfThree(self, n: int) -&gt; bool:
-        if n==0: return False
-        while n:
-            if n==1: return True
-            if n%3!=0:
-                return False
-            n//=3
-        return True
-
-class Solution:
-    def isPowerOfThree(self, n: int) -&gt; bool:
-        if n&lt;1: return False
-        while n%3==0:
-            n//=3
-            
-        return n==1
-</code></pre>
-<h1 id="font-colorred327-count-of-range-sum-hard-font"><font color='red'>327. Count of Range Sum (Hard) </font></h1>
-<p>Given an integer array nums and two integers lower and upper, return the number of range sums that lie in [lower, upper] inclusive.<br>
-Range sum S(i, j) is defined as the sum of the elements in nums between indices i and j inclusive, where i &lt;= j.</p>
-<pre><code class="language-python">class Solution:
-    def countRangeSum(self, nums: List[int], lower: int, upper: int) -&gt; int:
-        presum = [0]*(len(nums)+1)
-        for i,n in enumerate(nums):
-            presum[i+1]=presum[i]+n
-        
-        res=0
-        for i in range(1,len(nums)+1):
-            for j in range(i):
-                if upper&gt;=presum[i]-presum[j]&gt;=lower:
-                    res+=1
-        return res
-#ANSWER 1 PrefixSum+MergeSort
-class Solution:
-    def countRangeSum(self, nums, lower, upper):
-        cumsum = [0]*(len(nums)+1)
-        for i,num in enumerate(nums):
-            cumsum[i+1]=cumsum[i]+num
-        def sort(lo, hi):
-            mid = (lo + hi) // 2
-            if mid == lo:
-                return 0
-            count = sort(lo, mid) + sort(mid, hi)
-            i = j = mid
-            for left in cumsum[lo:mid]:
-                while i &lt; hi and cumsum[i] - left &lt;  lower: i += 1
-                while j &lt; hi and cumsum[j] - left &lt;= upper: j += 1
-                count += j - i
-            cumsum[lo:hi] = sorted(cumsum[lo:hi])
-            return count
-        return sort(0, len(cumsum))
-
-
-#ANSER Binary Indexed Tree + Binary Search
-class BinaryIndexedTree:
-    
-    def __init__(self, n):
-        self.n = n
-        self.tree = [0 for _ in range(n+1)]
-    
-    def update(self, idx, val):
-        while idx &lt;= self.n:
-            self.tree[idx] += val
-            idx += idx &amp; -idx
-    
-    def query(self, idx):
-        total = 0
-        while idx &gt; 0:
-            total += self.tree[idx]
-            idx -= idx &amp; -idx
-        return total
-
-    
-class Solution:
-    def countRangeSum(self, nums: List[int], lower: int, upper: int) -&gt; int:
-        n, prefixes = len(nums), list(itertools.accumulate(nums))
-        
-        sortedPrefixes = sorted(set(prefixes))
-        ranks = { prefix: idx + 1 for idx, prefix in enumerate(sortedPrefixes) }
-        
-        ds = BinaryIndexedTree(len(sortedPrefixes))
-        for prefix in prefixes:
-            ds.update(ranks[prefix], 1)
-        
-        res = 0
-        processed = 0
-        for prefix in prefixes:
-            l = bisect.bisect_left(sortedPrefixes, lower + processed)
-            r = bisect.bisect_right(sortedPrefixes, upper + processed)  
-            res += ds.query(r) - ds.query(l)
-            ds.update(ranks[prefix], -1)
-            processed = prefix
-        
-        return res
-</code></pre>
-<p>首次尝试O（n^2）time limit exccded。  看来得低于O（n^2）才可以。。。改进方法是增加mergesort。 思路：先算cumsum。 目标找出cumsum【right】-cumsum【left】在upper lower 之间的这样的pair个数。 定义helper function merge sort。 返回值是满足条件的个数，先递归找出只在lo<sub>mid和mid</sub>hi之间的个数。若left~right横跨mid， 对于每一个left in sumsum【lo：mid】 找出满足upper lower bond的 right。其中满足lower bound的index 是i， 满足upper bound 的index 是j 所以 count+=j-i。<br>
-又忘记了有segment tree 和binary indexed tree这两种数据结构。。。。</p>
-<h1 id="328-odd-even-linked-list-medium">328. Odd Even Linked List (Medium)</h1>
-<p>Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.<br>
-The first node is considered odd, and the second node is even, and so on.<br>
-Note that the relative order inside both the even and odd groups should remain as it was in the input.<br>
-You must solve the problem in O(1) extra space complexity and O(n) time complexity.</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def oddEvenList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
-        if not head: return head
-        odd_head=head
-        even_head=head.next
-        
-        cur=head
-        odd_tail=None
-        c=0
-        while cur:
-            curnext=cur.next
-            c+=1
-            if c%2==1:
-                #cur is odd node
-                cur.next=cur.next.next if cur.next else None
-                odd_tail=cur
-            else:
-                #cur is even node
-                cur.next=cur.next.next if cur.next else None
-            
-            cur=curnext
-        
-        if odd_tail:
-            odd_tail.next=even_head
-        
-        return odd_head
-
-
-#ANSWER 
-class Solution:
-    def oddEvenList(self, head: ListNode) -&gt; ListNode:
-        
-        if not head: return head
-        
-        odd  = head
-        even = head.next
-        evenhead = even
-        while even and even.next:
-            odd.next = even.next
-            odd = odd.next
-            even.next = odd.next
-            even = even.next
-        
-        odd.next = evenhead
-        return head
-</code></pre>
-<h1 id="font-colorred329-longest-increasing-path-in-a-matrix-hard-font"><font color='red'>329. Longest Increasing Path in a Matrix (Hard) </font></h1>
-<p>Given an m x n integers matrix, return the length of the longest increasing path in matrix.<br>
-From each cell, you can either move in four directions: left, right, up, or down. You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).</p>
-<pre><code class="language-python">class Solution:
-    def longestIncreasingPath(self, matrix: List[List[int]]) -&gt; int:
-        dirs = [[0,1],[1,0],[0,-1],[-1,0]]
-        m=len(matrix)
-        n=len(matrix[0])
-        if not matrix: return 0
-        cache= [[0]*n for _ in range(m)]
-        res=0
-        
-        def dfs(i,j):
-            if cache[i][j]!=0: return cache[i][j]
-            for d in dirs:
-                x=i+d[0]
-                y=j+d[1]
-                if m&gt;x&gt;=0 and n&gt;y&gt;=0 and matrix[x][y]&gt;matrix[i][j]:
-                    cache[i][j]=max(cache[i][j],dfs(x,y))
-            
-            cache[i][j]+=1
-            return cache[i][j] 
-        
-        
-        for i in range(m):
-            for j in range(n):
-                res=max(res,dfs(i,j))
-                
-        return res
-</code></pre>
-<p>DFS+mem  太晚了直接看答案了。。。因为是strictly increasing path 所以是DAG，所以dfs（i，j） path length 是可以用mem记住的。 但通常的DFS是不能用mem的。</p>
-<h1 id="font-colorred330-patching-array-hardfont"><font color='red'>330. Patching Array （Hard）</font></h1>
-<p>Given a sorted integer array nums and an integer n, add/patch elements to the array such that any number in the range [1, n] inclusive can be formed by the sum of some elements in the array.<br>
-Return the minimum number of patches required.</p>
-<pre><code class="language-python">class Solution:
-    def minPatches(self, nums: List[int], n: int) -&gt; int:
-        
-        '''Initialize the range [1, miss) = [1, 1) = empty
-        While n is not covered yet
-            if the current element nums[i] is less than or equal to miss
-                extends the range to [1, miss + nums[i])
-                increase i by 1
-            otherwise
-                patch the array with miss, extends the range to [1, miss + miss)
-                increase the number of patches
-        Return the number of patches
-        '''
-        
-        patches=0
-        i=0
-        miss=1
-        while miss&lt;=n:
-            if i&lt;len(nums) and nums[i]&lt;=miss:
-                #miss is covered
-                miss+=nums[i]
-                i+=1
-            else:
-                #patch miss to aray
-                miss+=miss
-                patches+=1
-        return patches
-
-</code></pre>
-<p>太晚没思路直接看答案， 答案思路：假设miss 是最小的missing number， 但我们知道【1，miss） 已经covered。 要cover miss，需要添加小于等于miss的数字。<br>
-假设我们添加的数字是x，那么区间【1，miss） 【x，x+miss）都covered。由于x小于等于miss。 所以两个区间可以合并为【1，x+miss）我们想选一个range cover最大的x，显然当x=miss时候区间最大。所以算法是：<br>
-初始化区间【1，miss）=【1，1）<br>
-当n还没covered，如果 nums【i】小于等于miss，增加区间为【1，miss+nums【i】），i++ 否则， 数组里添加miss， 增加区间为【1，miss+miss), res+=1</p>
 ]]></content>
     </entry>
 </feed>
