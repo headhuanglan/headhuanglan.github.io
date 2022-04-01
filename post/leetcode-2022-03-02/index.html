@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2022-03-02 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1648433305943">
+<link rel="shortcut icon" href="/favicon.ico?v=1648855981689">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">49</span>
+        <span class="site-item-stat-count">51</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1602,6 +1602,800 @@ Replace one character of password with another character.</p>
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/system-design/"" data-c="
+          &lt;p&gt;system design&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=PdtlXdse7pw&amp;amp;list=PL4KdJM8LzAMecwInbBK5GJ3Anz-ts75RQ&#34;&gt;DDIA书视频总结&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/donnemartin/system-design-primer&#34;&gt;system design primer github repo&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.hiredintech.com/classrooms/system-design/lesson/52&#34;&gt;system design class&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.educative.io/courses/grokking-the-system-design-interview&#34;&gt;grokking system design interview&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://luanjunyi.medium.com/the-table-of-contents-416d2240fa8e&#34;&gt;大佬的medium文章&lt;/a&gt;&lt;/p&gt;
+">系统设计</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-04/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;431-encode-n-ary-tree-to-binary-tree-hard&#34;&gt;431. Encode N-ary Tree to Binary Tree （Hard）&lt;/h1&gt;
+&lt;p&gt;Design an algorithm to encode an N-ary tree into a binary tree and decode the binary tree to get the original N-ary tree. An N-ary tree is a rooted tree in which each node has no more than N children. Similarly, a binary tree is a rooted tree in which each node has no more than 2 children. There is no restriction on how your encode/decode algorithm should work. You just need to ensure that an N-ary tree can be encoded to a binary tree and this binary tree can be decoded to the original N-nary tree structure.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;quot;&amp;quot;&amp;quot;
+# Definition for a Node.
+class Node:
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+&amp;quot;&amp;quot;&amp;quot;
+
+&amp;quot;&amp;quot;&amp;quot;
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+&amp;quot;&amp;quot;&amp;quot;
+
+class Codec:
+    # Encodes an n-ary tree to a binary tree.
+    def encode(self, root: &#39;Optional[Node]&#39;) -&amp;gt; Optional[TreeNode]:
+        if not root: return []
+        rootnode = TreeNode(root.val)
+        return_rootnode=rootnode
+       
+        first=True
+        for node in root.children:
+            if first:
+                first=False
+                rootnode.left=self.encode(node)
+                rootnode=rootnode.left
+            else:
+                rootnode.right=self.encode(node)
+                rootnode=rootnode.right
+        
+        return return_rootnode
+	
+	# Decodes your binary tree to an n-ary tree.
+    def decode(self, data: Optional[TreeNode]) -&amp;gt; &#39;Optional[Node]&#39;:
+        if not data: return None
+        #print(data)
+        #print(&#39;#&#39;*20)
+        root=data
+        root_node=Node(root.val,[])
+        if root.left:
+            root_node.children.append(self.decode(root.left))
+            root=root.left
+            while root.right:
+                root_node.children.append(self.decode(root.right))
+                root=root.right
+        
+        return root_node
+        
+
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.decode(codec.encode(root))
+
+
+#ANSWER 
+class Codec:
+
+    def encode(self, root):
+        if not root:
+            return None
+
+        binary = TreeNode(root.val)                 # create a binary root
+        if not root.children:
+            return binary
+        #Python - left child for children, right child for siblings
+        
+        binary.left = self.encode(root.children[0]) # left child of binary is the encoding of all n-ary children,
+        node = binary.left                          #     starting with the first child.
+        for child in root.children[1:]:             # other children of n-ary root are right child of previous child
+            node.right = self.encode(child)
+            node = node.right
+
+        return binary
+
+    def decode(self, data):
+        if not data:
+            return None
+
+        nary = Node(data.val, [])                   # create n-ary root
+        node = data.left                            # move to first child of n-ary root
+        while node:                                 # while more children of n-ary root
+            nary.children.append(self.decode(node)) # append to list
+            node = node.right                       # and move to next child
+            
+        return nary
+        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;我得方法，把所有孩子都包含在下一层，  root的left通向下一层，root.left.right和之后所有的right都是同一层的保存孩子。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-432-all-oone-data-structure-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 432. All O`one Data Structure （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Design a data structure to store the strings&#39; count with the ability to return the strings with minimum and maximum counts.&lt;br&gt;
+Implement the AllOne class:&lt;br&gt;
+AllOne() Initializes the object of the data structure.&lt;br&gt;
+inc(String key) Increments the count of the string key by 1. If key does not exist in the data structure, insert it with count 1.&lt;br&gt;
+dec(String key) Decrements the count of the string key by 1. If the count of key is 0 after the decrement, remove it from the data structure. It is guaranteed that key exists in the data structure before the decrement.&lt;br&gt;
+getMaxKey() Returns one of the keys with the maximal count. If no element exists, return an empty string &amp;quot;&amp;quot;.&lt;br&gt;
+getMinKey() Returns one of the keys with the minimum count. If no element exists, return an empty string &amp;quot;&amp;quot;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from collections import defaultdict
+class Node(object):
+    def __init__(self):
+        self.key_set = set([])
+        self.prev, self.nxt = None, None 
+
+    def add_key(self, key):
+        self.key_set.add(key)
+
+    def remove_key(self, key):
+        self.key_set.remove(key)        
+
+    def get_any_key(self):
+        if self.key_set:
+            result = self.key_set.pop()
+            self.add_key(result)
+            return result
+        else:
+            return None
+    
+    def count(self):
+        return len(self.key_set)
+
+    def is_empty(self):
+        return len(self.key_set) == 0
+
+
+class DoubleLinkedList(object):
+    def __init__(self):
+        self.head_node, self.tail_node = Node(), Node()
+        self.head_node.nxt, self.tail_node.prev = self.tail_node, self.head_node
+        return
+
+    def insert_after(self, x):
+        node, temp = Node(), x.nxt
+        x.nxt, node.prev = node, x
+        node.nxt, temp.prev = temp, node
+        return node
+    
+    def insert_before(self, x):
+        return self.insert_after(x.prev)
+
+    def remove(self, x):
+        prev_node = x.prev
+        prev_node.nxt, x.nxt.prev = x.nxt, prev_node
+        return
+
+    def get_head(self):
+        return self.head_node.nxt
+    
+    def get_tail(self):
+        return self.tail_node.prev
+
+    def get_sentinel_head(self):
+        return self.head_node
+
+    def get_sentinel_tail(self):
+        return self.tail_node
+    
+class AllOne(object):
+    def __init__(self):
+        &amp;quot;&amp;quot;&amp;quot;
+        Initialize your data structure here.
+        &amp;quot;&amp;quot;&amp;quot;
+        self.dll, self.key_counter = DoubleLinkedList(), defaultdict(int)
+        self.node_freq = {0:self.dll.get_sentinel_head()}
+
+    def _rmv_key_pf_node(self, pf, key):
+        node = self.node_freq[pf]
+        node.remove_key(key)
+        if node.is_empty():
+            self.dll.remove(node)
+            self.node_freq.pop(pf)
+        return
+
+    def inc(self, key):
+        &amp;quot;&amp;quot;&amp;quot;
+        Inserts a new key &amp;lt;Key&amp;gt; with value 1. Or increments an existing key by 1.
+        :type key: str
+        :rtype: void
+        &amp;quot;&amp;quot;&amp;quot;
+        self.key_counter[key] += 1
+        cf, pf = self.key_counter[key], self.key_counter[key]-1
+        if cf not in self.node_freq:
+            # No need to test if pf = 0 since frequency zero points to sentinel node
+            self.node_freq[cf] = self.dll.insert_after(self.node_freq[pf])
+        self.node_freq[cf].add_key(key)
+        if pf &amp;gt; 0:
+            self._rmv_key_pf_node(pf, key)
+
+    def dec(self, key):
+        &amp;quot;&amp;quot;&amp;quot;
+        Decrements an existing key by 1. If Key&#39;s value is 1, remove it from the data structure.
+        :type key: str
+        :rtype: void
+        &amp;quot;&amp;quot;&amp;quot;
+        if key in self.key_counter:
+            self.key_counter[key] -= 1
+            cf, pf = self.key_counter[key], self.key_counter[key]+1
+            if self.key_counter[key] == 0:
+                self.key_counter.pop(key)
+            if cf != 0:
+                if cf not in self.node_freq:
+                    self.node_freq[cf] = self.dll.insert_before(self.node_freq[pf])
+                self.node_freq[cf].add_key(key)
+            self._rmv_key_pf_node(pf, key)
+
+    def getMaxKey(self):
+        &amp;quot;&amp;quot;&amp;quot;
+        Returns one of the keys with maximal value.
+        :rtype: str
+        &amp;quot;&amp;quot;&amp;quot;
+        return self.dll.get_tail().get_any_key() if self.dll.get_tail().count() &amp;gt; 0 else &amp;quot;&amp;quot;
+
+    def getMinKey(self):
+        &amp;quot;&amp;quot;&amp;quot;
+        Returns one of the keys with Minimal value.
+        :rtype: str
+        &amp;quot;&amp;quot;&amp;quot;
+        return self.dll.get_head().get_any_key() if self.dll.get_tail().count() &amp;gt; 0 else &amp;quot;&amp;quot;
+
+
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;感觉是个maxheap minheap。。。但不是all o（1）。。。 看答案了。。。答案果然完美&lt;/p&gt;
+&lt;h1 id=&#34;433-minimum-genetic-mutation-medium&#34;&gt;433. Minimum Genetic Mutation (Medium)&lt;/h1&gt;
+&lt;p&gt;A gene string can be represented by an 8-character long string, with choices from &#39;A&#39;, &#39;C&#39;, &#39;G&#39;, and &#39;T&#39;.&lt;br&gt;
+Suppose we need to investigate a mutation from a gene string start to a gene string end where one mutation is defined as one single character changed in the gene string.&lt;br&gt;
+For example, &amp;quot;AACCGGTT&amp;quot; --&amp;gt; &amp;quot;AACCGGTA&amp;quot; is one mutation.&lt;br&gt;
+There is also a gene bank bank that records all the valid gene mutations. A gene must be in bank to make it a valid gene string.&lt;br&gt;
+Given the two gene strings start and end and the gene bank bank, return the minimum number of mutations needed to mutate from start to end. If there is no such a mutation, return -1.&lt;br&gt;
+Note that the starting point is assumed to be valid, so it might not be included in the bank.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def minMutation(self, start: str, end: str, bank: List[str]) -&amp;gt; int:
+        #BFS search neighbor
+        # neighor is 1 char off current also in bank
+        if   end not in bank: return -1
+        if not bank and start!=end: return -1
+        bank=set(bank)
+        bank.add(end)
+        q=[]
+        visited=set()
+        def nei(me):
+            neighbors=[]
+            for other in bank:
+                if other not in visited:
+                    valid=0
+                    for a,b in zip(me,other):
+                        valid+=bool(ord(a)^ord(b))
+                    if valid==1:
+                        neighbors.append(other)
+            return neighbors
+        
+        
+        q.append(start)
+        visited.add(start)
+        level=0
+        while q:
+            level+=1
+            for _ in range(len(q)):
+                cur=q.pop(0)
+                print(cur,nei(cur))
+                for ne in nei(cur):
+                    if ne==end: return level
+                    visited.add(ne)
+                    q.append(ne)
+        
+        return  -1
+        
+#ANSWER
+class Solution:
+    def minMutation(self, start: str, end: str, bank: List[str]) -&amp;gt; int:
+        &amp;quot;&amp;quot;&amp;quot;
+        :type start: str
+        :type end: str
+        :type bank: List[str]
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        queue = []
+        queue.append((start,0))
+        bankSet = set(bank)
+        
+        while queue:
+            curr, step = queue.pop(0)
+            if curr == end:
+                return step
+            for i in range(len(curr)):
+                for c in &amp;quot;AGCT&amp;quot;:
+                    mutation = curr[:i] + c + curr[i+1:]
+                    if mutation in bankSet:
+                        bankSet.remove(mutation)
+                        queue.append((mutation,step+1))
+                        
+        return -1
+        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;bfs注意corner case，end必须in bank。 答案用remove mutaton方式避免用visited set，而且mutaion是直接算的，不是从bank中找的。&lt;/p&gt;
+&lt;h1 id=&#34;434-number-of-segments-in-a-string-easy&#34;&gt;434. Number of Segments in a String （Easy）&lt;/h1&gt;
+&lt;p&gt;Given a string s, return the number of segments in the string.&lt;br&gt;
+A segment is defined to be a contiguous sequence of non-space characters.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def countSegments(self, s: str) -&amp;gt; int:
+        beforeisspace=True
+        c=0
+        while s:
+            if s[0]==&#39; &#39;:
+                s=s[1:]
+                beforeisspace=True
+            else:
+                if beforeisspace:
+                    c+=1
+                    beforeisspace=False
+                
+                s=s[1:]
+        return c
+
+class Solution:
+    def countSegments(self, s: str) -&amp;gt; int:
+        return len(s.split())
+
+class Solution:
+    def countSegments(self, s):
+        segment_count = 0
+
+        for i in range(len(s)):
+            if (i == 0 or s[i-1] == &#39; &#39;) and s[i] != &#39; &#39;:
+                segment_count += 1
+
+        return segment_count
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred-435-non-overlapping-intervals-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 435. Non-overlapping Intervals (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an array of intervals intervals where intervals[i] = [starti, endi], return the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def eraseOverlapIntervals(self, intervals: List[List[int]]) -&amp;gt; int:
+        #sort by start
+        # [1,2] [1,3] [2,3],[3,4]
+        #sort by end
+        # 找最小删除相当于找最大不overlap有多少个interval
+        #变成dp问题 dp[i]是最大的interval个数 用到ith interval
+        # dp【i】= max（dp【j】）+1 j&amp;lt;i  interval i，j不overlap
+        intervals=sorted(intervals,key=lambda x:x[0])
+        dp = [0]*len(intervals)
+        dp[0]=1
+        ans=1
+        for i in range(1,len(dp)):
+            max_=0
+            for j in range(i):
+                if intervals[j][1]&amp;lt;=intervals[i][0]:
+                    max_=max(dp[j],max_)
+            
+            dp[i]=max_+1
+            ans=max(ans,dp[i])
+        return len(intervals)-ans
+
+#PASS ANSWER
+class Solution:
+    def eraseOverlapIntervals(self, intervals: List[List[int]]) -&amp;gt; int:
+ 
+        intervals=sorted(intervals,key=lambda x:x[0])
+        end=intervals[0][1]
+        prev=0
+        c=0
+        for i in range(1,len(intervals)):
+            if intervals[prev][1]&amp;gt;intervals[i][0]:
+                #overlap
+                if intervals[prev][1]&amp;gt;intervals[i][1]:
+                    #include,bust del prev so c+=1 prev renew to i
+                    prev=i
+                
+                #if pure overlap do greedy, prev still the same, del i, c+=1
+                c+=1
+            else:
+                #case 1 two interval non overlapping
+                prev=i
+                
+        return c
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;没想出来如何处理~~ DP可以n^2， greedy也可以，Greedy nlogn&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-436-find-right-interval-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 436. Find Right Interval (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an array of intervals, where intervals[i] = [starti, endi] and each starti is unique.&lt;br&gt;
+The right interval for an interval i is an interval j such that startj &amp;gt;= endi and startj is minimized. Note that i may equal j.&lt;br&gt;
+Return an array of right interval indices for each interval i. If no right interval exists for interval i, then put -1 at index i.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+#TIME LIMIT EXCEEDED
+class Solution:
+    def findRightInterval(self, intervals: List[List[int]]) -&amp;gt; List[int]:
+        maps=dict()
+        for i,interval in enumerate(intervals):
+            maps[tuple(interval)]=i
+        
+        ans=[-1]*len(intervals)
+        intervals=sorted(intervals,key=lambda x:x[0])
+        for i in range(len(intervals)-1):
+            #i&#39;s right
+            j=i+1
+            while j&amp;lt;len(intervals) and intervals[j][0]&amp;lt;intervals[i][1]:
+                j+=1
+            if j&amp;lt;len(intervals):
+                ans[maps[tuple(intervals[i])]]=maps[tuple(intervals[j])]
+        return ans
+
+
+#ANSWER BINARY SERACH 
+
+class Solution:
+    def findRightInterval(self, intervals: List[List[int]]) -&amp;gt; List[int]:
+        
+        l = sorted((e[0], i) for i, e in enumerate(intervals))
+        res = []
+        for e in intervals:
+            r = bisect.bisect_left(l, (e[1],))
+            res.append(l[r][1] if r &amp;lt; len(l) else -1)
+        return res
+
+#Heap法
+class Solution:
+    def findRightInterval(self, intervals: List[List[int]]) -&amp;gt; List[int]:
+        heap, result = [], [-1] * len(intervals)
+        for idx, interval in sorted(enumerate(intervals), key=lambda enum: enum[1][0]):
+            while heap and heap[0][0] &amp;lt;= interval[0]:
+                _, i = heapq.heappop(heap)
+                if intervals[i][0]!=intervals[i][1]:
+                    result[i] = idx
+                else:
+                    result[i] = i
+            heapq.heappush(heap, (interval[1], idx))
+        return result
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;初次尝试 time limit exceeded 答案的bianry search法太厉害。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue-437-path-sum-iii-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 437. Path Sum III （Medium） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given the root of a binary tree and an integer targetSum, return the number of paths where the sum of the values along the path equals targetSum.&lt;br&gt;
+The path does not need to start or end at the root or a leaf, but it must go downwards (i.e., traveling only from parent nodes to child nodes).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def pathSum(self, root: Optional[TreeNode], targetSum: int) -&amp;gt; int:
+        #post order  botoom up save node val
+        
+        c=[0]
+        def post(root):
+            if not root: return 
+            post(root.left)
+            post(root.right)
+            root.vals=defaultdict(int)
+            if root.left:
+                for v in root.left.vals:
+                    root.vals[v+root.val]+=root.left.vals[v]
+            if root.right:
+                for v in root.right.vals:
+                    root.vals[v+root.val]+=root.right.vals[v]
+            root.vals[root.val]+=1
+            if targetSum in root.vals:
+                #print(root.val,root.vals)
+                c[0]+=root.vals[targetSum]
+       
+        post(root)
+        return c[0]  
+#ANSWER PREFIX SUM in tree
+class Solution:
+    def pathSum(self, root: TreeNode, sum: int) -&amp;gt; int:
+        def preorder(node: TreeNode, curr_sum) -&amp;gt; None:
+            nonlocal count
+            if not node:
+                return 
+            
+            # current prefix sum
+            curr_sum += node.val
+            
+            # here is the sum we&#39;re looking for
+            if curr_sum == k:
+                count += 1
+            
+            # number of times the curr_sum − k has occurred already, 
+            # determines the number of times a path with sum k 
+            # has occurred up to the current node
+            count += h[curr_sum - k]
+            
+            # add the current sum into hashmap
+            # to use it during the child nodes processing
+            h[curr_sum] += 1
+            
+            # process left subtree
+            preorder(node.left, curr_sum)
+            # process right subtree
+            preorder(node.right, curr_sum)
+            
+            # remove the current sum from the hashmap
+            # in order not to use it during 
+            # the parallel subtree processing
+            h[curr_sum] -= 1
+            
+        count, k = 0, sum
+        h = defaultdict(int)
+        preorder(root, 0)
+        return count       
+
+#上面这个解决方法基于
+class Solution:
+    def subarraySum(self, nums, k):
+        count = curr_sum = 0
+        h = defaultdict(int)
+        
+        for num in nums:
+            # current prefix sum
+            curr_sum += num
+            
+            # situation 1:
+            # continuous subarray starts 
+            # from the beginning of the array
+            if curr_sum == k:
+                count += 1
+            
+            # situation 2:
+            # number of times the curr_sum − k has occurred already, 
+            # determines the number of times a subarray with sum k 
+            # has occurred up to the current index
+            count += h[curr_sum - k]
+            
+            # add the current sum
+            h[curr_sum] += 1
+                
+        return count
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;我的解决方案是post order bottom up 扫，每个node存可以生成的pathsum值。答案是prefixsum。。&lt;/p&gt;
+&lt;h1 id=&#34;438-find-all-anagrams-in-a-string-medium&#34;&gt;438. Find All Anagrams in a String （Medium）&lt;/h1&gt;
+&lt;p&gt;Given two strings s and p, return an array of all the start indices of p&#39;s anagrams in s. You may return the answer in any order.&lt;br&gt;
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.&lt;br&gt;
+Input: s = &amp;quot;cbaebabacd&amp;quot;, p = &amp;quot;abc&amp;quot;&lt;br&gt;
+Output: [0,6]&lt;br&gt;
+Explanation:&lt;br&gt;
+The substring with start index = 0 is &amp;quot;cba&amp;quot;, which is an anagram of &amp;quot;abc&amp;quot;.&lt;br&gt;
+The substring with start index = 6 is &amp;quot;bac&amp;quot;, which is an anagram of &amp;quot;abc&amp;quot;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findAnagrams(self, s: str, p: str) -&amp;gt; List[int]:
+        if len(s)&amp;lt;len(p): return []
+        dicp=collections.Counter(p)
+        lp=len(p)
+        dic=dict()
+        for i in range(lp):
+            dic[s[i]]=dic.get(s[i],0)+1
+        res=[]
+        if dic==dicp: res.append(0)
+        for i in range(lp,len(s)):
+            #remove first
+            dic[s[i-lp]]-=1
+            if dic[s[i-lp]]==0:
+                del  dic[s[i-lp]]
+            #add last
+            dic[s[i]]=dic.get(s[i],0)+1
+            #
+            if dic==dicp:
+                res.append(i-lp+1)
+        return res
+            
+#ANSWER 写的更简单
+from collections import Counter
+class Solution:
+    def findAnagrams(self, s: str, p: str) -&amp;gt; List[int]:
+        ns, np = len(s), len(p)
+        if ns &amp;lt; np:
+            return []
+
+        p_count = Counter(p)
+        s_count = Counter()
+        
+        output = []
+        # sliding window on the string s
+        for i in range(ns):
+            # add one more letter 
+            # on the right side of the window
+            s_count[s[i]] += 1
+            # remove one letter 
+            # from the left side of the window
+            if i &amp;gt;= np:
+                if s_count[s[i - np]] == 1:
+                    del s_count[s[i - np]]
+                else:
+                    s_count[s[i - np]] -= 1
+            # compare array in the sliding window
+            # with the reference array
+            if p_count == s_count:
+                output.append(i - np + 1)
+        
+        return output
+
+#ANSWER
+class Solution:
+    def findAnagrams(self, s: str, p: str) -&amp;gt; List[int]:
+        ns, np = len(s), len(p)
+        if ns &amp;lt; np:
+            return []
+
+        p_count, s_count = [0] * 26, [0] * 26
+        # build reference array using string p
+        for ch in p:
+            p_count[ord(ch) - ord(&#39;a&#39;)] += 1
+        
+        output = []
+        # sliding window on the string s
+        for i in range(ns):
+            # add one more letter 
+            # on the right side of the window
+            s_count[ord(s[i]) - ord(&#39;a&#39;)] += 1
+            # remove one letter 
+            # from the left side of the window
+            if i &amp;gt;= np:
+                s_count[ord(s[i - np]) - ord(&#39;a&#39;)] -= 1
+            # compare array in the sliding window
+            # with the reference array
+            if p_count == s_count:
+                output.append(i - np + 1)
+        
+        return output
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;sliding window保持counter dict和p一样就可以。。。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-439-ternary-expression-parser-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 439. Ternary Expression Parser （Medium） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a string expression representing arbitrarily nested ternary expressions, evaluate the expression, and return the result of it.&lt;br&gt;
+You can always assume that the given expression is valid and only contains digits, &#39;?&#39;, &#39;:&#39;, &#39;T&#39;, and &#39;F&#39; where &#39;T&#39; is true and &#39;F&#39; is false. All the numbers in the expression are one-digit numbers (i.e., in the range [0, 9]).&lt;br&gt;
+The conditional expressions group right-to-left (as usual in most languages), and the result of the expression will always evaluate to either a digit, &#39;T&#39; or &#39;F&#39;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def parseTernary(self, expression: str) -&amp;gt; str:
+        #思路用stack，而且从后向前iterate
+        #T?a:b
+        if not expression: return expression
+        stack=[]
+        for char in expression[::-1]:
+            if stack and stack[-1]==&#39;?&#39;:
+                stack.pop() #?
+                first=stack.pop()
+                stack.pop() #:
+                second=stack.pop()
+                
+                if char==&#39;T&#39;:
+                    stack.append(first)
+                else:
+                    stack.append(second)
+            else:
+                stack.append(char)
+        #print(stack)
+        return stack[-1]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;T？（a）：（b） 形式，但a，b可以包含再包含。。。很难分辨哪个冒号是分界线。 用stack应该，看答案。关键是从后向前。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-440-k-th-smallest-in-lexicographical-order-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 440. K-th Smallest in Lexicographical Order （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given two integers n and k, return the kth lexicographically smallest integer in the range [1, n].&lt;br&gt;
+Example 1:&lt;br&gt;
+Input: n = 13, k = 2&lt;br&gt;
+Output: 10&lt;br&gt;
+Explanation: The lexicographical order is [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9], so the second smallest number is 10.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findKthNumber(self, n: int, k: int) -&amp;gt; int:
+        class Trie:
+            def __init__(self):
+                self.children=collections.defaultdict(Trie)
+                self.val=0
+        trie=Trie()
+        
+        def insert(i):
+            i=str(i)
+            root=trie
+            while i:
+                cur=i[0]
+                root=root.children[cur]
+                root.val+=1
+                i=i[1:]
+        for i in range(1,n+1):
+            insert(i)
+        
+        path=[]
+        def search(k):
+            current_rank=0
+            children=trie.children
+            i=0
+            while current_rank&amp;lt;k:
+                key=sorted(children)[i]
+                if children[key].val+current_rank&amp;lt;k:
+                    current_rank+=children[key].val
+                    i+=1
+                else:
+                    path.append(key)
+                    current_rank+=1
+                    children=children[key].children
+                    i=0
+                
+                
+                 
+                
+                        
+        search(k)
+        return int(&#39;&#39;.join(path))
+        
+        
+        
+        
+#ANSWER
+&#39;&#39;&#39;
+Initially, image you are at node 1 (variable: curr),
+the goal is move (k - 1) steps to the target node x. (substract steps from k after moving)
+when k is down to 0, curr will be finally at node x, there you get the result.
+
+we don&#39;t really need to do a exact k steps preorder traverse of the denary tree, the idea is to calculate the steps between curr and curr + 1 (neighbor nodes in same level), in order to skip some unnecessary moves.
+&#39;&#39;&#39;
+def findKthNumber(self, n, k):
+        cur = 1
+        k = k - 1
+        while k &amp;gt; 0:
+            steps = self.calSteps(n, cur)
+            if steps &amp;lt;= k:
+                cur += 1
+                k -= steps
+            else:
+                cur *= 10
+                k -= 1
+        return cur
+
+    def calSteps(self, n, cur):
+        steps = 0
+        n1, n2 = cur, cur + 1
+        while n1 &amp;lt;= n:
+            steps += min(n + 1, n2) - n1
+            n1 *= 10
+            n2 *= 10
+        return steps
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;根据提示用了trie，思路是对的，但是写seasrch func时候卡住了，given k，what is the node positon of kth node。就算写出来也是TLE。。。看答案。&lt;/p&gt;
+&lt;p&gt;Main function&lt;br&gt;
+Firstly, calculate how many steps curr need to move to curr + 1.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;if the steps &amp;lt;= k, we know we can move to curr + 1, and narrow down k to k - steps.
+
+else if the steps &amp;gt; k, that means the curr + 1 is actually behind the target node x in the preorder path, we can&#39;t jump to curr + 1. What we have to do is to move forward only 1 step (curr * 10 is always next preorder node) and repeat the iteration.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;calSteps function&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;how to calculate the steps between curr and curr + 1?
+Here we come up a idea to calculate by level.
+Let n1 = curr, n2 = curr + 1.
+n2 is always the next right node beside n1&#39;s right most node (who shares the same ancestor &amp;quot;curr&amp;quot;)
+(refer to the pic, 2 is right next to 1, 20 is right next to 19, 200 is right next to 199).
+
+so, if n2 &amp;lt;= n, what means n1&#39;s right most node exists, we can simply add the number of nodes from n1 to n2 to steps.
+
+else if n2 &amp;gt; n, what means n (the biggest node) is on the path between n1 to n2, add (n + 1 - n1) to steps.
+
+organize this flow to &amp;quot;steps += Math.min(n + 1, n2) - n1; n1 *= 10; n2 *= 10;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here is the code snippet:&lt;/p&gt;
+&lt;p&gt;public int findKthNumber(int n, int k) {&lt;br&gt;
+int curr = 1;&lt;br&gt;
+k = k - 1;&lt;br&gt;
+while (k &amp;gt; 0) {&lt;br&gt;
+int steps = calSteps(n, curr, curr + 1);&lt;br&gt;
+if (steps &amp;lt;= k) {&lt;br&gt;
+curr += 1;&lt;br&gt;
+k -= steps;&lt;br&gt;
+} else {&lt;br&gt;
+curr *= 10;&lt;br&gt;
+k -= 1;&lt;br&gt;
+}&lt;br&gt;
+}&lt;br&gt;
+return curr;&lt;br&gt;
+}&lt;br&gt;
+//use long in case of overflow&lt;br&gt;
+public int calSteps(int n, long n1, long n2) {&lt;br&gt;
+int steps = 0;&lt;br&gt;
+while (n1 &amp;lt;= n) {&lt;br&gt;
+steps += Math.min(n + 1, n2) - n1;&lt;br&gt;
+n1 *= 10;&lt;br&gt;
+n2 *= 10;&lt;br&gt;
+}&lt;br&gt;
+return steps;&lt;br&gt;
+}&lt;/p&gt;
+">Leetcode 2022-03-04</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-03/"" data-c="

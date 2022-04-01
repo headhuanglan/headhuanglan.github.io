@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-03-28T02:08:35.215Z</updated>
+    <updated>2022-04-01T23:33:11.352Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,6 +10,808 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Lan&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[系统设计]]></title>
+        <id>https://headhuanglan.github.io/post/system-design/</id>
+        <link href="https://headhuanglan.github.io/post/system-design/">
+        </link>
+        <updated>2022-03-29T23:23:07.000Z</updated>
+        <summary type="html"><![CDATA[<p>system design</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>system design</p>
+<!-- more -->
+<p><a href="https://www.youtube.com/watch?v=PdtlXdse7pw&amp;list=PL4KdJM8LzAMecwInbBK5GJ3Anz-ts75RQ">DDIA书视频总结</a></p>
+<p><a href="https://github.com/donnemartin/system-design-primer">system design primer github repo</a></p>
+<p><a href="https://www.hiredintech.com/classrooms/system-design/lesson/52">system design class</a></p>
+<p><a href="https://www.educative.io/courses/grokking-the-system-design-interview">grokking system design interview</a></p>
+<p><a href="https://luanjunyi.medium.com/the-table-of-contents-416d2240fa8e">大佬的medium文章</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2022-03-04]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2022-03-04/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2022-03-04/">
+        </link>
+        <updated>2022-03-04T14:13:50.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="431-encode-n-ary-tree-to-binary-tree-hard">431. Encode N-ary Tree to Binary Tree （Hard）</h1>
+<p>Design an algorithm to encode an N-ary tree into a binary tree and decode the binary tree to get the original N-ary tree. An N-ary tree is a rooted tree in which each node has no more than N children. Similarly, a binary tree is a rooted tree in which each node has no more than 2 children. There is no restriction on how your encode/decode algorithm should work. You just need to ensure that an N-ary tree can be encoded to a binary tree and this binary tree can be decoded to the original N-nary tree structure.</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a Node.
+class Node:
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+&quot;&quot;&quot;
+
+&quot;&quot;&quot;
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+&quot;&quot;&quot;
+
+class Codec:
+    # Encodes an n-ary tree to a binary tree.
+    def encode(self, root: 'Optional[Node]') -&gt; Optional[TreeNode]:
+        if not root: return []
+        rootnode = TreeNode(root.val)
+        return_rootnode=rootnode
+       
+        first=True
+        for node in root.children:
+            if first:
+                first=False
+                rootnode.left=self.encode(node)
+                rootnode=rootnode.left
+            else:
+                rootnode.right=self.encode(node)
+                rootnode=rootnode.right
+        
+        return return_rootnode
+	
+	# Decodes your binary tree to an n-ary tree.
+    def decode(self, data: Optional[TreeNode]) -&gt; 'Optional[Node]':
+        if not data: return None
+        #print(data)
+        #print('#'*20)
+        root=data
+        root_node=Node(root.val,[])
+        if root.left:
+            root_node.children.append(self.decode(root.left))
+            root=root.left
+            while root.right:
+                root_node.children.append(self.decode(root.right))
+                root=root.right
+        
+        return root_node
+        
+
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.decode(codec.encode(root))
+
+
+#ANSWER 
+class Codec:
+
+    def encode(self, root):
+        if not root:
+            return None
+
+        binary = TreeNode(root.val)                 # create a binary root
+        if not root.children:
+            return binary
+        #Python - left child for children, right child for siblings
+        
+        binary.left = self.encode(root.children[0]) # left child of binary is the encoding of all n-ary children,
+        node = binary.left                          #     starting with the first child.
+        for child in root.children[1:]:             # other children of n-ary root are right child of previous child
+            node.right = self.encode(child)
+            node = node.right
+
+        return binary
+
+    def decode(self, data):
+        if not data:
+            return None
+
+        nary = Node(data.val, [])                   # create n-ary root
+        node = data.left                            # move to first child of n-ary root
+        while node:                                 # while more children of n-ary root
+            nary.children.append(self.decode(node)) # append to list
+            node = node.right                       # and move to next child
+            
+        return nary
+        
+</code></pre>
+<p>我得方法，把所有孩子都包含在下一层，  root的left通向下一层，root.left.right和之后所有的right都是同一层的保存孩子。</p>
+<h1 id="font-colorred-432-all-oone-data-structure-hardfont"><font color='red'> 432. All O`one Data Structure （Hard）</font></h1>
+<p>Design a data structure to store the strings' count with the ability to return the strings with minimum and maximum counts.<br>
+Implement the AllOne class:<br>
+AllOne() Initializes the object of the data structure.<br>
+inc(String key) Increments the count of the string key by 1. If key does not exist in the data structure, insert it with count 1.<br>
+dec(String key) Decrements the count of the string key by 1. If the count of key is 0 after the decrement, remove it from the data structure. It is guaranteed that key exists in the data structure before the decrement.<br>
+getMaxKey() Returns one of the keys with the maximal count. If no element exists, return an empty string &quot;&quot;.<br>
+getMinKey() Returns one of the keys with the minimum count. If no element exists, return an empty string &quot;&quot;.</p>
+<pre><code class="language-python">from collections import defaultdict
+class Node(object):
+    def __init__(self):
+        self.key_set = set([])
+        self.prev, self.nxt = None, None 
+
+    def add_key(self, key):
+        self.key_set.add(key)
+
+    def remove_key(self, key):
+        self.key_set.remove(key)        
+
+    def get_any_key(self):
+        if self.key_set:
+            result = self.key_set.pop()
+            self.add_key(result)
+            return result
+        else:
+            return None
+    
+    def count(self):
+        return len(self.key_set)
+
+    def is_empty(self):
+        return len(self.key_set) == 0
+
+
+class DoubleLinkedList(object):
+    def __init__(self):
+        self.head_node, self.tail_node = Node(), Node()
+        self.head_node.nxt, self.tail_node.prev = self.tail_node, self.head_node
+        return
+
+    def insert_after(self, x):
+        node, temp = Node(), x.nxt
+        x.nxt, node.prev = node, x
+        node.nxt, temp.prev = temp, node
+        return node
+    
+    def insert_before(self, x):
+        return self.insert_after(x.prev)
+
+    def remove(self, x):
+        prev_node = x.prev
+        prev_node.nxt, x.nxt.prev = x.nxt, prev_node
+        return
+
+    def get_head(self):
+        return self.head_node.nxt
+    
+    def get_tail(self):
+        return self.tail_node.prev
+
+    def get_sentinel_head(self):
+        return self.head_node
+
+    def get_sentinel_tail(self):
+        return self.tail_node
+    
+class AllOne(object):
+    def __init__(self):
+        &quot;&quot;&quot;
+        Initialize your data structure here.
+        &quot;&quot;&quot;
+        self.dll, self.key_counter = DoubleLinkedList(), defaultdict(int)
+        self.node_freq = {0:self.dll.get_sentinel_head()}
+
+    def _rmv_key_pf_node(self, pf, key):
+        node = self.node_freq[pf]
+        node.remove_key(key)
+        if node.is_empty():
+            self.dll.remove(node)
+            self.node_freq.pop(pf)
+        return
+
+    def inc(self, key):
+        &quot;&quot;&quot;
+        Inserts a new key &lt;Key&gt; with value 1. Or increments an existing key by 1.
+        :type key: str
+        :rtype: void
+        &quot;&quot;&quot;
+        self.key_counter[key] += 1
+        cf, pf = self.key_counter[key], self.key_counter[key]-1
+        if cf not in self.node_freq:
+            # No need to test if pf = 0 since frequency zero points to sentinel node
+            self.node_freq[cf] = self.dll.insert_after(self.node_freq[pf])
+        self.node_freq[cf].add_key(key)
+        if pf &gt; 0:
+            self._rmv_key_pf_node(pf, key)
+
+    def dec(self, key):
+        &quot;&quot;&quot;
+        Decrements an existing key by 1. If Key's value is 1, remove it from the data structure.
+        :type key: str
+        :rtype: void
+        &quot;&quot;&quot;
+        if key in self.key_counter:
+            self.key_counter[key] -= 1
+            cf, pf = self.key_counter[key], self.key_counter[key]+1
+            if self.key_counter[key] == 0:
+                self.key_counter.pop(key)
+            if cf != 0:
+                if cf not in self.node_freq:
+                    self.node_freq[cf] = self.dll.insert_before(self.node_freq[pf])
+                self.node_freq[cf].add_key(key)
+            self._rmv_key_pf_node(pf, key)
+
+    def getMaxKey(self):
+        &quot;&quot;&quot;
+        Returns one of the keys with maximal value.
+        :rtype: str
+        &quot;&quot;&quot;
+        return self.dll.get_tail().get_any_key() if self.dll.get_tail().count() &gt; 0 else &quot;&quot;
+
+    def getMinKey(self):
+        &quot;&quot;&quot;
+        Returns one of the keys with Minimal value.
+        :rtype: str
+        &quot;&quot;&quot;
+        return self.dll.get_head().get_any_key() if self.dll.get_tail().count() &gt; 0 else &quot;&quot;
+
+
+
+
+</code></pre>
+<p>感觉是个maxheap minheap。。。但不是all o（1）。。。 看答案了。。。答案果然完美</p>
+<h1 id="433-minimum-genetic-mutation-medium">433. Minimum Genetic Mutation (Medium)</h1>
+<p>A gene string can be represented by an 8-character long string, with choices from 'A', 'C', 'G', and 'T'.<br>
+Suppose we need to investigate a mutation from a gene string start to a gene string end where one mutation is defined as one single character changed in the gene string.<br>
+For example, &quot;AACCGGTT&quot; --&gt; &quot;AACCGGTA&quot; is one mutation.<br>
+There is also a gene bank bank that records all the valid gene mutations. A gene must be in bank to make it a valid gene string.<br>
+Given the two gene strings start and end and the gene bank bank, return the minimum number of mutations needed to mutate from start to end. If there is no such a mutation, return -1.<br>
+Note that the starting point is assumed to be valid, so it might not be included in the bank.</p>
+<pre><code class="language-python">class Solution:
+    def minMutation(self, start: str, end: str, bank: List[str]) -&gt; int:
+        #BFS search neighbor
+        # neighor is 1 char off current also in bank
+        if   end not in bank: return -1
+        if not bank and start!=end: return -1
+        bank=set(bank)
+        bank.add(end)
+        q=[]
+        visited=set()
+        def nei(me):
+            neighbors=[]
+            for other in bank:
+                if other not in visited:
+                    valid=0
+                    for a,b in zip(me,other):
+                        valid+=bool(ord(a)^ord(b))
+                    if valid==1:
+                        neighbors.append(other)
+            return neighbors
+        
+        
+        q.append(start)
+        visited.add(start)
+        level=0
+        while q:
+            level+=1
+            for _ in range(len(q)):
+                cur=q.pop(0)
+                print(cur,nei(cur))
+                for ne in nei(cur):
+                    if ne==end: return level
+                    visited.add(ne)
+                    q.append(ne)
+        
+        return  -1
+        
+#ANSWER
+class Solution:
+    def minMutation(self, start: str, end: str, bank: List[str]) -&gt; int:
+        &quot;&quot;&quot;
+        :type start: str
+        :type end: str
+        :type bank: List[str]
+        :rtype: int
+        &quot;&quot;&quot;
+        queue = []
+        queue.append((start,0))
+        bankSet = set(bank)
+        
+        while queue:
+            curr, step = queue.pop(0)
+            if curr == end:
+                return step
+            for i in range(len(curr)):
+                for c in &quot;AGCT&quot;:
+                    mutation = curr[:i] + c + curr[i+1:]
+                    if mutation in bankSet:
+                        bankSet.remove(mutation)
+                        queue.append((mutation,step+1))
+                        
+        return -1
+        
+</code></pre>
+<p>bfs注意corner case，end必须in bank。 答案用remove mutaton方式避免用visited set，而且mutaion是直接算的，不是从bank中找的。</p>
+<h1 id="434-number-of-segments-in-a-string-easy">434. Number of Segments in a String （Easy）</h1>
+<p>Given a string s, return the number of segments in the string.<br>
+A segment is defined to be a contiguous sequence of non-space characters.</p>
+<pre><code class="language-python">class Solution:
+    def countSegments(self, s: str) -&gt; int:
+        beforeisspace=True
+        c=0
+        while s:
+            if s[0]==' ':
+                s=s[1:]
+                beforeisspace=True
+            else:
+                if beforeisspace:
+                    c+=1
+                    beforeisspace=False
+                
+                s=s[1:]
+        return c
+
+class Solution:
+    def countSegments(self, s: str) -&gt; int:
+        return len(s.split())
+
+class Solution:
+    def countSegments(self, s):
+        segment_count = 0
+
+        for i in range(len(s)):
+            if (i == 0 or s[i-1] == ' ') and s[i] != ' ':
+                segment_count += 1
+
+        return segment_count
+</code></pre>
+<h1 id="font-colorred-435-non-overlapping-intervals-medium-font"><font color='red'> 435. Non-overlapping Intervals (Medium) </font></h1>
+<p>Given an array of intervals intervals where intervals[i] = [starti, endi], return the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping.</p>
+<pre><code class="language-python">class Solution:
+    def eraseOverlapIntervals(self, intervals: List[List[int]]) -&gt; int:
+        #sort by start
+        # [1,2] [1,3] [2,3],[3,4]
+        #sort by end
+        # 找最小删除相当于找最大不overlap有多少个interval
+        #变成dp问题 dp[i]是最大的interval个数 用到ith interval
+        # dp【i】= max（dp【j】）+1 j&lt;i  interval i，j不overlap
+        intervals=sorted(intervals,key=lambda x:x[0])
+        dp = [0]*len(intervals)
+        dp[0]=1
+        ans=1
+        for i in range(1,len(dp)):
+            max_=0
+            for j in range(i):
+                if intervals[j][1]&lt;=intervals[i][0]:
+                    max_=max(dp[j],max_)
+            
+            dp[i]=max_+1
+            ans=max(ans,dp[i])
+        return len(intervals)-ans
+
+#PASS ANSWER
+class Solution:
+    def eraseOverlapIntervals(self, intervals: List[List[int]]) -&gt; int:
+ 
+        intervals=sorted(intervals,key=lambda x:x[0])
+        end=intervals[0][1]
+        prev=0
+        c=0
+        for i in range(1,len(intervals)):
+            if intervals[prev][1]&gt;intervals[i][0]:
+                #overlap
+                if intervals[prev][1]&gt;intervals[i][1]:
+                    #include,bust del prev so c+=1 prev renew to i
+                    prev=i
+                
+                #if pure overlap do greedy, prev still the same, del i, c+=1
+                c+=1
+            else:
+                #case 1 two interval non overlapping
+                prev=i
+                
+        return c
+</code></pre>
+<p>没想出来如何处理~~ DP可以n^2， greedy也可以，Greedy nlogn</p>
+<h1 id="font-colorred-436-find-right-interval-medium-font"><font color='red'> 436. Find Right Interval (Medium) </font></h1>
+<p>You are given an array of intervals, where intervals[i] = [starti, endi] and each starti is unique.<br>
+The right interval for an interval i is an interval j such that startj &gt;= endi and startj is minimized. Note that i may equal j.<br>
+Return an array of right interval indices for each interval i. If no right interval exists for interval i, then put -1 at index i.</p>
+<pre><code class="language-python">
+#TIME LIMIT EXCEEDED
+class Solution:
+    def findRightInterval(self, intervals: List[List[int]]) -&gt; List[int]:
+        maps=dict()
+        for i,interval in enumerate(intervals):
+            maps[tuple(interval)]=i
+        
+        ans=[-1]*len(intervals)
+        intervals=sorted(intervals,key=lambda x:x[0])
+        for i in range(len(intervals)-1):
+            #i's right
+            j=i+1
+            while j&lt;len(intervals) and intervals[j][0]&lt;intervals[i][1]:
+                j+=1
+            if j&lt;len(intervals):
+                ans[maps[tuple(intervals[i])]]=maps[tuple(intervals[j])]
+        return ans
+
+
+#ANSWER BINARY SERACH 
+
+class Solution:
+    def findRightInterval(self, intervals: List[List[int]]) -&gt; List[int]:
+        
+        l = sorted((e[0], i) for i, e in enumerate(intervals))
+        res = []
+        for e in intervals:
+            r = bisect.bisect_left(l, (e[1],))
+            res.append(l[r][1] if r &lt; len(l) else -1)
+        return res
+
+#Heap法
+class Solution:
+    def findRightInterval(self, intervals: List[List[int]]) -&gt; List[int]:
+        heap, result = [], [-1] * len(intervals)
+        for idx, interval in sorted(enumerate(intervals), key=lambda enum: enum[1][0]):
+            while heap and heap[0][0] &lt;= interval[0]:
+                _, i = heapq.heappop(heap)
+                if intervals[i][0]!=intervals[i][1]:
+                    result[i] = idx
+                else:
+                    result[i] = i
+            heapq.heappush(heap, (interval[1], idx))
+        return result
+</code></pre>
+<p>初次尝试 time limit exceeded 答案的bianry search法太厉害。</p>
+<h1 id="font-colorblue-437-path-sum-iii-medium-font"><font color='blue'> 437. Path Sum III （Medium） </font></h1>
+<p>Given the root of a binary tree and an integer targetSum, return the number of paths where the sum of the values along the path equals targetSum.<br>
+The path does not need to start or end at the root or a leaf, but it must go downwards (i.e., traveling only from parent nodes to child nodes).</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def pathSum(self, root: Optional[TreeNode], targetSum: int) -&gt; int:
+        #post order  botoom up save node val
+        
+        c=[0]
+        def post(root):
+            if not root: return 
+            post(root.left)
+            post(root.right)
+            root.vals=defaultdict(int)
+            if root.left:
+                for v in root.left.vals:
+                    root.vals[v+root.val]+=root.left.vals[v]
+            if root.right:
+                for v in root.right.vals:
+                    root.vals[v+root.val]+=root.right.vals[v]
+            root.vals[root.val]+=1
+            if targetSum in root.vals:
+                #print(root.val,root.vals)
+                c[0]+=root.vals[targetSum]
+       
+        post(root)
+        return c[0]  
+#ANSWER PREFIX SUM in tree
+class Solution:
+    def pathSum(self, root: TreeNode, sum: int) -&gt; int:
+        def preorder(node: TreeNode, curr_sum) -&gt; None:
+            nonlocal count
+            if not node:
+                return 
+            
+            # current prefix sum
+            curr_sum += node.val
+            
+            # here is the sum we're looking for
+            if curr_sum == k:
+                count += 1
+            
+            # number of times the curr_sum − k has occurred already, 
+            # determines the number of times a path with sum k 
+            # has occurred up to the current node
+            count += h[curr_sum - k]
+            
+            # add the current sum into hashmap
+            # to use it during the child nodes processing
+            h[curr_sum] += 1
+            
+            # process left subtree
+            preorder(node.left, curr_sum)
+            # process right subtree
+            preorder(node.right, curr_sum)
+            
+            # remove the current sum from the hashmap
+            # in order not to use it during 
+            # the parallel subtree processing
+            h[curr_sum] -= 1
+            
+        count, k = 0, sum
+        h = defaultdict(int)
+        preorder(root, 0)
+        return count       
+
+#上面这个解决方法基于
+class Solution:
+    def subarraySum(self, nums, k):
+        count = curr_sum = 0
+        h = defaultdict(int)
+        
+        for num in nums:
+            # current prefix sum
+            curr_sum += num
+            
+            # situation 1:
+            # continuous subarray starts 
+            # from the beginning of the array
+            if curr_sum == k:
+                count += 1
+            
+            # situation 2:
+            # number of times the curr_sum − k has occurred already, 
+            # determines the number of times a subarray with sum k 
+            # has occurred up to the current index
+            count += h[curr_sum - k]
+            
+            # add the current sum
+            h[curr_sum] += 1
+                
+        return count
+</code></pre>
+<p>我的解决方案是post order bottom up 扫，每个node存可以生成的pathsum值。答案是prefixsum。。</p>
+<h1 id="438-find-all-anagrams-in-a-string-medium">438. Find All Anagrams in a String （Medium）</h1>
+<p>Given two strings s and p, return an array of all the start indices of p's anagrams in s. You may return the answer in any order.<br>
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.<br>
+Input: s = &quot;cbaebabacd&quot;, p = &quot;abc&quot;<br>
+Output: [0,6]<br>
+Explanation:<br>
+The substring with start index = 0 is &quot;cba&quot;, which is an anagram of &quot;abc&quot;.<br>
+The substring with start index = 6 is &quot;bac&quot;, which is an anagram of &quot;abc&quot;.</p>
+<pre><code class="language-python">class Solution:
+    def findAnagrams(self, s: str, p: str) -&gt; List[int]:
+        if len(s)&lt;len(p): return []
+        dicp=collections.Counter(p)
+        lp=len(p)
+        dic=dict()
+        for i in range(lp):
+            dic[s[i]]=dic.get(s[i],0)+1
+        res=[]
+        if dic==dicp: res.append(0)
+        for i in range(lp,len(s)):
+            #remove first
+            dic[s[i-lp]]-=1
+            if dic[s[i-lp]]==0:
+                del  dic[s[i-lp]]
+            #add last
+            dic[s[i]]=dic.get(s[i],0)+1
+            #
+            if dic==dicp:
+                res.append(i-lp+1)
+        return res
+            
+#ANSWER 写的更简单
+from collections import Counter
+class Solution:
+    def findAnagrams(self, s: str, p: str) -&gt; List[int]:
+        ns, np = len(s), len(p)
+        if ns &lt; np:
+            return []
+
+        p_count = Counter(p)
+        s_count = Counter()
+        
+        output = []
+        # sliding window on the string s
+        for i in range(ns):
+            # add one more letter 
+            # on the right side of the window
+            s_count[s[i]] += 1
+            # remove one letter 
+            # from the left side of the window
+            if i &gt;= np:
+                if s_count[s[i - np]] == 1:
+                    del s_count[s[i - np]]
+                else:
+                    s_count[s[i - np]] -= 1
+            # compare array in the sliding window
+            # with the reference array
+            if p_count == s_count:
+                output.append(i - np + 1)
+        
+        return output
+
+#ANSWER
+class Solution:
+    def findAnagrams(self, s: str, p: str) -&gt; List[int]:
+        ns, np = len(s), len(p)
+        if ns &lt; np:
+            return []
+
+        p_count, s_count = [0] * 26, [0] * 26
+        # build reference array using string p
+        for ch in p:
+            p_count[ord(ch) - ord('a')] += 1
+        
+        output = []
+        # sliding window on the string s
+        for i in range(ns):
+            # add one more letter 
+            # on the right side of the window
+            s_count[ord(s[i]) - ord('a')] += 1
+            # remove one letter 
+            # from the left side of the window
+            if i &gt;= np:
+                s_count[ord(s[i - np]) - ord('a')] -= 1
+            # compare array in the sliding window
+            # with the reference array
+            if p_count == s_count:
+                output.append(i - np + 1)
+        
+        return output
+</code></pre>
+<p>sliding window保持counter dict和p一样就可以。。。</p>
+<h1 id="font-colorred-439-ternary-expression-parser-medium-font"><font color='red'> 439. Ternary Expression Parser （Medium） </font></h1>
+<p>Given a string expression representing arbitrarily nested ternary expressions, evaluate the expression, and return the result of it.<br>
+You can always assume that the given expression is valid and only contains digits, '?', ':', 'T', and 'F' where 'T' is true and 'F' is false. All the numbers in the expression are one-digit numbers (i.e., in the range [0, 9]).<br>
+The conditional expressions group right-to-left (as usual in most languages), and the result of the expression will always evaluate to either a digit, 'T' or 'F'.</p>
+<pre><code class="language-python">class Solution:
+    def parseTernary(self, expression: str) -&gt; str:
+        #思路用stack，而且从后向前iterate
+        #T?a:b
+        if not expression: return expression
+        stack=[]
+        for char in expression[::-1]:
+            if stack and stack[-1]=='?':
+                stack.pop() #?
+                first=stack.pop()
+                stack.pop() #:
+                second=stack.pop()
+                
+                if char=='T':
+                    stack.append(first)
+                else:
+                    stack.append(second)
+            else:
+                stack.append(char)
+        #print(stack)
+        return stack[-1]
+</code></pre>
+<p>T？（a）：（b） 形式，但a，b可以包含再包含。。。很难分辨哪个冒号是分界线。 用stack应该，看答案。关键是从后向前。</p>
+<h1 id="font-colorred-440-k-th-smallest-in-lexicographical-order-hardfont"><font color='red'> 440. K-th Smallest in Lexicographical Order （Hard）</font></h1>
+<p>Given two integers n and k, return the kth lexicographically smallest integer in the range [1, n].<br>
+Example 1:<br>
+Input: n = 13, k = 2<br>
+Output: 10<br>
+Explanation: The lexicographical order is [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9], so the second smallest number is 10.</p>
+<pre><code class="language-python">class Solution:
+    def findKthNumber(self, n: int, k: int) -&gt; int:
+        class Trie:
+            def __init__(self):
+                self.children=collections.defaultdict(Trie)
+                self.val=0
+        trie=Trie()
+        
+        def insert(i):
+            i=str(i)
+            root=trie
+            while i:
+                cur=i[0]
+                root=root.children[cur]
+                root.val+=1
+                i=i[1:]
+        for i in range(1,n+1):
+            insert(i)
+        
+        path=[]
+        def search(k):
+            current_rank=0
+            children=trie.children
+            i=0
+            while current_rank&lt;k:
+                key=sorted(children)[i]
+                if children[key].val+current_rank&lt;k:
+                    current_rank+=children[key].val
+                    i+=1
+                else:
+                    path.append(key)
+                    current_rank+=1
+                    children=children[key].children
+                    i=0
+                
+                
+                 
+                
+                        
+        search(k)
+        return int(''.join(path))
+        
+        
+        
+        
+#ANSWER
+'''
+Initially, image you are at node 1 (variable: curr),
+the goal is move (k - 1) steps to the target node x. (substract steps from k after moving)
+when k is down to 0, curr will be finally at node x, there you get the result.
+
+we don't really need to do a exact k steps preorder traverse of the denary tree, the idea is to calculate the steps between curr and curr + 1 (neighbor nodes in same level), in order to skip some unnecessary moves.
+'''
+def findKthNumber(self, n, k):
+        cur = 1
+        k = k - 1
+        while k &gt; 0:
+            steps = self.calSteps(n, cur)
+            if steps &lt;= k:
+                cur += 1
+                k -= steps
+            else:
+                cur *= 10
+                k -= 1
+        return cur
+
+    def calSteps(self, n, cur):
+        steps = 0
+        n1, n2 = cur, cur + 1
+        while n1 &lt;= n:
+            steps += min(n + 1, n2) - n1
+            n1 *= 10
+            n2 *= 10
+        return steps
+</code></pre>
+<p>根据提示用了trie，思路是对的，但是写seasrch func时候卡住了，given k，what is the node positon of kth node。就算写出来也是TLE。。。看答案。</p>
+<p>Main function<br>
+Firstly, calculate how many steps curr need to move to curr + 1.</p>
+<pre><code>if the steps &lt;= k, we know we can move to curr + 1, and narrow down k to k - steps.
+
+else if the steps &gt; k, that means the curr + 1 is actually behind the target node x in the preorder path, we can't jump to curr + 1. What we have to do is to move forward only 1 step (curr * 10 is always next preorder node) and repeat the iteration.
+</code></pre>
+<p>calSteps function</p>
+<pre><code>how to calculate the steps between curr and curr + 1?
+Here we come up a idea to calculate by level.
+Let n1 = curr, n2 = curr + 1.
+n2 is always the next right node beside n1's right most node (who shares the same ancestor &quot;curr&quot;)
+(refer to the pic, 2 is right next to 1, 20 is right next to 19, 200 is right next to 199).
+
+so, if n2 &lt;= n, what means n1's right most node exists, we can simply add the number of nodes from n1 to n2 to steps.
+
+else if n2 &gt; n, what means n (the biggest node) is on the path between n1 to n2, add (n + 1 - n1) to steps.
+
+organize this flow to &quot;steps += Math.min(n + 1, n2) - n1; n1 *= 10; n2 *= 10;&quot;
+</code></pre>
+<p>Here is the code snippet:</p>
+<p>public int findKthNumber(int n, int k) {<br>
+int curr = 1;<br>
+k = k - 1;<br>
+while (k &gt; 0) {<br>
+int steps = calSteps(n, curr, curr + 1);<br>
+if (steps &lt;= k) {<br>
+curr += 1;<br>
+k -= steps;<br>
+} else {<br>
+curr *= 10;<br>
+k -= 1;<br>
+}<br>
+}<br>
+return curr;<br>
+}<br>
+//use long in case of overflow<br>
+public int calSteps(int n, long n1, long n2) {<br>
+int steps = 0;<br>
+while (n1 &lt;= n) {<br>
+steps += Math.min(n + 1, n2) - n1;<br>
+n1 *= 10;<br>
+n2 *= 10;<br>
+}<br>
+return steps;<br>
+}</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Leetcode 2022-03-03]]></title>
         <id>https://headhuanglan.github.io/post/leetcode-2022-03-03/</id>
@@ -4277,949 +5079,6 @@ class Solution:
 
 </code></pre>
 <p>考二次函数，答案更精巧 用two pointer，关键点在于如果a大于0, 最大值肯定在head tail之间的一个，如果a小于0，最小值肯定在head tail中的一个。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-12-07]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-12-07/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-07/">
-        </link>
-        <updated>2021-12-06T22:31:40.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="font-colorred341-flatten-nested-list-iterator-mediumfont"><font color='red'>341. Flatten Nested List Iterator （Medium）</font></h1>
-<p>You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists. Implement an iterator to flatten it.</p>
-<pre><code class="language-python">
-class NestedIterator:
-    def __init__(self, nestedList: [NestedInteger]):
-        self.integers=[]
-        self.position = -1
-        def flaten_list(nestedList):
-            for nl in nestedList:
-                if nl.isInteger():
-                    self.integers.append(nl.getInteger())
-                else:
-                    flaten_list(nl.getList())
-        flaten_list(nestedList)
-    
-    def next(self) -&gt; int:
-        self.position+=1
-        return self.integers[self.position]
-    
-    def hasNext(self) -&gt; bool:
-        return self.position+1&lt;len(self.integers)
-
-
-class NestedIterator(object):
-
-    def __init__(self, nestedList):
-        &quot;&quot;&quot;
-        Initialize your data structure here.
-        :type nestedList: List[NestedInteger]
-        &quot;&quot;&quot;
-        self.stack = nestedList[::-1]
-        
-    def next(self):
-        &quot;&quot;&quot;
-        :rtype: int
-        &quot;&quot;&quot;
-        return self.stack.pop().getInteger()
-        
-    def hasNext(self):
-        &quot;&quot;&quot;
-        :rtype: bool
-        &quot;&quot;&quot;
-        while self.stack:
-            top = self.stack[-1]
-            if top.isInteger():
-                return True
-            self.stack = self.stack[:-1] + top.getList()[::-1]
-        return False
-
-class NestedIterator:
-
-    def __init__(self, nestedList: [NestedInteger]):
-        # Get a generator object from the generator function, passing in
-        # nestedList as the parameter.
-        self._generator = self._int_generator(nestedList)
-        # All values are placed here before being returned.
-        self._peeked = None
-
-    # This is the generator function. It can be used to create generator
-    # objects.
-    def _int_generator(self, nested_list) -&gt; &quot;Generator[int]&quot;:
-        # This code is the same as Approach 1. It's a recursive DFS.
-        for nested in nested_list:
-            if nested.isInteger():
-                yield nested.getInteger()
-            else:
-                # We always use &quot;yield from&quot; on recursive generator calls.
-                yield from self._int_generator(nested.getList())
-        # Will automatically raise a StopIteration.
-    
-    def next(self) -&gt; int:
-        # Check there are integers left, and if so, then this will
-        # also put one into self._peeked.
-        if not self.hasNext(): return None
-        # Return the value of self._peeked, also clearing it.
-        next_integer, self._peeked = self._peeked, None
-        return next_integer
-        
-    def hasNext(self) -&gt; bool:
-        if self._peeked is not None: return True
-        try: # Get another integer out of the generator.
-            self._peeked = next(self._generator)
-            return True
-        except: # The generator is finished so raised StopIteration.
-            return False
-
-</code></pre>
-<p>generator 解法没见过， 普通解法，要么初始化时候分解，要么用stack倒序，保证栈顶是integer。</p>
-<h1 id="342-power-of-four-easy">342. Power of Four （Easy）</h1>
-<p>Given an integer n, return true if it is a power of four. Otherwise, return false.<br>
-An integer n is a power of four, if there exists an integer x such that n == 4^x.</p>
-<pre><code class="language-python">class Solution:
-    def isPowerOfFour(self, n: int) -&gt; bool:
-        if n==0: return False 
-        while n:
-            if n==1: return True
-            if n%4!=0:
-                return False
-            n//=4
-        return True
-
-class Solution(object):
-    def isPowerOfFour(self, n):
-        if n == 0:
-            return False
-        while n % 4 == 0:
-            n /= 4
-        return n == 1
-</code></pre>
-<h1 id="font-colorred343-integer-break-medium-font"><font color='red'>343. Integer Break (Medium) </font></h1>
-<p>Given an integer n, break it into the sum of k positive integers, where k &gt;= 2, and maximize the product of those integers.<br>
-Return the maximum product you can get.</p>
-<pre><code class="language-python">class Solution:
-    def integerBreak(self, n: int) -&gt; int:
-        dp = [0]*(n+1)
-        dp[1]=1
-        for i in range(2,n+1):
-            for j in range(1,i):
-                dp[i]=max(dp[i],max(dp[j],j)*max(i-j,dp[i-j]))
-        return dp[n]
-  
-class Solution:
-    def integerBreak(self, n: int) -&gt; int:
-        if n==2: return 1
-        if n==3: return 2
-        product = 1
-        while n&gt;4:
-            product*=3;
-            n-=3
-        product*=n;
-        return product
-
-#
-class Solution:
-    def integerBreak(self, n: int) -&gt; int:
-        if n == 2: 
-            return 1 
-        elif n == 3:
-            return 2
-        elif n%3 == 0:
-            return 3**(n//3)
-        elif n%3 == 1:
-            return 4* 3**((n - 4) // 3)
-        else: 
-            #n%3==2
-            return 2 * (3** (n//3))
-</code></pre>
-<p>没思路,答案一，dp，dp【i】保存i可以被分解的最大乘集，假设i被分解成 a和b的和， 那么a或者b可以选中集训分解dp【a/b】或者不分解保留原始值a/b. 思路2： 用3 as many as possible. 比如 6, 3 乘 3大于2 乘 2 乘 2. 因此答案不会有超过3个的2. 尽力用3.   答案3： 有了思路2 ，和容易写出答案3.但dp这种方法应该想出来。。。</p>
-<h1 id="344-reverse-string-easy">344. Reverse String (Easy)</h1>
-<p>Write a function that reverses a string. The input string is given as an array of characters s.<br>
-You must do this by modifying the input array in-place with O(1) extra memory.</p>
-<pre><code class="language-python">class Solution:
-    def reverseString(self, s: List[str]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify s in-place instead.
-        &quot;&quot;&quot;
-        l=0
-        r=len(s)-1
-        while l&lt;r:
-            s[l],s[r]=s[r],s[l]
-            l+=1
-            r-=1
-</code></pre>
-<h1 id="345-reverse-vowels-of-a-string-easy">345. Reverse Vowels of a String (Easy)</h1>
-<p>Given a string s, reverse only all the vowels in the string and return it.<br>
-The vowels are 'a', 'e', 'i', 'o', and 'u', and they can appear in both cases.</p>
-<pre><code class="language-python">class Solution:
-    def reverseVowels(self, s: str) -&gt; str:
-        s=[e for e in s]
-        l=0
-        r=len(s)-1
-        vowels={'a','e','i','o','u'}
-        while l&lt;r:
-            while l&lt;r and s[l].lower() not in vowels:
-                l+=1
-            while l&lt;r and s[r].lower() not in vowels:
-                r-=1
-            
-            s[l],s[r]=s[r],s[l]
-            r-=1
-            l+=1
-        
-        return ''.join(s)
-</code></pre>
-<h1 id="346-moving-average-from-data-stream-easy">346. Moving Average from Data Stream (Easy)</h1>
-<p>Given a stream of integers and a window size, calculate the moving average of all integers in the sliding window.<br>
-Implement the MovingAverage class:<br>
-MovingAverage(int size) Initializes the object with the size of the window size.<br>
-double next(int val) Returns the moving average of the last size values of the stream.</p>
-<pre><code class="language-python">class MovingAverage:
-
-    def __init__(self, size: int):
-        self.size=size
-        self.q=[]
-    def next(self, val: int) -&gt; float:
-        if len(self.q)&lt;self.size:
-            self.q.append(val)
-            return sum(self.q)/len(self.q)
-        else:
-            self.q.pop(0)
-            self.q.append(val)
-            return sum(self.q)/len(self.q)
-        
-from collections import deque
-class MovingAverage:
-    def __init__(self, size: int):
-        self.size = size
-        self.queue = deque()
-        # number of elements seen so far
-        self.window_sum = 0
-        self.count = 0
-
-    def next(self, val: int) -&gt; float:
-        self.count += 1
-        # calculate the new sum by shifting the window
-        self.queue.append(val)
-        tail = self.queue.popleft() if self.count &gt; self.size else 0
-
-        self.window_sum = self.window_sum - tail + val
-
-        return self.window_sum / min(self.size, self.count)
-
-class MovingAverage:
-    def __init__(self, size: int):
-        self.size = size
-        self.queue = [0] * self.size
-        self.head = self.window_sum = 0
-        # number of elements seen so far
-        self.count = 0
-
-    def next(self, val: int) -&gt; float:
-        self.count += 1
-        # calculate the new sum by shifting the window
-        tail = (self.head + 1) % self.size
-        self.window_sum = self.window_sum - self.queue[tail] + val
-        # move on to the next head
-        self.head = (self.head + 1) % self.size
-        self.queue[self.head] = val
-        return self.window_sum / min(self.size, self.count)
-
-</code></pre>
-<p>用queue 和 Circular Queue 都是好想法。</p>
-<h1 id="font-colorblue347-top-k-frequent-elements-mediumfont"><font color='blue'>347. Top K Frequent Elements （Medium）</font></h1>
-<p>Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.<br>
-Your algorithm's time complexity must be better than O(n log n), where n is the array's size</p>
-<pre><code class="language-python">class Solution:
-    def topKFrequent(self, nums: List[int], k: int) -&gt; List[int]:
-        dic_c = collections.Counter(nums)
-        return sorted(dic_c.keys(),key=lambda x: dic_c[x],reverse=True)[:k]
-
-#ANSWER
-from collections import Counter
-class Solution:
-    def topKFrequent(self, nums: List[int], k: int) -&gt; List[int]:
-        count = Counter(nums)
-        unique = list(count.keys())
-        
-        def partition(left, right, pivot_index) -&gt; int:
-            pivot_frequency = count[unique[pivot_index]]
-            # 1. move pivot to end
-            unique[pivot_index], unique[right] = unique[right], unique[pivot_index]  
-            
-            # 2. move all less frequent elements to the left
-            store_index = left
-            for i in range(left, right):
-                if count[unique[i]] &lt; pivot_frequency:
-                    unique[store_index], unique[i] = unique[i], unique[store_index]
-                    store_index += 1
-
-            # 3. move pivot to its final place
-            unique[right], unique[store_index] = unique[store_index], unique[right]  
-            
-            return store_index
-        
-        def quickselect(left, right, k_smallest) -&gt; None:
-            &quot;&quot;&quot;
-            Sort a list within left..right till kth less frequent element
-            takes its place. 
-            &quot;&quot;&quot;
-            # base case: the list contains only one element
-            if left == right: 
-                return
-            
-            # select a random pivot_index
-            pivot_index = random.randint(left, right)     
-                            
-            # find the pivot position in a sorted list   
-            pivot_index = partition(left, right, pivot_index)
-            
-            # if the pivot is in its final sorted position
-            if k_smallest == pivot_index:
-                 return 
-            # go left
-            elif k_smallest &lt; pivot_index:
-                quickselect(left, pivot_index - 1, k_smallest)
-            # go right
-            else:
-                quickselect(pivot_index + 1, right, k_smallest)
-         
-        n = len(unique) 
-        # kth top frequent element is (n - k)th less frequent.
-        # Do a partial sort: from less frequent to the most frequent, till
-        # (n - k)th less frequent element takes its place (n - k) in a sorted array. 
-        # All element on the left are less frequent.
-        # All the elements on the right are more frequent.  
-        quickselect(0, n - 1, n - k)
-        # Return top k frequent elements
-        return unique[n - k:]
-
-#ANSWER
-from collections import Counter
-class Solution:
-    def topKFrequent(self, nums: List[int], k: int) -&gt; List[int]:
-        
-        bucket = [[] for _ in range(len(nums) + 1)]
-        Count = Counter(nums).items()  
-        for num, freq in Count: 
-            bucket[freq].append(num) 
-        flat_list = [item for sublist in bucket for item in sublist]
-        return flat_list[::-1][:k]
-</code></pre>
-<p>答案给出了quick selelct的解法O（n）。但bucket 方法更好。 也是O（n）。</p>
-<h1 id="348-design-tic-tac-toe-medium">348. Design Tic-Tac-Toe （Medium）</h1>
-<p>Assume the following rules are for the tic-tac-toe game on an n x n board between two players:<br>
-A move is guaranteed to be valid and is placed on an empty block.<br>
-Once a winning condition is reached, no more moves are allowed.<br>
-A player who succeeds in placing n of their marks in a horizontal, vertical, or diagonal row wins the game.<br>
-Implement the TicTacToe class:<br>
-TicTacToe(int n) Initializes the object the size of the board n.<br>
-int move(int row, int col, int player) Indicates that the player with id player plays at the cell (row, col) of the board. The move is guaranteed to be a valid move.</p>
-<pre><code class="language-python">class TicTacToe:
-
-    def __init__(self, n: int):
-        self.n=n
-        self.rows_p1 = [0]*n
-        self.rows_p2 = [0]*n
-        self.cols_p1 = [0]*n
-        self.cols_p2 = [0]*n
-        self.i_plus_j_n_1_p1=0
-        self.i_plus_j_n_1_p2=0
-        self.i_equal_j_p1=0
-        self.i_equal_j_p2=0
-                
-    def move(self, row: int, col: int, player: int) -&gt; int:
-        if player==1:
-            self.rows_p1[row]+=1
-            if self.rows_p1[row]==self.n: return player
-            self.cols_p1[col]+=1
-            if self.cols_p1[col]==self.n: return player
-            if row+col==self.n-1:
-                self.i_plus_j_n_1_p1+=1
-                if self.i_plus_j_n_1_p1==self.n: return player
-            if row==col:
-                self.i_equal_j_p1+=1
-                if self.i_equal_j_p1==self.n: return player
-        else:
-            self.rows_p2[row]+=1
-            if self.rows_p2[row]==self.n: return player
-            self.cols_p2[col]+=1
-            if self.cols_p2[col]==self.n: return player
-            if row+col==self.n-1:
-                self.i_plus_j_n_1_p2+=1
-                if self.i_plus_j_n_1_p2==self.n: return player
-            if row==col:
-                self.i_equal_j_p2+=1
-                if self.i_equal_j_p2==self.n: return player
-        
-        return 0
-
-
-</code></pre>
-<h1 id="349-intersection-of-two-arrays-easy">349. Intersection of Two Arrays (Easy)</h1>
-<p>Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must be unique and you may return the result in any order.</p>
-<pre><code class="language-python">class Solution:
-    def intersection(self, nums1: List[int], nums2: List[int]) -&gt; List[int]:
-        return list(set(nums1)&amp;set(nums2))
-</code></pre>
-<p>folowup, solve in O(n) time O(1) space given nums1,nums2 are sorted.</p>
-<pre><code class="language-python">def intersection(self, nums1: List[int], nums2: List[int]) -&gt; List[int]:
-    # if the lists are already sorted and you're told to solve in O(n) time and O(1) space:
-    nums1.sort() # assume sorted
-    nums2.sort() # assume sorted
-
-    # iterate both nums backwards till at least 1 is empty
-    # if num2[j] &gt; num1[i], pop num2
-    # if num2[j] &lt; num1[i], pop num1
-    # if equal and num not last appended to result, append to result and pop both nums
-    
-    result = []
-            
-    while nums1 and nums2:
-        if nums2[-1] &gt; nums1[-1]:
-            nums2.pop()
-        elif nums2[-1] &lt; nums1[-1]:
-            nums1.pop()
-        else:
-            # to avoid duplicates
-            if not result or (result and nums1[-1] != result[-1]):
-                result.append(nums1[-1])
-            nums1.pop()
-            nums2.pop()
-
-    return result
-</code></pre>
-<h1 id="350-intersection-of-two-arrays-ii-easy">350. Intersection of Two Arrays II （Easy）</h1>
-<p>Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must appear as many times as it shows in both arrays and you may return the result in any order.</p>
-<pre><code class="language-python">class Solution:
-    def intersect(self, nums1: List[int], nums2: List[int]) -&gt; List[int]:
-        c1=collections.Counter(nums1)
-        c2=collections.Counter(nums2)
-        res=[]
-        for k in c1:
-            if k in c2:
-                res.extend([k]*min(c1[k],c2[k]))
-        return res
-
-#Bad but save space answer
-class Solution:
-    def intersect(self, nums1: List[int], nums2: List[int]) -&gt; List[int]:
-        nums1.sort()
-        nums2.sort()
-        result = []
-    
-        while nums1 and nums2:
-            if nums2[-1] &gt; nums1[-1]:
-                nums2.pop()
-            elif nums2[-1] &lt; nums1[-1]:
-                nums1.pop()
-            else:
-                result.append(nums1[-1])
-                nums1.pop()
-                nums2.pop()
-
-        return result
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-12-06]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-12-06/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-06/">
-        </link>
-        <updated>2021-12-06T05:36:37.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="font-colorblue331-verify-preorder-serialization-of-a-binary-tree-font"><font color='blue'>331. Verify Preorder Serialization of a Binary Tree </font></h1>
-<p>One way to serialize a binary tree is to use preorder traversal. When we encounter a non-null node, we record the node's value. If it is a null node, we record using a sentinel value such as '#'.</p>
-<pre><code class="language-python">class Solution:
-    def isValidSerialization(self, preorder: str) -&gt; bool:
-        
-        stack = []
-        for char in preorder.split(','):
-            while char=='#' and stack and stack[-1]=='#':
-                if len(stack)&lt;2: return False
-                stack.pop()
-                stack.pop()
-            
-            stack.append(char)
-        
-        return stack==['#']
-                
- #ANSWER           
- class Solution:
-    def isValidSerialization(self, preorder: str) -&gt; bool:
-        # number of available slots
-        slots = 1
-
-        for node in preorder.split(','):
-            # one node takes one slot
-            slots -= 1
-            
-            # no more slots available
-            if slots &lt; 0:
-                return False
-            
-            # non-empty node creates two children slots
-            if node != '#':
-                slots += 2
-        
-        # all slots should be used up
-        return slots == 0
-</code></pre>
-<p>没思路初看， 但是用stack解决了， 如果遇到‘X,#,#’ X一定是个leave，出栈，但X本身可能是其他人的child，所以补一个#。  最后如果valid，应该stack为【#】。答案思路没用stack用了计算slot的方法。</p>
-<h1 id="font-colorred332-reconstruct-itinerary-hardfont"><font color='red'>332. Reconstruct Itinerary （Hard）</font></h1>
-<p>You are given a list of airline tickets where tickets[i] = [fromi, toi] represent the departure and the arrival airports of one flight. Reconstruct the itinerary in order and return it.<br>
-All of the tickets belong to a man who departs from &quot;JFK&quot;, thus, the itinerary must begin with &quot;JFK&quot;. If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string.</p>
-<pre><code class="language-python">class Solution:
-    def findItinerary(self, tickets: List[List[str]]) -&gt; List[str]:
-        self.flightMap = collections.defaultdict(list)
-        for ticket in tickets:
-            origin,dest=ticket[0],ticket[1]
-            self.flightMap[origin].append(dest)
-        
-        self.visitBitmap=dict()
-        
-        for origin,itinerary in self.flightMap.items():
-            itinerary.sort()
-            self.visitBitmap[origin]=[False]*len(itinerary)
-        
-        self.flights=len(tickets)
-        self.result=[]
-        route=['JFK']
-        self.backtracking('JFK',route)
-        return self.result
-    
-    def backtracking(self,origin,route):
-        if len(route)==self.flights+1:
-            self.result=route
-            return True
-        
-        for i, nextDest in enumerate(self.flightMap[origin]):
-            if not self.visitBitmap[origin][i]:
-                self.visitBitmap[origin][i]=True
-                ret=self.backtracking(nextDest,route+[nextDest])
-                self.visitBitmap[origin][i]=False
-                if ret:
-                    return True
-        return False
-
-#
-class Solution:
-    def findItinerary(self, tickets: List[List[str]]) -&gt; List[str]:
-        self.flightMap = collections.defaultdict(list)
-        for ticket in tickets:
-            origin,dest=ticket[0],ticket[1]
-            self.flightMap[origin].append(dest)
- 
-        
-        for origin,itinerary in self.flightMap.items():
-            itinerary.sort()
-         
-        self.result=[]
-        self.DFS('JFK')
-       
-        return self.result[::-1]
-    
-    def DFS(self,origin):
-        destList=self.flightMap[origin]
-        while destList:
-            nextDest=destList.pop(0)
-            self.DFS(nextDest)
-        self.result.append(origin)
-</code></pre>
-<p>这个明显是个一笔画问题，不知道答案。。。有两个问题，判断能否是一笔画，怎么能画出一笔画。一笔画算法：<br>
-It starts with a random node and then follows an arbitrary unvisited edge to a neighbor. This step is repeated until one returns to the starting node. This yields a first circle in the graph.</p>
-<pre><code>If this circle covers all nodes it is an Eulerian cycle and the algorithm is finished. Otherwise, one chooses another node among the cycles' nodes with unvisited edges and constructs another circle, called subtour.
-By connecting all the circles in the above process, we build the Eulerian cycle at the end
-</code></pre>
-<p>答案1：backtracking+greedy  答案2： 在倒序添加一个机场前，必须已经visited 所有这个机场的outgoing edge。否则就是还有路径没有浏览过。 所以算法是postorder DFS</p>
-<h1 id="font-colorblue333-largest-bst-subtree-medium-font"><font color='blue'>333. Largest BST Subtree （Medium） </font></h1>
-<p>Given the root of a binary tree, find the largest subtree, which is also a Binary Search Tree (BST), where the largest means subtree has the largest number of nodes.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def largestBSTSubtree(self, root: Optional[TreeNode]) -&gt; int:
-         
-        self.res=0
-        
-        def isBST(root):
-            if not root: 
-                return True
-            res=[]
-            def inorder(root):
-                if not root: return 
-                inorder(root.left)
-                res.append(root.val)
-                inorder(root.right)
-            inorder(root)
-            for i in range(1,len(res)):
-                if res[i-1] &gt;= res[i]:
-                    return False
-            root.size=len(res)
-            return True
-            
-        
-        def helper(root):
-            if not root: return
-            helper(root.left)
-            helper(root.right)
-            if isBST(root):
-                self.res=max(self.res,root.size)  
-     
-        helper(root)
-        return self.res          
-
-</code></pre>
-<p>因为要判断isBST，call很多次，自己写的时间复杂度感觉比较大。。。 isBST同时设置了 BST大小，所以call完isBST后直接更新self.res.  看答案思路：答案是preorder 和postorder 。。。 postorder优于preorder，因为没有重复判断isvalidBST. 但需要通知parent node maxleft minright是多少，感觉更繁琐，不如自己的答案。</p>
-<h1 id="font-colorred334-increasing-triplet-subsequence-mediumfont"><font color='red'>334. Increasing Triplet Subsequence （Medium）</font></h1>
-<p>Given an integer array nums, return true if there exists a triple of indices (i, j, k) such that i &lt; j &lt; k and nums[i] &lt; nums[j] &lt; nums[k]. If no such indices exists, return false.</p>
-<pre><code class="language-python">class Solution:
-    def increasingTriplet(self, nums: List[int]) -&gt; bool:
-        if len(nums)&lt;3: return False
-        
-        dp=[1]*len(nums)
-        for i in range(len(nums)):
-            for j in range(i):
-                 if nums[i]&gt;nums[j]:
-                    dp[i]= max(dp[j]+1,dp[i])  
-                    if dp[i]&gt;=3: return True
-        
-        return False
-
-
-class Solution:
-    def increasingTriplet(self, nums: List[int]) -&gt; bool:
-        first_num = float(&quot;inf&quot;)
-        second_num = float(&quot;inf&quot;)
-        for n in nums:
-            if n &lt;= first_num:
-                first_num = n
-            elif n &lt;= second_num:
-                second_num = n
-            else:
-                return True
-        return False
-</code></pre>
-<p>初次尝试用increasing subsequence DP方法， time limit exceeded。。。直接看答案了。。。直接比较难相到这个方法，思路：scan num list。 边scan边保存看到的最小的和次小的数字，如果遇到比这两个数字都大的，那么找到了答案，如果都没有return False。</p>
-<h1 id="font-colorred335-self-crossing-hard-font"><font color='red'>335. Self Crossing （Hard） </font></h1>
-<p>You are given an array of integers distance.<br>
-You start at point (0,0) on an X-Y plane and you move distance[0] meters to the north, then distance[1] meters to the west, distance[2] meters to the south, distance[3] meters to the east, and so on. In other words, after each move, your direction changes counter-clockwise.<br>
-Return true if your path crosses itself, and false if it does not.</p>
-<pre><code class="language-python">class Solution:
-    def isSelfCrossing(self, distance: List[int]) -&gt; bool:
-        
-        x=distance
-        for i in range(3,len(x)):
-            
-            if i &gt;= 3 and x[i] &gt;= x[i - 2] and x[i - 1] &lt;= x[i - 3]:
-                return True
-            
-            if i &gt;= 4 and x[i - 1] == x[i - 3] and x[i] + x[i - 4] &gt;= x[i - 2]:
-                return True
-            
-            if i &gt;= 5 and x[i - 2] &gt;= x[i - 4] and x[i - 5] + x[i - 1] &gt;= x[i - 3] and x[i - 1] &lt;= x[i - 3] and x[i - 4] + x[i] &gt;= x[i - 2]:
-                return True
-        
-        return False
-
-#GREAT ANSWER
-def isSelfCrossing(self, x):
-    b = c = d = e = 0
-    for a in x:
-        if d &gt;= b &gt; 0 and (a &gt;= c or a &gt;= c-e &gt;= 0 and f &gt;= d-b):
-            return True
-        b, c, d, e, f = a, b, c, d, e
-    return False
-</code></pre>
-<p>直接看答案， 只有3种情况会crossing， 第一种包含4条线段 最后一条穿过第一条， 第二种包括5条线段，最后一条嵌入第一条。 第三种包含6条线段，最后一条与第一条十字交叉穿过。</p>
-<p>第二种解法：</p>
-<pre>
-            b                              b
-   +----------------+             +----------------+
-   |                |             |                |
-   |                |             |                | a
- c |                |           c |                |
-   |                | a           |                |    f
-   +----------->    |             |                | <----+
-            d       |             |                |      | e
-                    |             |                       |
-                                  +-----------------------+
-                                               d
-</pre>
-<h1 id="font-colorred336-palindrome-pairs-hard-font"><font color='red'>336. Palindrome Pairs (Hard) </font></h1>
-<p>Given a list of unique words, return all the pairs of the distinct indices (i, j) in the given list, so that the concatenation of the two words words[i] + words[j] is a palindrome.</p>
-<pre><code class="language-python">class Solution:
-    def palindromePairs(self, words: List[str]) -&gt; List[List[int]]:
-        res= []
-        def isp(w):
-            res = [e for e in w]
-            return res==res[::-1]
-        for i in range(len(words)):
-            for j in range(i+1,len(words)):
-                if not words[i] or not words[j] or words[i][0]==words[j][-1]:
-                    if isp(words[i]+words[j]):
-                        res.append([i,j])
-                if not words[i] or not words[j] or words[j][0]==words[i][-1]:
-                    if isp(words[j]+words[i]):
-                        res.append([j,i])
-        return res
-#answer                  
-class Solution:
-    def palindromePairs(self, words: List[str]) -&gt; List[List[int]]:
-      
-        def all_valid_prefixes(word):
-            valid_prefixes = []
-            for i in range(len(word)):
-                if word[i:] == word[i:][::-1]:
-                    valid_prefixes.append(word[:i])
-            return valid_prefixes
-
-        def all_valid_suffixes(word):
-            valid_suffixes = []
-            for i in range(len(word)):
-                if word[:i+1] == word[:i+1][::-1]:
-                    valid_suffixes.append(word[i + 1:])
-            return valid_suffixes
-
-        word_lookup = {word: i for i, word in enumerate(words)}
-        solutions = []
-
-        for word_index, word in enumerate(words):
-            reversed_word = word[::-1]
-
-            # Build solutions of case #1. This word will be word 1.
-            if reversed_word in word_lookup and word_index != word_lookup[reversed_word]:
-                solutions.append([word_index, word_lookup[reversed_word]])
-
-            # Build solutions of case #2. This word will be word 2.
-            for suffix in all_valid_suffixes(word):
-                reversed_suffix = suffix[::-1]
-                if reversed_suffix in word_lookup:
-                    solutions.append([word_lookup[reversed_suffix], word_index])
-
-            # Build solutions of case #3. This word will be word 1.
-            for prefix in all_valid_prefixes(word):
-                reversed_prefix = prefix[::-1]
-                if reversed_prefix in word_lookup:
-                    solutions.append([word_index, word_lookup[reversed_prefix]])
-
-        return solutions
-#ANSWER TRIE
-
-class TrieNode:
-    def __init__(self):
-        self.next = collections.defaultdict(TrieNode)
-        self.ending_word = -1
-        self.palindrome_suffixes = []
-
-class Solution:
-    def palindromePairs(self, words):
-
-        # Create the Trie and add the reverses of all the words.
-        trie = TrieNode()
-        for i, word in enumerate(words):
-            word = word[::-1] # We want to insert the reverse.
-            current_level = trie
-            for j, c in enumerate(word):
-                # Check if remainder of word is a palindrome.
-                if word[j:] == word[j:][::-1]:# Is the word the same as its reverse?
-                    current_level.palindrome_suffixes.append(i)
-                # Move down the trie.
-                current_level = current_level.next[c]
-            current_level.ending_word = i
-
-        # Look up each word in the Trie and find palindrome pairs.
-        solutions = []
-        for i, word in enumerate(words):
-            current_level = trie
-            for j, c in enumerate(word):
-                # Check for case 3.
-                if current_level.ending_word != -1:
-                    if word[j:] == word[j:][::-1]: # Is the word the same as its reverse?
-                        solutions.append([i, current_level.ending_word])
-                if c not in current_level.next:
-                    break
-                current_level = current_level.next[c]
-            else: # Case 1 and 2 only come up if whole word was iterated.
-                # Check for case 1.
-                if current_level.ending_word != -1 and current_level.ending_word != i:
-                    solutions.append([i, current_level.ending_word])
-                # Check for case 2.
-                for j in current_level.palindrome_suffixes:
-                    solutions.append([i, j])
-        return solutions
-</code></pre>
-<p>初次尝试，time limit exceeded。 基本暴力解，无优化。如何优化？  感觉是用Trie。。。看答案了。思路1： 三种情况，1）word本身是palindrome，2）AB_PALINDROME     BA  找到第一个词所有满足第一个pattern的prefix，然后找prefix[::-1]  3)    BA    PALINDROM_AB,找第二个词所有满足第二个patern的suffix，然后找suffix[::-1]<br>
-思路2： Trie， case1） CAT TAC     case2）  CAT   PALINDROME_TAC case3） CAT_PALINDROME  TAC.     只有在扫过所有word1字符情况都不break情况下才会再检查case1和2. 逆序在tire保存word和保存满足palindrome suffix的word ids是简化算法的关键。</p>
-<h1 id="337-house-robber-iii-medium">337. House Robber III （Medium）</h1>
-<p>The thief has found himself a new place for his thievery again. There is only one entrance to this area, called root.<br>
-Besides the root, each house has one and only one parent house. After a tour, the smart thief realized that all houses in this place form a binary tree. It will automatically contact the police if two directly-linked houses were broken into on the same night.<br>
-Given the root of the binary tree, return the maximum amount of money the thief can rob without alerting the police.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def rob(self, root: Optional[TreeNode]) -&gt; int:
-        # root.val =  root.left_rob+root.right.rob                         1)rob2child
-        # root.val =  root.left_norob + root.right.norob + root.val        2)rob root no rob child
-        # root.val = root.left/right.rob   root.right/left.norob      3) rob one of child norob root
-        
-    
-        #postorder transversal  add two value, rob  norob
-        
-        def helper(root):
-            if not root: return 
-            helper(root.left)
-            helper(root.right)
-            
-            #processing leaves
-            if not root.left and not root.right:
-                root.rob=root.val
-                root.norob=0
-            
-            #if decide rob root:
-            root_left_max = root.left.norob if root.left else 0
-            root_right_max= root.right.norob if root.right else 0
-            root.rob = root.val + root_left_max + root_right_max
-            #if decide norob root:
-            root_left_max =max([root.left.norob,root.left.rob]) if root.left else 0
-            root_right_max= max([root.right.norob,root.right.rob]) if root.right else 0
-            root.norob = root_left_max + root_right_max
-        
-        helper(root)
-        return max([root.rob,root.norob])
-
-
-#ANSWER
-class Solution:
-    def rob(self, root: TreeNode) -&gt; int:
-        def helper(node):
-            # return [rob this node, not rob this node]
-            if not node:
-                return (0, 0)
-            left = helper(node.left)
-            right = helper(node.right)
-            # if we rob this node, we cannot rob its children
-            rob = node.val + left[1] + right[1]
-            # else we could choose to either rob its children or not
-            not_rob = max(left) + max(right)
-            return [rob, not_rob]
-
-        return max(helper(root))
-</code></pre>
-<h1 id="338-counting-bits-easy">338. Counting Bits (Easy)</h1>
-<p>Given an integer n, return an array ans of length n + 1 such that for each i (0 &lt;= i &lt;= n), ans[i] is the number of 1's in the binary representation of i.</p>
-<pre><code class="language-python">class Solution:
-    def countBits(self, n: int) -&gt; List[int]:
-        if n==0: return [0]
-        if n==1: return [0,1]
-        cur=[0,1]
-        while len(cur)&lt;=n:
-            cur = cur+[1+e for e in cur]
-        return cur[:n+1]
-        
-#ANSWER
-class Solution:
-    def countBits(self, n: int) -&gt; List[int]:
-        ans = [0] * (n + 1)
-        for x in range(1, n + 1):
-            ans[x] = ans[x &amp; (x - 1)] + 1
-        return ans 
-
-</code></pre>
-<p>答案更优雅，x&amp;x-1 得到去掉最后一个significant bit的数字  X&gt; X&amp;(X-1) 然后从1遍历到n用dp。</p>
-<h1 id="339-nested-list-weight-sum-medium">339. Nested List Weight Sum （Medium）</h1>
-<p>You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists.<br>
-The depth of an integer is the number of lists that it is inside of. For example, the nested list [1,[2,2],[[3],2],1] has each integer's value set to its depth.<br>
-Return the sum of each integer in nestedList multiplied by its depth.</p>
-<pre><code class="language-python">
-class Solution:
-    def depthSum(self, nestedList: List[NestedInteger]) -&gt; int:
-        def helper(nestli,level):
-            res=0
-            for nl in nestli:
-                if nl.isInteger():
-                    res+=nl.getInteger() * level
-                else:
-                    res+=helper(nl.getList(),level+1)
-            
-            return res
-        return helper(nestedList,1)
-</code></pre>
-<h1 id="font-colorblue340-longest-substring-with-at-most-k-distinct-characters-medium-font"><font color='blue'>340. Longest Substring with At Most K Distinct Characters (Medium) </font></h1>
-<p>Given a string s and an integer k, return the length of the longest substring of s that contains at most k distinct characters.</p>
-<pre><code class="language-python">class Solution:
-    def lengthOfLongestSubstringKDistinct(self, s: str, k: int) -&gt; int:
-        #  e c e b a  a a a a a a c d a a 
-        # two pointer
-        #   
-        dic=dict()
-        start=0
-        res=0
-        for j,char in enumerate(s):
-            #process over k case
-            if dic and char not in dic and len(dic)==k:
-                while len(dic)==k:
-                    dic[s[start]]-=1
-                    if dic[s[start]]==0:
-                        del dic[s[start]]
-                    start+=1
-            
-            elif char in dic and len(dic)&lt;=k:
-                res=max(res,j-start+1)
-            
-            
-            elif len(dic)&lt;k:
-                res+=1
-        
-            
-            dic[char]=dic.get(char,0)+1
-        
-        return res
-
-
-
-#ANSWER
-from collections import defaultdict
-class Solution:
-    def lengthOfLongestSubstringKDistinct(self, s: str, k: int) -&gt; int:
-        n = len(s)
-        if n * k == 0:
-            return 0
-
-        # sliding window left and right pointers
-        left, right = 0, 0
-        # hashmap character -&gt; its rightmost position
-        # in the sliding window
-        hashmap = defaultdict()
-
-        max_len = 1
-
-        while right &lt; n:
-            # add new character and move right pointer
-            hashmap[s[right]] = right
-            right += 1
-
-            if len(hashmap) == k + 1:
-                # delete the leftmost character
-                del_idx = min(hashmap.values())
-                del hashmap[s[del_idx]]
-                # move left pointer of the slidewindow
-                left = del_idx + 1
-
-            max_len = max(max_len, right - left)
-
-        return max_len
-</code></pre>
-<p>典型的two pointer 写的磕磕绊绊 但写出来了。。。dic存放window中遇到字符的个数，  case1）如果目前dic有内容而且当前char不在dic而且window已经达到容量，start得向前移动，每前进一位，dic中s【start】数目减少一个，如果减少到0需要删除key。 退出while循环现在len（dic）小于k，后续这个不在dic中的char会加入dic。 case2）char in dic and len（dic）小于等于k，直接算结果 case3） len（dic）小于k，res+1.  答案方法思路也差不多。</p>
 ]]></content>
     </entry>
 </feed>
