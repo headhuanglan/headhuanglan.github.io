@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-04-01T23:33:11.352Z</updated>
+    <updated>2022-04-15T01:02:37.106Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -15,16 +15,661 @@
         <id>https://headhuanglan.github.io/post/system-design/</id>
         <link href="https://headhuanglan.github.io/post/system-design/">
         </link>
-        <updated>2022-03-29T23:23:07.000Z</updated>
-        <summary type="html"><![CDATA[<p>system design</p>
+        <updated>2022-03-27T23:23:07.000Z</updated>
+        <summary type="html"><![CDATA[<p>System Design 资源汇总</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>system design</p>
+        <content type="html"><![CDATA[<p>System Design 资源汇总</p>
 <!-- more -->
 <p><a href="https://www.youtube.com/watch?v=PdtlXdse7pw&amp;list=PL4KdJM8LzAMecwInbBK5GJ3Anz-ts75RQ">DDIA书视频总结</a></p>
+<p><a href="https://www.interviewbit.com/courses/system-design/">InterviewBit系统设计题汇总</a></p>
 <p><a href="https://github.com/donnemartin/system-design-primer">system design primer github repo</a></p>
 <p><a href="https://www.hiredintech.com/classrooms/system-design/lesson/52">system design class</a></p>
-<p><a href="https://www.educative.io/courses/grokking-the-system-design-interview">grokking system design interview</a></p>
+<p><a href="https://www.educative.io/courses/grokking-the-system-design-interview">付费 grokking system design interview</a></p>
 <p><a href="https://luanjunyi.medium.com/the-table-of-contents-416d2240fa8e">大佬的medium文章</a></p>
+<p><a href="http://blog.gainlo.co/index.php/category/system-design-interview-questions/">已经解决的系统设计问题合集</a></p>
+<p><a href="http://highscalability.com/blog/2022/1/25/designing-uber.html/">Design Uber</a></p>
+<p><a href="http://highscalability.com/blog/2022/1/17/designing-tinder.html">Design Tinder</a></p>
+<p><a href="http://highscalability.com/blog/2022/1/11/designing-instagram.html">Design Instagram</a></p>
+<p><a href="http://highscalability.com/blog/2022/1/3/designing-whatsapp.html">Design Whatsapp</a></p>
+<p><a href="http://highscalability.com/blog/2021/12/13/designing-netflix.html">Design Netflix</a></p>
+<p>https://leetcode.com/company/facebook/discuss/229177/My-System-Design-Template<br>
+(1) FEATURE EXPECTATIONS [5 min]</p>
+<pre><code>    (1) Use cases
+    (2) Scenarios that will not be covered
+    (3) Who will use
+    (4) How many will use
+    (5) Usage patterns
+</code></pre>
+<p>(2) ESTIMATIONS [5 min]</p>
+<pre><code>    (1) Throughput (QPS for read and write queries)
+    (2) Latency expected from the system (for read and write queries)
+    (3) Read/Write ratio
+    (4) Traffic estimates
+            - Write (QPS, Volume of data)
+            - Read  (QPS, Volume of data)
+    (5) Storage estimates
+    (6) Memory estimates
+            - If we are using a cache, what is the kind of data we want to store in cache
+            - How much RAM and how many machines do we need for us to achieve this ?
+            - Amount of data you want to store in disk/ssd
+</code></pre>
+<p>(3) DESIGN GOALS [5 min]</p>
+<pre><code>    (1) Latency and Throughput requirements
+    (2) Consistency vs Availability  [Weak/strong/eventual =&gt; consistency | Failover/replication =&gt; availability]
+</code></pre>
+<p>(4) HIGH LEVEL DESIGN [5-10 min]</p>
+<pre><code>    (1) APIs for Read/Write scenarios for crucial components
+    (2) Database schema
+    (3) Basic algorithm
+    (4) High level design for Read/Write scenario
+</code></pre>
+<p>(5) DEEP DIVE [15-20 min]</p>
+<pre><code>    (1) Scaling the algorithm
+    (2) Scaling individual components: 
+            -&gt; Availability, Consistency and Scale story for each component
+            -&gt; Consistency and availability patterns
+    (3) Think about the following components, how they would fit in and how it would help
+            a) DNS
+            b) CDN [Push vs Pull]
+            c) Load Balancers [Active-Passive, Active-Active, Layer 4, Layer 7]
+            d) Reverse Proxy
+            e) Application layer scaling [Microservices, Service Discovery]
+            f) DB [RDBMS, NoSQL]
+                    &gt; RDBMS 
+                        &gt;&gt; Master-slave, Master-master, Federation, Sharding, Denormalization, SQL Tuning
+                    &gt; NoSQL
+                        &gt;&gt; Key-Value, Wide-Column, Graph, Document
+                            Fast-lookups:
+                            -------------
+                                &gt;&gt;&gt; RAM  [Bounded size] =&gt; Redis, Memcached
+                                &gt;&gt;&gt; AP [Unbounded size] =&gt; Cassandra, RIAK, Voldemort
+                                &gt;&gt;&gt; CP [Unbounded size] =&gt; HBase, MongoDB, Couchbase, DynamoDB
+            g) Caches
+                    &gt; Client caching, CDN caching, Webserver caching, Database caching, Application caching, Cache @Query level, Cache @Object level
+                    &gt; Eviction policies:
+                            &gt;&gt; Cache aside
+                            &gt;&gt; Write through
+                            &gt;&gt; Write behind
+                            &gt;&gt; Refresh ahead
+            h) Asynchronism
+                    &gt; Message queues
+                    &gt; Task queues
+                    &gt; Back pressure
+            i) Communication
+                    &gt; TCP
+                    &gt; UDP
+                    &gt; REST
+                    &gt; RPC
+</code></pre>
+<p>(6) JUSTIFY [5 min]</p>
+<pre><code>    (1) Throughput of each layer
+    (2) Latency caused between each layer
+    (3) Overall latency justification
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2022-03-05]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2022-03-05/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2022-03-05/">
+        </link>
+        <updated>2022-03-05T11:11:11.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="441-arranging-coins-easy">441. Arranging Coins （Easy）</h1>
+<p>You have n coins and you want to build a staircase with these coins. The staircase consists of k rows where the ith row has exactly i coins. The last row of the staircase may be incomplete.<br>
+Given the integer n, return the number of complete rows of the staircase you will build.</p>
+<pre><code class="language-python">class Solution:
+    def arrangeCoins(self, n: int) -&gt; int:
+        r=0
+        while n&gt;0:
+            r+=1
+            n-=r
+        return r-1 if n&lt;0 else r
+
+class Solution:
+    def arrangeCoins(self, n: int) -&gt; int:
+        
+        # (1+ x) x /2 &lt;= n
+        #      (1+x)x &lt;= 2n
+        # max x which (1+x)x &lt;=2n
+        
+        l, r = 0, n
+        
+        while l &lt;= r:
+            
+            m = (l + r) // 2
+            
+            if (m+1)*m &lt;= 2*n and (m+2)*(m+1) &gt; 2*n:
+                return m
+            
+            if (m+1)*m &lt; 2*n:
+                l = m + 1
+            else:
+                r = m - 1
+                
+</code></pre>
+<p>答案是binary  search啊。。</p>
+<h1 id="442-find-all-duplicates-in-an-array-medium">442. Find All Duplicates in an Array （Medium）</h1>
+<p>Given an integer array nums of length n where all the integers of nums are in the range [1, n] and each integer appears once or twice, return an array of all the integers that appears twice.<br>
+You must write an algorithm that runs in O(n) time and uses only constant extra space.</p>
+<pre><code class="language-python">class Solution:
+    def findDuplicates(self, nums: List[int]) -&gt; List[int]:
+        # 0 1 2 3 4 5 6 7
+        # 4 3 2 7 8 2 3 1
+        
+        # -4 3 2-7    -3-1 
+        
+        n=len(nums)
+        
+        for i in range(n):
+            ind=(abs(nums[i])%n-1)
+            nums[ind] =   abs(nums[ind])+n if nums[ind]&lt;0 else -abs(nums[ind])-n
+        
+        #print(nums)
+        res=[]
+        for i in range(n):
+            if nums[i]&gt;n:
+                res.append(i+1)
+        return res
+
+#ANSWER
+class Solution:
+    def findDuplicates(self, nums: List[int]) -&gt; List[int]:
+        res=[]
+        for n in nums:
+            if nums[abs(n)-1]&lt;0: #seen before
+                res.append(abs(n))
+            
+            nums[abs(n)-1]*=-1
+        
+        return res
+</code></pre>
+<p>特殊的bookkeeping。 答案写的更好</p>
+<h1 id="font-colorblue-443-string-compression-medium-font"><font color='blue'> 443. String Compression （Medium） </font></h1>
+<p>Given an array of characters chars, compress it using the following algorithm:<br>
+Begin with an empty string s. For each group of consecutive repeating characters in chars:<br>
+If the group's length is 1, append the character to s.<br>
+Otherwise, append the character followed by the group's length.<br>
+The compressed string s should not be returned separately, but instead, be stored in the input character array chars. Note that group lengths that are 10 or longer will be split into multiple characters in chars.<br>
+After you are done modifying the input array, return the new length of the array.<br>
+You must write an algorithm that uses only constant extra space.</p>
+<pre><code class="language-python">class Solution:
+    def compress(self, chars: List[str]) -&gt; int:
+        #two pointer
+        l=0
+        lchar=0
+        r=0
+        while r&lt;len(chars):
+            c=0
+            while r&lt;len(chars) and chars[r]==chars[l]:
+                c+=1
+                r+=1
+            
+            if c&gt;0:r-=1
+            
+            if c==1:
+                chars[lchar]=chars[l]
+                l+=1
+                lchar=lchar+1
+            elif c&gt;1 and c&lt;10:
+                chars[lchar]=chars[l]
+                chars[lchar+1]=str(c)
+                l=l+c
+                lchar=lchar+2
+            elif c&gt;=10:
+                chars[lchar]=chars[l]
+                l=l+c
+                for j,cc in enumerate(str(c)):
+                    chars[lchar+1+j]=cc
+                 
+                lchar=lchar+len(str(c))+1
+            r+=1    
+            
+        return lchar 
+#ANSWER 更简单
+ 
+class Solution:
+    def compress(self, chars: List[str]) -&gt; int:
+        walker, runner = 0, 0
+        while runner &lt; len(chars):
+		
+            chars[walker] = chars[runner]
+            count = 1
+			
+            while runner + 1 &lt; len(chars) and chars[runner] == chars[runner+1]:
+                runner += 1
+                count += 1
+			
+            if count &gt; 1:
+                for c in str(count):
+                    chars[walker+1] = c
+                    walker += 1
+            
+            runner += 1
+            walker += 1
+        
+        return walker
+
+</code></pre>
+<p>two pointer 写出来了，但是cornercase很多边test边写的。。。。答案很简单。。。。</p>
+<h1 id="font-colorred-444-sequence-reconstruction-medium-font"><font color='red'> 444. Sequence Reconstruction (Medium) </font></h1>
+<p>You are given an integer array nums of length n where nums is a permutation of the integers in the range [1, n]. You are also given a 2D integer array sequences where sequences[i] is a subsequence of nums.<br>
+Check if nums is the shortest possible and the only supersequence. The shortest supersequence is a sequence with the shortest length and has all sequences[i] as subsequences. There could be multiple valid supersequences for the given array sequences.<br>
+For example, for sequences = [[1,2],[1,3]], there are two shortest supersequences, [1,2,3] and [1,3,2].<br>
+While for sequences = [[1,2],[1,3],[1,2,3]], the only shortest supersequence possible is [1,2,3]. [1,2,3,4] is a possible supersequence but not the shortest.<br>
+Return true if nums is the only shortest supersequence for sequences, or false otherwise.<br>
+A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements.</p>
+<pre><code class="language-python">class Solution:
+    def sequenceReconstruction(self, nums: List[int], sequences: List[List[int]]) -&gt; bool:
+        values = {x for seq in sequences for x in seq}
+        graph = {x: [] for x in values}
+        indegrees = {x: 0 for x in values}
+        for seq in sequences:
+            for i in range(len(seq) - 1):
+                s = seq[i]
+                t = seq[i+1]
+                graph[s].append(t)
+                indegrees[t] += 1
+        queue = collections.deque()
+        for node, count in indegrees.items():
+            if count == 0:
+                queue.append(node)
+        res = []
+        while queue:
+            if len(queue) != 1:
+                return False
+            source = queue.popleft()
+            res.append(source)
+            for target in graph[source]:
+                indegrees[target] -= 1
+                if indegrees[target] == 0:
+                    queue.append(target)
+        return len(res) == len(values) and res == nums
+
+
+</code></pre>
+<p>感觉题就没读懂。。。。topological sort... 第一步建立dependency graph， 第二部toposort，每一步检查是否只有一个node的可能性，如果比一个多，return False。 第三步，在得到toposortlist 后，检查长度是否和sequence中所有unique 元素个数一样而且 是input nums。<br>
+解释：<br>
+TopSort order exists<br>
+Whether the TopSort order is the only one (Uniqueness of Topological sort, Hamilton path, see https://en.wikipedia.org/wiki/Topological_sorting#Uniqueness).如果不是，那么说明有些pair只有偏序关系，没有全序关系，这样不能完全确定元素之间的顺序<br>
+the only top sort order constructed should be equal to the org.</p>
+<p>index == org.length (check condition 3) &amp;&amp; index == map.size() (check all the vertex in the graph has been visited, so the top sort order exists, check condition 1)</p>
+<p>How to check only one order? queue.size() should always be one, then only one element at a time has indegree to be 0, so you only have one choice (check condition 2)</p>
+<h1 id="font-colorblue-445-add-two-numbers-ii-medium-font"><font color='blue'> 445. Add Two Numbers II （Medium） </font></h1>
+<p>You are given two non-empty linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.<br>
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -&gt; Optional[ListNode]:
+        def rev(node):
+            pre=None
+            while node:
+                nodenext=node.next
+                node.next=pre
+                pre=node
+                node=nodenext
+            return pre
+        
+        l1=rev(l1)
+        l2=rev(l2)
+        
+        carry=0
+        head=ListNode(val=None)
+        savehead=head
+        while l1 or l2:
+            v1= l1.val if l1 else 0
+            v2= l2.val if l2 else 0
+            val=(v1+v2+carry)%10
+            carry=(v1+v2+carry)//10
+            head.next=ListNode(val)
+            head=head.next
+            
+            l1=l1.next if l1 else None
+            l2=l2.next if l2 else None
+            
+        if carry:
+            head.next=ListNode(carry)
+            head=head.next
+        
+        return rev(savehead.next)
+
+#
+class Solution:
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -&gt; ListNode:
+        if not l1: return l2
+        if not l2: return l1
+        
+        s1=[]
+        s2=[]
+        
+        cur=l1
+        while cur:
+            s1.append(cur.val)
+            cur=cur.next
+            
+        cur=l2
+        while cur:
+            s2.append(cur.val)
+            cur=cur.next
+            
+        
+        head=None
+        carry=0
+        while s1 or s2:
+            x = s1.pop() if s1 else 0
+            y = s2.pop() if s2 else 0
+            sum_=x+y+carry
+            cur=ListNode(sum_%10)
+            cur.next=head
+            head=cur
+            carry=sum_//10
+        
+        if carry:
+            cur=ListNode(carry)
+            cur.next=head
+            head=cur
+        return head
+        
+ #####
+ class Solution:
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -&gt; ListNode:
+        if not l1: return l2
+        if not l2: return l1
+        
+        s1=[]
+        s2=[]
+        
+        cur=l1
+        while cur:
+            s1.append(cur.val)
+            cur=cur.next
+            
+        cur=l2
+        while cur:
+            s2.append(cur.val)
+            cur=cur.next
+            
+        
+        head=None
+        carry=0
+        while s1 or s2:
+            x = s1.pop() if s1 else 0
+            y = s2.pop() if s2 else 0
+            sum_=x+y+carry
+            cur=ListNode(sum_%10)
+            cur.next=head
+            head=cur
+            carry=sum_//10
+        
+        if carry:
+            cur=ListNode(carry)
+            cur.next=head
+            head=cur
+        return head
+               
+</code></pre>
+<p>followup 是不revlist能否。。。</p>
+<h1 id="font-colorred-446-arithmetic-slices-ii-subsequence-hard-font"><font color='red'> 446. Arithmetic Slices II - Subsequence (Hard) </font></h1>
+<p>Given an integer array nums, return the number of all the arithmetic subsequences of nums.<br>
+A sequence of numbers is called arithmetic if it consists of at least three elements and if the difference between any two consecutive elements is the same.<br>
+For example, [1, 3, 5, 7, 9], [7, 7, 7, 7], and [3, -1, -5, -9] are arithmetic sequences.<br>
+For example, [1, 1, 2, 5, 7] is not an arithmetic sequence.<br>
+A subsequence of an array is a sequence that can be formed by removing some elements (possibly none) of the array.<br>
+For example, [2,5,10] is a subsequence of [1,2,1,2,4,1,5,10].<br>
+The test cases are generated so that the answer fits in 32-bit integer.</p>
+<pre><code class="language-python">class Solution:
+    def numberOfArithmeticSlices(self, nums: List[int]) -&gt; int:
+        
+        #f[i][d] denotes the number of weak arithmetic subsequences that ends with A[i] and its common difference is d.
+        #Now the state transitions are quite straightforward:
+
+        # for all j &lt; i, f[i][A[i] - A[j]] += (f[j][A[i] - A[j]] + 1).
+        # The 1 appears here because we can form a new weak arithmetic subsequence for the pair (i, j)
+        
+        #when we are appending new elements to existing weak arithmetic subsequences, we are forming arithmetic subsequences. So the first part, f[j][A[i] - A[j]] is the number of new formed arithmetic subsequences, and can be added to the answer.
+
+        
+        n=len(nums)
+        res=0
+        cnt=dict()
+        for i in range(n):
+            cnt[i]=dict()
+            for j in range(i):
+                delta=nums[i]-nums[j]
+                
+                diff=delta
+                sum_=cnt[j].get(diff,0)
+                origin=cnt[i].get(diff,0)
+                cnt[i][diff]=origin+sum_+1
+                res+=sum_
+        return res
+</code></pre>
+<p>是应该用DP但看答案。。。答案这个DP解法不是一般的DP。。。先dp【i】【diff】是以ith nums为最终位置的weak arithmetic subsequences的个数，这个weak值2个元素也能形成subsequence。 要想得到真正的3个元素的arithmetic subsequences个数，每次可以把nums【i】添加到dp【j】【diff】时候这个dp【j】【diff】个数就是arithmetic subsequences个数。很难想到这个方法啊。。。<br>
+backtracking 方法超时</p>
+<pre><code class="language-java">class Solution {
+    private int n;
+    private int ans;
+    private void dfs(int dep, int[] A, List&lt;Long&gt; cur) {
+        if (dep == n) {
+            if (cur.size() &lt; 3) {
+                return;
+            }
+            long diff = cur.get(1) - cur.get(0);
+            for (int i = 1; i &lt; cur.size(); i++) {                
+                if (cur.get(i) - cur.get(i - 1) != diff) {
+                    return;
+                }
+            }
+            ans ++;
+            return;
+        }
+        dfs(dep + 1, A, cur);
+        cur.add((long)A[dep]);
+        dfs(dep + 1, A, cur);
+        cur.remove((long)A[dep]);
+    }
+    public int numberOfArithmeticSlices(int[] A) {
+        n = A.length;
+        ans = 0;
+        List&lt;Long&gt; cur = new ArrayList&lt;Long&gt;();
+        dfs(0, A, cur);
+        return (int)ans;        
+    }
+}
+</code></pre>
+<h1 id="font-colorblue-447-number-of-boomerangs-medium-font"><font color='blue'> 447. Number of Boomerangs (Medium) </font></h1>
+<p>You are given n points in the plane that are all distinct, where points[i] = [xi, yi]. A boomerang is a tuple of points (i, j, k) such that the distance between i and j equals the distance between i and k (the order of the tuple matters).<br>
+Return the number of boomerangs.</p>
+<pre><code class="language-python">class Solution:
+    def numberOfBoomerangs(self, points: List[List[int]]) -&gt; int:
+        
+        def dis(p1,p2):
+            return (p1[0]-p2[0])**2+(p1[1]-p2[1])**2
+        
+        
+        dic=collections.defaultdict(set)
+        
+        for i,p1 in enumerate(points):
+            for j,p2 in enumerate(points):
+                if i!=j:
+                    dic[dis(p1,p2)].add((i,j))
+                    dic[dis(p1,p2)].add((j,i))
+        #print(dic)
+        res=0
+        for k, s in dic.items():
+            #find i,j i,k
+            d=dict()
+            for t in s:
+                d[t[0]]=d.get(t[0],0)+1
+            
+            #print(d)
+            
+            for key,val in d.items():
+                res+= val*(val-1) if val&gt;1 else 0
+        
+        return res
+#ANSWER 同样思路但超级简单
+class Solution:
+    def numberOfBoomerangs(self, points: List[List[int]]) -&gt; int:
+        res = 0
+        for p in points:
+            cmap = {}
+            for q in points:
+                f = p[0]-q[0]
+                s = p[1]-q[1]
+                cmap[f*f + s*s] = 1 + cmap.get(f*f + s*s, 0)
+            for k in cmap:
+                res += cmap[k] * (cmap[k] -1)
+        return res
+</code></pre>
+<p>pass了 hashmap先按照距离分类， 然后每个距离下按照起始点分类，比如距离为1下 其实点为0的edge总共有n个，那么组成三角形能组成n*n-1个。</p>
+<h1 id="448-find-all-numbers-disappeared-in-an-array-easy">448. Find All Numbers Disappeared in an Array (Easy)</h1>
+<pre><code class="language-python">class Solution:
+    def findDisappearedNumbers(self, nums: List[int]) -&gt; List[int]:
+        #
+        n=len(nums)
+        
+        for i in range(n):
+            ind = abs(nums[i])-1
+            nums[ind]=-abs(nums[ind])
+        
+        res=[]
+        for i in range(n):
+            if nums[i]&gt;0:
+                res.append(i+1)
+        return res
+
+</code></pre>
+<h1 id="449-serialize-and-deserialize-bst-medium">449. Serialize and Deserialize BST (Medium)</h1>
+<p>Serialization is converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.<br>
+Design an algorithm to serialize and deserialize a binary search tree. There is no restriction on how your serialization/deserialization algorithm should work. You need to ensure that a binary search tree can be serialized to a string, and this string can be deserialized to the original tree structure.<br>
+The encoded string should be as compact as possible.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Codec:
+
+    def serialize(self, root: Optional[TreeNode]) -&gt; str:
+        &quot;&quot;&quot;Encodes a tree to a single string.
+        &quot;&quot;&quot;
+        res=[]
+        def pre(root):
+            if not root: 
+                res.append('#')
+                return
+            res.append(str(root.val))
+            pre(root.left)
+            pre(root.right)
+        pre(root)
+        return ','.join(res)
+        
+
+    def deserialize(self, data: str) -&gt; Optional[TreeNode]:
+        &quot;&quot;&quot;Decodes your encoded data to tree.
+        &quot;&quot;&quot;
+        data=data.split(',')
+        def pre(data):
+            if not data: return None
+            cur=data.pop(0) 
+            root=None
+            if cur!='#':
+                root=TreeNode(int(cur))
+            
+            if root and data:
+                root.left=pre(data)
+            if root and data:
+                root.right=pre(data)
+            return root
+        return pre(data)
+            
+#答案用postorder compressed string 更好
+class Codec:
+    def serialize(self, root):
+        &quot;&quot;&quot;
+        Encodes a tree to a single string.
+        &quot;&quot;&quot;
+        def postorder(root):
+            return postorder(root.left) + postorder(root.right) + [root.val] if root else []
+        return ' '.join(map(str, postorder(root)))
+
+    def deserialize(self, data):
+        &quot;&quot;&quot;
+        Decodes your encoded data to tree.
+        &quot;&quot;&quot;
+        def helper(lower = float('-inf'), upper = float('inf')):
+            if not data or data[-1] &lt; lower or data[-1] &gt; upper:
+                return None
+            
+            val = data.pop()
+            root = TreeNode(val)
+            root.right = helper(val, upper)
+            root.left = helper(lower, val)
+            return root
+        
+        data = [int(x) for x in data.split(' ') if x]
+        return helper()
+</code></pre>
+<p>用的pre order encode没想到写出来了。。。</p>
+<h1 id="font-colorred-450-delete-node-in-a-bst-mediumfont"><font color='red'> 450. Delete Node in a BST （Medium）</font></h1>
+<p>Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the root node reference (possibly updated) of the BST.<br>
+Basically, the deletion can be divided into two stages:<br>
+Search for a node to remove.<br>
+If the node is found, delete the node.</p>
+<pre><code class="language-python">class Solution:
+    def successor(self, root):
+        &quot;&quot;&quot;
+        One step right and then always left
+        &quot;&quot;&quot;
+        root = root.right
+        while root.left:
+            root = root.left
+        return root.val
+    
+    def predecessor(self, root):
+        &quot;&quot;&quot;
+        One step left and then always right
+        &quot;&quot;&quot;
+        root = root.left
+        while root.right:
+            root = root.right
+        return root.val
+        
+    def deleteNode(self, root: TreeNode, key: int) -&gt; TreeNode:
+        if not root:
+            return None
+        
+        # delete from the right subtree
+        if key &gt; root.val:
+            root.right = self.deleteNode(root.right, key)
+        # delete from the left subtree
+        elif key &lt; root.val:
+            root.left = self.deleteNode(root.left, key)
+        # delete the current node
+        else:
+            # the node is a leaf
+            if not (root.left or root.right):
+                root = None
+            # the node is not a leaf and has a right child
+            elif root.right:
+                root.val = self.successor(root)
+                root.right = self.deleteNode(root.right, root.val)
+            # the node is not a leaf, has no right child, and has a left child    
+            else:
+                root.val = self.predecessor(root)
+                root.left = self.deleteNode(root.left, root.val)
+                        
+        return root
+
+</code></pre>
+<p>这个是很经典的一个题目。recursion方法很经典。</p>
 ]]></content>
     </entry>
     <entry>
@@ -4661,424 +5306,6 @@ def query(left,right):
     return res
 
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-12-08]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-12-08/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-08/">
-        </link>
-        <updated>2021-12-08T03:32:01.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="font-colorred351-android-unlock-patterns-medium-font"><font color='red'>351. Android Unlock Patterns (Medium) </font></h1>
-<p>Android devices have a special lock screen with a 3 x 3 grid of dots. Users can set an &quot;unlock pattern&quot; by connecting the dots in a specific sequence, forming a series of joined line segments where each segment's endpoints are two consecutive dots in the sequence. A sequence of k dots is a valid unlock pattern if both of the following are true:<br>
-All the dots in the sequence are distinct.<br>
-If the line segment connecting two consecutive dots in the sequence passes through the center of any other dot, the other dot must have previously appeared in the sequence. No jumps through the center non-selected dots are allowed.<br>
-For example, connecting dots 2 and 9 without dots 5 or 6 appearing beforehand is valid because the line from dot 2 to dot 9 does not pass through the center of either dot 5 or 6.<br>
-However, connecting dots 1 and 3 without dot 2 appearing beforehand is invalid because the line from dot 1 to dot 3 passes through the center of dot 2.<br>
-Given two integers m and n, return the number of unique and valid unlock patterns of the Android grid lock screen that consist of at least m keys and at most n keys.</p>
-<p>Two unlock patterns are considered unique if there is a dot in one sequence that is not in the other, or the order of the dots is different.</p>
-<pre><code class="language-python">class Solution:
-    def numberOfPatterns(self, m: int, n: int) -&gt; int:
-        skip = [[0]*10 for _ in range(10)]
-        skip[1][3] = skip[3][1] = 2 
-        skip[1][7] = skip[7][1] = 4 
-        skip[3][9] = skip[9][3] = 6 
-        skip[7][9] = skip[9][7] = 8 
-        skip[1][9] = skip[9][1] = skip[2][8] = skip[8][2] = skip[3][7] = skip[7][3] = skip[4][6] = skip[6][4] = 5 
-        visited = [False]*10
-        res=0
-        def DFS(cur,remain):
-            if remain&lt;0: return 0
-            if remain==0: return 1
-            visited[cur]=True
-            res=0
-            for i in range(1,10):
-                if not visited[i] and (skip[cur][i]==0 or visited[skip[cur][i]]):
-                    res+=DFS(i,remain-1)
-            visited[cur]=False
-            return res
-        
-        for i in range(m,n+1):
-            res+=DFS(1,i-1)*4 # 1,3,7, 9 sym 
-            res+=DFS(2,i-1)*4 # 2 4 6 8  sym
-            res+=DFS(5,i-1) 
-            
-        return res
-        
-</code></pre>
-<p>问题是奇怪的问题，解决方法大概是DP，但递归关系不好找。思路错误， 答案用DFS+BT  简化思路是 1,3,7,9 are symmetric, 2,4,6,8 are also symmetric. Hence we only calculate one among each group and multiply by 4.</p>
-<h1 id="font-colorred352-data-stream-as-disjoint-intervals-hardfont"><font color='red'>352. Data Stream as Disjoint Intervals （Hard）</font></h1>
-<p>Given a data stream input of non-negative integers a1, a2, ..., an, summarize the numbers seen so far as a list of disjoint intervals.<br>
-Implement the SummaryRanges class:<br>
-SummaryRanges() Initializes the object with an empty stream.<br>
-void addNum(int val) Adds the integer val to the stream.<br>
-int[][] getIntervals() Returns a summary of the integers in the stream currently as a list of disjoint intervals [starti, endi].</p>
-<pre><code class="language-python">class SummaryRanges:
-
-    def __init__(self):
-        &quot;&quot;&quot;
-        Initialize your data structure here.
-        &quot;&quot;&quot;
-        self.interval = [] # record the interval
-        self.s = set() # record the number we have added before
-        return 
-
-    def addNum(self, val: int) -&gt; None:
-        if val in self.s:
-            return 
-        self.s.add(val)
-        index = bisect_left(self.interval,[val,val])
-
-        # check whether we could extend the interval on its left and right 
-        if index &lt; len(self.interval) and self.interval[index][0]-1 == val:
-            self.interval[index][0] = self.interval[index][0] - 1
-        elif index &gt; 0 and self.interval[index-1][1]+1 == val:
-            self.interval[index-1][1] = self.interval[index-1][1] + 1
-        else:
-            self.interval.insert(index, [val,val])
-
-    def getIntervals(self) -&gt; List[List[int]]:
-        # update the intervals in getIntervals function 
-        connect = []
-        for x in self.interval:
-            if connect and connect[-1][1] == x[0]-1:
-                connect[-1][1] = x[1]
-            else:
-                connect.append(x)
-        self.interval = connect
-        return self.interval 
-
-</code></pre>
-<p>思路： binary search for interval， interval update when getIntervals。</p>
-<h1 id="353-design-snake-game-medium">353. Design Snake Game （Medium）</h1>
-<pre><code class="language-python">class SnakeGame:
-
-    def __init__(self, width: int, height: int, food: List[List[int]]):
-        self.food=food
-        self.w=width
-        self.h=height
-        self.score=0
-        self.body = [[0,0]]
-        self.pos=[0,0]
-
-    def move(self, direction: str) -&gt; int:
-        #outofbound check
-        if direction=='R':
-            self.pos[1]+=1
-        elif direction=='L':
-            self.pos[1]-=1
-        elif direction=='U':
-            self.pos[0]-=1
-        elif direction=='D':
-            self.pos[0]+=1
-        
-        if not (self.h&gt;self.pos[0]&gt;=0): return -1
-        if not (self.w&gt;self.pos[1]&gt;=0): return -1
-        
-        #hadle food
-       
-        if not (self.food and self.pos==self.food[0]):
-            #no food
-            self.body.pop(0)
-            if self.pos in self.body: return -1
-            self.body.append(self.pos[:])
-        else:
-            #food
-            self.food.pop(0)
-            self.body.append(self.pos[:])
-            self.score+=1
-        return self.score
-            
-# Your SnakeGame object will be instantiated and called as such:
-# obj = SnakeGame(width, height, food)
-# param_1 = obj.move(direction)
-
-</code></pre>
-<h1 id="font-colorred354-russian-doll-envelopes-hard-font"><font color='red'>354. Russian Doll Envelopes (Hard) </font></h1>
-<p>You are given a 2D array of integers envelopes where envelopes[i] = [wi, hi] represents the width and the height of an envelope.</p>
-<p>One envelope can fit into another if and only if both the width and height of one envelope are greater than the other envelope's width and height.</p>
-<p>Return the maximum number of envelopes you can Russian doll (i.e., put one inside the other).</p>
-<pre><code class="language-python">from bisect import bisect_left
-class Solution:
-    def maxEnvelopes(self, envelopes: List[List[int]]) -&gt; int:
-        arr = envelopes
-        arr.sort(key=lambda x: (x[0], -x[1]))
-
-        def lis(nums):
-            dp = []
-            for i in range(len(nums)):
-                idx = bisect_left(dp, nums[i])
-                if idx == len(dp):
-                    dp.append(nums[i])
-                else:
-                    dp[idx] = nums[i]
-            return len(dp)
-        # extract the second dimension and run the LIS
-        return lis([i[1] for i in arr])
-
-</code></pre>
-<p>尝试用greedy解决但失败了，感觉是个DP问题。。。思路看答案了。  2D longest increasing subsequence problem (LIS).  KEY： ''we also sort decreasing on the second dimension, so two envelopes that are equal in the first dimension can never be in the same increasing subsequence'' 关键是NlogN的 LIS 没用过。。。，需要记住写法。dp[i] 存储的是长度是i+1的LIS末尾元素。</p>
-<h1 id="355-design-twitter-medium">355. Design Twitter （Medium）</h1>
-<p>Design a simplified version of Twitter where users can post tweets, follow/unfollow another user, and is able to see the 10 most recent tweets in the user's news feed.<br>
-Implement the Twitter class:<br>
-Twitter() Initializes your twitter object.<br>
-void postTweet(int userId, int tweetId) Composes a new tweet with ID tweetId by the user userId. Each call to this function will be made with a unique tweetId.<br>
-List<Integer> getNewsFeed(int userId) Retrieves the 10 most recent tweet IDs in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user themself. Tweets must be ordered from most recent to least recent.<br>
-void follow(int followerId, int followeeId) The user with ID followerId started following the user with ID followeeId.<br>
-void unfollow(int followerId, int followeeId) The user with ID followerId started unfollowing the user with ID followeeId.</p>
-<pre><code class="language-python">
-class Twitter:
-
-    def __init__(self):
-        self.follows=collections.defaultdict(set)
-        self.tweets=collections.defaultdict(list)
-        self.time=0
-   
-
-    def postTweet(self, userId: int, tweetId: int) -&gt; None:
-        self.tweets[userId].append([tweetId,self.time])
-        self.time+=1
-        
-
-    def getNewsFeed(self, userId: int) -&gt; List[int]:
-        res=[]
-        followers=self.follows[userId]
-        for f in list(followers)+[userId]:
-            res.extend(self.tweets[f])
-        
-        return [ e[0] for e in sorted(res,key=lambda x:-x[1])][:10] 
-
-    def follow(self, followerId: int, followeeId: int) -&gt; None:
-        self.follows[followerId].add(followeeId)
-    
-
-    def unfollow(self, followerId: int, followeeId: int) -&gt; None:
-        if followeeId in self.follows[followerId]:
-            self.follows[followerId].remove(followeeId)
-        
-
-
-</code></pre>
-<h1 id="font-colorred356-line-reflection-medium-font"><font color='red'>356. Line Reflection (Medium) </font></h1>
-<p>Given n points on a 2D plane, find if there is such a line parallel to the y-axis that reflects the given points symmetrically.</p>
-<p>In other words, answer whether or not if there exists a line that after reflecting all points over the given line, the original points' set is the same as the reflected ones.</p>
-<pre><code class="language-python">class Solution:
-    def isReflected(self, points: List[List[int]]) -&gt; bool:
-        s=set()
-        min_=float('inf')
-        max_=float('-inf')
-        for p in points:
-            min_=min(p[0],min_)
-            max_=max(p[0],max_)
-            s.add(tuple(p))
-        sum_=min_+max_
-        for p in points:
-            if s and (sum_-p[0],p[1]) not in s:
-                return False
-        return True
-        
-
-</code></pre>
-<p>思路竟然和two sum类似， 用一个set先保存点，然后找reflect点是否在set里。 中心位置一定是min+max的中点。</p>
-<h1 id="font-colorblue357-count-numbers-with-unique-digits-medium-font"><font color='blue'>357. Count Numbers with Unique Digits (Medium) </font></h1>
-<p>Given an integer n, return the count of all numbers with unique digits, x, where 0 &lt;= x &lt; 10n.</p>
-<pre><code class="language-python">class Solution:
-    def countNumbersWithUniqueDigits(self, n: int) -&gt; int:
-        #Let f(k) = count of numbers with unique digits with length equals k.
-        # f(1)=10
-        # f(2)=9*9   choose 1~9, choose 0~9 except first choose
-        # f(3)=9*9*8
-        # f(k)=9*9*8*...(9-k+2)
-        if n==0: return 1
-        if n==1: return 10 
-        if n==2: return 91
-        f=[0]*(n+1)
-        f[1]=10
-        f[2]=81
-        for i in range(3,n+1):
-            f[i]=f[i-1]*(9-i+2)
-        
-         
-        res=0
-        for j in range(1,n+1):
-            #print(j,f[j])
-            res+=f[j]
-        return res
-</code></pre>
-<p>看了提示才做出来。。。 定义f（x） ，意思是长度为x的string，有多少种不同组合方式。答案就是f1+f2+。。。+fn</p>
-<h1 id="font-colorred-358-rearrange-string-k-distance-apart-hard-font"><font color='red'> 358. Rearrange String k Distance Apart (Hard) </font></h1>
-<p>Given a string s and an integer k, rearrange s such that the same characters are at least distance k from each other. If it is not possible to rearrange the string, return an empty string &quot;&quot;.</p>
-<pre><code class="language-python">class Solution:
-    def rearrangeString(self, s: str, k: int) -&gt; str:
-     
-        if k == 0:
-            return s
-        n = len(s)
-        count = collections.Counter(s)
-        max_val = max(count.values())
-        max_count = sum(1 for val in count.values() if val == max_val)
-        if (max_val-1)*k+max_count &gt; n:
-            return &quot;&quot;
-        
-        buckets = [[] for _ in range(max_val)]
-        cnt = 0
-        for key in sorted(count, key = lambda x: -count[x]):
-            divisor = max_val if count[key] == max_val else max_val-1
-            for _ in range(count[key]):
-                buckets[cnt% divisor].append(key)
-                cnt += 1
-        return &quot;&quot;.join([&quot;&quot;.join(bucket) for bucket in buckets])
-</code></pre>
-<p>刚开始想用bt做，看了答案用的是比较巧妙的bucket。 而且要从数目多的char到数目少的char来排。 排的位置如果是频率最大的，则能排到所有buket，否则只能排到n-1 buket。<br>
-aaabbcccd  k=2<br>
-count={a：3，c：3，b：2，d：1}<br>
-max_val=3 所以有3个buket<br>
-【】 【】 【】<br>
-先排a，divisor=3<br>
-【a】 【a】 【a】<br>
-再排c，divisor=3<br>
-【ac】【ac】【ac】<br>
-再排b，divisor=2 最后一个位置排满了<br>
-【acb】【acb】【ac】<br>
-再排d，divisor=2<br>
-【acbd】【acb】【ac】</p>
-<p>这个思路比较难想出来。。。buket+变divisor。。。</p>
-<h1 id="359-logger-rate-limiter-easy">359. Logger Rate Limiter （Easy）</h1>
-<p>Design a logger system that receives a stream of messages along with their timestamps. Each unique message should only be printed at most every 10 seconds (i.e. a message printed at timestamp t will prevent other identical messages from being printed until timestamp t + 10).<br>
-All messages will come in chronological order. Several messages may arrive at the same timestamp.<br>
-Implement the Logger class:<br>
-Logger() Initializes the logger object.<br>
-bool shouldPrintMessage(int timestamp, string message) Returns true if the message should be printed in the given timestamp, otherwise returns false.</p>
-<pre><code class="language-python">class Logger:
-
-    def __init__(self):
-        self.dic=dict()
-        
-
-    def shouldPrintMessage(self, timestamp: int, message: str) -&gt; bool:
-        res=True
-        if message in self.dic and timestamp-self.dic[message]&lt;10:
-            res=False
-        if res:
-            self.dic[message]=timestamp
-        return res
-# Your Logger object will be instantiated and called as such:
-# obj = Logger()
-# param_1 = obj.shouldPrintMessage(timestamp,message)
-
-
-#ANSWER WAY OF WRITTING
-class Logger(object):
-
-    def __init__(self):
-        &quot;&quot;&quot;
-        Initialize your data structure here.
-        &quot;&quot;&quot;
-        self._msg_dict = {}
-    
-    def shouldPrintMessage(self, timestamp, message):
-        &quot;&quot;&quot;
-        Returns true if the message should be printed in the given timestamp, otherwise returns false.
-        &quot;&quot;&quot;
-        if message not in self._msg_dict:
-            # case 1). add the message to print
-            self._msg_dict[message] = timestamp
-            return True
-
-        if timestamp - self._msg_dict[message] &gt;= 10:
-            # case 2). update the timestamp of the message
-            self._msg_dict[message] = timestamp
-            return True
-        else:
-            return False
-
-</code></pre>
-<h1 id="360-sort-transformed-array-medium">360. Sort Transformed Array (Medium)</h1>
-<p>Given a sorted integer array nums and three integers a, b and c, apply a quadratic function of the form f(x) = ax2 + bx + c to each element nums[i] in the array, and return the array in a sorted order.</p>
-<pre><code class="language-python">class Solution:
-    def sortTransformedArray(self, nums: List[int], a: int, b: int, c: int) -&gt; List[int]:
-        #f(x)=ax**2+bx+c
-        #f(x)= a(x+b/2a)**2 -b**2/4a+c
-        #Therefore, sym axis=  -b/2a  
-        
-        
-        
-        f=lambda x: a*x**2+b*x+c
-        if a==0: return [f(i) for i in nums] if b&gt;0 else  [f(i) for i in nums[::-1]]
-        
-        axis=-b/(2*a)
-        res=[]
-        ind=bisect.bisect_left(nums,axis)
-        l=ind-1
-        r=ind
-        while l&gt;=0 and r&lt;len(nums):
-            
-            if a&gt;0: #fill left to right find smaller
-                if f(nums[l])&lt;=f(nums[r]):
-                    res.append(f(nums[l]))
-                    l-=1
-                else:
-                    res.append(f(nums[r]))
-                    r+=1
-            
-            else:# fill right to left find larger
-                if f(nums[l])&gt;=f(nums[r]):
-                    res=[f(nums[l])]+res
-                    l-=1
-                else:
-                    res= [f(nums[r])]+res
-                    r+=1
-        
-        #print(res)
-        while l&gt;=0:
-            if a&gt;0:
-                res.append(f(nums[l]))
-            else:
-                res=[f(nums[l])]+res
-            l-=1
-                
-        while r&lt;len(nums):
-            if a&gt;0:
-                res.append(f(nums[r]))
-            else:
-                res=[f(nums[r])]+res
-            r+=1
-        
-        return res
-        
-#ANSWER WAY
-class Solution:
-    def sortTransformedArray(self, nums: List[int], a: int, b: int, c: int) -&gt; List[int]:
- 
-        
-        f=lambda x: a*x**2+b*x+c
-        n=len(nums)
-        res=['NULL']*n
-        l=0
-        r=n-1
-        index= n-1 if a&gt;=0 else 0
-        while l&lt;=r:
-            if a&gt;=0:
-                res[index]=f(nums[l]) if f(nums[l])&gt;=f(nums[r]) else f(nums[r])
-                index-=1
-                if f(nums[l])&gt;=f(nums[r]):
-                    l+=1
-                else:
-                    r-=1
-             
-            else:
-                res[index]=f(nums[r]) if f(nums[l])&gt;=f(nums[r]) else f(nums[l])
-                index+=1
-                if f(nums[l])&gt;=f(nums[r]):
-                    r-=1
-                else:
-                    l+=1
-        return res
-      
-
-</code></pre>
-<p>考二次函数，答案更精巧 用two pointer，关键点在于如果a大于0, 最大值肯定在head tail之间的一个，如果a小于0，最小值肯定在head tail中的一个。</p>
 ]]></content>
     </entry>
 </feed>

@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-27 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1648855981689">
+<link rel="shortcut icon" href="/favicon.ico?v=1649984538361">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">51</span>
+        <span class="site-item-stat-count">52</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1400,14 +1400,656 @@ class Solution:
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/system-design/"" data-c="
-          &lt;p&gt;system design&lt;/p&gt;
+          &lt;p&gt;System Design 资源汇总&lt;/p&gt;
 &lt;!-- more --&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=PdtlXdse7pw&amp;amp;list=PL4KdJM8LzAMecwInbBK5GJ3Anz-ts75RQ&#34;&gt;DDIA书视频总结&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.interviewbit.com/courses/system-design/&#34;&gt;InterviewBit系统设计题汇总&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/donnemartin/system-design-primer&#34;&gt;system design primer github repo&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.hiredintech.com/classrooms/system-design/lesson/52&#34;&gt;system design class&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://www.educative.io/courses/grokking-the-system-design-interview&#34;&gt;grokking system design interview&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.educative.io/courses/grokking-the-system-design-interview&#34;&gt;付费 grokking system design interview&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://luanjunyi.medium.com/the-table-of-contents-416d2240fa8e&#34;&gt;大佬的medium文章&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://blog.gainlo.co/index.php/category/system-design-interview-questions/&#34;&gt;已经解决的系统设计问题合集&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://highscalability.com/blog/2022/1/25/designing-uber.html/&#34;&gt;Design Uber&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://highscalability.com/blog/2022/1/17/designing-tinder.html&#34;&gt;Design Tinder&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://highscalability.com/blog/2022/1/11/designing-instagram.html&#34;&gt;Design Instagram&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://highscalability.com/blog/2022/1/3/designing-whatsapp.html&#34;&gt;Design Whatsapp&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://highscalability.com/blog/2021/12/13/designing-netflix.html&#34;&gt;Design Netflix&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;https://leetcode.com/company/facebook/discuss/229177/My-System-Design-Template&lt;br&gt;
+(1) FEATURE EXPECTATIONS [5 min]&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    (1) Use cases
+    (2) Scenarios that will not be covered
+    (3) Who will use
+    (4) How many will use
+    (5) Usage patterns
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;(2) ESTIMATIONS [5 min]&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    (1) Throughput (QPS for read and write queries)
+    (2) Latency expected from the system (for read and write queries)
+    (3) Read/Write ratio
+    (4) Traffic estimates
+            - Write (QPS, Volume of data)
+            - Read  (QPS, Volume of data)
+    (5) Storage estimates
+    (6) Memory estimates
+            - If we are using a cache, what is the kind of data we want to store in cache
+            - How much RAM and how many machines do we need for us to achieve this ?
+            - Amount of data you want to store in disk/ssd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;(3) DESIGN GOALS [5 min]&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    (1) Latency and Throughput requirements
+    (2) Consistency vs Availability  [Weak/strong/eventual =&amp;gt; consistency | Failover/replication =&amp;gt; availability]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;(4) HIGH LEVEL DESIGN [5-10 min]&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    (1) APIs for Read/Write scenarios for crucial components
+    (2) Database schema
+    (3) Basic algorithm
+    (4) High level design for Read/Write scenario
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;(5) DEEP DIVE [15-20 min]&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    (1) Scaling the algorithm
+    (2) Scaling individual components: 
+            -&amp;gt; Availability, Consistency and Scale story for each component
+            -&amp;gt; Consistency and availability patterns
+    (3) Think about the following components, how they would fit in and how it would help
+            a) DNS
+            b) CDN [Push vs Pull]
+            c) Load Balancers [Active-Passive, Active-Active, Layer 4, Layer 7]
+            d) Reverse Proxy
+            e) Application layer scaling [Microservices, Service Discovery]
+            f) DB [RDBMS, NoSQL]
+                    &amp;gt; RDBMS 
+                        &amp;gt;&amp;gt; Master-slave, Master-master, Federation, Sharding, Denormalization, SQL Tuning
+                    &amp;gt; NoSQL
+                        &amp;gt;&amp;gt; Key-Value, Wide-Column, Graph, Document
+                            Fast-lookups:
+                            -------------
+                                &amp;gt;&amp;gt;&amp;gt; RAM  [Bounded size] =&amp;gt; Redis, Memcached
+                                &amp;gt;&amp;gt;&amp;gt; AP [Unbounded size] =&amp;gt; Cassandra, RIAK, Voldemort
+                                &amp;gt;&amp;gt;&amp;gt; CP [Unbounded size] =&amp;gt; HBase, MongoDB, Couchbase, DynamoDB
+            g) Caches
+                    &amp;gt; Client caching, CDN caching, Webserver caching, Database caching, Application caching, Cache @Query level, Cache @Object level
+                    &amp;gt; Eviction policies:
+                            &amp;gt;&amp;gt; Cache aside
+                            &amp;gt;&amp;gt; Write through
+                            &amp;gt;&amp;gt; Write behind
+                            &amp;gt;&amp;gt; Refresh ahead
+            h) Asynchronism
+                    &amp;gt; Message queues
+                    &amp;gt; Task queues
+                    &amp;gt; Back pressure
+            i) Communication
+                    &amp;gt; TCP
+                    &amp;gt; UDP
+                    &amp;gt; REST
+                    &amp;gt; RPC
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;(6) JUSTIFY [5 min]&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    (1) Throughput of each layer
+    (2) Latency caused between each layer
+    (3) Overall latency justification
+&lt;/code&gt;&lt;/pre&gt;
 ">系统设计</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-05/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;441-arranging-coins-easy&#34;&gt;441. Arranging Coins （Easy）&lt;/h1&gt;
+&lt;p&gt;You have n coins and you want to build a staircase with these coins. The staircase consists of k rows where the ith row has exactly i coins. The last row of the staircase may be incomplete.&lt;br&gt;
+Given the integer n, return the number of complete rows of the staircase you will build.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def arrangeCoins(self, n: int) -&amp;gt; int:
+        r=0
+        while n&amp;gt;0:
+            r+=1
+            n-=r
+        return r-1 if n&amp;lt;0 else r
+
+class Solution:
+    def arrangeCoins(self, n: int) -&amp;gt; int:
+        
+        # (1+ x) x /2 &amp;lt;= n
+        #      (1+x)x &amp;lt;= 2n
+        # max x which (1+x)x &amp;lt;=2n
+        
+        l, r = 0, n
+        
+        while l &amp;lt;= r:
+            
+            m = (l + r) // 2
+            
+            if (m+1)*m &amp;lt;= 2*n and (m+2)*(m+1) &amp;gt; 2*n:
+                return m
+            
+            if (m+1)*m &amp;lt; 2*n:
+                l = m + 1
+            else:
+                r = m - 1
+                
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案是binary  search啊。。&lt;/p&gt;
+&lt;h1 id=&#34;442-find-all-duplicates-in-an-array-medium&#34;&gt;442. Find All Duplicates in an Array （Medium）&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums of length n where all the integers of nums are in the range [1, n] and each integer appears once or twice, return an array of all the integers that appears twice.&lt;br&gt;
+You must write an algorithm that runs in O(n) time and uses only constant extra space.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findDuplicates(self, nums: List[int]) -&amp;gt; List[int]:
+        # 0 1 2 3 4 5 6 7
+        # 4 3 2 7 8 2 3 1
+        
+        # -4 3 2-7    -3-1 
+        
+        n=len(nums)
+        
+        for i in range(n):
+            ind=(abs(nums[i])%n-1)
+            nums[ind] =   abs(nums[ind])+n if nums[ind]&amp;lt;0 else -abs(nums[ind])-n
+        
+        #print(nums)
+        res=[]
+        for i in range(n):
+            if nums[i]&amp;gt;n:
+                res.append(i+1)
+        return res
+
+#ANSWER
+class Solution:
+    def findDuplicates(self, nums: List[int]) -&amp;gt; List[int]:
+        res=[]
+        for n in nums:
+            if nums[abs(n)-1]&amp;lt;0: #seen before
+                res.append(abs(n))
+            
+            nums[abs(n)-1]*=-1
+        
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;特殊的bookkeeping。 答案写的更好&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue-443-string-compression-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 443. String Compression （Medium） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an array of characters chars, compress it using the following algorithm:&lt;br&gt;
+Begin with an empty string s. For each group of consecutive repeating characters in chars:&lt;br&gt;
+If the group&#39;s length is 1, append the character to s.&lt;br&gt;
+Otherwise, append the character followed by the group&#39;s length.&lt;br&gt;
+The compressed string s should not be returned separately, but instead, be stored in the input character array chars. Note that group lengths that are 10 or longer will be split into multiple characters in chars.&lt;br&gt;
+After you are done modifying the input array, return the new length of the array.&lt;br&gt;
+You must write an algorithm that uses only constant extra space.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def compress(self, chars: List[str]) -&amp;gt; int:
+        #two pointer
+        l=0
+        lchar=0
+        r=0
+        while r&amp;lt;len(chars):
+            c=0
+            while r&amp;lt;len(chars) and chars[r]==chars[l]:
+                c+=1
+                r+=1
+            
+            if c&amp;gt;0:r-=1
+            
+            if c==1:
+                chars[lchar]=chars[l]
+                l+=1
+                lchar=lchar+1
+            elif c&amp;gt;1 and c&amp;lt;10:
+                chars[lchar]=chars[l]
+                chars[lchar+1]=str(c)
+                l=l+c
+                lchar=lchar+2
+            elif c&amp;gt;=10:
+                chars[lchar]=chars[l]
+                l=l+c
+                for j,cc in enumerate(str(c)):
+                    chars[lchar+1+j]=cc
+                 
+                lchar=lchar+len(str(c))+1
+            r+=1    
+            
+        return lchar 
+#ANSWER 更简单
+ 
+class Solution:
+    def compress(self, chars: List[str]) -&amp;gt; int:
+        walker, runner = 0, 0
+        while runner &amp;lt; len(chars):
+		
+            chars[walker] = chars[runner]
+            count = 1
+			
+            while runner + 1 &amp;lt; len(chars) and chars[runner] == chars[runner+1]:
+                runner += 1
+                count += 1
+			
+            if count &amp;gt; 1:
+                for c in str(count):
+                    chars[walker+1] = c
+                    walker += 1
+            
+            runner += 1
+            walker += 1
+        
+        return walker
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;two pointer 写出来了，但是cornercase很多边test边写的。。。。答案很简单。。。。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-444-sequence-reconstruction-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 444. Sequence Reconstruction (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an integer array nums of length n where nums is a permutation of the integers in the range [1, n]. You are also given a 2D integer array sequences where sequences[i] is a subsequence of nums.&lt;br&gt;
+Check if nums is the shortest possible and the only supersequence. The shortest supersequence is a sequence with the shortest length and has all sequences[i] as subsequences. There could be multiple valid supersequences for the given array sequences.&lt;br&gt;
+For example, for sequences = [[1,2],[1,3]], there are two shortest supersequences, [1,2,3] and [1,3,2].&lt;br&gt;
+While for sequences = [[1,2],[1,3],[1,2,3]], the only shortest supersequence possible is [1,2,3]. [1,2,3,4] is a possible supersequence but not the shortest.&lt;br&gt;
+Return true if nums is the only shortest supersequence for sequences, or false otherwise.&lt;br&gt;
+A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def sequenceReconstruction(self, nums: List[int], sequences: List[List[int]]) -&amp;gt; bool:
+        values = {x for seq in sequences for x in seq}
+        graph = {x: [] for x in values}
+        indegrees = {x: 0 for x in values}
+        for seq in sequences:
+            for i in range(len(seq) - 1):
+                s = seq[i]
+                t = seq[i+1]
+                graph[s].append(t)
+                indegrees[t] += 1
+        queue = collections.deque()
+        for node, count in indegrees.items():
+            if count == 0:
+                queue.append(node)
+        res = []
+        while queue:
+            if len(queue) != 1:
+                return False
+            source = queue.popleft()
+            res.append(source)
+            for target in graph[source]:
+                indegrees[target] -= 1
+                if indegrees[target] == 0:
+                    queue.append(target)
+        return len(res) == len(values) and res == nums
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;感觉题就没读懂。。。。topological sort... 第一步建立dependency graph， 第二部toposort，每一步检查是否只有一个node的可能性，如果比一个多，return False。 第三步，在得到toposortlist 后，检查长度是否和sequence中所有unique 元素个数一样而且 是input nums。&lt;br&gt;
+解释：&lt;br&gt;
+TopSort order exists&lt;br&gt;
+Whether the TopSort order is the only one (Uniqueness of Topological sort, Hamilton path, see https://en.wikipedia.org/wiki/Topological_sorting#Uniqueness).如果不是，那么说明有些pair只有偏序关系，没有全序关系，这样不能完全确定元素之间的顺序&lt;br&gt;
+the only top sort order constructed should be equal to the org.&lt;/p&gt;
+&lt;p&gt;index == org.length (check condition 3) &amp;amp;&amp;amp; index == map.size() (check all the vertex in the graph has been visited, so the top sort order exists, check condition 1)&lt;/p&gt;
+&lt;p&gt;How to check only one order? queue.size() should always be one, then only one element at a time has indegree to be 0, so you only have one choice (check condition 2)&lt;/p&gt;
+&lt;h1 id=&#34;font-colorblue-445-add-two-numbers-ii-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 445. Add Two Numbers II （Medium） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given two non-empty linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.&lt;br&gt;
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -&amp;gt; Optional[ListNode]:
+        def rev(node):
+            pre=None
+            while node:
+                nodenext=node.next
+                node.next=pre
+                pre=node
+                node=nodenext
+            return pre
+        
+        l1=rev(l1)
+        l2=rev(l2)
+        
+        carry=0
+        head=ListNode(val=None)
+        savehead=head
+        while l1 or l2:
+            v1= l1.val if l1 else 0
+            v2= l2.val if l2 else 0
+            val=(v1+v2+carry)%10
+            carry=(v1+v2+carry)//10
+            head.next=ListNode(val)
+            head=head.next
+            
+            l1=l1.next if l1 else None
+            l2=l2.next if l2 else None
+            
+        if carry:
+            head.next=ListNode(carry)
+            head=head.next
+        
+        return rev(savehead.next)
+
+#
+class Solution:
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -&amp;gt; ListNode:
+        if not l1: return l2
+        if not l2: return l1
+        
+        s1=[]
+        s2=[]
+        
+        cur=l1
+        while cur:
+            s1.append(cur.val)
+            cur=cur.next
+            
+        cur=l2
+        while cur:
+            s2.append(cur.val)
+            cur=cur.next
+            
+        
+        head=None
+        carry=0
+        while s1 or s2:
+            x = s1.pop() if s1 else 0
+            y = s2.pop() if s2 else 0
+            sum_=x+y+carry
+            cur=ListNode(sum_%10)
+            cur.next=head
+            head=cur
+            carry=sum_//10
+        
+        if carry:
+            cur=ListNode(carry)
+            cur.next=head
+            head=cur
+        return head
+        
+ #####
+ class Solution:
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -&amp;gt; ListNode:
+        if not l1: return l2
+        if not l2: return l1
+        
+        s1=[]
+        s2=[]
+        
+        cur=l1
+        while cur:
+            s1.append(cur.val)
+            cur=cur.next
+            
+        cur=l2
+        while cur:
+            s2.append(cur.val)
+            cur=cur.next
+            
+        
+        head=None
+        carry=0
+        while s1 or s2:
+            x = s1.pop() if s1 else 0
+            y = s2.pop() if s2 else 0
+            sum_=x+y+carry
+            cur=ListNode(sum_%10)
+            cur.next=head
+            head=cur
+            carry=sum_//10
+        
+        if carry:
+            cur=ListNode(carry)
+            cur.next=head
+            head=cur
+        return head
+               
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;followup 是不revlist能否。。。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-446-arithmetic-slices-ii-subsequence-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 446. Arithmetic Slices II - Subsequence (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums, return the number of all the arithmetic subsequences of nums.&lt;br&gt;
+A sequence of numbers is called arithmetic if it consists of at least three elements and if the difference between any two consecutive elements is the same.&lt;br&gt;
+For example, [1, 3, 5, 7, 9], [7, 7, 7, 7], and [3, -1, -5, -9] are arithmetic sequences.&lt;br&gt;
+For example, [1, 1, 2, 5, 7] is not an arithmetic sequence.&lt;br&gt;
+A subsequence of an array is a sequence that can be formed by removing some elements (possibly none) of the array.&lt;br&gt;
+For example, [2,5,10] is a subsequence of [1,2,1,2,4,1,5,10].&lt;br&gt;
+The test cases are generated so that the answer fits in 32-bit integer.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def numberOfArithmeticSlices(self, nums: List[int]) -&amp;gt; int:
+        
+        #f[i][d] denotes the number of weak arithmetic subsequences that ends with A[i] and its common difference is d.
+        #Now the state transitions are quite straightforward:
+
+        # for all j &amp;lt; i, f[i][A[i] - A[j]] += (f[j][A[i] - A[j]] + 1).
+        # The 1 appears here because we can form a new weak arithmetic subsequence for the pair (i, j)
+        
+        #when we are appending new elements to existing weak arithmetic subsequences, we are forming arithmetic subsequences. So the first part, f[j][A[i] - A[j]] is the number of new formed arithmetic subsequences, and can be added to the answer.
+
+        
+        n=len(nums)
+        res=0
+        cnt=dict()
+        for i in range(n):
+            cnt[i]=dict()
+            for j in range(i):
+                delta=nums[i]-nums[j]
+                
+                diff=delta
+                sum_=cnt[j].get(diff,0)
+                origin=cnt[i].get(diff,0)
+                cnt[i][diff]=origin+sum_+1
+                res+=sum_
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;是应该用DP但看答案。。。答案这个DP解法不是一般的DP。。。先dp【i】【diff】是以ith nums为最终位置的weak arithmetic subsequences的个数，这个weak值2个元素也能形成subsequence。 要想得到真正的3个元素的arithmetic subsequences个数，每次可以把nums【i】添加到dp【j】【diff】时候这个dp【j】【diff】个数就是arithmetic subsequences个数。很难想到这个方法啊。。。&lt;br&gt;
+backtracking 方法超时&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;class Solution {
+    private int n;
+    private int ans;
+    private void dfs(int dep, int[] A, List&amp;lt;Long&amp;gt; cur) {
+        if (dep == n) {
+            if (cur.size() &amp;lt; 3) {
+                return;
+            }
+            long diff = cur.get(1) - cur.get(0);
+            for (int i = 1; i &amp;lt; cur.size(); i++) {                
+                if (cur.get(i) - cur.get(i - 1) != diff) {
+                    return;
+                }
+            }
+            ans ++;
+            return;
+        }
+        dfs(dep + 1, A, cur);
+        cur.add((long)A[dep]);
+        dfs(dep + 1, A, cur);
+        cur.remove((long)A[dep]);
+    }
+    public int numberOfArithmeticSlices(int[] A) {
+        n = A.length;
+        ans = 0;
+        List&amp;lt;Long&amp;gt; cur = new ArrayList&amp;lt;Long&amp;gt;();
+        dfs(0, A, cur);
+        return (int)ans;        
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorblue-447-number-of-boomerangs-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 447. Number of Boomerangs (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given n points in the plane that are all distinct, where points[i] = [xi, yi]. A boomerang is a tuple of points (i, j, k) such that the distance between i and j equals the distance between i and k (the order of the tuple matters).&lt;br&gt;
+Return the number of boomerangs.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def numberOfBoomerangs(self, points: List[List[int]]) -&amp;gt; int:
+        
+        def dis(p1,p2):
+            return (p1[0]-p2[0])**2+(p1[1]-p2[1])**2
+        
+        
+        dic=collections.defaultdict(set)
+        
+        for i,p1 in enumerate(points):
+            for j,p2 in enumerate(points):
+                if i!=j:
+                    dic[dis(p1,p2)].add((i,j))
+                    dic[dis(p1,p2)].add((j,i))
+        #print(dic)
+        res=0
+        for k, s in dic.items():
+            #find i,j i,k
+            d=dict()
+            for t in s:
+                d[t[0]]=d.get(t[0],0)+1
+            
+            #print(d)
+            
+            for key,val in d.items():
+                res+= val*(val-1) if val&amp;gt;1 else 0
+        
+        return res
+#ANSWER 同样思路但超级简单
+class Solution:
+    def numberOfBoomerangs(self, points: List[List[int]]) -&amp;gt; int:
+        res = 0
+        for p in points:
+            cmap = {}
+            for q in points:
+                f = p[0]-q[0]
+                s = p[1]-q[1]
+                cmap[f*f + s*s] = 1 + cmap.get(f*f + s*s, 0)
+            for k in cmap:
+                res += cmap[k] * (cmap[k] -1)
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;pass了 hashmap先按照距离分类， 然后每个距离下按照起始点分类，比如距离为1下 其实点为0的edge总共有n个，那么组成三角形能组成n*n-1个。&lt;/p&gt;
+&lt;h1 id=&#34;448-find-all-numbers-disappeared-in-an-array-easy&#34;&gt;448. Find All Numbers Disappeared in an Array (Easy)&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findDisappearedNumbers(self, nums: List[int]) -&amp;gt; List[int]:
+        #
+        n=len(nums)
+        
+        for i in range(n):
+            ind = abs(nums[i])-1
+            nums[ind]=-abs(nums[ind])
+        
+        res=[]
+        for i in range(n):
+            if nums[i]&amp;gt;0:
+                res.append(i+1)
+        return res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;449-serialize-and-deserialize-bst-medium&#34;&gt;449. Serialize and Deserialize BST (Medium)&lt;/h1&gt;
+&lt;p&gt;Serialization is converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.&lt;br&gt;
+Design an algorithm to serialize and deserialize a binary search tree. There is no restriction on how your serialization/deserialization algorithm should work. You need to ensure that a binary search tree can be serialized to a string, and this string can be deserialized to the original tree structure.&lt;br&gt;
+The encoded string should be as compact as possible.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Codec:
+
+    def serialize(self, root: Optional[TreeNode]) -&amp;gt; str:
+        &amp;quot;&amp;quot;&amp;quot;Encodes a tree to a single string.
+        &amp;quot;&amp;quot;&amp;quot;
+        res=[]
+        def pre(root):
+            if not root: 
+                res.append(&#39;#&#39;)
+                return
+            res.append(str(root.val))
+            pre(root.left)
+            pre(root.right)
+        pre(root)
+        return &#39;,&#39;.join(res)
+        
+
+    def deserialize(self, data: str) -&amp;gt; Optional[TreeNode]:
+        &amp;quot;&amp;quot;&amp;quot;Decodes your encoded data to tree.
+        &amp;quot;&amp;quot;&amp;quot;
+        data=data.split(&#39;,&#39;)
+        def pre(data):
+            if not data: return None
+            cur=data.pop(0) 
+            root=None
+            if cur!=&#39;#&#39;:
+                root=TreeNode(int(cur))
+            
+            if root and data:
+                root.left=pre(data)
+            if root and data:
+                root.right=pre(data)
+            return root
+        return pre(data)
+            
+#答案用postorder compressed string 更好
+class Codec:
+    def serialize(self, root):
+        &amp;quot;&amp;quot;&amp;quot;
+        Encodes a tree to a single string.
+        &amp;quot;&amp;quot;&amp;quot;
+        def postorder(root):
+            return postorder(root.left) + postorder(root.right) + [root.val] if root else []
+        return &#39; &#39;.join(map(str, postorder(root)))
+
+    def deserialize(self, data):
+        &amp;quot;&amp;quot;&amp;quot;
+        Decodes your encoded data to tree.
+        &amp;quot;&amp;quot;&amp;quot;
+        def helper(lower = float(&#39;-inf&#39;), upper = float(&#39;inf&#39;)):
+            if not data or data[-1] &amp;lt; lower or data[-1] &amp;gt; upper:
+                return None
+            
+            val = data.pop()
+            root = TreeNode(val)
+            root.right = helper(val, upper)
+            root.left = helper(lower, val)
+            return root
+        
+        data = [int(x) for x in data.split(&#39; &#39;) if x]
+        return helper()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用的pre order encode没想到写出来了。。。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-450-delete-node-in-a-bst-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 450. Delete Node in a BST （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the root node reference (possibly updated) of the BST.&lt;br&gt;
+Basically, the deletion can be divided into two stages:&lt;br&gt;
+Search for a node to remove.&lt;br&gt;
+If the node is found, delete the node.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def successor(self, root):
+        &amp;quot;&amp;quot;&amp;quot;
+        One step right and then always left
+        &amp;quot;&amp;quot;&amp;quot;
+        root = root.right
+        while root.left:
+            root = root.left
+        return root.val
+    
+    def predecessor(self, root):
+        &amp;quot;&amp;quot;&amp;quot;
+        One step left and then always right
+        &amp;quot;&amp;quot;&amp;quot;
+        root = root.left
+        while root.right:
+            root = root.right
+        return root.val
+        
+    def deleteNode(self, root: TreeNode, key: int) -&amp;gt; TreeNode:
+        if not root:
+            return None
+        
+        # delete from the right subtree
+        if key &amp;gt; root.val:
+            root.right = self.deleteNode(root.right, key)
+        # delete from the left subtree
+        elif key &amp;lt; root.val:
+            root.left = self.deleteNode(root.left, key)
+        # delete the current node
+        else:
+            # the node is a leaf
+            if not (root.left or root.right):
+                root = None
+            # the node is not a leaf and has a right child
+            elif root.right:
+                root.val = self.successor(root)
+                root.right = self.deleteNode(root.right, root.val)
+            # the node is not a leaf, has no right child, and has a left child    
+            else:
+                root.val = self.predecessor(root)
+                root.left = self.deleteNode(root.left, root.val)
+                        
+        return root
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个是很经典的一个题目。recursion方法很经典。&lt;/p&gt;
+">Leetcode 2022-03-05</a>
       </div>
       
       <div class="item">
