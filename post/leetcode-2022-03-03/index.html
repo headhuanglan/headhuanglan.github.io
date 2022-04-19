@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2022-03-03 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1649984538361">
+<link rel="shortcut icon" href="/favicon.ico?v=1650402080745">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">52</span>
+        <span class="site-item-stat-count">53</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1851,6 +1851,525 @@ class Solution(object):
     (3) Overall latency justification
 &lt;/code&gt;&lt;/pre&gt;
 ">系统设计</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-06/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;451-sort-characters-by-frequency-medium&#34;&gt;451. Sort Characters By Frequency （Medium）&lt;/h1&gt;
+&lt;p&gt;Given a string s, sort it in decreasing order based on the frequency of the characters. The frequency of a character is the number of times it appears in the string.&lt;br&gt;
+Return the sorted string. If there are multiple answers, return any of them&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def frequencySort(self, s: str) -&amp;gt; str:
+        d=Counter(s)
+        res=&#39;&#39;
+        for k in sorted(d,key=lambda x: d[x],reverse=True):
+            res+=k*d[k]
+        return res
+#O(n) bucket sort
+class Solution:
+    def frequencySort(self, s: str) -&amp;gt; str:
+        if not s: return s
+        counts=collections.Counter(s)
+        max_freq=max(counts.values())
+        
+        buckets=[[] for _ in range(max_freq+1)]
+        for c,i in counts.items():
+            buckets[i].append(c)
+        
+        string_builder=[]
+        for i in range(len(buckets)-1,0,-1):
+            for c in buckets[i]:
+                string_builder.append(c*i)
+        return &#39;&#39;.join(string_builder)
+        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案的On解法好。bucketsort&lt;/p&gt;
+&lt;h1 id=&#34;452-minimum-number-of-arrows-to-burst-balloons-medium&#34;&gt;452. Minimum Number of Arrows to Burst Balloons (Medium)&lt;/h1&gt;
+&lt;p&gt;There are some spherical balloons taped onto a flat wall that represents the XY-plane. The balloons are represented as a 2D integer array points where points[i] = [xstart, xend] denotes a balloon whose horizontal diameter stretches between xstart and xend. You do not know the exact y-coordinates of the balloons.&lt;br&gt;
+Arrows can be shot up directly vertically (in the positive y-direction) from different points along the x-axis. A balloon with xstart and xend is burst by an arrow shot at x if xstart &amp;lt;= x &amp;lt;= xend. There is no limit to the number of arrows that can be shot. A shot arrow keeps traveling up infinitely, bursting any balloons in its path.&lt;br&gt;
+Given the array points, return the minimum number of arrows that must be shot to burst all balloons.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findMinArrowShots(self, points: List[List[int]]) -&amp;gt; int:
+        #merge points by &amp;amp; return how many distinct points
+        
+        points=sorted(points,key=lambda x:x[0])
+        res=[]
+        for p in points:
+            if res:
+                # 1    1
+                #    2   2 
+                if res[-1][1]&amp;gt;=p[0]:
+                    res[-1][0]=max(res[-1][0],p[0])
+                    res[-1][1]=min(res[-1][1],p[1])
+                    
+                else:
+                    res.append(p)
+            else:
+                res.append(p)
+        #print(res)
+        return len(res)
+                
+#ANSWER WAY OF WRITTING
+class Solution:
+    def findMinArrowShots(self, points: List[List[int]]) -&amp;gt; int:
+        if not points:
+            return 0
+        
+        # sort by x_end
+        points.sort(key = lambda x : x[1])
+        
+        arrows = 1
+        first_end = points[0][1]
+        for x_start, x_end in points:
+            # if the current balloon starts after the end of another one,
+            # one needs one more arrow
+            if first_end &amp;lt; x_start:
+                arrows += 1
+                first_end = x_end
+        
+        return arrows
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;我的思路是找到相交的区间，看总共多少个就行。。。答案思路是track球右边位置，让碰到新气球左边大于cur end位置+1，更新end位置的greedy算法。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-453-minimum-moves-to-equal-array-elements-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 453. Minimum Moves to Equal Array Elements （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums of size n, return the minimum number of moves required to make all array elements equal.&lt;br&gt;
+In one move, you can increment n - 1 elements of the array by 1.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#TLE naive solution
+class Solution:
+    def minMoves(self, nums: List[int]) -&amp;gt; int:
+        c=0
+        while len(set(nums))!=1:
+            ind = nums.index(max(nums))
+            for i in range(len(nums)):
+                if i!=ind:
+                    nums[i]+=1
+            #print(nums)
+            c+=1
+        return c
+#ANSWER
+class Solution:
+    def minMoves(self, nums: List[int]) -&amp;gt; int:
+        nums.sort()
+        c=0
+        for i in range(len(nums)-1,0,-1):
+            c+=nums[i]-nums[0]
+        return c
+#ANSWER
+class Solution:
+    def minMoves(self, nums: List[int]) -&amp;gt; int: 
+        moves=0
+        min_=float(&#39;inf&#39;)
+        for i in range(len(nums)):
+            moves+=nums[i]
+            min_=min(min_,nums[i])
+        return moves-min_*len(nums)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案很巧妙，如果是答案1） 思路先sort，那么每次需要move是nums【i】-nums【0】，这样move后nums【i】和nums【0】相等，然后其余数字都加上了move次，再次move时候，求nums【i-1】-nums【0】，这样nums【0】就和nums【i-1】相等，自然也和nums【i】相等。 以此类推，可求出总共move数目。 如果是答案2）所有加1除了1个不加，和只有一个减去1是等效的。 所以就是减多少次能使所有数平衡，sum（all）-min（all）乘n。&lt;/p&gt;
+&lt;h1 id=&#34;454-4sum-ii-medium&#34;&gt;454. 4Sum II （Medium）&lt;/h1&gt;
+&lt;p&gt;Given four integer arrays nums1, nums2, nums3, and nums4 all of length n, return the number of tuples (i, j, k, l) such that:&lt;br&gt;
+0 &amp;lt;= i, j, k, l &amp;lt; n&lt;br&gt;
+nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def fourSumCount(self, nums1: List[int], nums2: List[int], nums3: List[int], nums4: List[int]) -&amp;gt; int:
+        dic2sum=collections.defaultdict(int)
+        for i in nums1:
+            for j in nums2:
+                dic2sum[i+j]+=1
+        
+        res=0
+        for k in nums3:
+            for l in nums4:
+                if -k-l in dic2sum:
+                    res+=dic2sum[-k-l]
+        return res
+
+
+
+#ANSWER GENERALIZED 
+class Solution:
+    def fourSumCount(self, A: List[int], B: List[int], C: List[int], D: List[int]) -&amp;gt; int:
+        m = collections.defaultdict(int)
+        lists = [A, B, C, D]
+
+        def nSumCount() -&amp;gt; int:
+            addToHash(0, 0)
+            return countComplements(len(lists) // 2, 0)
+
+        def addToHash(i: int, total: int) -&amp;gt; None:
+            if i == len(lists) // 2:
+                m[total] = m[total] + 1
+            else:
+                for a in lists[i]:
+                    addToHash(i + 1, total + a)
+
+        def countComplements(i: int, complement: int) -&amp;gt; int:
+            if i == len(lists):
+                return m[complement]
+            cnt = 0
+            for a in lists[i]:
+                cnt += countComplements(i + 1, complement - a)
+            return cnt
+
+        return nSumCount()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;455-assign-cookies-easy&#34;&gt;455. Assign Cookies (Easy)&lt;/h1&gt;
+&lt;p&gt;Assume you are an awesome parent and want to give your children some cookies. But, you should give each child at most one cookie.&lt;br&gt;
+Each child i has a greed factor g[i], which is the minimum size of a cookie that the child will be content with; and each cookie j has a size s[j]. If s[j] &amp;gt;= g[i], we can assign the cookie j to the child i, and the child i will be content. Your goal is to maximize the number of your content children and output the maximum number.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findContentChildren(self, g: List[int], s: List[int]) -&amp;gt; int:
+        g.sort()
+        s.sort()
+        c=0
+        while g:
+            cur=g.pop(0)
+            while s and s[0]&amp;lt;cur:
+                s.pop(0)
+            if s:
+                s.pop(0)
+                c+=1
+        return c
+#
+# 先对g, s两个数组进行排序
+# 贪心算法
+# 贪心思想1 优先满足需求因子较小的孩子。因为如果较小需求的孩子无法被满足，则之后的较大的需求更不可能能被满足了。
+#贪心思想2 尽量用较小的糖果去优先满足孩子。
+
+class Solution:
+    def findContentChildren(self, g, s):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type g: List[int]
+        :type s: List[int]
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        g.sort()    # 对需求因子进行排序，从小到大
+        s.sort()    # 对糖果数组进行排序，从小到大
+        child  = 0  # 记录可以被满足孩子数
+        cookie = 0  # 记录可以满足的糖果数
+        while  child &amp;lt;len(g) and cookie &amp;lt; len(s):
+            if g[child] &amp;lt;= s[cookie]: 
+                child += 1
+            cookie += 1
+        return child
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred-456-132-pattern-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 456. 132 Pattern （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an array of n integers nums, a 132 pattern is a subsequence of three integers nums[i], nums[j] and nums[k] such that i &amp;lt; j &amp;lt; k and nums[i] &amp;lt; nums[k] &amp;lt; nums[j].&lt;br&gt;
+Return true if there is a 132 pattern in nums, otherwise, return false.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def find132pattern(self, nums: List[int]) -&amp;gt; bool:
+        if len(nums) &amp;lt; 3:
+            return False
+        stack=[]
+        min_array = [-1] * len(nums)
+        min_array[0] = nums[0]
+        for i in range(1, len(nums)):
+            min_array[i] = min(min_array[i - 1], nums[i])
+        
+        
+        for j in range(len(nums) - 1, -1, -1):
+            if nums[j] &amp;lt;= min_array[j]:
+                continue
+            while stack and stack[-1] &amp;lt;= min_array[j]:
+                stack.pop()
+            if stack and stack[-1] &amp;lt; nums[j]:
+                return True
+            stack.append(nums[j])
+        return False
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;估计是用stack但是。。。看答案思路：从前往后算minarry，从后往前用stack。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-457-circular-array-loop-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 457. Circular Array Loop （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are playing a game involving a circular array of non-zero integers nums. Each nums[i] denotes the number of indices forward/backward you must move if you are located at index i:&lt;br&gt;
+If nums[i] is positive, move nums[i] steps forward, and&lt;br&gt;
+If nums[i] is negative, move nums[i] steps backward.&lt;br&gt;
+Since the array is circular, you may assume that moving forward from the last element puts you on the first element, and moving backwards from the first element puts you on the last element.&lt;br&gt;
+A cycle in the array consists of a sequence of indices seq of length k where:&lt;br&gt;
+Following the movement rules above results in the repeating index sequence seq[0] -&amp;gt; seq[1] -&amp;gt; ... -&amp;gt; seq[k - 1] -&amp;gt; seq[0] -&amp;gt; ...&lt;br&gt;
+Every nums[seq[j]] is either all positive or all negative.&lt;br&gt;
+k &amp;gt; 1&lt;br&gt;
+Return true if there is a cycle in nums, or false otherwise.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def circularArrayLoop(self, nums: List[int]) -&amp;gt; bool:
+        #two pointer
+        n=len(nums)
+        #check every start location
+        for start in range(n):
+            if nums[start]==0: continue
+                
+            slow=start
+            fast=(slow+nums[slow])%n
+            
+            #if sign of fast and fast.next is the same we do the while loop
+            while nums[start]*nums[fast]&amp;gt;0 and  nums[start] * nums[(fast+nums[fast])%n] &amp;gt; 0:
+                if slow == fast:
+                    if slow == (slow+nums[slow])%n:  
+                        break #  1-element loop
+                    return True 
+
+
+                slow = (slow+nums[slow])%n
+                fast = (fast+nums[fast])%n
+                fast = (fast+nums[fast])%n
+            
+            #we are here know start from start have no loop so mark visited as 0
+            slow = start 
+            sgn = nums[start] 
+            while sgn * nums[slow] &amp;gt; 0:
+                nxt = (slow+nums[slow])%n
+                nums[slow] = 0 
+                slow = nxt 
+
+        return False
+        
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;two pointer, but tricky ....if we meet element with different directions, then the search fail, we set all elements along the way to 0. Because 0 is fail for sure so when later search meet 0 we know the search will fail.&lt;/p&gt;
+&lt;h1 id=&#34;458-poor-pigs-hard&#34;&gt;458. Poor Pigs (Hard)&lt;/h1&gt;
+&lt;p&gt;There are buckets buckets of liquid, where exactly one of the buckets is poisonous. To figure out which one is poisonous, you feed some number of (poor) pigs the liquid to see whether they will die or not. Unfortunately, you only have minutesToTest minutes to determine which bucket is poisonous.&lt;br&gt;
+You can feed the pigs according to these steps:&lt;br&gt;
+Choose some live pigs to feed.&lt;br&gt;
+For each pig, choose which buckets to feed it. The pig will consume all the chosen buckets simultaneously and will take no time.&lt;br&gt;
+Wait for minutesToDie minutes. You may not feed any other pigs during this time.&lt;br&gt;
+After minutesToDie minutes have passed, any pigs that have been fed the poisonous bucket will die, and all others will survive.&lt;br&gt;
+Repeat this process until you run out of time.&lt;br&gt;
+Given buckets, minutesToDie, and minutesToTest, return the minimum number of pigs needed to figure out which bucket is poisonous within the allotted time.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def poorPigs(self, buckets: int, minutesToDie: int, minutesToTest: int) -&amp;gt; int:
+        return int(math.ceil(math.log(buckets, 2) / math.log(minutesToTest / minutesToDie + 1, 2)))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;good to knwo but not algorithm..&lt;/p&gt;
+&lt;h1 id=&#34;459-repeated-substring-pattern-easy&#34;&gt;459. Repeated Substring Pattern （Easy）&lt;/h1&gt;
+&lt;p&gt;Given a string s, check if it can be constructed by taking a substring of it and appending multiple copies of the substring together.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def repeatedSubstringPattern(self, s: str) -&amp;gt; bool:
+        for i in range(1,len(s)//2+1):
+            if s[:i]*(len(s)//i)==s:
+                return True
+        return False
+#ANSWER
+def repeatedSubstringPattern(self, str):
+
+        &amp;quot;&amp;quot;&amp;quot;
+        :type str: str
+        :rtype: bool
+        &amp;quot;&amp;quot;&amp;quot;
+        if not str:
+            return False
+            
+        ss = (str + str)[1:-1]
+        return ss.find(str) != -1
+#ANSWER
+def repeatedSubstringPattern(self, str):
+    return s in (s+s)[1:-1]
+    
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;答案思路很好， If the string S has repeated block, it could be described in terms of pattern.&lt;br&gt;
+S = SpSp (For example, S has two repeatable block at most)&lt;br&gt;
+If we repeat the string, then SS=SpSpSpSp.&lt;br&gt;
+Destroying first and the last pattern by removing each character, we generate a new S2=SxSpSpSy.&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-460-lfu-cache-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 460. LFU Cache （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Design and implement a data structure for a Least Frequently Used (LFU) cache.&lt;br&gt;
+Implement the LFUCache class:&lt;br&gt;
+LFUCache(int capacity) Initializes the object with the capacity of the data structure.&lt;br&gt;
+int get(int key) Gets the value of the key if the key exists in the cache. Otherwise, returns -1.&lt;br&gt;
+void put(int key, int value) Update the value of the key if present, or inserts the key if not already present. When the cache reaches its capacity, it should invalidate and remove the least frequently used key before inserting a new item. For this problem, when there is a tie (i.e., two or more keys with the same frequency), the least recently used key would be invalidated.&lt;br&gt;
+To determine the least frequently used key, a use counter is maintained for each key in the cache. The key with the smallest use counter is the least frequently used key.&lt;br&gt;
+When a key is first inserted into the cache, its use counter is set to 1 (due to the put operation). The use counter for a key in the cache is incremented either a get or put operation is called on it.&lt;br&gt;
+The functions get and put must each run in O(1) average time complexity.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import collections
+
+class Node:
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+        self.freq = 1
+        self.prev = self.next = None
+
+class DLinkedList:
+    &amp;quot;&amp;quot;&amp;quot; An implementation of doubly linked list.
+	
+	Two APIs provided:
+    
+    append(node): append the node to the head of the linked list.
+    pop(node=None): remove the referenced node. 
+                    If None is given, remove the one from tail, which is the least recently used.
+                    
+    Both operation, apparently, are in O(1) complexity.
+    &amp;quot;&amp;quot;&amp;quot;
+    def __init__(self):
+        self._sentinel = Node(None, None) # dummy node
+        self._sentinel.next = self._sentinel.prev = self._sentinel
+        self._size = 0
+    
+    def __len__(self):
+        return self._size
+    
+    def append(self, node):
+        node.next = self._sentinel.next
+        node.prev = self._sentinel
+        node.next.prev = node
+        self._sentinel.next = node
+        self._size += 1
+    
+    def pop(self, node=None):
+        if self._size == 0:
+            return
+        
+        if not node:
+            node = self._sentinel.prev
+
+        node.prev.next = node.next
+        node.next.prev = node.prev
+        self._size -= 1
+        
+        return node
+        
+class LFUCache:
+    def __init__(self, capacity):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type capacity: int
+        
+        Three things to maintain:
+        
+        1. a dict, named as `self._node`, for the reference of all nodes given key.
+           That is, O(1) time to retrieve node given a key.
+           
+        2. Each frequency has a doubly linked list, store in `self._freq`, where key
+           is the frequency, and value is an object of `DLinkedList`
+        
+        3. The min frequency through all nodes. We can maintain this in O(1) time, taking
+           advantage of the fact that the frequency can only increment by 1. Use the following
+		   two rules:
+           
+           Rule 1: Whenever we see the size of the DLinkedList of current min frequency is 0,
+                   the min frequency must increment by 1.
+           
+           Rule 2: Whenever put in a new (key, value), the min frequency must 1 (the new node)
+           
+        &amp;quot;&amp;quot;&amp;quot;
+        self._size = 0
+        self._capacity = capacity
+        
+        self._node = dict() # key: Node
+        self._freq = collections.defaultdict(DLinkedList)
+        self._minfreq = 0
+        
+        
+    def _update(self, node):
+        &amp;quot;&amp;quot;&amp;quot; 
+        This is a helper function that used in the following two cases:
+        
+            1. when `get(key)` is called; and
+            2. when `put(key, value)` is called and the key exists.
+         
+        The common point of these two cases is that:
+        
+            1. no new node comes in, and
+            2. the node is visited one more times -&amp;gt; node.freq changed -&amp;gt; 
+               thus the place of this node will change
+        
+        The logic of this function is:
+        
+            1. pop the node from the old DLinkedList (with freq `f`)
+            2. append the node to new DLinkedList (with freq `f+1`)
+            3. if old DlinkedList has size 0 and self._minfreq is `f`,
+               update self._minfreq to `f+1`
+        
+        All of the above opeartions took O(1) time.
+        &amp;quot;&amp;quot;&amp;quot;
+        freq = node.freq
+        
+        self._freq[freq].pop(node)
+        if self._minfreq == freq and not self._freq[freq]:
+            self._minfreq += 1
+        
+        node.freq += 1
+        freq = node.freq
+        self._freq[freq].append(node)
+    
+    def get(self, key):
+        &amp;quot;&amp;quot;&amp;quot;
+        Through checking self._node[key], we can get the node in O(1) time.
+        Just performs self._update, then we can return the value of node.
+        
+        :type key: int
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        if key not in self._node:
+            return -1
+        
+        node = self._node[key]
+        self._update(node)
+        return node.val
+
+    def put(self, key, value):
+        &amp;quot;&amp;quot;&amp;quot;
+        If `key` already exists in self._node, we do the same operations as `get`, except
+        updating the node.val to new value.
+        
+        Otherwise, the following logic will be performed
+        
+        1. if the cache reaches its capacity, pop the least frequently used item. (*)
+        2. add new node to self._node
+        3. add new node to the DLinkedList with frequency 1
+        4. reset self._minfreq to 1
+        
+        (*) How to pop the least frequently used item? Two facts:
+        
+        1. we maintain the self._minfreq, the minimum possible frequency in cache.
+        2. All cache with the same frequency are stored as a DLinkedList, with
+           recently used order (Always append at head)
+          
+        Consequence? ==&amp;gt; The tail of the DLinkedList with self._minfreq is the least
+                         recently used one, pop it...
+        
+        :type key: int
+        :type value: int
+        :rtype: void
+        &amp;quot;&amp;quot;&amp;quot;
+        if self._capacity == 0:
+            return
+        
+        if key in self._node:
+            node = self._node[key]
+            self._update(node)
+            node.val = value
+        else:
+            if self._size == self._capacity:
+                node = self._freq[self._minfreq].pop()
+                del self._node[node.key]
+                self._size -= 1
+                
+            node = Node(key, value)
+            self._node[key] = node
+            self._freq[1].append(node)
+            self._minfreq = 1
+            self._size += 1
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Each key is mapping to the corresponding node (self._node), where we can retrieve the node in O(1) time.&lt;/p&gt;
+&lt;p&gt;Each frequency freq is mapped to a Doubly Linked List (self._freq), where all nodes in the DLinkedList have the same frequency, freq. Moreover, each node will be always inserted in the head (indicating most recently used).&lt;/p&gt;
+&lt;p&gt;A minimum frequency self._minfreq is maintained to keep track of the minimum frequency of across all nodes in this cache, such that the DLinkedList with the min frequency can always be retrieved in O(1) time.&lt;/p&gt;
+&lt;p&gt;Here is how the algorithm works&lt;/p&gt;
+&lt;p&gt;get(key)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;query the node by calling self._node[key]
+find the frequency by checking node.freq, assigned as f, and query the DLinkedList that this node is in, through calling self._freq[f]
+pop this node
+update node&#39;s frequence, append the node to the new DLinkedList with frequency f+1
+if the DLinkedList is empty and self._minfreq == f, update self._minfreq to f+1.
+return node.val
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;put(key, value)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;If key is already in cache, do the same thing as get(key), and update node.val as value
+Otherwise:
+    if the cache is full, pop the least frequenly used element (*)
+    add new node to self._node
+    add new node to self._freq[1]
+    reset self._minfreq to 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;(*) The least frequently used element is the tail element in the DLinkedList with frequency self._minfreq&lt;/p&gt;
+">Leetcode 2022-03-06</a>
       </div>
       
       <div class="item">

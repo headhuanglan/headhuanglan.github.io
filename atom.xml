@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-04-15T01:02:37.106Z</updated>
+    <updated>2022-04-19T21:01:33.503Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -106,6 +106,528 @@
     (2) Latency caused between each layer
     (3) Overall latency justification
 </code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Leetcode 2022-03-06]]></title>
+        <id>https://headhuanglan.github.io/post/leetcode-2022-03-06/</id>
+        <link href="https://headhuanglan.github.io/post/leetcode-2022-03-06/">
+        </link>
+        <updated>2022-03-06T11:20:47.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="451-sort-characters-by-frequency-medium">451. Sort Characters By Frequency （Medium）</h1>
+<p>Given a string s, sort it in decreasing order based on the frequency of the characters. The frequency of a character is the number of times it appears in the string.<br>
+Return the sorted string. If there are multiple answers, return any of them</p>
+<pre><code class="language-python">class Solution:
+    def frequencySort(self, s: str) -&gt; str:
+        d=Counter(s)
+        res=''
+        for k in sorted(d,key=lambda x: d[x],reverse=True):
+            res+=k*d[k]
+        return res
+#O(n) bucket sort
+class Solution:
+    def frequencySort(self, s: str) -&gt; str:
+        if not s: return s
+        counts=collections.Counter(s)
+        max_freq=max(counts.values())
+        
+        buckets=[[] for _ in range(max_freq+1)]
+        for c,i in counts.items():
+            buckets[i].append(c)
+        
+        string_builder=[]
+        for i in range(len(buckets)-1,0,-1):
+            for c in buckets[i]:
+                string_builder.append(c*i)
+        return ''.join(string_builder)
+        
+</code></pre>
+<p>答案的On解法好。bucketsort</p>
+<h1 id="452-minimum-number-of-arrows-to-burst-balloons-medium">452. Minimum Number of Arrows to Burst Balloons (Medium)</h1>
+<p>There are some spherical balloons taped onto a flat wall that represents the XY-plane. The balloons are represented as a 2D integer array points where points[i] = [xstart, xend] denotes a balloon whose horizontal diameter stretches between xstart and xend. You do not know the exact y-coordinates of the balloons.<br>
+Arrows can be shot up directly vertically (in the positive y-direction) from different points along the x-axis. A balloon with xstart and xend is burst by an arrow shot at x if xstart &lt;= x &lt;= xend. There is no limit to the number of arrows that can be shot. A shot arrow keeps traveling up infinitely, bursting any balloons in its path.<br>
+Given the array points, return the minimum number of arrows that must be shot to burst all balloons.</p>
+<pre><code class="language-python">class Solution:
+    def findMinArrowShots(self, points: List[List[int]]) -&gt; int:
+        #merge points by &amp; return how many distinct points
+        
+        points=sorted(points,key=lambda x:x[0])
+        res=[]
+        for p in points:
+            if res:
+                # 1    1
+                #    2   2 
+                if res[-1][1]&gt;=p[0]:
+                    res[-1][0]=max(res[-1][0],p[0])
+                    res[-1][1]=min(res[-1][1],p[1])
+                    
+                else:
+                    res.append(p)
+            else:
+                res.append(p)
+        #print(res)
+        return len(res)
+                
+#ANSWER WAY OF WRITTING
+class Solution:
+    def findMinArrowShots(self, points: List[List[int]]) -&gt; int:
+        if not points:
+            return 0
+        
+        # sort by x_end
+        points.sort(key = lambda x : x[1])
+        
+        arrows = 1
+        first_end = points[0][1]
+        for x_start, x_end in points:
+            # if the current balloon starts after the end of another one,
+            # one needs one more arrow
+            if first_end &lt; x_start:
+                arrows += 1
+                first_end = x_end
+        
+        return arrows
+</code></pre>
+<p>我的思路是找到相交的区间，看总共多少个就行。。。答案思路是track球右边位置，让碰到新气球左边大于cur end位置+1，更新end位置的greedy算法。</p>
+<h1 id="font-colorred-453-minimum-moves-to-equal-array-elements-mediumfont"><font color='red'> 453. Minimum Moves to Equal Array Elements （Medium）</font></h1>
+<p>Given an integer array nums of size n, return the minimum number of moves required to make all array elements equal.<br>
+In one move, you can increment n - 1 elements of the array by 1.</p>
+<pre><code class="language-python">#TLE naive solution
+class Solution:
+    def minMoves(self, nums: List[int]) -&gt; int:
+        c=0
+        while len(set(nums))!=1:
+            ind = nums.index(max(nums))
+            for i in range(len(nums)):
+                if i!=ind:
+                    nums[i]+=1
+            #print(nums)
+            c+=1
+        return c
+#ANSWER
+class Solution:
+    def minMoves(self, nums: List[int]) -&gt; int:
+        nums.sort()
+        c=0
+        for i in range(len(nums)-1,0,-1):
+            c+=nums[i]-nums[0]
+        return c
+#ANSWER
+class Solution:
+    def minMoves(self, nums: List[int]) -&gt; int: 
+        moves=0
+        min_=float('inf')
+        for i in range(len(nums)):
+            moves+=nums[i]
+            min_=min(min_,nums[i])
+        return moves-min_*len(nums)
+</code></pre>
+<p>答案很巧妙，如果是答案1） 思路先sort，那么每次需要move是nums【i】-nums【0】，这样move后nums【i】和nums【0】相等，然后其余数字都加上了move次，再次move时候，求nums【i-1】-nums【0】，这样nums【0】就和nums【i-1】相等，自然也和nums【i】相等。 以此类推，可求出总共move数目。 如果是答案2）所有加1除了1个不加，和只有一个减去1是等效的。 所以就是减多少次能使所有数平衡，sum（all）-min（all）乘n。</p>
+<h1 id="454-4sum-ii-medium">454. 4Sum II （Medium）</h1>
+<p>Given four integer arrays nums1, nums2, nums3, and nums4 all of length n, return the number of tuples (i, j, k, l) such that:<br>
+0 &lt;= i, j, k, l &lt; n<br>
+nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0</p>
+<pre><code class="language-python">class Solution:
+    def fourSumCount(self, nums1: List[int], nums2: List[int], nums3: List[int], nums4: List[int]) -&gt; int:
+        dic2sum=collections.defaultdict(int)
+        for i in nums1:
+            for j in nums2:
+                dic2sum[i+j]+=1
+        
+        res=0
+        for k in nums3:
+            for l in nums4:
+                if -k-l in dic2sum:
+                    res+=dic2sum[-k-l]
+        return res
+
+
+
+#ANSWER GENERALIZED 
+class Solution:
+    def fourSumCount(self, A: List[int], B: List[int], C: List[int], D: List[int]) -&gt; int:
+        m = collections.defaultdict(int)
+        lists = [A, B, C, D]
+
+        def nSumCount() -&gt; int:
+            addToHash(0, 0)
+            return countComplements(len(lists) // 2, 0)
+
+        def addToHash(i: int, total: int) -&gt; None:
+            if i == len(lists) // 2:
+                m[total] = m[total] + 1
+            else:
+                for a in lists[i]:
+                    addToHash(i + 1, total + a)
+
+        def countComplements(i: int, complement: int) -&gt; int:
+            if i == len(lists):
+                return m[complement]
+            cnt = 0
+            for a in lists[i]:
+                cnt += countComplements(i + 1, complement - a)
+            return cnt
+
+        return nSumCount()
+</code></pre>
+<h1 id="455-assign-cookies-easy">455. Assign Cookies (Easy)</h1>
+<p>Assume you are an awesome parent and want to give your children some cookies. But, you should give each child at most one cookie.<br>
+Each child i has a greed factor g[i], which is the minimum size of a cookie that the child will be content with; and each cookie j has a size s[j]. If s[j] &gt;= g[i], we can assign the cookie j to the child i, and the child i will be content. Your goal is to maximize the number of your content children and output the maximum number.</p>
+<pre><code class="language-python">class Solution:
+    def findContentChildren(self, g: List[int], s: List[int]) -&gt; int:
+        g.sort()
+        s.sort()
+        c=0
+        while g:
+            cur=g.pop(0)
+            while s and s[0]&lt;cur:
+                s.pop(0)
+            if s:
+                s.pop(0)
+                c+=1
+        return c
+#
+# 先对g, s两个数组进行排序
+# 贪心算法
+# 贪心思想1 优先满足需求因子较小的孩子。因为如果较小需求的孩子无法被满足，则之后的较大的需求更不可能能被满足了。
+#贪心思想2 尽量用较小的糖果去优先满足孩子。
+
+class Solution:
+    def findContentChildren(self, g, s):
+        &quot;&quot;&quot;
+        :type g: List[int]
+        :type s: List[int]
+        :rtype: int
+        &quot;&quot;&quot;
+        g.sort()    # 对需求因子进行排序，从小到大
+        s.sort()    # 对糖果数组进行排序，从小到大
+        child  = 0  # 记录可以被满足孩子数
+        cookie = 0  # 记录可以满足的糖果数
+        while  child &lt;len(g) and cookie &lt; len(s):
+            if g[child] &lt;= s[cookie]: 
+                child += 1
+            cookie += 1
+        return child
+</code></pre>
+<h1 id="font-colorred-456-132-pattern-mediumfont"><font color='red'> 456. 132 Pattern （Medium）</font></h1>
+<p>Given an array of n integers nums, a 132 pattern is a subsequence of three integers nums[i], nums[j] and nums[k] such that i &lt; j &lt; k and nums[i] &lt; nums[k] &lt; nums[j].<br>
+Return true if there is a 132 pattern in nums, otherwise, return false.</p>
+<pre><code class="language-python">class Solution:
+    def find132pattern(self, nums: List[int]) -&gt; bool:
+        if len(nums) &lt; 3:
+            return False
+        stack=[]
+        min_array = [-1] * len(nums)
+        min_array[0] = nums[0]
+        for i in range(1, len(nums)):
+            min_array[i] = min(min_array[i - 1], nums[i])
+        
+        
+        for j in range(len(nums) - 1, -1, -1):
+            if nums[j] &lt;= min_array[j]:
+                continue
+            while stack and stack[-1] &lt;= min_array[j]:
+                stack.pop()
+            if stack and stack[-1] &lt; nums[j]:
+                return True
+            stack.append(nums[j])
+        return False
+
+</code></pre>
+<p>估计是用stack但是。。。看答案思路：从前往后算minarry，从后往前用stack。</p>
+<h1 id="font-colorred-457-circular-array-loop-mediumfont"><font color='red'> 457. Circular Array Loop （Medium）</font></h1>
+<p>You are playing a game involving a circular array of non-zero integers nums. Each nums[i] denotes the number of indices forward/backward you must move if you are located at index i:<br>
+If nums[i] is positive, move nums[i] steps forward, and<br>
+If nums[i] is negative, move nums[i] steps backward.<br>
+Since the array is circular, you may assume that moving forward from the last element puts you on the first element, and moving backwards from the first element puts you on the last element.<br>
+A cycle in the array consists of a sequence of indices seq of length k where:<br>
+Following the movement rules above results in the repeating index sequence seq[0] -&gt; seq[1] -&gt; ... -&gt; seq[k - 1] -&gt; seq[0] -&gt; ...<br>
+Every nums[seq[j]] is either all positive or all negative.<br>
+k &gt; 1<br>
+Return true if there is a cycle in nums, or false otherwise.</p>
+<pre><code class="language-python">class Solution:
+    def circularArrayLoop(self, nums: List[int]) -&gt; bool:
+        #two pointer
+        n=len(nums)
+        #check every start location
+        for start in range(n):
+            if nums[start]==0: continue
+                
+            slow=start
+            fast=(slow+nums[slow])%n
+            
+            #if sign of fast and fast.next is the same we do the while loop
+            while nums[start]*nums[fast]&gt;0 and  nums[start] * nums[(fast+nums[fast])%n] &gt; 0:
+                if slow == fast:
+                    if slow == (slow+nums[slow])%n:  
+                        break #  1-element loop
+                    return True 
+
+
+                slow = (slow+nums[slow])%n
+                fast = (fast+nums[fast])%n
+                fast = (fast+nums[fast])%n
+            
+            #we are here know start from start have no loop so mark visited as 0
+            slow = start 
+            sgn = nums[start] 
+            while sgn * nums[slow] &gt; 0:
+                nxt = (slow+nums[slow])%n
+                nums[slow] = 0 
+                slow = nxt 
+
+        return False
+        
+
+</code></pre>
+<p>two pointer, but tricky ....if we meet element with different directions, then the search fail, we set all elements along the way to 0. Because 0 is fail for sure so when later search meet 0 we know the search will fail.</p>
+<h1 id="458-poor-pigs-hard">458. Poor Pigs (Hard)</h1>
+<p>There are buckets buckets of liquid, where exactly one of the buckets is poisonous. To figure out which one is poisonous, you feed some number of (poor) pigs the liquid to see whether they will die or not. Unfortunately, you only have minutesToTest minutes to determine which bucket is poisonous.<br>
+You can feed the pigs according to these steps:<br>
+Choose some live pigs to feed.<br>
+For each pig, choose which buckets to feed it. The pig will consume all the chosen buckets simultaneously and will take no time.<br>
+Wait for minutesToDie minutes. You may not feed any other pigs during this time.<br>
+After minutesToDie minutes have passed, any pigs that have been fed the poisonous bucket will die, and all others will survive.<br>
+Repeat this process until you run out of time.<br>
+Given buckets, minutesToDie, and minutesToTest, return the minimum number of pigs needed to figure out which bucket is poisonous within the allotted time.</p>
+<pre><code class="language-python">class Solution:
+    def poorPigs(self, buckets: int, minutesToDie: int, minutesToTest: int) -&gt; int:
+        return int(math.ceil(math.log(buckets, 2) / math.log(minutesToTest / minutesToDie + 1, 2)))
+</code></pre>
+<p>good to knwo but not algorithm..</p>
+<h1 id="459-repeated-substring-pattern-easy">459. Repeated Substring Pattern （Easy）</h1>
+<p>Given a string s, check if it can be constructed by taking a substring of it and appending multiple copies of the substring together.</p>
+<pre><code class="language-python">class Solution:
+    def repeatedSubstringPattern(self, s: str) -&gt; bool:
+        for i in range(1,len(s)//2+1):
+            if s[:i]*(len(s)//i)==s:
+                return True
+        return False
+#ANSWER
+def repeatedSubstringPattern(self, str):
+
+        &quot;&quot;&quot;
+        :type str: str
+        :rtype: bool
+        &quot;&quot;&quot;
+        if not str:
+            return False
+            
+        ss = (str + str)[1:-1]
+        return ss.find(str) != -1
+#ANSWER
+def repeatedSubstringPattern(self, str):
+    return s in (s+s)[1:-1]
+    
+
+</code></pre>
+<p>答案思路很好， If the string S has repeated block, it could be described in terms of pattern.<br>
+S = SpSp (For example, S has two repeatable block at most)<br>
+If we repeat the string, then SS=SpSpSpSp.<br>
+Destroying first and the last pattern by removing each character, we generate a new S2=SxSpSpSy.</p>
+<h1 id="font-colorred-460-lfu-cache-hardfont"><font color='red'> 460. LFU Cache （Hard）</font></h1>
+<p>Design and implement a data structure for a Least Frequently Used (LFU) cache.<br>
+Implement the LFUCache class:<br>
+LFUCache(int capacity) Initializes the object with the capacity of the data structure.<br>
+int get(int key) Gets the value of the key if the key exists in the cache. Otherwise, returns -1.<br>
+void put(int key, int value) Update the value of the key if present, or inserts the key if not already present. When the cache reaches its capacity, it should invalidate and remove the least frequently used key before inserting a new item. For this problem, when there is a tie (i.e., two or more keys with the same frequency), the least recently used key would be invalidated.<br>
+To determine the least frequently used key, a use counter is maintained for each key in the cache. The key with the smallest use counter is the least frequently used key.<br>
+When a key is first inserted into the cache, its use counter is set to 1 (due to the put operation). The use counter for a key in the cache is incremented either a get or put operation is called on it.<br>
+The functions get and put must each run in O(1) average time complexity.</p>
+<pre><code class="language-python">import collections
+
+class Node:
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+        self.freq = 1
+        self.prev = self.next = None
+
+class DLinkedList:
+    &quot;&quot;&quot; An implementation of doubly linked list.
+	
+	Two APIs provided:
+    
+    append(node): append the node to the head of the linked list.
+    pop(node=None): remove the referenced node. 
+                    If None is given, remove the one from tail, which is the least recently used.
+                    
+    Both operation, apparently, are in O(1) complexity.
+    &quot;&quot;&quot;
+    def __init__(self):
+        self._sentinel = Node(None, None) # dummy node
+        self._sentinel.next = self._sentinel.prev = self._sentinel
+        self._size = 0
+    
+    def __len__(self):
+        return self._size
+    
+    def append(self, node):
+        node.next = self._sentinel.next
+        node.prev = self._sentinel
+        node.next.prev = node
+        self._sentinel.next = node
+        self._size += 1
+    
+    def pop(self, node=None):
+        if self._size == 0:
+            return
+        
+        if not node:
+            node = self._sentinel.prev
+
+        node.prev.next = node.next
+        node.next.prev = node.prev
+        self._size -= 1
+        
+        return node
+        
+class LFUCache:
+    def __init__(self, capacity):
+        &quot;&quot;&quot;
+        :type capacity: int
+        
+        Three things to maintain:
+        
+        1. a dict, named as `self._node`, for the reference of all nodes given key.
+           That is, O(1) time to retrieve node given a key.
+           
+        2. Each frequency has a doubly linked list, store in `self._freq`, where key
+           is the frequency, and value is an object of `DLinkedList`
+        
+        3. The min frequency through all nodes. We can maintain this in O(1) time, taking
+           advantage of the fact that the frequency can only increment by 1. Use the following
+		   two rules:
+           
+           Rule 1: Whenever we see the size of the DLinkedList of current min frequency is 0,
+                   the min frequency must increment by 1.
+           
+           Rule 2: Whenever put in a new (key, value), the min frequency must 1 (the new node)
+           
+        &quot;&quot;&quot;
+        self._size = 0
+        self._capacity = capacity
+        
+        self._node = dict() # key: Node
+        self._freq = collections.defaultdict(DLinkedList)
+        self._minfreq = 0
+        
+        
+    def _update(self, node):
+        &quot;&quot;&quot; 
+        This is a helper function that used in the following two cases:
+        
+            1. when `get(key)` is called; and
+            2. when `put(key, value)` is called and the key exists.
+         
+        The common point of these two cases is that:
+        
+            1. no new node comes in, and
+            2. the node is visited one more times -&gt; node.freq changed -&gt; 
+               thus the place of this node will change
+        
+        The logic of this function is:
+        
+            1. pop the node from the old DLinkedList (with freq `f`)
+            2. append the node to new DLinkedList (with freq `f+1`)
+            3. if old DlinkedList has size 0 and self._minfreq is `f`,
+               update self._minfreq to `f+1`
+        
+        All of the above opeartions took O(1) time.
+        &quot;&quot;&quot;
+        freq = node.freq
+        
+        self._freq[freq].pop(node)
+        if self._minfreq == freq and not self._freq[freq]:
+            self._minfreq += 1
+        
+        node.freq += 1
+        freq = node.freq
+        self._freq[freq].append(node)
+    
+    def get(self, key):
+        &quot;&quot;&quot;
+        Through checking self._node[key], we can get the node in O(1) time.
+        Just performs self._update, then we can return the value of node.
+        
+        :type key: int
+        :rtype: int
+        &quot;&quot;&quot;
+        if key not in self._node:
+            return -1
+        
+        node = self._node[key]
+        self._update(node)
+        return node.val
+
+    def put(self, key, value):
+        &quot;&quot;&quot;
+        If `key` already exists in self._node, we do the same operations as `get`, except
+        updating the node.val to new value.
+        
+        Otherwise, the following logic will be performed
+        
+        1. if the cache reaches its capacity, pop the least frequently used item. (*)
+        2. add new node to self._node
+        3. add new node to the DLinkedList with frequency 1
+        4. reset self._minfreq to 1
+        
+        (*) How to pop the least frequently used item? Two facts:
+        
+        1. we maintain the self._minfreq, the minimum possible frequency in cache.
+        2. All cache with the same frequency are stored as a DLinkedList, with
+           recently used order (Always append at head)
+          
+        Consequence? ==&gt; The tail of the DLinkedList with self._minfreq is the least
+                         recently used one, pop it...
+        
+        :type key: int
+        :type value: int
+        :rtype: void
+        &quot;&quot;&quot;
+        if self._capacity == 0:
+            return
+        
+        if key in self._node:
+            node = self._node[key]
+            self._update(node)
+            node.val = value
+        else:
+            if self._size == self._capacity:
+                node = self._freq[self._minfreq].pop()
+                del self._node[node.key]
+                self._size -= 1
+                
+            node = Node(key, value)
+            self._node[key] = node
+            self._freq[1].append(node)
+            self._minfreq = 1
+            self._size += 1
+
+
+</code></pre>
+<p>Each key is mapping to the corresponding node (self._node), where we can retrieve the node in O(1) time.</p>
+<p>Each frequency freq is mapped to a Doubly Linked List (self._freq), where all nodes in the DLinkedList have the same frequency, freq. Moreover, each node will be always inserted in the head (indicating most recently used).</p>
+<p>A minimum frequency self._minfreq is maintained to keep track of the minimum frequency of across all nodes in this cache, such that the DLinkedList with the min frequency can always be retrieved in O(1) time.</p>
+<p>Here is how the algorithm works</p>
+<p>get(key)</p>
+<pre><code>query the node by calling self._node[key]
+find the frequency by checking node.freq, assigned as f, and query the DLinkedList that this node is in, through calling self._freq[f]
+pop this node
+update node's frequence, append the node to the new DLinkedList with frequency f+1
+if the DLinkedList is empty and self._minfreq == f, update self._minfreq to f+1.
+return node.val
+</code></pre>
+<p>put(key, value)</p>
+<pre><code>If key is already in cache, do the same thing as get(key), and update node.val as value
+Otherwise:
+    if the cache is full, pop the least frequenly used element (*)
+    add new node to self._node
+    add new node to self._freq[1]
+    reset self._minfreq to 1
+</code></pre>
+<p>(*) The least frequently used element is the tail element in the DLinkedList with frequency self._minfreq</p>
 ]]></content>
     </entry>
     <entry>
@@ -4539,773 +5061,6 @@ class RandomizedSet():
 
 </code></pre>
 <p>这个思路好，用dic保存插入元素位置方便找出index， 删除时候找出index，然后和list中最后一个元素交换位置，然后pop list del dict【val】</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-12-09]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-12-09/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-09/">
-        </link>
-        <updated>2021-12-09T05:25:59.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="361-bomb-enemy-medium">361. Bomb Enemy （Medium）</h1>
-<p>Given an m x n matrix grid where each cell is either a wall 'W', an enemy 'E' or empty '0', return the maximum enemies you can kill using one bomb. You can only place the bomb in an empty cell.</p>
-<p>The bomb kills all the enemies in the same row and column from the planted point until it hits the wall since it is too strong to be destroyed.</p>
-<pre><code class="language-python">class Solution:
-    def maxKilledEnemies(self, grid: List[List[str]]) -&gt; int:
-        m=len(grid)
-        n=len(grid[0])
-        dp=[[0]*n for _ in range(m) ]
-        #look from left for each row
-        for i in range(m):
-            c=0
-            for j in range(n):
-                dp[i][j]+=c
-                if grid[i][j]=='E':
-                    c+=1
-                elif grid[i][j]=='W':
-                    dp[i][j]=0
-                    c=0
-        #look from right for each row
-        for i in range(m):
-            c=0
-            for j in range(n-1,-1,-1):
-                dp[i][j]+=c
-                if grid[i][j]=='E':
-                    c+=1
-                elif grid[i][j]=='W':
-                    dp[i][j]=0
-                    c=0
-        #look from up for each col
-        for i in range(n):
-            c=0
-            for j in range(m):
-                dp[j][i]+=c
-                if grid[j][i]=='E':
-                    c+=1
-                elif grid[j][i]=='W':
-                    dp[j][i]=0
-                    c=0
-        #look from bottom for each col
-        for i in range(n):
-            c=0
-            for j in range(m-1,-1,-1):
-                dp[j][i]+=c
-                if grid[j][i]=='E':
-                    c+=1
-                elif grid[j][i]=='W':
-                    dp[j][i]=0
-                    c=0
-         
-        res=0
-        for i in range(m):
-            for j in range(n):
-                if grid[i][j]=='0':
-                    res=max(res,dp[i][j])
-        return res
-                
- #ANSWER
- class Solution:
-    def maxKilledEnemies(self, grid: List[List[str]]) -&gt; int:
-        if len(grid) == 0:
-            return 0
-
-        rows, cols = len(grid), len(grid[0])
-
-        max_count = 0
-        row_hits = 0
-        col_hits = [0] * cols
-
-        for row in range(0, rows):
-            for col in range(0, cols):
-                # reset the hits on the row, if necessary.
-                if col == 0 or grid[row][col - 1] == 'W':
-                    row_hits = 0
-                    for k in range(col, cols):
-                        if grid[row][k] == 'W':
-                            # stop the scan when we hit the wall.
-                            break
-                        elif grid[row][k] == 'E':
-                            row_hits += 1
-
-                # reset the hits on the col, if necessary.
-                if row == 0 or grid[row - 1][col] == 'W':
-                    col_hits[col] = 0
-                    for k in range(row, rows):
-                        if grid[k][col] == 'W':
-                            break
-                        elif grid[k][col] == 'E':
-                            col_hits[col] += 1
-
-                # count the hits for each empty cell.
-                if grid[row][col] == '0':
-                    total_hits = row_hits + col_hits[col]
-                    max_count = max(max_count, total_hits)
-
-        return max_count       
-</code></pre>
-<p>和答案思路是一致的，写的更简洁些。</p>
-<h1 id="362-design-hit-counter-medium">362. Design Hit Counter （Medium）</h1>
-<p>Design a hit counter which counts the number of hits received in the past 5 minutes (i.e., the past 300 seconds).<br>
-Your system should accept a timestamp parameter (in seconds granularity), and you may assume that calls are being made to the system in chronological order (i.e., timestamp is monotonically increasing). Several hits may arrive roughly at the same time.<br>
-Implement the HitCounter class:<br>
-HitCounter() Initializes the object of the hit counter system.<br>
-void hit(int timestamp) Records a hit that happened at timestamp (in seconds). Several hits may happen at the same timestamp.<br>
-int getHits(int timestamp) Returns the number of hits in the past 5 minutes from timestamp (i.e., the past 300 seconds).</p>
-<pre><code class="language-python">#NOT WORKING DUE TO timestamp range up to 2*10^9
-class HitCounter:
-    class BIT:
-        def __init__(self,size):
-            self.size=size
-            self.tree=[0]*size
-            
-        def update(self,ind):
-            #index in BIT is 1 more than original index
-            while ind&lt;self.size:
-                self.tree[ind]+=1
-                ind+= ind&amp;-ind
-        def query(self,ind):
-            #index in BIT is 1 more than original index
-            res=0
-            while ind&gt;0:
-                res+=self.tree[ind]
-                ind-= ind&amp;-ind
-            return res
-
-
-    def __init__(self):
-        self.tree=self.BIT(2000)
-    def hit(self, timestamp: int) -&gt; None:
-        self.tree.update(timestamp)
-        
-
-    def getHits(self, timestamp: int) -&gt; int:
-        return self.tree.query(timestamp)-self.tree.query(timestamp-300 if timestamp-300&gt;0 else 0)
-        
-#ANOTHER WAY...
-class HitCounter:
-
-    def __init__(self):
-        self.data=[]
-        
-        
-
-    def hit(self, timestamp: int) -&gt; None:
-        self.data.append(timestamp)
-        
-
-    def getHits(self, timestamp: int) -&gt; int:
-        return bisect.bisect_right(self.data,timestamp)-bisect.bisect_left(self.data,timestamp-299)
-
-
-# Your HitCounter object will be instantiated and called as such:
-# obj = HitCounter()
-# obj.hit(timestamp)
-# param_2 = obj.getHits(timestamp)
-
-class HitCounter(object):
-
-def __init__(self):
-    &quot;&quot;&quot;
-    Initialize your data structure here.
-    &quot;&quot;&quot;
-    self.deque = collections.deque()
-
-def hit(self, timestamp):
-    &quot;&quot;&quot;
-    Record a hit.
-    @param timestamp - The current timestamp (in seconds granularity).
-    :type timestamp: int
-    :rtype: None
-    &quot;&quot;&quot;
-    self.deque.append(timestamp)
-    
-
-def getHits(self, timestamp):
-    &quot;&quot;&quot;
-    Return the number of hits in the past 5 minutes.
-    @param timestamp - The current timestamp (in seconds granularity).
-    :type timestamp: int
-    :rtype: int
-    &quot;&quot;&quot;
-
-    while self.deque and timestamp - self.deque[0] &gt;= 300:
-        self.deque.popleft()
-    return len(self.deque)
-
-</code></pre>
-<p>感觉用Seg Tree 或者Binary Indexed Tree 但忘记怎么写。。。遇到memory out of bond 问题，因为timestamp 范围太大。。。换思路。。。直接用binary search。。。或者用queue</p>
-<h1 id="font-colorred-363-max-sum-of-rectangle-no-larger-than-k-hardfont"><font color='red'> 363. Max Sum of Rectangle No Larger Than K （Hard）</font></h1>
-<p>Given an m x n matrix matrix and an integer k, return the max sum of a rectangle in the matrix such that its sum is no larger than k.</p>
-<pre><code class="language-python">
-#TIME LIMIT EXCEEDED
-class Solution:
-    def maxSumSubmatrix(self, matrix: List[List[int]], k: int) -&gt; int:
-        m=len(matrix)
-        n=len(matrix[0])
-        res=[]
-        for i in range(m):
-            for j in range(n):
-                area=matrix[i][j]
-                if area&lt;=k:
-                    heapq.heappush(res,-area)
-                if i==0 and j==0:continue
-                if j&gt;0 and i==0 :
-                    matrix[i][j]+=matrix[i][j-1]
-                elif i&gt;0 and j==0:
-                    matrix[i][j]+=matrix[i-1][j]
-                else:
-                    matrix[i][j]+=matrix[i][j-1]+matrix[i-1][j]-matrix[i-1][j-1]
-                
-                area=matrix[i][j]
-                if area&lt;=k:
-                    heapq.heappush(res,-area)
-        
-        #for row in matrix:
-        #    print(row)
-        #print(res)
-   
-        for row in range(m):
-            for col in range(n):
-                for row_p in range(row):
-                    area=matrix[row][col]-matrix[row_p][col]
-                    if area&lt;=k:
-                            heapq.heappush(res,-area)
-                    for col_p in range(col):
-                        area=matrix[row][col]-matrix[row][col_p]
-                        if area&lt;=k:
-                            heapq.heappush(res,-area)
-                        area=matrix[row][col]-matrix[row_p][col]-matrix[row][col_p]+matrix[row_p][col_p]
-                        if area&lt;=k:
-                            heapq.heappush(res,-area)
-
-        return -heapq.heappop(res)
-
-#ANSWER
-import sortedcontainers
-class Solution:
-    def maxSumSubmatrix(self, matrix: List[List[int]], k: int) -&gt; int:
-        self.result=float('-inf')
-        def updateresult(nums,k):
-            sum=0
-            sortedsum=sortedcontainers.SortedSet()
-            sortedsum.add(0)
-            for num in nums:
-                #running sum
-                sum+=num
-                #get x where runningsum-x&lt;=k such that sum-x is closest to k
-                ind=bisect.bisect_left(sortedsum,sum-k)
-                try:
-                    x=sortedsum[ind]
-                except:
-                    x=None
-                if x is not None:
-                    self.result=max(self.result,sum-x)
-                sortedsum.add(sum)
-        
-        
-        for i in range(len(matrix)):
-            #start from ith row
-            rowsum=[0]*len(matrix[0])
-            for row in range(i,len(matrix)):
-                for col in range(len(matrix[0])):
-                    rowsum[col]+=matrix[row][col]
-                updateresult(rowsum,k)
-                
-                if self.result==k:
-                    return self.result
-        return self.result
-
-#ANSWER 
-import sortedcontainers
-class Solution:
-    
-    def maxSumSubmatrix(self, matrix: List[List[int]], k: int) -&gt; int:
-        self.result=float('-inf')
-        
-        def getmaxkadane(nums):
-            maxkadane=float('-inf')
-            currentmaxsum=0
-            for num in nums:
-                currentmaxsum=max(currentmaxsum+num,num)
-                maxkadane=max(maxkadane,currentmaxsum)
-            return maxkadane
-        def updateresult(nums,k):
-            kadanesum=getmaxkadane(nums)
-            if kadanesum&lt;=k:
-                self.result=max(self.result,kadanesum)
-                return
-            
-            
-            sum=0
-            sortedsum=sortedcontainers.SortedSet()
-            sortedsum.add(0)
-            for num in nums:
-                #running sum
-                sum+=num
-                #get x where runningsum-x&lt;=k such that sum-x is closest to k
-                ind=bisect.bisect_left(sortedsum,sum-k)
-                try:
-                    x=sortedsum[ind]
-                except:
-                    x=None
-                if x is not None:
-                    self.result=max(self.result,sum-x)
-                sortedsum.add(sum)
-        
-        
-        for i in range(len(matrix)):
-            #start from ith row
-            rowsum=[0]*len(matrix[0])
-            for row in range(i,len(matrix)):
-                for col in range(len(matrix[0])):
-                    rowsum[col]+=matrix[row][col]
-                updateresult(rowsum,k)
-                
-                if self.result==k:
-                    return self.result
-        return self.result
-                      
-</code></pre>
-<p>初次尝试heapq+cumsum time limit exceeded，因为还是属于暴力解法。。。看答案。答案用python去解也是TLE， 答案思路，先考虑1D问题，要寻找加和小于等于K的，相当于找当前的runningsum-X小于等于K，所以要寻找X大于等于runningsum-K，这样用orderedset和binary seasrch可以从runningsum中找到这个X，runningsum-X就是要求的小于等于K的累加和。 再还原成2d问题，对于每一个起始点为ith row的数据，初始化一个rowsum。然后每添加一个row就update一下答案。 Time complexity: O(m2nlog⁡n)<br>
-另一种方法增加改进用Kadane's algorithm gets the max possible sum of a sub-array in O(n) time，</p>
-<pre><code class="language-python">class Solution:
-    def maxSubArray(self, nums: List[int]) -&gt; int:
-        # Initialize our variables using the first element.
-        current_subarray = max_subarray = nums[0]
-        # Start with the 2nd element since we already used the first one.
-        for num in nums[1:]:
-            # If current_subarray is negative, throw it away. Otherwise, keep adding to it.
-            current_subarray = max(num, current_subarray + num)
-            max_subarray = max(max_subarray, current_subarray)
-        return max_subarray
-</code></pre>
-<p>一种DP的方法求maxsubarray。。。因为一个row如果maxsumarry已经小于等于K了就没必要用nlogn方法的updateresult再去求了，算一步时间复杂度上的小优化。这样写出来能pass。</p>
-<h1 id="364-nested-list-weight-sum-ii-medium">364. Nested List Weight Sum II （Medium）</h1>
-<p>You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists.<br>
-The depth of an integer is the number of lists that it is inside of. For example, the nested list [1,[2,2],[[3],2],1] has each integer's value set to its depth. Let maxDepth be the maximum depth of any integer.<br>
-The weight of an integer is maxDepth - (the depth of the integer) + 1.<br>
-Return the sum of each integer in nestedList multiplied by its weight.</p>
-<pre><code class="language-python"># &quot;&quot;&quot;
-# This is the interface that allows for creating nested lists.
-# You should not implement it, or speculate about its implementation
-# &quot;&quot;&quot;
-#class NestedInteger:
-#    def __init__(self, value=None):
-#        &quot;&quot;&quot;
-#        If value is not specified, initializes an empty list.
-#        Otherwise initializes a single integer equal to value.
-#        &quot;&quot;&quot;
-#
-#    def isInteger(self):
-#        &quot;&quot;&quot;
-#        @return True if this NestedInteger holds a single integer, rather than a nested list.
-#        :rtype bool
-#        &quot;&quot;&quot;
-#
-#    def add(self, elem):
-#        &quot;&quot;&quot;
-#        Set this NestedInteger to hold a nested list and adds a nested integer elem to it.
-#        :rtype void
-#        &quot;&quot;&quot;
-#
-#    def setInteger(self, value):
-#        &quot;&quot;&quot;
-#        Set this NestedInteger to hold a single integer equal to value.
-#        :rtype void
-#        &quot;&quot;&quot;
-#
-#    def getInteger(self):
-#        &quot;&quot;&quot;
-#        @return the single integer that this NestedInteger holds, if it holds a single integer
-#        Return None if this NestedInteger holds a nested list
-#        :rtype int
-#        &quot;&quot;&quot;
-#
-#    def getList(self):
-#        &quot;&quot;&quot;
-#        @return the nested list that this NestedInteger holds, if it holds a nested list
-#        Return None if this NestedInteger holds a single integer
-#        :rtype List[NestedInteger]
-#        &quot;&quot;&quot;
-
-class Solution:
-    def depthSumInverse(self, nestedList: List[NestedInteger]) -&gt; int:
-        #[[1,1],2,[1,1]]
-        
-        def depth(nestedList):
-            d=1
-            for li in nestedList:
-                if not li.isInteger():
-                    d=max(d,1+depth(li.getList()))
-            return d
-                    
-                    
-                
-        maxd=depth(nestedList)    
-        #print(maxd)
-    
-        
-        def helper(nestedList,depth):
-            res=0
-            for li in nestedList:
-                if li.isInteger():
-                    #print(li.getInteger(),(maxd-depth+1))
-                    res+=li.getInteger()*(maxd-depth+1)
-                else:
-                    
-                    res+=helper(li.getList(),depth+1)
-                   
-            return res
-        
-        return helper(nestedList,1)
-
-            
-        
-</code></pre>
-<p>算maxdepth时候卡壳了。。。。写出的算法同答案1，double DFS。 算法2，3用了math+BFS。</p>
-<h1 id="font-colorred365-water-and-jug-problem-mediumfont"><font color='red'>365. Water and Jug Problem （Medium）</font></h1>
-<p>ou are given two jugs with capacities jug1Capacity and jug2Capacity liters. There is an infinite amount of water supply available. Determine whether it is possible to measure exactly targetCapacity liters using these two jugs.</p>
-<p>If targetCapacity liters of water are measurable, you must have targetCapacity liters of water contained within one or both buckets by the end.</p>
-<p>Operations allowed:</p>
-<pre><code>Fill any of the jugs with water.
-Empty any of the jugs.
-Pour water from one jug into another till the other jug is completely full, or the first jug itself is empty.
-</code></pre>
-<pre><code class="language-python">class Solution:
-    def canMeasureWater(self, jug1Capacity: int, jug2Capacity: int, targetCapacity: int) -&gt; bool:
-     
-        x=jug1Capacity
-        y=jug2Capacity
-        z=targetCapacity
-        if x + y &lt; z: return False
-        if  x == z or y == z or x + y == z : return True
-        
-        def GCD(a,b):
-            while b:
-                a,b=b,a%b
-            return a
-        return z%GCD(x, y) == 0 
-
-#ANSWER BFS
-class Solution:
-    def canMeasureWater(self, jug1Capacity: int, jug2Capacity: int, targetCapacity: int) -&gt; bool:
-        x=jug1Capacity
-        y=jug2Capacity
-        z=targetCapacity
-     
-        if x&gt;y:
-            #make sure x&lt;y
-            x,y=y,x
-            
-        if z &gt; x + y: return False
-        
-        # set the initial state will empty jars;
-        queue = [(0, 0)]
-        visited = set((0, 0))
-        while queue:
-            a, b = queue.pop(0);
-            if a + b == z:
-                return True;
-            
-            states = set()
-            
-            states.add((x, b)) # fill jar x;
-            states.add((a, y)) # fill jar y;
-            states.add((0, b)) # empty jar x;
-            states.add((a, 0)) # empty jar y;
-            states.add((min(x, b + a), 0 if b &lt; x - a else b - (x - a))) # pour jar y to x;
-            states.add((0 if a + b &lt; y else a - (y - b), min(b + a, y))) # pour jar x to y;
-
-            for state in states:
-                if state in visited:
-                    continue;
-                queue.append(state)
-                visited.add(state);
-                
-        return False
-
-</code></pre>
-<p>一眼看上去好像是个dp问题。但提示是DFS，BFS, MATH。 答案用了 Bézout's identity and check if z is a multiple of GCD(x, y)<br>
-Bézout's identity (also called Bézout's lemma) is a theorem in the elementary theory of numbers:<br>
-let a and b be nonzero integers and let d be their greatest common divisor. Then there exist integers x and y such that ax+by=d，In addition, the greatest common divisor d is the smallest positive integer that can be written as ax + by every integer of the form ax + by is a multiple of the greatest common divisor d.<br>
-BFS解法也很经典</p>
-<h1 id="366-find-leaves-of-binary-tree-medium">366. Find Leaves of Binary Tree （Medium）</h1>
-<p>Given the root of a binary tree, collect a tree's nodes as if you were doing this:<br>
-Collect all the leaf nodes.<br>
-Remove all the leaf nodes.<br>
-Repeat until the tree is empty.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def findLeaves(self, root: Optional[TreeNode]) -&gt; List[List[int]]:
-        self.maxd=0
-        def depth(root):
-            if not root: return
-            if not root.left and not root.right:
-                root.d=0
-                return
-        
-            depth(root.left)
-            depth(root.right)
-            
-            if root.left and root.right:
-                root.d=max(root.left.d,root.right.d)+1
-            elif root.left:
-                root.d=root.left.d+1
-            else:
-                root.d=root.right.d+1
-            
-            self.maxd=max(self.maxd,root.d)
-                
-                    
-        depth(root)
-        res=[[] for _ in range(self.maxd+1)]
-        
-        def pre(root):
-            if not root: return 
-            res[root.d].append(root.val)
-            pre(root.left)
-            pre(root.right)
-        
-        pre(root)
-        return res 
-
-
-#ANSWER
-def findLeaves(self, root: TreeNode) -&gt; List[List[int]]:
-    output = collections.defaultdict(list)
-    
-    def dfs(node, layer):
-        if not node: 
-            return layer 
-        left = dfs(node.left, layer)
-        right = dfs(node.right, layer)
-        layer = max(left, right)
-        output[layer].append(node.val)
-        return layer + 1
-    
-    dfs(root, 0)
-    return output.values() 
-</code></pre>
-<p>先后序遍历给node标号，同时知道最大深度，然后初始化res，再前序遍历把val放到应该放的res位置。答案把所有的都放在后序遍历里了。</p>
-<h1 id="367-valid-perfect-square-easy">367. Valid Perfect Square （Easy）</h1>
-<p>Given a positive integer num, write a function which returns True if num is a perfect square else False.</p>
-<pre><code class="language-python">class Solution:
-    def isPerfectSquare(self, num: int) -&gt; bool:
-        l=1
-        r=num//2+1
-        while l&lt;=r:
-            m= (l+r)//2
-            if m*m==num:
-                return True
-            elif m*m&gt;num:
-                r=m-1
-            else:
-                l=m+1
-        return False
-#ANSWER
-class Solution:
-    def isPerfectSquare(self, num: int) -&gt; bool:
-        if num &lt; 2:
-            return True
-        
-        x = num // 2
-        while x * x &gt; num:
-            x = (x + num // x) // 2
-        return x * x == num
-</code></pre>
-<p>答案用了牛顿法，更快收敛比二分法。找出f（x）= x^2-num=0的根。 设一个猜测值Xk  ，f（Xk）是y值，f‘（Xk）是对比底，所以底= f（Xk）/f'(Xk)  新的猜测Xk+1= Xk- f（Xk）/f'(Xk) 所以 xk+1​=0.5*(xk​+num/xk​​)<br>
-牛顿法也是O(log⁡N)</p>
-<h1 id="font-colorred368-largest-divisible-subset-mediumfont"><font color='red'>368. Largest Divisible Subset （Medium）</font></h1>
-<p>Given a set of distinct positive integers nums, return the largest subset answer such that every pair (answer[i], answer[j]) of elements in this subset satisfies:<br>
-answer[i] % answer[j] == 0, or<br>
-answer[j] % answer[i] == 0<br>
-If there are multiple solutions, return any of them.</p>
-<pre><code class="language-python">class Solution:
-    def largestDivisibleSubset(self, nums: List[int]) -&gt; List[int]:
-        #dp[i]= maxsubset include nums[i] from 0 to i
-        # dp[i]=      nums[0] to nums[i] are divisible by nums[i] find max(dp)+1
-        nums.sort()
-        dp=[1]*len(nums)
-        for i in range(len(nums)):
-            for j in range(i):
-                if nums[i]%nums[j]==0 or nums[j]%nums[i]==0:
-                    dp[i]=max(dp[i],dp[j]+1)
-               
-        ind=dp.index(max(dp))
-        while ind+1&lt;len(dp) and dp[ind+1]==max(dp):
-            ind+=1
-        #print(nums)
-        #print(dp)
-        #reconstruct res
-        res=[]
-        cursize=max(dp)
-        curtail=nums[ind]
-        for i in range(ind,-1,-1):
-            if cursize==dp[i] and curtail%nums[i]==0:
-                res.append(nums[i])
-                cursize-=1
-                curtail=nums[i]
-        return res[::-1]
-
- #ANSWER WAY OF WRITING        
-class Solution(object):
-    def largestDivisibleSubset(self, nums):
-        &quot;&quot;&quot;
-        :type nums: List[int]
-        :rtype: List[int]
-        &quot;&quot;&quot;
-        # The container that holds all intermediate solutions.
-        # key: the largest element in a valid subset.
-        subsets = {-1: set()}
-        
-        for num in sorted(nums):
-            subsets[num] = max([subsets[k] for k in subsets if num % k == 0], key=len) | {num}
-        
-        return list(max(subsets.values(), key=len))
-</code></pre>
-<p>用dp可以算出长度，但没法正确给出一个result。问题出在了reconstruct这一步。 看了答案写出来了。<br>
-答案写出算法用了2个定理。假设【E，F，G】已经是从小到大排序好的而且是divisible subset，那么1）对于h大于G， h%G等于0则【E，F，G，h】满足divisible subset  2）对于 d小于E，若 E%d==0则【d，E，F，G】满足divisible subset。</p>
-<h1 id="369-plus-one-linked-list-medium">369. Plus One Linked List （Medium）</h1>
-<p>Given a non-negative integer represented as a linked list of digits, plus one to the integer.<br>
-The digits are stored such that the most significant digit is at the head of the list.</p>
-<pre><code class="language-python"># Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def plusOne(self, head: ListNode) -&gt; ListNode:
-        
-        def rev(head):
-            pre=None
-            while head:
-                headnext=head.next
-                head.next=pre
-                pre=head
-                head=headnext
-            return pre
-        
-        revlist_head = rev(head)
-        cur=revlist_head
-        first=True
-        carry=0
-        pre=None
-        while cur:
-            if first:
-                val=cur.val+carry+1
-                cur.val=val%10
-                carry=val//10
-                first=False
-            else:
-                val=cur.val+carry
-                cur.val=val%10
-                carry=val//10
-            pre=cur
-            cur=cur.next
-        
-        if carry:
-            pre.next=ListNode(val=carry)
-        
-        return rev(revlist_head)
-
-#ANSWER WAY OF WRITING
-class Solution:
-    def plusOne(self, head: ListNode) -&gt; ListNode:
-        
-        # sentinel head
-        sentinel = ListNode(0)
-        sentinel.next = head
-        not_nine = sentinel
-
-        # find the rightmost not-nine digit
-        while head:
-            if head.val != 9:
-                not_nine = head
-            head = head.next
-
-        # increase this rightmost not-nine digit by 1
-        not_nine.val += 1
-        not_nine = not_nine.next
-
-        # set all the following nines to zeros
-        while not_nine:
-            not_nine.val = 0
-            not_nine = not_nine.next
-
-        return sentinel if sentinel.val else sentinel.next
-
-</code></pre>
-<p>先rev了加1，然后再rev回去。<br>
-答案做法用哨兵0node，找到最右面不是9的node+1，后面是9的一律变0.</p>
-<h1 id="font-colorblue-370-range-addition-mediumfont"><font color='blue'> 370. Range Addition （Medium）</font></h1>
-<p>You are given an integer length and an array updates where updates[i] = [startIdxi, endIdxi, inci].</p>
-<p>You have an array arr of length length with all zeros, and you have some operation to apply on arr. In the ith operation, you should increment all the elements arr[startIdxi], arr[startIdxi + 1], ..., arr[endIdxi] by inci.</p>
-<p>Return arr after applying all the updates.</p>
-<pre><code class="language-python">class Solution:
-    def getModifiedArray(self, length: int, updates: List[List[int]]) -&gt; List[int]:
-        #brute force
-        res=[0]*length
-        for update in updates:
-            i,j,inc=update
-            res[i]+=inc
-            if j+1&lt;length:
-                res[j+1]+=-inc 
-            
-        for i in range(1,length):
-            res[i]+=res[i-1]
-        return res
-        
-
-</code></pre>
-<p>暴力解TLE。。 看了hint写出来了。。。第一个hint就是没必要用复杂数据结构，别想太多。<br>
-BIT,SEGMENTTREE</p>
-<pre><code class="language-python">tree=[0]*(2*size)   
-#####SEGMENT TREE
-#   1
-# 2   3
-#4 5 6 7
-# 1 2 3 4 5 6 7
-       
-def update(ind):
-    tree[ind]+=1
-    
-    while ind&gt;0:
-        left=ind
-        right=ind
-        if ind%2==0:
-            right+=1
-        else:
-            left-=1
-        if ind//2&gt;0:
-            tree[ind//2]=tree[left]+tree[right]
-        ind//=2
-#####
-#   1
-# 2   3
-#4 5 6 7
-# 1 2 3 4 5 6 7      
-def query(left,right):
-    res=0
-    while left&lt;=right:
-        if right%2==0:
-            res+=tree[right]
-            right-=1
-        if left%2==1:
-            res+=tree[left]
-            left+=1
-
-        left//=2
-        right//=2
-
-    return res
-
-</code></pre>
 ]]></content>
     </entry>
 </feed>
