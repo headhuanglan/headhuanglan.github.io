@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-04-19T21:01:33.503Z</updated>
+    <updated>2022-04-22T00:45:16.188Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -106,6 +106,404 @@
     (2) Latency caused between each layer
     (3) Overall latency justification
 </code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[2022-03-07 Leetcode]]></title>
+        <id>https://headhuanglan.github.io/post/2022-03-07-leetcode/</id>
+        <link href="https://headhuanglan.github.io/post/2022-03-07-leetcode/">
+        </link>
+        <updated>2022-03-07T07:06:49.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="461-hamming-distance-easy">461. Hamming Distance (Easy)</h1>
+<p>The Hamming distance between two integers is the number of positions at which the corresponding bits are different.<br>
+Given two integers x and y, return the Hamming distance between them.</p>
+<pre><code class="language-python">class Solution:
+    def hammingDistance(self, x: int, y: int) -&gt; int:
+        res=x^y
+        c=0
+        for i in range(32):
+            if res &gt;&gt;i &amp; 1:
+                c+=1
+        return c
+#
+class Solution(object):
+    def hammingDistance(self, x, y):
+        &quot;&quot;&quot;
+        :type x: int
+        :type y: int
+        :rtype: int
+        &quot;&quot;&quot;
+        xor = x ^ y
+        distance = 0
+        while xor:
+            # mask out the rest bits
+            if xor &amp; 1:
+                distance += 1
+            xor = xor &gt;&gt; 1
+        return distance
+
+#
+class Solution:
+    def hammingDistance(self, x, y):
+        xor = x ^ y
+        distance = 0
+        while xor:
+            distance += 1
+            # remove the rightmost bit of '1'
+            xor = xor &amp; (xor - 1)
+        return distance
+</code></pre>
+<h1 id="462-minimum-moves-to-equal-array-elements-ii-medium">462. Minimum Moves to Equal Array Elements II (Medium)</h1>
+<p>Given an integer array nums of size n, return the minimum number of moves required to make all array elements equal.<br>
+In one move, you can increment or decrement an element of the array by 1.<br>
+Test cases are designed so that the answer will fit in a 32-bit integer.</p>
+<pre><code class="language-python">class Solution:
+    def minMoves2(self, nums: List[int]) -&gt; int:
+        # nums[i]-mid
+        nums.sort()
+        mid= nums[len(nums)//2]
+        return sum([abs(val-mid) for val in nums])
+#JAVA ANSWER good to know
+public class Solution {
+    public int minMoves2(int[] nums) {
+        int l = 0, r = nums.length - 1, sum = 0;
+        Arrays.sort(nums);
+        while (l &lt; r) {
+            sum += nums[r] - nums[l];
+            l++;
+            r--;
+        }
+        return sum;
+    }
+}
+</code></pre>
+<h1 id="463-island-perimeter-easy">463. Island Perimeter (Easy)</h1>
+<p>You are given row x col grid representing a map where grid[i][j] = 1 represents land and grid[i][j] = 0 represents water.<br>
+Grid cells are connected horizontally/vertically (not diagonally). The grid is completely surrounded by water, and there is exactly one island (i.e., one or more connected land cells).<br>
+The island doesn't have &quot;lakes&quot;, meaning the water inside isn't connected to the water around the island. One cell is a square with side length 1. The grid is rectangular, width and height don't exceed 100. Determine the perimeter of the island.</p>
+<pre><code class="language-python">class Solution:
+    def islandPerimeter(self, grid: List[List[int]]) -&gt; int:
+        # find a neighor + neighbor4 but contact need to -contact number.
+        visited=set()
+        def nei(i,j):
+            neis=[]
+            for ii,jj in [(i+1,j),(i-1,j),(i,j+1),(i,j-1)]:
+                if ii&lt;0 or ii&gt;=len(grid) or jj&lt;0 or jj&gt;=len(grid[0]) or grid[ii][jj]==0: 
+                        continue
+                neis.append((ii,jj))
+            return neis
+        
+        res = [0]
+        
+        def dfs(i,j):
+            if (i,j) in visited: return
+            res[0]+=4
+            neis = nei(i,j)
+            res[0]-=len(neis)
+            visited.add((i,j))
+            for ne in neis:
+                if ne not in visited:
+                    dfs(*ne)
+        
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j]==1:
+                    dfs(i,j)
+                    break
+        return res[0]
+            
+</code></pre>
+<h1 id="font-colorred-464-can-i-win-medium-font"><font color='red'> 464. Can I Win (Medium) </font></h1>
+<p>In the &quot;100 game&quot; two players take turns adding, to a running total, any integer from 1 to 10. The player who first causes the running total to reach or exceed 100 wins.<br>
+What if we change the game so that players cannot re-use integers?<br>
+For example, two players might take turns drawing from a common pool of numbers from 1 to 15 without replacement until they reach a total &gt;= 100.<br>
+Given two integers maxChoosableInteger and desiredTotal, return true if the first player to move can force a win, otherwise, return false. Assume both players play optimally.</p>
+<pre><code class="language-python">class Solution:
+    def canIWin(self, maxChoosableInteger: int, desiredTotal: int) -&gt; bool:
+        @lru_cache(None)
+        def check(nums, t):
+            if nums[-1] &gt;= t: return True
+            res = any(not check(tuple(nums[:i]+nums[i+1:]),t-nums[i]) for i in range(len(nums)))
+            return res
+            
+        if maxChoosableInteger * (1 + maxChoosableInteger) // 2 &lt; desiredTotal: return False
+        nums = tuple(range(1, maxChoosableInteger + 1))
+        return check(nums, desiredTotal)
+
+#ANSWER 2 TLE
+class Solution:
+    def canIWin(self, maxChoosableInteger: int, desiredTotal: int) -&gt; bool:
+        dic = dict()
+        used = [False]*(maxChoosableInteger+1)
+        
+        sum_=(1+maxChoosableInteger)*maxChoosableInteger//2
+        if sum_&lt;desiredTotal: return False
+        if desiredTotal&lt;=0: return True
+        
+        def formatkey(used):
+            n=0
+            for bl in used:
+                n&lt;&lt;=1
+                if bl:
+                    n |=1
+            return n
+            
+        def helper(desiredTotal):
+            if desiredTotal&lt;=0: return False
+            key = formatkey(used)
+            if key not in dic:
+                for i in range(1,len(used)):
+                    if not used[i]:
+                        used[i]=True
+                        #check whether this lead to a win (i.e. the other player lose)
+                        if not helper(desiredTotal-i):
+                            dic[key]=True
+                            used[i]=False
+                            return True
+                        used[i]=False
+                dic[key]=False
+            
+            return dic[key]
+        
+        return helper(desiredTotal)
+</code></pre>
+<p>can not reuse integer， 答案 pythonic写法。</p>
+<h1 id="font-colorred-465-optimal-account-balancing-hardfont"><font color='red'> 465. Optimal Account Balancing （Hard）</font></h1>
+<p>You are given an array of transactions transactions where transactions[i] = [fromi, toi, amounti] indicates that the person with ID = fromi gave amounti $ to the person with ID = toi.<br>
+Return the minimum number of transactions required to settle the debt.</p>
+<pre><code class="language-python">    def minTransfers(self, transactions):
+        &quot;&quot;&quot;
+        :type transactions: List[List[int]]
+        :rtype: int
+        &quot;&quot;&quot;
+        m = collections.defaultdict(int)
+        
+        for t in transactions:
+            m[t[0]]-=t[2]
+            m[t[1]]+=t[2]
+        
+        debt = m.values()
+        
+        def dfs(s):
+            while(s&lt;len(debt) and debt[s]==0):
+                s+=1
+            if s==len(debt): return 0
+            
+            r = float('inf')
+            for i in range(s+1,len(debt)):
+                if debt[i]*debt[s]&lt;0:
+                    # settle s with i
+                    debt[i]+=debt[s]
+                    r=min(r,1+dfs(s+1))
+                    # backtrack
+                    debt[i]-=debt[s]
+            return r
+        
+        return dfs(0)
+
+
+
+</code></pre>
+<p>idea is tricky...  person index s have debt[s] for other person from s+1, if other person have neg sign then person s. update debt[i] with debt[s] (so person i will take full responsiblity of person s). r=min(r,1+dfs(s+1))</p>
+<h1 id="font-colorred-466-count-the-repetitions-hard-font"><font color='red'> 466. Count The Repetitions (Hard) </font></h1>
+<p>We define str = [s, n] as the string str which consists of the string s concatenated n times.<br>
+For example, str == [&quot;abc&quot;, 3] ==&quot;abcabcabc&quot;.<br>
+We define that string s1 can be obtained from string s2 if we can remove some characters from s2 such that it becomes s1.<br>
+For example, s1 = &quot;abc&quot; can be obtained from s2 = &quot;abdbec&quot; based on our definition by removing the bolded underlined characters.<br>
+You are given two strings s1 and s2 and two integers n1 and n2. You have the two strings str1 = [s1, n1] and str2 = [s2, n2].<br>
+Return the maximum integer m such that str = [str2, m] can be obtained from str1.</p>
+<pre><code class="language-python">
+class Solution:
+    def getMaxRepetitions(self, s1, n1, s2, n2):
+        d, l1, l2, i1, i2 = {}, len(s1), len(s2), 0, 0
+        tot = l1 * n1
+
+        while i1 &lt; tot:
+            if s1[i1 % l1] == s2[i2 % l2]:
+                if (i1 % l1, i2 % l2) in d:
+                    prev1, prev2 = d[(i1 % l1, i2 % l2)]
+                    cir1, cir2 = i1 - prev1, i2 - prev2
+                    count_cir1 = (tot - i1) // cir1
+                    i1 += count_cir1 * cir1
+                    i2 += count_cir1 * cir2
+                    if i1 &gt;= tot: break
+                else:
+                    d[(i1 % l1, i2 % l2)] = (i1, i2)
+                i2 += 1
+            i1 += 1
+        return i2 // l2 // n2
+
+</code></pre>
+<p>直接数出现的次数算重复不行，因为还有字母出现次序问题。。。 得找重复pattern。 答案厉害。</p>
+<h1 id="font-colorred-467-unique-substrings-in-wraparound-string-medium-font"><font color='red'> 467. Unique Substrings in Wraparound String (Medium) </font></h1>
+<p>We define the string s to be the infinite wraparound string of &quot;abcdefghijklmnopqrstuvwxyz&quot;, so s will look like this:<br>
+&quot;...zabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd....&quot;.<br>
+Given a string p, return the number of unique non-empty substrings of p are present in s.</p>
+<pre><code class="language-python">def findSubstringInWraproundString(self, p):
+        res = {i: 1 for i in p}
+        l = 1
+        for i, j in zip(p, p[1:]):
+            l = l + 1 if (ord(j) - ord(i)) % 26 == 1 else 1
+            res[j] = max(res[j], l)
+        return sum(res.values())
+#
+class Solution:
+    def findSubstringInWraproundString(self, p: str) -&gt; int:
+        if not p: return 0
+        count = [0]*26
+        #initally, count is 1 for each unique char
+        for char in p:
+            count[ord(char)-ord('a')]=1
+        
+        res=1
+        #for each sub sequence ending in char2, if it is connected, res+=1 else res=1
+        for char1,char2 in zip(p,p[1:]):
+            if (ord(char2)-ord(char1))%26==1:
+                res+=1
+            else:
+                res=1
+            #prevent duplicate char2
+            count[ord(char2)-ord('a')] = max(count[ord(char2)-ord('a')], res)
+                
+        return sum(count)
+
+#ANSWER DP 思路：若字符连续，当前可形成的substring个数+1，若不连续substring个数=1，更新count 为防止重复字符overwrite，更新时候取max。 
+class Solution:
+    def findSubstringInWraproundString(self, p: str) -&gt; int:
+        count=[0]*26
+        cur_maxlen=0
+        for i in range(len(p)):
+            if i&gt;0 and (ord(p[i])-ord(p[i-1]))%26==1:
+                cur_maxlen+=1
+            else:
+                cur_maxlen=1
+            
+            index=ord(p[i])-ord('a')
+            count[index]=max(count[index],cur_maxlen)
+        
+        return sum(count)
+</code></pre>
+<p>看答案了。。。<br>
+Each single charecter contribution is initialized to 1<br>
+if the order is continued, the contribution is increased by 1 from previous character contribution</p>
+<p>example string zabce</p>
+<p>Values got incremented in the following way</p>
+<pre><code>z -&gt; 1
+a -&gt; 1 + 1 (or) z + 1 -&gt; 2
+b -&gt; 1 + 1 + 1 (or) a + 1 -&gt; 3
+c -&gt; 1 + 1 + 1 + 1 (or) b + 1 -&gt; 4
+e -&gt; 1 (ord(j) - ord(i)) % 26 != 1 here
+</code></pre>
+<p>So the final answer is contribution from z + a + b + c + e (1 + 2 + 3 + 4 + 1 = 11)</p>
+<pre><code>max(res[j], l) is required to handle cases where the character is repeated.
+</code></pre>
+<p>For example in zaba, since each each unique character is assigned as key to res, the 2nd a contribution should not replace the 1st a contribution until it exceeds the 1st a contribution</p>
+<h1 id="468-validate-ip-address-medium">468. Validate IP Address （Medium）</h1>
+<p>Given a string queryIP, return &quot;IPv4&quot; if IP is a valid IPv4 address, &quot;IPv6&quot; if IP is a valid IPv6 address or &quot;Neither&quot; if IP is not a correct IP of any type.<br>
+A valid IPv4 address is an IP in the form &quot;x1.x2.x3.x4&quot; where 0 &lt;= xi &lt;= 255 and xi cannot contain leading zeros. For example, &quot;192.168.1.1&quot; and &quot;192.168.1.0&quot; are valid IPv4 addresses but &quot;192.168.01.1&quot;, while &quot;192.168.1.00&quot; and &quot;192.168@1.1&quot; are invalid IPv4 addresses.<br>
+A valid IPv6 address is an IP in the form &quot;x1:x2:x3:x4:x5:x6:x7:x8&quot; where:<br>
+1 &lt;= xi.length &lt;= 4<br>
+xi is a hexadecimal string which may contain digits, lower-case English letter ('a' to 'f') and upper-case English letters ('A' to 'F').<br>
+Leading zeros are allowed in xi.<br>
+For example, &quot;2001:0db8:85a3:0000:0000:8a2e:0370:7334&quot; and &quot;2001:db8:85a3:0:0:8A2E:0370:7334&quot; are valid IPv6 addresses, while &quot;2001:0db8:85a3::8A2E:037j:7334&quot; and &quot;02001:0db8:85a3:0000:0000:8a2e:0370:7334&quot; are invalid IPv6 addresses.</p>
+<pre><code class="language-python">class Solution:
+    def validIPAddress(self, queryIP: str) -&gt; str:
+        
+        def convert4(string):
+            # in range 0~255
+            # cannot leading zeros
+            # number only
+            if not string: return False
+            if len(string)&gt;1 and string[0]=='0': return False
+            val=0
+            for s in string:
+                if s not in '0123456789':
+                    return False
+                val=val*10+int(s)
+            
+            #return True if success, else False
+            if val&gt;=0 and val&lt;=255:
+                return True
+            return False
+        
+        def convert6(string):
+            if not string: return False
+            #length 1~4
+            # hexadecial string 0~9 a~f A~F
+            if len(string)&gt;4: return False
+            for s in string:
+                if s not in '0123456789abcdefABCDEF':
+                    return False
+            return True
+        
+        if '.' in queryIP:
+            data = queryIP.split('.')
+            if len(data)==4 and all([convert4(string) for string in data]):
+                return 'IPv4'        
+            
+        elif ':' in queryIP:
+            data = queryIP.split(':')
+            if len(data)==8 and all([convert6(string) for string in data]):
+                return 'IPv6'
+        
+        return 'Neither'
+
+</code></pre>
+<p>只需要细心的题目</p>
+<h1 id="font-colorred-469-convex-polygon-mediumfont"><font color='red'> 469. Convex Polygon （Medium）</font></h1>
+<p>You are given an array of points on the X-Y plane points where points[i] = [xi, yi]. The points form a polygon when joined sequentially.<br>
+Return true if this polygon is convex and false otherwise.<br>
+You may assume the polygon formed by given points is always a simple polygon. In other words, we ensure that exactly two edges intersect at each vertex and that edges otherwise don't intersect each other.</p>
+<pre><code class="language-python">def isConvex(self, p: List[List[int]]) -&gt; bool:
+    def ccw(a, b, c):
+        # (b-a) X (c-a)
+        return (b[0] - a[0])*(c[1] - a[1]) - (b[1] - a[1])*(c[0] - a[0]) 
+    res = [ccw(p[i-2], p[i-1], p[i]) for i in range(len(p))]
+    return abs(sum(res)) == sum(abs(i) for i in res)
+</code></pre>
+<p>convex...beyond my knowledge  CCW算法。。。Note: |Σxi| = Σ|xi| is only true when all xi are the same sign.</p>
+<h1 id="470-implement-rand10-using-rand7-medium">470. Implement Rand10() Using Rand7() (Medium)</h1>
+<p>Given the API rand7() that generates a uniform random integer in the range [1, 7], write a function rand10() that generates a uniform random integer in the range [1, 10]. You can only call the API rand7(), and you shouldn't call any other API. Please do not use a language's built-in random API.<br>
+Each test case will have one internal argument n, the number of times that your implemented function rand10() will be called while testing. Note that this is not an argument passed to rand10().</p>
+<pre><code class="language-python"># The rand7() API is already defined for you.
+# def rand7():
+# @return a random integer in the range 1 to 7
+
+class Solution:
+    def rand10(self):
+        &quot;&quot;&quot;
+        :rtype: int
+        &quot;&quot;&quot;
+        # rand1  1~7   取1~6  奇偶决定生成左区间1~5 还是右区间6~10
+        # rand2        取1~5  
+        rand1=rand7()
+        while rand1==7:
+            rand1=rand7()
+        flag = rand1%2==1
+        rand2=rand7()
+        while rand2&gt;5:
+            rand2=rand7()
+        return 5+rand2 if flag else rand2
+
+#ANSWER
+# The rand7() API is already defined for you.
+# def rand7():
+# @return a random integer in the range 1 to 7
+
+class Solution:
+    def rand10(self):
+        &quot;&quot;&quot;
+        :rtype: int
+        &quot;&quot;&quot;
+        n1=rand7()
+        n2=rand7()
+        while n1+(n2-1)*7 &gt;40:
+            n1=rand7()
+            n2=rand7()
+        return (n1+(n2-1)*7)%10 +1
+</code></pre>
+<p>(n2-1)乘7+n1</p>
 ]]></content>
     </entry>
     <entry>
@@ -4574,493 +4972,6 @@ like 2 4 6 8 10, we move from 10, we will take out 10, 6 and 2, head is deleted 
 like 2 4 6 8 10 12, we move from 12, we will take out 12, 8, 4, head is still remaining 2
 </code></pre>
 <p>then we find a rule to update our head.</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Leetcode 2021-12-10]]></title>
-        <id>https://headhuanglan.github.io/post/leetcode-2021-12-10/</id>
-        <link href="https://headhuanglan.github.io/post/leetcode-2021-12-10/">
-        </link>
-        <updated>2021-12-09T17:33:22.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<h1 id="font-colorred-371-sum-of-two-integers-medium-font"><font color='red'> 371. Sum of Two Integers （Medium） </font></h1>
-<p>Given two integers a and b, return the sum of the two integers without using the operators + and -.</p>
-<pre><code class="language-python">class Solution:
-    def getSum(self, a: int, b: int) -&gt; int:
-        x, y = abs(a), abs(b)
-        # ensure that abs(a) &gt;= abs(b)
-        if x &lt; y:
-            return self.getSum(b, a)
-        
-        # abs(a) &gt;= abs(b) --&gt; 
-        # a determines the sign
-        sign = 1 if a &gt; 0 else -1
-        
-        if a * b &gt;= 0:
-            # sum of two positive integers x + y
-            # where x &gt; y
-            while y:
-                answer = x ^ y
-                carry = (x &amp; y) &lt;&lt; 1
-                x, y = answer, carry
-        else:
-            # difference of two integers x - y
-            # where x &gt; y
-            while y:
-                answer = x ^ y
-                borrow = ((~x) &amp; y) &lt;&lt; 1
-                x, y = answer, borrow
-        
-        return x * sign
-#ANSWER
-class Solution:
-    def getSum(self, a: int, b: int) -&gt; int:
-        mask = 0xFFFFFFFF
-        
-        while b != 0:
-            a, b = (a ^ b) &amp; mask, ((a &amp; b) &lt;&lt; 1) &amp; mask
-        
-        max_int = 0x7FFFFFFF
-        return a if a &lt; max_int else ~(a ^ mask)
-</code></pre>
-<p>bit manipulation 初见感觉是。 但不知道怎么处理。思路，borrow 是 x&amp;y《《1， 没borrow的sum是x^y.</p>
-<h1 id="font-colorred-372-super-pow-medium-font"><font color='red'> 372. Super Pow (Medium) </font></h1>
-<p>Your task is to calculate a^b mod 1337 where a is a positive integer and b is an extremely large positive integer given in the form of an array.</p>
-<pre><code class="language-python">class Solution:
-    def superPow(self, a: int, b: List[int]) -&gt; int:
-        base=1337
-        def f(a,b):
-            res=1
-            for i in range(b):
-                res*=(a%base)
-                res%=base
-            return res
-        if not b: return 1
-        last_digit=b.pop()
-        return f(self.superPow(a, b), 10) * f(a, last_digit) % base;
-</code></pre>
-<p>mod 有结合律交换律吗？。。不太清楚。。。 答案用了1） ab % k = (a%k)(b%k)%k<br>
-2）a<sup>b%k=(a%k)</sup>b%k<br>
-推到递推关系：<br>
-a^1234567 % k = (a^1234560 a^7)%k= ((a^1234560)%k )  ((a^7)%k ) %k<br>
-= ((a<sup>123456)</sup>10)%k )  ((a^7)%k ) %k<br>
-= ((((a<sup>123456)%k)</sup>10 )% k)  ((a^7)%k ) %k<br>
-设 a^b%k=f(a,b)<br>
-f(a,1234567)=  f(f(a,123456),10) f(a,7)%k</p>
-<h1 id="font-colorred-373-find-k-pairs-with-smallest-sums-medium-font"><font color='red'> 373. Find K Pairs with Smallest Sums （Medium） </font></h1>
-<p>You are given two integer arrays nums1 and nums2 sorted in ascending order and an integer k.<br>
-Define a pair (u, v) which consists of one element from the first array and one element from the second array.<br>
-Return the k pairs (u1, v1), (u2, v2), ..., (uk, vk) with the smallest sums.</p>
-<pre><code class="language-python">class Solution:
-    def kSmallestPairs(self, nums1: List[int], nums2: List[int], k: int) -&gt; List[List[int]]:
-        res = []
-        if not nums1 or not nums2 or not k:
-            return res
-        
-        heap = []
-        visited = set()
-        
-        heapq.heappush(heap, (nums1[0] + nums2[0], 0, 0))
-        
-        visited.add((0, 0))
-        
-        while len(res) &lt; k and heap:
-            _, i, j = heapq.heappop(heap)
-            res.append([nums1[i], nums2[j]])
-            
-            if i+1 &lt; len(nums1) and (i+1, j) not in visited:
-                heapq.heappush(heap, (nums1[i+1] + nums2[j], i+1, j))
-                visited.add((i+1, j))
-            
-            if j+1 &lt; len(nums2) and (i, j+1) not in visited:
-                heapq.heappush(heap, (nums1[i] + nums2[j+1], i, j+1))
-                visited.add((i, j+1))
-        return res
-        
-           
-
-</code></pre>
-<p>暴力解肯定TLE。。。也想到了是k-way merge sort 但怎么写出来？直接抄答案了，用到了heapq.heappush, heapq.heappop, visited.  先从（0，0）开始push，然后是（1，0）（0，1）， i.e.   (i,j) then (i+1,j),(i,j+1)... 通过visited 去重。</p>
-<h1 id="374-guess-number-higher-or-lower-easy">374. Guess Number Higher or Lower （Easy）</h1>
-<p>We are playing the Guess Game. The game is as follows:<br>
-I pick a number from 1 to n. You have to guess which number I picked.<br>
-Every time you guess wrong, I will tell you whether the number I picked is higher or lower than your guess.<br>
-You call a pre-defined API int guess(int num), which returns three possible results:<br>
--1: Your guess is higher than the number I picked (i.e. num &gt; pick).<br>
-1: Your guess is lower than the number I picked (i.e. num &lt; pick).<br>
-0: your guess is equal to the number I picked (i.e. num == pick).</p>
-<pre><code class="language-python"># The guess API is already defined for you.
-# @param num, your guess
-# @return -1 if my number is lower, 1 if my number is higher, otherwise return 0
-# def guess(num: int) -&gt; int:
-
-class Solution:
-    def guessNumber(self, n: int) -&gt; int:
-        l=1
-        r=n
-        while l&lt;=r:
-            m=(l+r)//2
-            if guess(m)==0:
-                return m
-            elif guess(m)==1:
-                l=m+1
-            else:
-                r=m-1
-# The guess API is already defined for you.
-# @param num, your guess
-# @return -1 if my number is lower, 1 if my number is higher, otherwise return 0
-# def guess(num: int) -&gt; int:
-
-class Solution:
-    def guessNumber(self, n: int) -&gt; int:
-        l=1
-        r=n
-        while l&lt;=r:
-            m1=l+(r-l)//3
-            m2=r-(r-l)//3
-            res1=guess(m1)
-            res2=guess(m2)
-            if res1==0:
-                return m1
-            if res2==0:
-                return m2
-            elif res1&lt;0:
-                r=m1-1
-            elif res2&gt;0:
-                l=m2+1
-            else:
-                l=m1+1
-                r=m2-1
-</code></pre>
-<p>二分法，三分法。。。</p>
-<h1 id="font-colorred375-guess-number-higher-or-lower-ii-mediumfont"><font color='red'>375. Guess Number Higher or Lower II （Medium）</font></h1>
-<p>We are playing the Guessing Game. The game will work as follows:<br>
-I pick a number between 1 and n.<br>
-You guess a number.<br>
-If you guess the right number, you win the game.<br>
-If you guess the wrong number, then I will tell you whether the number I picked is higher or lower, and you will continue guessing.<br>
-Every time you guess a wrong number x, you will pay x dollars. If you run out of money, you lose the game.<br>
-Given a particular n, return the minimum amount of money you need to guarantee a win regardless of what number I pick.</p>
-<pre><code class="language-python">class Solution:
-    def getMoneyAmount(self, n: int) -&gt; int:
-        #dp[i][j] will save the min cost guessing from i to j
-        dp=[[0]*(n+1) for _ in range(n+1)]
-         
-        def helper(start,end):
-            if start&gt;=end: return 0
-            if dp[start][end]!=0: return dp[start][end]
-            res=float('inf')
-            for x in range(start,end+1):
-                #try select x,the cost will be
-                tmp=x+max(helper(start,x-1),helper(x+1,end))
-                res=min(res,tmp)
-            dp[start][end]=res
-            return res
-            
-        return helper( 1, n)
-    
-</code></pre>
-<p>没思路。。。看答案，用了DP 关键是DP【i】【j】定义为从i猜到j，花费的最小cost。 那么如果X在i，j之间，选定了X，则cost为 X+max（dp【start】【x-1】，dp【x+1】【end】）因为dp这时候还没值，所以用helper（start，x-1），helper（x+1，end）代替，用max是因为不确定是左面还是右面，只能按照最坏情况准备钱。扫描所有X，然后最小的作为dp【i】【j】cost结果。</p>
-<h1 id="font-colorblue376-wiggle-subsequence-mediumfont"><font color='blue'>376. Wiggle Subsequence （Medium）</font></h1>
-<p>A wiggle sequence is a sequence where the differences between successive numbers strictly alternate between positive and negative. The first difference (if one exists) may be either positive or negative. A sequence with one element and a sequence with two non-equal elements are trivially wiggle sequences.<br>
-For example, [1, 7, 4, 9, 2, 5] is a wiggle sequence because the differences (6, -3, 5, -7, 3) alternate between positive and negative.<br>
-In contrast, [1, 4, 7, 2, 5] and [1, 7, 4, 5, 5] are not wiggle sequences. The first is not because its first two differences are positive, and the second is not because its last difference is zero.<br>
-A subsequence is obtained by deleting some elements (possibly zero) from the original sequence, leaving the remaining elements in their original order.<br>
-Given an integer array nums, return the length of the longest wiggle subsequence of nums.</p>
-<pre><code class="language-python">class Solution:
-    def wiggleMaxLength(self, nums: List[int]) -&gt; int:
-        #dp[i]   the max length of wiggle including nums[i]
-        # 1 17 5 10 13 15 10 5 16 8
-        # 0 +  - +  +   +  - - +  -
-        # 1 2  3 4  4   4  5 5 6  7   
-        
-        # 1 7 4 9 2 5
-        # 0 + - + - +
-        #sign[i] the sign of max length of nums[i-1] to nums[i] if increasing 1 decresasing -1
-        if len(nums)&lt;2: return len(nums)
-        if len(nums)==2 and nums[0]!=nums[1]:return 2
-        if len(nums)==2 and nums[0]==nums[1]:return 1
-        
-        
-        count_plus=0
-        count_minus=0
-        presign=None
-        for i in range(1,len(nums)):
-            if nums[i]==nums[i-1]: continue
-            sign= nums[i]-nums[i-1]&gt;0
-            if sign:
-                #positive
-                if presign is None:
-                    count_minus=1
-                
-                if presign!=sign:
-                    
-                    count_plus=count_minus+1
-            else:
-                #negtive
-                if presign is None:
-                    count_plus=1
-                if presign!=sign:
-                    count_minus=count_plus+1 
-            
-            presign=sign
-        
-        return max([1,count_plus,count_minus])
-
-#ANSWER DP O（n*n）
-class Solution:
-    def wiggleMaxLength(self, nums: List[int]) -&gt; int:
-        if len(nums)&lt;2: return len(nums)
-        up=[1]*len(nums)
-        down=[1]*len(nums)
-        for i in range(1,len(nums)):
-            for j in range(i):
-                if nums[i]&gt;nums[j]:
-                    up[i]=max(up[i],down[j]+1)
-                elif nums[i]&lt;nums[j]:
-                    down[i]=max(down[i],up[j]+1)
-        return max(up[-1],down[-1])
-
-#ANSWER DP O（n）
-class Solution:
-    def wiggleMaxLength(self, nums: List[int]) -&gt; int:
-        if len(nums)&lt;2: return len(nums)
-        up=[0]*len(nums)
-        down=[0]*len(nums)
-        up[0]=1
-        down[0]=1
-        for i in range(1,len(nums)):
-            if nums[i]&gt;nums[i-1]:
-                up[i]=down[i-1]+1
-                down[i]=down[i-1]
-            elif nums[i]&lt;nums[i-1]:
-                down[i]=up[i-1]+1
-                up[i]=up[i-1]
-            else:
-                down[i]=down[i-1]
-                up[i]=up[i-1]
-        return max(up[-1],down[-1])
-
-#ANSWER DP O（n） space O（1）
-class Solution:
-    def wiggleMaxLength(self, nums: List[int]) -&gt; int:
-        if len(nums)&lt;2: return len(nums)
-        up=1
-        down=1
-       
-        for i in range(1,len(nums)):
-            if nums[i]&gt;nums[i-1]:
-                up =down +1
-           
-            elif nums[i]&lt;nums[i-1]:
-                down =up +1
-              
-        return max(up ,down )
-
-#Greedy
-class Solution:
-    def wiggleMaxLength(self, nums: List[int]) -&gt; int:
-        if len(nums)&lt;2: return len(nums)
-        maxLen=1
-        sign=0
-        for i in range(1,len(nums)):
-            if nums[i]&lt;nums[i-1] and sign!=-1:
-                # find a peak nums[i-1] is peak, now it is a decreasing sequence sign=-1
-                sign=-1
-                maxLen+=1
-           
-            elif nums[i]&gt;nums[i-1] and sign!=1:
-                #valley
-                sign=1
-                maxLen+=1
-              
-        return maxLen
-         
-</code></pre>
-<p>本来想用DP做，但发现只用保持 count+ 和 count- 两个计数器就够了。  如果发现增加2元序列，count-加1. 如果发现减小2元序列，count+加1，最后返回count+,count-中最大的就可以了，注意corner case。答案用了多种方法，贴上来开阔思路。第三个方法和我的一样但是写的更简单</p>
-<h1 id="font-colorred-377-combination-sum-iv-mediumfont"><font color='red'> 377. Combination Sum IV （Medium）</font></h1>
-<p>Given an array of distinct integers nums and a target integer target, return the number of possible combinations that add up to target.<br>
-The test cases are generated so that the answer can fit in a 32-bit integer.</p>
-<pre><code class="language-python">class Solution:
-    def combinationSum4(self, nums: List[int], target: int) -&gt; int:
-        @lru_cache(None)
-        def dp(remain):
-            if remain==0:
-                return 1
-            res=0
-            for n in nums:
-                if remain-n&gt;=0:
-                    res+=dp(remain-n)
-            return res
-        return dp(target)
-    
-class Solution:
-    def combinationSum4(self, nums: List[int], target: int) -&gt; int:
-        # minor optimization
-        # nums.sort()
-        dp = [0 for i in range(target+1)]
-        dp[0] = 1
-
-        for comb_sum in range(target+1):
-
-            for num in nums:
-                if comb_sum - num &gt;= 0:
-                    dp[comb_sum] += dp[comb_sum-num]
-                # minor optimization, early stopping.
-                # else:
-                #    break
-        return dp[target]
-</code></pre>
-<p>知道是DP，而且知道DP【i】是能sum到i的组合个数，那么dp【i】=dp【i-n】+dp【n】为啥不对？？ n是添加的最后一个数。而且扫的是所有n in nums。 如果再拆分n，那么会有重复。<br>
-思路卡了， 应该是dp【i】+=dp【i-n】   要往组合里加n能到i，那么多出来的组合数就是dp【i-n】。应该求的是和。。。</p>
-<h1 id="379-design-phone-directory-medium">379. Design Phone Directory （Medium）</h1>
-<p>Design a phone directory that initially has maxNumbers empty slots that can store numbers. The directory should store numbers, check if a certain slot is empty or not, and empty a given slot.<br>
-Implement the PhoneDirectory class:<br>
-PhoneDirectory(int maxNumbers) Initializes the phone directory with the number of available slots maxNumbers.<br>
-int get() Provides a number that is not assigned to anyone. Returns -1 if no number is available.<br>
-bool check(int number) Returns true if the slot number is available and false otherwise.<br>
-void release(int number) Recycles or releases the slot number.</p>
-<pre><code class="language-python">class PhoneDirectory:
-
-    def __init__(self, maxNumbers: int):
-        self.n=maxNumbers
-        self.avaliable=set([i for i in range(self.n)])
-        self.used=set()
-        self.current=-1
-        
-
-    def get(self) -&gt; int:
-        if not self.avaliable: return -1
-        while not self.check(self.current):
-            self.current= (self.current+1)%self.n
-        
-        #current in self.avaliable
-        # remove from self.avaliable
-        self.avaliable.remove(self.current)
-        self.used.add(self.current)
-        
-        res = self.current
-        self.current= (self.current+1)%self.n
-        return res
-
-    def check(self, number: int) -&gt; bool:
-        return  number in self.avaliable 
-
-    def release(self, number: int) -&gt; None:
-        self.avaliable.add(number)
-        if number in self.used:
-            self.used.remove(number)
-        
-
-
-# Your PhoneDirectory object will be instantiated and called as such:
-# obj = PhoneDirectory(maxNumbers)
-# param_1 = obj.get()
-# param_2 = obj.check(number)
-# obj.release(number)
-
-   def __init__(self, maxNumbers):
-        self.available = set(range(maxNumbers))
-
-    def get(self):
-        return self.available.pop() if self.available else -1
-
-    def check(self, number):
-        return number in self.available
-
-    def release(self, number):
-        self.available.add(number)
-
-#ANSWER PERFECT
-class PhoneDirectory:
-
-    def __init__(self, maxNumbers: int):
-        self.pos=0
-        self.next=[0]*maxNumbers
-        for i in range(maxNumbers):
-            self.next[i]=(i+1)%maxNumbers
-        
-
-    def get(self) -&gt; int:
-        if self.next[self.pos]==-1: return -1
-        res=self.pos
-        self.pos=self.next[self.pos]
-        self.next[res]=-1
-        return res
-        
-
-    def check(self, number: int) -&gt; bool:
-        return self.next[number]!=-1
-
-    def release(self, number: int) -&gt; None:
-        if self.next[number]!=-1: return
-        self.next[number]=self.pos
-        self.pos=number
-        
-
-
-# Your PhoneDirectory object will be instantiated and called as such:
-# obj = PhoneDirectory(maxNumbers)
-# param_1 = obj.get()
-# param_2 = obj.check(number)
-# obj.release(number) int[] next;
-   
-  
-
-
-</code></pre>
-<p>答案很完美的写法：Use a linked list to track available numbers, and a pointer to head. If head is still available, get() would return it and move to the next available number. Release would re-add a node to the beginning of the linked list and update head</p>
-<h1 id="font-colorred-380-insert-delete-getrandom-o1-mediumfont"><font color='red'> 380. Insert Delete GetRandom O(1) （Medium）</font></h1>
-<p>Implement the RandomizedSet class:</p>
-<pre><code>RandomizedSet() Initializes the RandomizedSet object.
-bool insert(int val) Inserts an item val into the set if not present. Returns true if the item was not present, false otherwise.
-bool remove(int val) Removes an item val from the set if present. Returns true if the item was present, false otherwise.
-int getRandom() Returns a random element from the current set of elements (it's guaranteed that at least one element exists when this method is called). Each element must have the same probability of being returned.
-</code></pre>
-<p>You must implement the functions of the class such that each function works in average O(1) time complexity.</p>
-<pre><code class="language-python">from random import choice
-class RandomizedSet():
-    def __init__(self):
-        &quot;&quot;&quot;
-        Initialize your data structure here.
-        &quot;&quot;&quot;
-        self.dict = {}
-        self.list = []
-
-        
-    def insert(self, val: int) -&gt; bool:
-        &quot;&quot;&quot;
-        Inserts a value to the set. Returns true if the set did not already contain the specified element.
-        &quot;&quot;&quot;
-        if val in self.dict:
-            return False
-        self.dict[val] = len(self.list)
-        self.list.append(val)
-        return True
-        
-
-    def remove(self, val: int) -&gt; bool:
-        &quot;&quot;&quot;
-        Removes a value from the set. Returns true if the set contained the specified element.
-        &quot;&quot;&quot;
-        if val in self.dict:
-            # move the last element to the place idx of the element to delete
-            last_element, idx = self.list[-1], self.dict[val]
-            self.list[idx], self.dict[last_element] = last_element, idx
-            # delete the last element
-            self.list.pop()
-            del self.dict[val]
-            return True
-        return False
-
-    def getRandom(self) -&gt; int:
-        &quot;&quot;&quot;
-        Get a random element from the set.
-        &quot;&quot;&quot;
-        return choice(self.list)
-
-</code></pre>
-<p>这个思路好，用dic保存插入元素位置方便找出index， 删除时候找出index，然后和list中最后一个元素交换位置，然后pop list del dict【val】</p>
 ]]></content>
     </entry>
 </feed>

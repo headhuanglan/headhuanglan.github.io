@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-11-03 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1650402080745">
+<link rel="shortcut icon" href="/favicon.ico?v=1650588301580">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">53</span>
+        <span class="site-item-stat-count">54</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1540,6 +1540,401 @@ two pointer + counter dict 应用。</p>
     (3) Overall latency justification
 &lt;/code&gt;&lt;/pre&gt;
 ">系统设计</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/2022-03-07-leetcode/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;461-hamming-distance-easy&#34;&gt;461. Hamming Distance (Easy)&lt;/h1&gt;
+&lt;p&gt;The Hamming distance between two integers is the number of positions at which the corresponding bits are different.&lt;br&gt;
+Given two integers x and y, return the Hamming distance between them.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def hammingDistance(self, x: int, y: int) -&amp;gt; int:
+        res=x^y
+        c=0
+        for i in range(32):
+            if res &amp;gt;&amp;gt;i &amp;amp; 1:
+                c+=1
+        return c
+#
+class Solution(object):
+    def hammingDistance(self, x, y):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type x: int
+        :type y: int
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        xor = x ^ y
+        distance = 0
+        while xor:
+            # mask out the rest bits
+            if xor &amp;amp; 1:
+                distance += 1
+            xor = xor &amp;gt;&amp;gt; 1
+        return distance
+
+#
+class Solution:
+    def hammingDistance(self, x, y):
+        xor = x ^ y
+        distance = 0
+        while xor:
+            distance += 1
+            # remove the rightmost bit of &#39;1&#39;
+            xor = xor &amp;amp; (xor - 1)
+        return distance
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;462-minimum-moves-to-equal-array-elements-ii-medium&#34;&gt;462. Minimum Moves to Equal Array Elements II (Medium)&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums of size n, return the minimum number of moves required to make all array elements equal.&lt;br&gt;
+In one move, you can increment or decrement an element of the array by 1.&lt;br&gt;
+Test cases are designed so that the answer will fit in a 32-bit integer.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def minMoves2(self, nums: List[int]) -&amp;gt; int:
+        # nums[i]-mid
+        nums.sort()
+        mid= nums[len(nums)//2]
+        return sum([abs(val-mid) for val in nums])
+#JAVA ANSWER good to know
+public class Solution {
+    public int minMoves2(int[] nums) {
+        int l = 0, r = nums.length - 1, sum = 0;
+        Arrays.sort(nums);
+        while (l &amp;lt; r) {
+            sum += nums[r] - nums[l];
+            l++;
+            r--;
+        }
+        return sum;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;463-island-perimeter-easy&#34;&gt;463. Island Perimeter (Easy)&lt;/h1&gt;
+&lt;p&gt;You are given row x col grid representing a map where grid[i][j] = 1 represents land and grid[i][j] = 0 represents water.&lt;br&gt;
+Grid cells are connected horizontally/vertically (not diagonally). The grid is completely surrounded by water, and there is exactly one island (i.e., one or more connected land cells).&lt;br&gt;
+The island doesn&#39;t have &amp;quot;lakes&amp;quot;, meaning the water inside isn&#39;t connected to the water around the island. One cell is a square with side length 1. The grid is rectangular, width and height don&#39;t exceed 100. Determine the perimeter of the island.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def islandPerimeter(self, grid: List[List[int]]) -&amp;gt; int:
+        # find a neighor + neighbor4 but contact need to -contact number.
+        visited=set()
+        def nei(i,j):
+            neis=[]
+            for ii,jj in [(i+1,j),(i-1,j),(i,j+1),(i,j-1)]:
+                if ii&amp;lt;0 or ii&amp;gt;=len(grid) or jj&amp;lt;0 or jj&amp;gt;=len(grid[0]) or grid[ii][jj]==0: 
+                        continue
+                neis.append((ii,jj))
+            return neis
+        
+        res = [0]
+        
+        def dfs(i,j):
+            if (i,j) in visited: return
+            res[0]+=4
+            neis = nei(i,j)
+            res[0]-=len(neis)
+            visited.add((i,j))
+            for ne in neis:
+                if ne not in visited:
+                    dfs(*ne)
+        
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j]==1:
+                    dfs(i,j)
+                    break
+        return res[0]
+            
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred-464-can-i-win-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 464. Can I Win (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;In the &amp;quot;100 game&amp;quot; two players take turns adding, to a running total, any integer from 1 to 10. The player who first causes the running total to reach or exceed 100 wins.&lt;br&gt;
+What if we change the game so that players cannot re-use integers?&lt;br&gt;
+For example, two players might take turns drawing from a common pool of numbers from 1 to 15 without replacement until they reach a total &amp;gt;= 100.&lt;br&gt;
+Given two integers maxChoosableInteger and desiredTotal, return true if the first player to move can force a win, otherwise, return false. Assume both players play optimally.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def canIWin(self, maxChoosableInteger: int, desiredTotal: int) -&amp;gt; bool:
+        @lru_cache(None)
+        def check(nums, t):
+            if nums[-1] &amp;gt;= t: return True
+            res = any(not check(tuple(nums[:i]+nums[i+1:]),t-nums[i]) for i in range(len(nums)))
+            return res
+            
+        if maxChoosableInteger * (1 + maxChoosableInteger) // 2 &amp;lt; desiredTotal: return False
+        nums = tuple(range(1, maxChoosableInteger + 1))
+        return check(nums, desiredTotal)
+
+#ANSWER 2 TLE
+class Solution:
+    def canIWin(self, maxChoosableInteger: int, desiredTotal: int) -&amp;gt; bool:
+        dic = dict()
+        used = [False]*(maxChoosableInteger+1)
+        
+        sum_=(1+maxChoosableInteger)*maxChoosableInteger//2
+        if sum_&amp;lt;desiredTotal: return False
+        if desiredTotal&amp;lt;=0: return True
+        
+        def formatkey(used):
+            n=0
+            for bl in used:
+                n&amp;lt;&amp;lt;=1
+                if bl:
+                    n |=1
+            return n
+            
+        def helper(desiredTotal):
+            if desiredTotal&amp;lt;=0: return False
+            key = formatkey(used)
+            if key not in dic:
+                for i in range(1,len(used)):
+                    if not used[i]:
+                        used[i]=True
+                        #check whether this lead to a win (i.e. the other player lose)
+                        if not helper(desiredTotal-i):
+                            dic[key]=True
+                            used[i]=False
+                            return True
+                        used[i]=False
+                dic[key]=False
+            
+            return dic[key]
+        
+        return helper(desiredTotal)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;can not reuse integer， 答案 pythonic写法。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-465-optimal-account-balancing-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 465. Optimal Account Balancing （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an array of transactions transactions where transactions[i] = [fromi, toi, amounti] indicates that the person with ID = fromi gave amounti $ to the person with ID = toi.&lt;br&gt;
+Return the minimum number of transactions required to settle the debt.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;    def minTransfers(self, transactions):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type transactions: List[List[int]]
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        m = collections.defaultdict(int)
+        
+        for t in transactions:
+            m[t[0]]-=t[2]
+            m[t[1]]+=t[2]
+        
+        debt = m.values()
+        
+        def dfs(s):
+            while(s&amp;lt;len(debt) and debt[s]==0):
+                s+=1
+            if s==len(debt): return 0
+            
+            r = float(&#39;inf&#39;)
+            for i in range(s+1,len(debt)):
+                if debt[i]*debt[s]&amp;lt;0:
+                    # settle s with i
+                    debt[i]+=debt[s]
+                    r=min(r,1+dfs(s+1))
+                    # backtrack
+                    debt[i]-=debt[s]
+            return r
+        
+        return dfs(0)
+
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;idea is tricky...  person index s have debt[s] for other person from s+1, if other person have neg sign then person s. update debt[i] with debt[s] (so person i will take full responsiblity of person s). r=min(r,1+dfs(s+1))&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-466-count-the-repetitions-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 466. Count The Repetitions (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;We define str = [s, n] as the string str which consists of the string s concatenated n times.&lt;br&gt;
+For example, str == [&amp;quot;abc&amp;quot;, 3] ==&amp;quot;abcabcabc&amp;quot;.&lt;br&gt;
+We define that string s1 can be obtained from string s2 if we can remove some characters from s2 such that it becomes s1.&lt;br&gt;
+For example, s1 = &amp;quot;abc&amp;quot; can be obtained from s2 = &amp;quot;abdbec&amp;quot; based on our definition by removing the bolded underlined characters.&lt;br&gt;
+You are given two strings s1 and s2 and two integers n1 and n2. You have the two strings str1 = [s1, n1] and str2 = [s2, n2].&lt;br&gt;
+Return the maximum integer m such that str = [str2, m] can be obtained from str1.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+class Solution:
+    def getMaxRepetitions(self, s1, n1, s2, n2):
+        d, l1, l2, i1, i2 = {}, len(s1), len(s2), 0, 0
+        tot = l1 * n1
+
+        while i1 &amp;lt; tot:
+            if s1[i1 % l1] == s2[i2 % l2]:
+                if (i1 % l1, i2 % l2) in d:
+                    prev1, prev2 = d[(i1 % l1, i2 % l2)]
+                    cir1, cir2 = i1 - prev1, i2 - prev2
+                    count_cir1 = (tot - i1) // cir1
+                    i1 += count_cir1 * cir1
+                    i2 += count_cir1 * cir2
+                    if i1 &amp;gt;= tot: break
+                else:
+                    d[(i1 % l1, i2 % l2)] = (i1, i2)
+                i2 += 1
+            i1 += 1
+        return i2 // l2 // n2
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;直接数出现的次数算重复不行，因为还有字母出现次序问题。。。 得找重复pattern。 答案厉害。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-467-unique-substrings-in-wraparound-string-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 467. Unique Substrings in Wraparound String (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;We define the string s to be the infinite wraparound string of &amp;quot;abcdefghijklmnopqrstuvwxyz&amp;quot;, so s will look like this:&lt;br&gt;
+&amp;quot;...zabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd....&amp;quot;.&lt;br&gt;
+Given a string p, return the number of unique non-empty substrings of p are present in s.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def findSubstringInWraproundString(self, p):
+        res = {i: 1 for i in p}
+        l = 1
+        for i, j in zip(p, p[1:]):
+            l = l + 1 if (ord(j) - ord(i)) % 26 == 1 else 1
+            res[j] = max(res[j], l)
+        return sum(res.values())
+#
+class Solution:
+    def findSubstringInWraproundString(self, p: str) -&amp;gt; int:
+        if not p: return 0
+        count = [0]*26
+        #initally, count is 1 for each unique char
+        for char in p:
+            count[ord(char)-ord(&#39;a&#39;)]=1
+        
+        res=1
+        #for each sub sequence ending in char2, if it is connected, res+=1 else res=1
+        for char1,char2 in zip(p,p[1:]):
+            if (ord(char2)-ord(char1))%26==1:
+                res+=1
+            else:
+                res=1
+            #prevent duplicate char2
+            count[ord(char2)-ord(&#39;a&#39;)] = max(count[ord(char2)-ord(&#39;a&#39;)], res)
+                
+        return sum(count)
+
+#ANSWER DP 思路：若字符连续，当前可形成的substring个数+1，若不连续substring个数=1，更新count 为防止重复字符overwrite，更新时候取max。 
+class Solution:
+    def findSubstringInWraproundString(self, p: str) -&amp;gt; int:
+        count=[0]*26
+        cur_maxlen=0
+        for i in range(len(p)):
+            if i&amp;gt;0 and (ord(p[i])-ord(p[i-1]))%26==1:
+                cur_maxlen+=1
+            else:
+                cur_maxlen=1
+            
+            index=ord(p[i])-ord(&#39;a&#39;)
+            count[index]=max(count[index],cur_maxlen)
+        
+        return sum(count)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;看答案了。。。&lt;br&gt;
+Each single charecter contribution is initialized to 1&lt;br&gt;
+if the order is continued, the contribution is increased by 1 from previous character contribution&lt;/p&gt;
+&lt;p&gt;example string zabce&lt;/p&gt;
+&lt;p&gt;Values got incremented in the following way&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;z -&amp;gt; 1
+a -&amp;gt; 1 + 1 (or) z + 1 -&amp;gt; 2
+b -&amp;gt; 1 + 1 + 1 (or) a + 1 -&amp;gt; 3
+c -&amp;gt; 1 + 1 + 1 + 1 (or) b + 1 -&amp;gt; 4
+e -&amp;gt; 1 (ord(j) - ord(i)) % 26 != 1 here
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So the final answer is contribution from z + a + b + c + e (1 + 2 + 3 + 4 + 1 = 11)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;max(res[j], l) is required to handle cases where the character is repeated.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For example in zaba, since each each unique character is assigned as key to res, the 2nd a contribution should not replace the 1st a contribution until it exceeds the 1st a contribution&lt;/p&gt;
+&lt;h1 id=&#34;468-validate-ip-address-medium&#34;&gt;468. Validate IP Address （Medium）&lt;/h1&gt;
+&lt;p&gt;Given a string queryIP, return &amp;quot;IPv4&amp;quot; if IP is a valid IPv4 address, &amp;quot;IPv6&amp;quot; if IP is a valid IPv6 address or &amp;quot;Neither&amp;quot; if IP is not a correct IP of any type.&lt;br&gt;
+A valid IPv4 address is an IP in the form &amp;quot;x1.x2.x3.x4&amp;quot; where 0 &amp;lt;= xi &amp;lt;= 255 and xi cannot contain leading zeros. For example, &amp;quot;192.168.1.1&amp;quot; and &amp;quot;192.168.1.0&amp;quot; are valid IPv4 addresses but &amp;quot;192.168.01.1&amp;quot;, while &amp;quot;192.168.1.00&amp;quot; and &amp;quot;192.168@1.1&amp;quot; are invalid IPv4 addresses.&lt;br&gt;
+A valid IPv6 address is an IP in the form &amp;quot;x1:x2:x3:x4:x5:x6:x7:x8&amp;quot; where:&lt;br&gt;
+1 &amp;lt;= xi.length &amp;lt;= 4&lt;br&gt;
+xi is a hexadecimal string which may contain digits, lower-case English letter (&#39;a&#39; to &#39;f&#39;) and upper-case English letters (&#39;A&#39; to &#39;F&#39;).&lt;br&gt;
+Leading zeros are allowed in xi.&lt;br&gt;
+For example, &amp;quot;2001:0db8:85a3:0000:0000:8a2e:0370:7334&amp;quot; and &amp;quot;2001:db8:85a3:0:0:8A2E:0370:7334&amp;quot; are valid IPv6 addresses, while &amp;quot;2001:0db8:85a3::8A2E:037j:7334&amp;quot; and &amp;quot;02001:0db8:85a3:0000:0000:8a2e:0370:7334&amp;quot; are invalid IPv6 addresses.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def validIPAddress(self, queryIP: str) -&amp;gt; str:
+        
+        def convert4(string):
+            # in range 0~255
+            # cannot leading zeros
+            # number only
+            if not string: return False
+            if len(string)&amp;gt;1 and string[0]==&#39;0&#39;: return False
+            val=0
+            for s in string:
+                if s not in &#39;0123456789&#39;:
+                    return False
+                val=val*10+int(s)
+            
+            #return True if success, else False
+            if val&amp;gt;=0 and val&amp;lt;=255:
+                return True
+            return False
+        
+        def convert6(string):
+            if not string: return False
+            #length 1~4
+            # hexadecial string 0~9 a~f A~F
+            if len(string)&amp;gt;4: return False
+            for s in string:
+                if s not in &#39;0123456789abcdefABCDEF&#39;:
+                    return False
+            return True
+        
+        if &#39;.&#39; in queryIP:
+            data = queryIP.split(&#39;.&#39;)
+            if len(data)==4 and all([convert4(string) for string in data]):
+                return &#39;IPv4&#39;        
+            
+        elif &#39;:&#39; in queryIP:
+            data = queryIP.split(&#39;:&#39;)
+            if len(data)==8 and all([convert6(string) for string in data]):
+                return &#39;IPv6&#39;
+        
+        return &#39;Neither&#39;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;只需要细心的题目&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-469-convex-polygon-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 469. Convex Polygon （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an array of points on the X-Y plane points where points[i] = [xi, yi]. The points form a polygon when joined sequentially.&lt;br&gt;
+Return true if this polygon is convex and false otherwise.&lt;br&gt;
+You may assume the polygon formed by given points is always a simple polygon. In other words, we ensure that exactly two edges intersect at each vertex and that edges otherwise don&#39;t intersect each other.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def isConvex(self, p: List[List[int]]) -&amp;gt; bool:
+    def ccw(a, b, c):
+        # (b-a) X (c-a)
+        return (b[0] - a[0])*(c[1] - a[1]) - (b[1] - a[1])*(c[0] - a[0]) 
+    res = [ccw(p[i-2], p[i-1], p[i]) for i in range(len(p))]
+    return abs(sum(res)) == sum(abs(i) for i in res)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;convex...beyond my knowledge  CCW算法。。。Note: |Σxi| = Σ|xi| is only true when all xi are the same sign.&lt;/p&gt;
+&lt;h1 id=&#34;470-implement-rand10-using-rand7-medium&#34;&gt;470. Implement Rand10() Using Rand7() (Medium)&lt;/h1&gt;
+&lt;p&gt;Given the API rand7() that generates a uniform random integer in the range [1, 7], write a function rand10() that generates a uniform random integer in the range [1, 10]. You can only call the API rand7(), and you shouldn&#39;t call any other API. Please do not use a language&#39;s built-in random API.&lt;br&gt;
+Each test case will have one internal argument n, the number of times that your implemented function rand10() will be called while testing. Note that this is not an argument passed to rand10().&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# The rand7() API is already defined for you.
+# def rand7():
+# @return a random integer in the range 1 to 7
+
+class Solution:
+    def rand10(self):
+        &amp;quot;&amp;quot;&amp;quot;
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        # rand1  1~7   取1~6  奇偶决定生成左区间1~5 还是右区间6~10
+        # rand2        取1~5  
+        rand1=rand7()
+        while rand1==7:
+            rand1=rand7()
+        flag = rand1%2==1
+        rand2=rand7()
+        while rand2&amp;gt;5:
+            rand2=rand7()
+        return 5+rand2 if flag else rand2
+
+#ANSWER
+# The rand7() API is already defined for you.
+# def rand7():
+# @return a random integer in the range 1 to 7
+
+class Solution:
+    def rand10(self):
+        &amp;quot;&amp;quot;&amp;quot;
+        :rtype: int
+        &amp;quot;&amp;quot;&amp;quot;
+        n1=rand7()
+        n2=rand7()
+        while n1+(n2-1)*7 &amp;gt;40:
+            n1=rand7()
+            n2=rand7()
+        return (n1+(n2-1)*7)%10 +1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;(n2-1)乘7+n1&lt;/p&gt;
+">2022-03-07 Leetcode</a>
       </div>
       
       <div class="item">

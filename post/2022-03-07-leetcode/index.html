@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>Leetcode 2021-11-27 | Lan&#39;s Blog</title>
+<title>2022-03-07 Leetcode | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1650588301580">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,7 +41,7 @@
 
 
 
-  <meta name="description" content="Leetcode 2021-11-27" />
+  <meta name="description" content="2022-03-07 Leetcode" />
   <meta name="keywords" content="leetcode" />
 </head>
 
@@ -223,16 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#font-colorred-241-different-ways-to-add-parentheses-mediumfont"><font color='red'> 241. Different Ways to Add Parentheses （Medium）</font></a></li>
-<li><a href="#242-valid-anagram-easy">242. Valid Anagram （Easy）</a></li>
-<li><a href="#243-shortest-word-distance-easy">243. Shortest Word Distance (Easy)</a></li>
-<li><a href="#244-shortest-word-distance-ii-medium">244. Shortest Word Distance II (Medium)</a></li>
-<li><a href="#245-shortest-word-distance-iii-medium">245. Shortest Word Distance III (Medium)</a></li>
-<li><a href="#246-strobogrammatic-number-easy">246. Strobogrammatic Number (Easy)</a></li>
-<li><a href="#font-colorred247-strobogrammatic-number-ii-medium-font"><font color='red'>247. Strobogrammatic Number II (Medium) </font></a></li>
-<li><a href="#font-colorred248-strobogrammatic-number-iii-hard-font"><font color='red'>248. Strobogrammatic Number III （Hard） </font></a></li>
-<li><a href="#249-group-shifted-strings-medium">249. Group Shifted Strings （Medium）</a></li>
-<li><a href="#250-count-univalue-subtrees-medium">250. Count Univalue Subtrees (Medium)</a></li>
+<li><a href="#461-hamming-distance-easy">461. Hamming Distance (Easy)</a></li>
+<li><a href="#462-minimum-moves-to-equal-array-elements-ii-medium">462. Minimum Moves to Equal Array Elements II (Medium)</a></li>
+<li><a href="#463-island-perimeter-easy">463. Island Perimeter (Easy)</a></li>
+<li><a href="#font-colorred-464-can-i-win-medium-font"><font color='red'> 464. Can I Win (Medium) </font></a></li>
+<li><a href="#font-colorred-465-optimal-account-balancing-hardfont"><font color='red'> 465. Optimal Account Balancing （Hard）</font></a></li>
+<li><a href="#font-colorred-466-count-the-repetitions-hard-font"><font color='red'> 466. Count The Repetitions (Hard) </font></a></li>
+<li><a href="#font-colorred-467-unique-substrings-in-wraparound-string-medium-font"><font color='red'> 467. Unique Substrings in Wraparound String (Medium) </font></a></li>
+<li><a href="#468-validate-ip-address-medium">468. Validate IP Address （Medium）</a></li>
+<li><a href="#font-colorred-469-convex-polygon-mediumfont"><font color='red'> 469. Convex Polygon （Medium）</font></a></li>
+<li><a href="#470-implement-rand10-using-rand7-medium">470. Implement Rand10() Using Rand7() (Medium)</a></li>
 </ul>
 
   </div>
@@ -498,14 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-27/"> Leetcode 2021-11-27 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/2022-03-07-leetcode/"> 2022-03-07 Leetcode </a>
   </h1>
   <div class="post-meta">
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-26 20:05:28">2021-11-26</span>
+      <span class="publish-time" data-t="2022-03-07 02:06:49">2022-03-07</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -523,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >9<span class="language" data-lan="minute"
+        >16<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -532,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >1401<span class="pc-show language" data-lan="words"
+        >2464<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -543,274 +543,395 @@
 
             <div class="post-body next-md-body" id="post_body">
               <!-- more -->
-<h1 id="font-colorred-241-different-ways-to-add-parentheses-mediumfont"><font color='red'> 241. Different Ways to Add Parentheses （Medium）</font></h1>
-<p>Given a string expression of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. You may return the answer in any order.</p>
+<h1 id="461-hamming-distance-easy">461. Hamming Distance (Easy)</h1>
+<p>The Hamming distance between two integers is the number of positions at which the corresponding bits are different.<br>
+Given two integers x and y, return the Hamming distance between them.</p>
 <pre><code class="language-python">class Solution:
-    def diffWaysToCompute(self, expression: str) -&gt; List[int]:
-        if not expression: return []
-         
-        exp = []
-        start=0
-        i=0
-        while i&lt;len(expression):
-            if expression[i].isdigit():
-                i+=1
-            else:
-                exp.append(expression[start:i])
-                exp.append(expression[i])
-                start=i+1
-                i+=1
-        exp.append(expression[start:])
-        
-        
-        #basecase
-        res = []
-        if len(exp)==1 and ('+' not in exp) and ('-' not in exp) and ('*' not in exp):
-            res=[int(exp[0])]
-        
-        
-        for i, op in enumerate(exp):
-            if not op.isdigit():
-                left = self.diffWaysToCompute(''.join(exp[:i]))
-                right= self.diffWaysToCompute(''.join(exp[i+1:]))
-                if op=='+':
-                    for l in left:
-                        for r in right:
-                            res.append(l+r)
-                elif op=='-':
-                     for l in left:
-                        for r in right:
-                            res.append(l-r)
-                else:
-                     for l in left:
-                        for r in right:
-                            res.append(l*r)
-                      
- 
-        return res
+    def hammingDistance(self, x: int, y: int) -&gt; int:
+        res=x^y
+        c=0
+        for i in range(32):
+            if res &gt;&gt;i &amp; 1:
+                c+=1
+        return c
+#
+class Solution(object):
+    def hammingDistance(self, x, y):
+        &quot;&quot;&quot;
+        :type x: int
+        :type y: int
+        :rtype: int
+        &quot;&quot;&quot;
+        xor = x ^ y
+        distance = 0
+        while xor:
+            # mask out the rest bits
+            if xor &amp; 1:
+                distance += 1
+            xor = xor &gt;&gt; 1
+        return distance
 
-</code></pre>
-<p>感觉是backtracking但写code出现了问题。。。并不是 a+(b+...)   和 (a+b)+.... 这2种情况， 而是 （left）+ （right）产生不同的组合。  思路错误导致没写出来。。写了个bug。</p>
-<h1 id="242-valid-anagram-easy">242. Valid Anagram （Easy）</h1>
-<pre><code class="language-python">class Solution:
-    def isAnagram(self, s: str, t: str) -&gt; bool:
-        return collections.Counter(s)==collections.Counter(t)
-</code></pre>
-<p>答案用了26个字符的数组存储出现次数，s出现+1，t出现-1. 这样相等时候所有位置都应该是0.</p>
-<h1 id="243-shortest-word-distance-easy">243. Shortest Word Distance (Easy)</h1>
-<pre><code class="language-python">class Solution:
-    def shortestDistance(self, wordsDict: List[str], word1: str, word2: str) -&gt; int:
-        visited = dict()
-        res=float('inf')
-        for i,w in enumerate(wordsDict):
-            if w==word1 and word2 in visited:
-                res=min(res,i-visited[word2])
-            if w==word2 and word1 in visited:
-                res=min(res,i-visited[word1])
-            visited[w]=i
-        return res
-
-</code></pre>
-<h1 id="244-shortest-word-distance-ii-medium">244. Shortest Word Distance II (Medium)</h1>
-<pre><code class="language-python">class WordDistance:
-
-    def __init__(self, wordsDict: List[str]):
-        self.dic = collections.defaultdict(list)
-        for i,w in enumerate(wordsDict):
-            self.dic[w].append(i)
-        
-
-    def shortest(self, word1: str, word2: str) -&gt; int:
-        res=float('inf')
-        for pos1 in self.dic[word1]:
-            for pos2 in self.dic[word2]:
-                res=min(res,abs(pos2-pos1))
-        return res
-</code></pre>
-<h1 id="245-shortest-word-distance-iii-medium">245. Shortest Word Distance III (Medium)</h1>
-<pre><code class="language-python">class Solution:
-    def shortestWordDistance(self, wordsDict: List[str], word1: str, word2: str) -&gt; int:
-        dic=dict()
-        res = float('inf')
-        for i, w in enumerate(wordsDict):
-            if w==word1 and word2 in dic:
-                res=min(res,i-dic[word2])
-            if w==word2 and word1 in dic:
-                res=min(res,i-dic[word1])
-            
-            dic[w]=i
-        return res
-
-</code></pre>
-<h1 id="246-strobogrammatic-number-easy">246. Strobogrammatic Number (Easy)</h1>
-<pre><code class="language-python">class Solution:
-    def isStrobogrammatic(self, num: str) -&gt; bool:
-        # 1 6 9 8 0
-        if '2' in num or '3' in num or '4' in num or '5' in num or '7' in num:
-            return False
-        dic={'6':'9','9':'6','1':'1','8':'8','0':'0'}
-        num2= ''.join([dic[e] for e in num][::-1])
-        return num==num2
-
-</code></pre>
-<h1 id="font-colorred247-strobogrammatic-number-ii-medium-font"><font color='red'>247. Strobogrammatic Number II (Medium) </font></h1>
-<pre><code class="language-python">class Solution:
-    def findStrobogrammatic(self, n: int) -&gt; List[str]:
-        if n==1: return [&quot;0&quot;,&quot;1&quot;,&quot;8&quot;]
-        nums=['0','1','6','8','9']
-        
-        def isStrobogrammatic(num: str) -&gt; bool:
-            if '2' in num or '3' in num or '4' in num or '5' in num or '7' in num:
-                return False
-            dic={'6':'9','9':'6','1':'1','8':'8','0':'0'}
-            num2= ''.join([dic[e] for e in num][::-1])
-            return num==num2
-        
-        res = []
-        def bt(tmp):
-            if len(tmp)==n:
-                sb = ''.join(tmp[:])
-                if isStrobogrammatic(sb) and sb[0]!='0':
-                    res.append(sb)
-                return 
-            for cur in nums:
-                tmp.append(cur)
-                bt(tmp)
-                tmp.pop()
-        
-        bt([])
-        return res
-#answer way of writting
+#
 class Solution:
-    def findStrobogrammatic(self, n: int) -&gt; List[str]:
-        evenMidCandidate = [&quot;11&quot;,&quot;69&quot;,&quot;88&quot;,&quot;96&quot;, &quot;00&quot;]
-        oddMidCandidate = [&quot;0&quot;, &quot;1&quot;, &quot;8&quot;]
-        if n == 1:
-            return oddMidCandidate
-        if n == 2:
-            return evenMidCandidate[:-1]
-        if n % 2:
-            pre, midCandidate = self.findStrobogrammatic(n-1), oddMidCandidate
-        else: 
-            pre, midCandidate = self.findStrobogrammatic(n-2), evenMidCandidate
-        premid = (n-1)//2
-        return [p[:premid] + c + p[premid:] for c in midCandidate for p in pre]
+    def hammingDistance(self, x, y):
+        xor = x ^ y
+        distance = 0
+        while xor:
+            distance += 1
+            # remove the rightmost bit of '1'
+            xor = xor &amp; (xor - 1)
+        return distance
 </code></pre>
-<p>初次尝试， time limit exceeded。。。 backtracking属于暴力求解。 答案思路：<br>
-n == 1: [0, 1, 8]<br>
-n == 2: [11, 88, 69, 96]<br>
-How about n == 3?<br>
-=&gt; it can be retrieved if you insert [0, 1, 8] to the middle of solution of n == 2<br>
-n == 4?<br>
-=&gt; it can be retrieved if you insert [11, 88, 69, 96, 00] to the middle of solution of n == 2<br>
-n == 5?<br>
-=&gt; it can be retrieved if you insert [0, 1, 8] to the middle of solution of n == 4<br>
-the same, for n == 6, it can be retrieved if you insert [11, 88, 69, 96, 00] to the middle of solution of n == 4</p>
-<h1 id="font-colorred248-strobogrammatic-number-iii-hard-font"><font color='red'>248. Strobogrammatic Number III （Hard） </font></h1>
+<h1 id="462-minimum-moves-to-equal-array-elements-ii-medium">462. Minimum Moves to Equal Array Elements II (Medium)</h1>
+<p>Given an integer array nums of size n, return the minimum number of moves required to make all array elements equal.<br>
+In one move, you can increment or decrement an element of the array by 1.<br>
+Test cases are designed so that the answer will fit in a 32-bit integer.</p>
 <pre><code class="language-python">class Solution:
-    def strobogrammaticInRange(self, low: str, high: str) -&gt; int:
+    def minMoves2(self, nums: List[int]) -&gt; int:
+        # nums[i]-mid
+        nums.sort()
+        mid= nums[len(nums)//2]
+        return sum([abs(val-mid) for val in nums])
+#JAVA ANSWER good to know
+public class Solution {
+    public int minMoves2(int[] nums) {
+        int l = 0, r = nums.length - 1, sum = 0;
+        Arrays.sort(nums);
+        while (l &lt; r) {
+            sum += nums[r] - nums[l];
+            l++;
+            r--;
+        }
+        return sum;
+    }
+}
+</code></pre>
+<h1 id="463-island-perimeter-easy">463. Island Perimeter (Easy)</h1>
+<p>You are given row x col grid representing a map where grid[i][j] = 1 represents land and grid[i][j] = 0 represents water.<br>
+Grid cells are connected horizontally/vertically (not diagonally). The grid is completely surrounded by water, and there is exactly one island (i.e., one or more connected land cells).<br>
+The island doesn't have &quot;lakes&quot;, meaning the water inside isn't connected to the water around the island. One cell is a square with side length 1. The grid is rectangular, width and height don't exceed 100. Determine the perimeter of the island.</p>
+<pre><code class="language-python">class Solution:
+    def islandPerimeter(self, grid: List[List[int]]) -&gt; int:
+        # find a neighor + neighbor4 but contact need to -contact number.
+        visited=set()
+        def nei(i,j):
+            neis=[]
+            for ii,jj in [(i+1,j),(i-1,j),(i,j+1),(i,j-1)]:
+                if ii&lt;0 or ii&gt;=len(grid) or jj&lt;0 or jj&gt;=len(grid[0]) or grid[ii][jj]==0: 
+                        continue
+                neis.append((ii,jj))
+            return neis
         
+        res = [0]
         
-        dic = {'0': '0','1': '1','6': '9','8': '8','9': '6'}    
-        count=[0] # count as list can be modifed without return 
+        def dfs(i,j):
+            if (i,j) in visited: return
+            res[0]+=4
+            neis = nei(i,j)
+            res[0]-=len(neis)
+            visited.add((i,j))
+            for ne in neis:
+                if ne not in visited:
+                    dfs(*ne)
         
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j]==1:
+                    dfs(i,j)
+                    break
+        return res[0]
+            
+</code></pre>
+<h1 id="font-colorred-464-can-i-win-medium-font"><font color='red'> 464. Can I Win (Medium) </font></h1>
+<p>In the &quot;100 game&quot; two players take turns adding, to a running total, any integer from 1 to 10. The player who first causes the running total to reach or exceed 100 wins.<br>
+What if we change the game so that players cannot re-use integers?<br>
+For example, two players might take turns drawing from a common pool of numbers from 1 to 15 without replacement until they reach a total &gt;= 100.<br>
+Given two integers maxChoosableInteger and desiredTotal, return true if the first player to move can force a win, otherwise, return false. Assume both players play optimally.</p>
+<pre><code class="language-python">class Solution:
+    def canIWin(self, maxChoosableInteger: int, desiredTotal: int) -&gt; bool:
+        @lru_cache(None)
+        def check(nums, t):
+            if nums[-1] &gt;= t: return True
+            res = any(not check(tuple(nums[:i]+nums[i+1:]),t-nums[i]) for i in range(len(nums)))
+            return res
+            
+        if maxChoosableInteger * (1 + maxChoosableInteger) // 2 &lt; desiredTotal: return False
+        nums = tuple(range(1, maxChoosableInteger + 1))
+        return check(nums, desiredTotal)
+
+#ANSWER 2 TLE
+class Solution:
+    def canIWin(self, maxChoosableInteger: int, desiredTotal: int) -&gt; bool:
+        dic = dict()
+        used = [False]*(maxChoosableInteger+1)
         
+        sum_=(1+maxChoosableInteger)*maxChoosableInteger//2
+        if sum_&lt;desiredTotal: return False
+        if desiredTotal&lt;=0: return True
         
-        def dfs(low,high,c,left,right,count):
-            if left&gt;right:
-                s=''.join(c)
-                if (len(s)==len(low) and s&lt;low) or (len(s)==len(high) and s&gt;high):
-                    return 
-                count[0]+=1
-                return
-            for k,v in dic.items():
-                c[left]=k
-                c[right]=v
-                if len(c)!=1 and c[0]=='0':
-                    continue
-                if left==right and k!=v:
-                    continue
-                
-                dfs(low,high,c,left+1,right-1,count)
+        def formatkey(used):
+            n=0
+            for bl in used:
+                n&lt;&lt;=1
+                if bl:
+                    n |=1
+            return n
+            
+        def helper(desiredTotal):
+            if desiredTotal&lt;=0: return False
+            key = formatkey(used)
+            if key not in dic:
+                for i in range(1,len(used)):
+                    if not used[i]:
+                        used[i]=True
+                        #check whether this lead to a win (i.e. the other player lose)
+                        if not helper(desiredTotal-i):
+                            dic[key]=True
+                            used[i]=False
+                            return True
+                        used[i]=False
+                dic[key]=False
+            
+            return dic[key]
         
+        return helper(desiredTotal)
+</code></pre>
+<p>can not reuse integer， 答案 pythonic写法。</p>
+<h1 id="font-colorred-465-optimal-account-balancing-hardfont"><font color='red'> 465. Optimal Account Balancing （Hard）</font></h1>
+<p>You are given an array of transactions transactions where transactions[i] = [fromi, toi, amounti] indicates that the person with ID = fromi gave amounti $ to the person with ID = toi.<br>
+Return the minimum number of transactions required to settle the debt.</p>
+<pre><code class="language-python">    def minTransfers(self, transactions):
+        &quot;&quot;&quot;
+        :type transactions: List[List[int]]
+        :rtype: int
+        &quot;&quot;&quot;
+        m = collections.defaultdict(int)
         
-        for length in range(len(low),len(high)+1):
-   
-            dfs(low, high, ['']*length, 0, length-1, count);
+        for t in transactions:
+            m[t[0]]-=t[2]
+            m[t[1]]+=t[2]
         
-        return count[0]
-    
+        debt = m.values()
+        
+        def dfs(s):
+            while(s&lt;len(debt) and debt[s]==0):
+                s+=1
+            if s==len(debt): return 0
+            
+            r = float('inf')
+            for i in range(s+1,len(debt)):
+                if debt[i]*debt[s]&lt;0:
+                    # settle s with i
+                    debt[i]+=debt[s]
+                    r=min(r,1+dfs(s+1))
+                    # backtrack
+                    debt[i]-=debt[s]
+            return r
+        
+        return dfs(0)
+
+
 
 </code></pre>
-<p>give up, 思路 ， 构建length长度的满足条件的string，从两边向中间构建。  做dfs search。<br>
-用247的办法也可以感觉。 然后过滤出low，high之间有多少个。</p>
-<h1 id="249-group-shifted-strings-medium">249. Group Shifted Strings （Medium）</h1>
-<p>We can shift a string by shifting each of its letters to its successive letter.</p>
-<pre><code>For example, &quot;abc&quot; can be shifted to be &quot;bcd&quot;.
-</code></pre>
-<p>We can keep shifting the string to form a sequence.</p>
-<pre><code>For example, we can keep shifting &quot;abc&quot; to form the sequence: &quot;abc&quot; -&gt; &quot;bcd&quot; -&gt; ... -&gt; &quot;xyz&quot;.
-</code></pre>
-<p>Given an array of strings strings, group all strings[i] that belong to the same shifting sequence. You may return the answer in any order.</p>
+<p>idea is tricky...  person index s have debt[s] for other person from s+1, if other person have neg sign then person s. update debt[i] with debt[s] (so person i will take full responsiblity of person s). r=min(r,1+dfs(s+1))</p>
+<h1 id="font-colorred-466-count-the-repetitions-hard-font"><font color='red'> 466. Count The Repetitions (Hard) </font></h1>
+<p>We define str = [s, n] as the string str which consists of the string s concatenated n times.<br>
+For example, str == [&quot;abc&quot;, 3] ==&quot;abcabcabc&quot;.<br>
+We define that string s1 can be obtained from string s2 if we can remove some characters from s2 such that it becomes s1.<br>
+For example, s1 = &quot;abc&quot; can be obtained from s2 = &quot;abdbec&quot; based on our definition by removing the bolded underlined characters.<br>
+You are given two strings s1 and s2 and two integers n1 and n2. You have the two strings str1 = [s1, n1] and str2 = [s2, n2].<br>
+Return the maximum integer m such that str = [str2, m] can be obtained from str1.</p>
 <pre><code class="language-python">
 class Solution:
-    def groupStrings(self, strings: List[str]) -&gt; List[List[str]]:
-        dic = collections.defaultdict(list)
-        for s in strings:
-            if len(s)==1:
-                dic['NULL'].append(s)
-            else:
-                key=[]
-                for i in range(1,len(s)):
-                    tmp = str((ord(s[i])-ord(s[i-1]))%26)
-                    key.append(tmp)
-                key='-'.join(key)
-                dic[key].append(s)
-        return dic.values()
-</code></pre>
-<h1 id="250-count-univalue-subtrees-medium">250. Count Univalue Subtrees (Medium)</h1>
-<p>Given the root of a binary tree, return the number of uni-value subtrees.<br>
-A uni-value subtree means all nodes of the subtree have the same value.</p>
-<pre><code class="language-python"># Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def countUnivalSubtrees(self, root: Optional[TreeNode]) -&gt; int:
-        
-        count = [0]
-        
-        def isUnivalSubtrees(root):
-            if not root:
-                return False
-            if not root.left and not root.right:
-                count[0]+=1
-                return True
-            if not root.left:
-                res = isUnivalSubtrees(root.right) and root.val==root.right.val
-                if res:
-                    count[0]+=1
-                return res
-            if not root.right:
-                res= isUnivalSubtrees(root.left) and root.val==root.left.val
-                if res:
-                    count[0]+=1
-                return res
-            
-            left = isUnivalSubtrees(root.left)
-            right= isUnivalSubtrees(root.right)
-            res=left and right and root.val==root.left.val and root.val==root.right.val
-            if res:
-                count[0]+=1
-            return res
-        
-        isUnivalSubtrees(root)
-        return count[0]
+    def getMaxRepetitions(self, s1, n1, s2, n2):
+        d, l1, l2, i1, i2 = {}, len(s1), len(s2), 0, 0
+        tot = l1 * n1
+
+        while i1 &lt; tot:
+            if s1[i1 % l1] == s2[i2 % l2]:
+                if (i1 % l1, i2 % l2) in d:
+                    prev1, prev2 = d[(i1 % l1, i2 % l2)]
+                    cir1, cir2 = i1 - prev1, i2 - prev2
+                    count_cir1 = (tot - i1) // cir1
+                    i1 += count_cir1 * cir1
+                    i2 += count_cir1 * cir2
+                    if i1 &gt;= tot: break
+                else:
+                    d[(i1 % l1, i2 % l2)] = (i1, i2)
+                i2 += 1
+            i1 += 1
+        return i2 // l2 // n2
 
 </code></pre>
-<p>从上个题目获得的trick这个题目马上用到， count作为list，边run边更新不影响helper function的bool返回值。</p>
+<p>直接数出现的次数算重复不行，因为还有字母出现次序问题。。。 得找重复pattern。 答案厉害。</p>
+<h1 id="font-colorred-467-unique-substrings-in-wraparound-string-medium-font"><font color='red'> 467. Unique Substrings in Wraparound String (Medium) </font></h1>
+<p>We define the string s to be the infinite wraparound string of &quot;abcdefghijklmnopqrstuvwxyz&quot;, so s will look like this:<br>
+&quot;...zabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd....&quot;.<br>
+Given a string p, return the number of unique non-empty substrings of p are present in s.</p>
+<pre><code class="language-python">def findSubstringInWraproundString(self, p):
+        res = {i: 1 for i in p}
+        l = 1
+        for i, j in zip(p, p[1:]):
+            l = l + 1 if (ord(j) - ord(i)) % 26 == 1 else 1
+            res[j] = max(res[j], l)
+        return sum(res.values())
+#
+class Solution:
+    def findSubstringInWraproundString(self, p: str) -&gt; int:
+        if not p: return 0
+        count = [0]*26
+        #initally, count is 1 for each unique char
+        for char in p:
+            count[ord(char)-ord('a')]=1
+        
+        res=1
+        #for each sub sequence ending in char2, if it is connected, res+=1 else res=1
+        for char1,char2 in zip(p,p[1:]):
+            if (ord(char2)-ord(char1))%26==1:
+                res+=1
+            else:
+                res=1
+            #prevent duplicate char2
+            count[ord(char2)-ord('a')] = max(count[ord(char2)-ord('a')], res)
+                
+        return sum(count)
+
+#ANSWER DP 思路：若字符连续，当前可形成的substring个数+1，若不连续substring个数=1，更新count 为防止重复字符overwrite，更新时候取max。 
+class Solution:
+    def findSubstringInWraproundString(self, p: str) -&gt; int:
+        count=[0]*26
+        cur_maxlen=0
+        for i in range(len(p)):
+            if i&gt;0 and (ord(p[i])-ord(p[i-1]))%26==1:
+                cur_maxlen+=1
+            else:
+                cur_maxlen=1
+            
+            index=ord(p[i])-ord('a')
+            count[index]=max(count[index],cur_maxlen)
+        
+        return sum(count)
+</code></pre>
+<p>看答案了。。。<br>
+Each single charecter contribution is initialized to 1<br>
+if the order is continued, the contribution is increased by 1 from previous character contribution</p>
+<p>example string zabce</p>
+<p>Values got incremented in the following way</p>
+<pre><code>z -&gt; 1
+a -&gt; 1 + 1 (or) z + 1 -&gt; 2
+b -&gt; 1 + 1 + 1 (or) a + 1 -&gt; 3
+c -&gt; 1 + 1 + 1 + 1 (or) b + 1 -&gt; 4
+e -&gt; 1 (ord(j) - ord(i)) % 26 != 1 here
+</code></pre>
+<p>So the final answer is contribution from z + a + b + c + e (1 + 2 + 3 + 4 + 1 = 11)</p>
+<pre><code>max(res[j], l) is required to handle cases where the character is repeated.
+</code></pre>
+<p>For example in zaba, since each each unique character is assigned as key to res, the 2nd a contribution should not replace the 1st a contribution until it exceeds the 1st a contribution</p>
+<h1 id="468-validate-ip-address-medium">468. Validate IP Address （Medium）</h1>
+<p>Given a string queryIP, return &quot;IPv4&quot; if IP is a valid IPv4 address, &quot;IPv6&quot; if IP is a valid IPv6 address or &quot;Neither&quot; if IP is not a correct IP of any type.<br>
+A valid IPv4 address is an IP in the form &quot;x1.x2.x3.x4&quot; where 0 &lt;= xi &lt;= 255 and xi cannot contain leading zeros. For example, &quot;192.168.1.1&quot; and &quot;192.168.1.0&quot; are valid IPv4 addresses but &quot;192.168.01.1&quot;, while &quot;192.168.1.00&quot; and &quot;192.168@1.1&quot; are invalid IPv4 addresses.<br>
+A valid IPv6 address is an IP in the form &quot;x1:x2:x3:x4:x5:x6:x7:x8&quot; where:<br>
+1 &lt;= xi.length &lt;= 4<br>
+xi is a hexadecimal string which may contain digits, lower-case English letter ('a' to 'f') and upper-case English letters ('A' to 'F').<br>
+Leading zeros are allowed in xi.<br>
+For example, &quot;2001:0db8:85a3:0000:0000:8a2e:0370:7334&quot; and &quot;2001:db8:85a3:0:0:8A2E:0370:7334&quot; are valid IPv6 addresses, while &quot;2001:0db8:85a3::8A2E:037j:7334&quot; and &quot;02001:0db8:85a3:0000:0000:8a2e:0370:7334&quot; are invalid IPv6 addresses.</p>
+<pre><code class="language-python">class Solution:
+    def validIPAddress(self, queryIP: str) -&gt; str:
+        
+        def convert4(string):
+            # in range 0~255
+            # cannot leading zeros
+            # number only
+            if not string: return False
+            if len(string)&gt;1 and string[0]=='0': return False
+            val=0
+            for s in string:
+                if s not in '0123456789':
+                    return False
+                val=val*10+int(s)
+            
+            #return True if success, else False
+            if val&gt;=0 and val&lt;=255:
+                return True
+            return False
+        
+        def convert6(string):
+            if not string: return False
+            #length 1~4
+            # hexadecial string 0~9 a~f A~F
+            if len(string)&gt;4: return False
+            for s in string:
+                if s not in '0123456789abcdefABCDEF':
+                    return False
+            return True
+        
+        if '.' in queryIP:
+            data = queryIP.split('.')
+            if len(data)==4 and all([convert4(string) for string in data]):
+                return 'IPv4'        
+            
+        elif ':' in queryIP:
+            data = queryIP.split(':')
+            if len(data)==8 and all([convert6(string) for string in data]):
+                return 'IPv6'
+        
+        return 'Neither'
+
+</code></pre>
+<p>只需要细心的题目</p>
+<h1 id="font-colorred-469-convex-polygon-mediumfont"><font color='red'> 469. Convex Polygon （Medium）</font></h1>
+<p>You are given an array of points on the X-Y plane points where points[i] = [xi, yi]. The points form a polygon when joined sequentially.<br>
+Return true if this polygon is convex and false otherwise.<br>
+You may assume the polygon formed by given points is always a simple polygon. In other words, we ensure that exactly two edges intersect at each vertex and that edges otherwise don't intersect each other.</p>
+<pre><code class="language-python">def isConvex(self, p: List[List[int]]) -&gt; bool:
+    def ccw(a, b, c):
+        # (b-a) X (c-a)
+        return (b[0] - a[0])*(c[1] - a[1]) - (b[1] - a[1])*(c[0] - a[0]) 
+    res = [ccw(p[i-2], p[i-1], p[i]) for i in range(len(p))]
+    return abs(sum(res)) == sum(abs(i) for i in res)
+</code></pre>
+<p>convex...beyond my knowledge  CCW算法。。。Note: |Σxi| = Σ|xi| is only true when all xi are the same sign.</p>
+<h1 id="470-implement-rand10-using-rand7-medium">470. Implement Rand10() Using Rand7() (Medium)</h1>
+<p>Given the API rand7() that generates a uniform random integer in the range [1, 7], write a function rand10() that generates a uniform random integer in the range [1, 10]. You can only call the API rand7(), and you shouldn't call any other API. Please do not use a language's built-in random API.<br>
+Each test case will have one internal argument n, the number of times that your implemented function rand10() will be called while testing. Note that this is not an argument passed to rand10().</p>
+<pre><code class="language-python"># The rand7() API is already defined for you.
+# def rand7():
+# @return a random integer in the range 1 to 7
+
+class Solution:
+    def rand10(self):
+        &quot;&quot;&quot;
+        :rtype: int
+        &quot;&quot;&quot;
+        # rand1  1~7   取1~6  奇偶决定生成左区间1~5 还是右区间6~10
+        # rand2        取1~5  
+        rand1=rand7()
+        while rand1==7:
+            rand1=rand7()
+        flag = rand1%2==1
+        rand2=rand7()
+        while rand2&gt;5:
+            rand2=rand7()
+        return 5+rand2 if flag else rand2
+
+#ANSWER
+# The rand7() API is already defined for you.
+# def rand7():
+# @return a random integer in the range 1 to 7
+
+class Solution:
+    def rand10(self):
+        &quot;&quot;&quot;
+        :rtype: int
+        &quot;&quot;&quot;
+        n1=rand7()
+        n2=rand7()
+        while n1+(n2-1)*7 &gt;40:
+            n1=rand7()
+            n2=rand7()
+        return (n1+(n2-1)*7)%10 +1
+</code></pre>
+<p>(n2-1)乘7+n1</p>
 
             </div>
             
@@ -823,7 +944,7 @@ class Solution:
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-27/" title="Leetcode 2021-11-27">https://headhuanglan.github.io/post/leetcode-2021-11-27/</a>
+      <a href="https://headhuanglan.github.io/post/2022-03-07-leetcode/" title="2022-03-07 Leetcode">https://headhuanglan.github.io/post/2022-03-07-leetcode/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -839,14 +960,14 @@ class Solution:
     <div class="nav-prev">
       
         <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-28" href="https://headhuanglan.github.io/post/leetcode-2021-11-28/">Leetcode 2021-11-28</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-28" href="https://headhuanglan.github.io/post/leetcode-2021-11-28/">上一篇</a>
+        <a class="nav-pc-next" title="系统设计" href="https://headhuanglan.github.io/post/system-design/">系统设计</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="系统设计" href="https://headhuanglan.github.io/post/system-design/">上一篇</a>
       
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="书单" href="https://headhuanglan.github.io/post/shu-dan/">书单</a>
-        <a class="nav-mobile-next" title="书单" href="https://headhuanglan.github.io/post/shu-dan/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2022-03-06" href="https://headhuanglan.github.io/post/leetcode-2022-03-06/">Leetcode 2022-03-06</a>
+        <a class="nav-mobile-next" title="Leetcode 2022-03-06" href="https://headhuanglan.github.io/post/leetcode-2022-03-06/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
