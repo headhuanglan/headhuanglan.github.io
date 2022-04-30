@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>BFS DFS 模板总结 | Lan&#39;s Blog</title>
+<title>2022-03-08 Leetcode | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1651301659615">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,8 @@
 
 
 
-  <meta name="description" content="BFS DFS 模板总结" />
-  <meta name="keywords" content="算法总结" />
+  <meta name="description" content="2022-03-08 Leetcode" />
+  <meta name="keywords" content="leetcode" />
 </head>
 
 <body>
@@ -223,18 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#bfs-template">BFS - Template</a>
-<ul>
-<li><a href="#template-i">template I</a></li>
-<li><a href="#template-ii">template II</a></li>
-</ul>
-</li>
-<li><a href="#dfs-template">DFS - Template</a>
-<ul>
-<li><a href="#template-i-2">template I</a></li>
-<li><a href="#template-ii-2">template II</a></li>
-</ul>
-</li>
+<li><a href="#font-colorred-471-encode-string-with-shortest-length-hardfont"><font color='red'> 471. Encode String with Shortest Length （Hard）</font></a></li>
+<li><a href="#font-colorred-472-concatenated-words-hardfont"><font color='red'> 472. Concatenated Words （Hard）</font></a></li>
+<li><a href="#font-colorred-473-matchsticks-to-square-medium-font"><font color='red'> 473. Matchsticks to Square (Medium) </font></a></li>
+<li><a href="#font-colorred-474-ones-and-zeroes-mediumfont"><font color='red'> 474. Ones and Zeroes （Medium）</font></a></li>
+<li><a href="#font-colorred-475-heaters-mediumfont"><font color='red'> 475. Heaters （Medium）</font></a></li>
+<li><a href="#476-number-complement-easy">476. Number Complement (Easy)</a></li>
+<li><a href="#font-colorred477-total-hamming-distance-medium-font"><font color='red'>477. Total Hamming Distance (Medium) </font></a></li>
+<li><a href="#478-generate-random-point-in-a-circle-medium">478. Generate Random Point in a Circle （Medium）</a></li>
+<li><a href="#font-colorred-479-largest-palindrome-product-hard-font"><font color='red'> 479. Largest Palindrome Product (Hard) </font></a></li>
+<li><a href="#480-sliding-window-median-hard">480. Sliding Window Median （Hard）</a></li>
 </ul>
 
   </div>
@@ -500,20 +498,14 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/leetcode-2021-11-14/"> BFS DFS 模板总结 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/2022-03-08-leetcode/"> 2022-03-08 Leetcode </a>
   </h1>
   <div class="post-meta">
-    
-    <span class="meta-item">
-      <i class="fa fa-thumb-tack"></i>
-      <span class="language" data-lan="top">置顶</span>
-      <span class="post-meta-divider">|</span>
-    </span>
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-12 09:18:20">2021-11-12</span>
+      <span class="publish-time" data-t="2022-03-07 18:50:30">2022-03-07</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -521,8 +513,8 @@
       <i class="fa fa-folder-o"></i>
       <span class="pc-show language" data-lan="category-in">标签:</span>
        
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/">
-        <span>算法总结</span>
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/">
+        <span>leetcode</span>
       </a>
        
     </span>
@@ -531,7 +523,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >3<span class="language" data-lan="minute"
+        >17<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -540,7 +532,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >415<span class="pc-show language" data-lan="words"
+        >2769<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -550,105 +542,469 @@
 </section>
 
             <div class="post-body next-md-body" id="post_body">
-              <p>BFS DFS 模板总结</p>
-<!-- more -->
-<h1 id="bfs-template">BFS - Template</h1>
-<h2 id="template-i">template I</h2>
-<pre><code class="language-java">/**
- * Return the length of the shortest path between root and target node.
- */
-int BFS(Node root, Node target) {
-    Queue&lt;Node&gt; queue;  // store all nodes which are waiting to be processed
-    int step = 0;       // number of steps neeeded from root to current node
-    // initialize
-    add root to queue;
-    // BFS
-    while (queue is not empty) {
-        step = step + 1;
-        // iterate the nodes which are already in the queue
-        int size = queue.size();
-        for (int i = 0; i &lt; size; ++i) {
-            Node cur = the first node in queue;
-            return step if cur is target;
-            for (Node next : the neighbors of cur) {
-                add next to queue;
-            }
-            remove the first node from queue;
-        }
-    }
-    return -1;          // there is no path from root to target
-}
+              <!-- more -->
+<h1 id="font-colorred-471-encode-string-with-shortest-length-hardfont"><font color='red'> 471. Encode String with Shortest Length （Hard）</font></h1>
+<p>Given a string s, encode the string such that its encoded length is the shortest.<br>
+The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly k times. k should be a positive integer.<br>
+If an encoding process does not make the string shorter, then do not encode it. If there are several solutions, return any of them.</p>
+<pre><code class="language-python">class Solution:
+    @lru_cache(None)
+    def encode(self, s: str) -&gt; str:
+        i=(s+s).find(s,1)
+        encoded=str(len(s)//i)+'['+self.encode(s[:i])+']' if i&lt;len(s) else s
+        splitEncoded=[self.encode(s[:i])+self.encode(s[i:]) for i in range(1,len(s))]
+        return min(splitEncoded+[encoded],key=len)
 </code></pre>
-<h2 id="template-ii">template II</h2>
-<pre><code class="language-java">/**
- * Return the length of the shortest path between root and target node.
- */
-int BFS(Node root, Node target) {
-    Queue&lt;Node&gt; queue;  // store all nodes which are waiting to be processed
-    Set&lt;Node&gt; visited;  // store all the nodes that we've visited
-    int step = 0;       // number of steps neeeded from root to current node
-    // initialize
-    add root to queue;
-    add root to visited;
-    // BFS
-    while (queue is not empty) {
-        step = step + 1;
-        // iterate the nodes which are already in the queue
-        int size = queue.size();
-        for (int i = 0; i &lt; size; ++i) {
-            Node cur = the first node in queue;
-            return step if cur is target;
-            for (Node next : the neighbors of cur) {
-                if (next is not in used) {
-                    add next to queue;
-                    add next to visited;
-                }
-            }
-            remove the first node from queue;
-        }
-    }
-    return -1;          // there is no path from root to target
-}
+<p>答案绝了。。。<br>
+For any s, you can either<br>
+Do not encode it<br>
+Or encode it to one string if possible<br>
+Or, split it into two, encode the two substring to their shortest possible length, and combine them<br>
+Pick up the shortest result from 1~3.<br>
+During this process, you should remember the best encoding result for all substrings so that it can be reused.<br>
+For #2, you can use LeetCode 459: Repeated Substring Pattern to find out whether the &quot;s&quot; is repeated or not, and how many times it is repeated:<br>
+&quot;i=(s+s).find(s,1)&quot;<br>
+&quot;i&quot; is the length of repeating pattern. If i&gt;=len(s), then s is not repeated.</p>
+<h1 id="font-colorred-472-concatenated-words-hardfont"><font color='red'> 472. Concatenated Words （Hard）</font></h1>
+<p>Given an array of strings words (without duplicates), return all the concatenated words in the given list of words.<br>
+A concatenated word is defined as a string that is comprised entirely of at least two shorter words in the given array.</p>
+<pre><code class="language-python">class Solution:
+    def findAllConcatenatedWordsInADict(self, words: List[str]) -&gt; List[str]:
+        d = set(words)
+        @lru_cache(None)
+        def dfs(word):
+            for i in range(1, len(word)):
+                prefix = word[:i]
+                suffix = word[i:]
+                
+                if prefix in d and suffix in d:
+                    return True
+                if prefix in d and dfs(suffix):
+                    return True
+                if suffix in d and dfs(prefix):
+                    return True
+            
+            return False
+        
+        res = []
+        for word in words:
+            if dfs(word):
+                res.append(word)
+        
+        return res
 
 </code></pre>
-<h1 id="dfs-template">DFS - Template</h1>
-<h2 id="template-i-2">template I</h2>
-<pre><code class="language-java">/*
- * Return true if there is a path from cur to target.
- */
-boolean DFS(Node cur, Node target, Set&lt;Node&gt; visited) {
-    return true if cur is target;
-    for (next : each neighbor of cur) {
-        if (next is not in visited) {
-            add next to visted;
-            return true if DFS(next, target, visited) == true;
-        }
-    }
-    return false;
-}
+<p>看答案捐膝盖。。</p>
+<h1 id="font-colorred-473-matchsticks-to-square-medium-font"><font color='red'> 473. Matchsticks to Square (Medium) </font></h1>
+<p>You are given an integer array matchsticks where matchsticks[i] is the length of the ith matchstick. You want to use all the matchsticks to make one square. You should not break any stick, but you can link them up, and each matchstick must be used exactly one time.<br>
+Return true if you can make this square and false otherwise.</p>
+<pre><code class="language-python">#TLE
+class Solution:
+    def makesquare(self, matchsticks: List[int]) -&gt; bool:
+        length = sum(matchsticks)//4
+        if length*4!= sum(matchsticks): return False
+        
+        holds=[[],[],[],[]]
+        self.result=False
+        def bt(i):
+            if i&gt;=len(matchsticks): return
+            for hold in holds:
+                val=matchsticks[i]
+                hold.append(val)
+                if len(set(map(sum,holds)))==1 and i==len(matchsticks)-1:
+                    self.result=True
+                    return 
+                bt(i+1)
+                hold.pop()
+        
+        bt(0)
+        
+        return self.result
+
+#ANSWER
+class Solution:
+    def makesquare(self, nums):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :rtype: bool
+        &quot;&quot;&quot;
+
+        # If there are no matchsticks, then we can't form any square
+        if not nums:
+            return False
+
+        # Number of matchsticks we have
+        L = len(nums)
+
+        # Perimeter of our square (if one can be formed)
+        perimeter = sum(nums)
+
+        # Possible side of our square.
+        possible_side =  perimeter // 4
+
+        # If the perimeter can be equally split into 4 parts (and hence 4 sides, then we move on).
+        if possible_side * 4 != perimeter:
+            return False
+
+        # Reverse sort the matchsticks because we want to consider the biggest one first.
+        nums.sort(reverse=True)
+
+        # This array represents the 4 sides and their current lengths
+        sums = [0 for _ in range(4)]
+
+        # Our recursive dfs function.
+        def dfs(index):
+
+            # If we reach the end of matchsticks array, we check if the square was formed or not
+            if index == L:
+                # If 3 equal sides were formed, 4th will be the same as these three and answer should be True in that case.
+                return sums[0] == sums[1] == sums[2] == possible_side
+
+            # The current matchstick can belong to any of the 4 sides (provided their remaining lenghts are &gt;= the size of the current matchstick)
+            for i in range(4):
+                # If this matchstick can fir in the space left for the current side
+                if sums[i] + nums[index] &lt;= possible_side:
+                    # Recurse
+                    sums[i] += nums[index]
+                    if dfs(index + 1):
+                        return True
+                    # Revert the effects of recursion because we no longer need them for other recursions.
+                    sums[i] -= nums[index]
+            return False        
+        return dfs(0)
 </code></pre>
-<h2 id="template-ii-2">template II</h2>
-<pre><code class="language-java">/*
- * Return true if there is a path from cur to target.
- */
-boolean DFS(int root, int target) {
-    Set&lt;Node&gt; visited;
-    Stack&lt;Node&gt; stack;
-    add root to stack;
-    while (stack is not empty) {
-        Node cur = the top element in stack;
-        remove the cur from the stack;
-        return true if cur is target;
-        for (Node next : the neighbors of cur) {
-            if (next is not in visited) {
-                add next to visited;
-                add next to stack;
-            }
-        }
-    }
-    return false;
-}
+<p>初次尝试backtracking TLE。。。答案same idea with trick can pass， reverse sorting and early stopping。</p>
+<h1 id="font-colorred-474-ones-and-zeroes-mediumfont"><font color='red'> 474. Ones and Zeroes （Medium）</font></h1>
+<p>You are given an array of binary strings strs and two integers m and n.<br>
+Return the size of the largest subset of strs such that there are at most m 0's and n 1's in the subset.<br>
+A set x is a subset of a set y if all elements of x are also elements of y.</p>
+<pre><code class="language-python">class Solution:
+    def findMaxForm(self, strs: List[str], m: int, n: int) -&gt; int:
+        
+        dp=[[0 for _ in range(n+1)] for __ in range(m+1)]
+        for s in strs:
+            c0=s.count('0')
+            c1=s.count('1')
+            for zeros in range(m,c0-1,-1):
+                for ones in range(n,c1-1,-1):
+                    dp[zeros][ones] = max(1+dp[zeros-c0][ones-c1],dp[zeros][ones])
+        
+        return dp[m][n]
+#ANSWER
+class Solution:
+    def findMaxForm(self, strs: List[str], m: int, n: int) -&gt; int:
+        @lru_cache(None)
+        def calculate(i,zeroes,ones):
+            if i==len(strs): return 0
+            c1=strs[i].count('1')
+            c0=strs[i].count('0')        
+            taken=-1
+            if zeroes-c0&gt;=0 and ones-c1&gt;=0:
+                taken = calculate(i+1,zeroes-c0,ones-c1) +1
+            not_taken=calculate(  i + 1, zeroes, ones )
+            return max(taken, not_taken)
+        return calculate(0, m, n) 
+    
 </code></pre>
+<p>greedy failed....   DP? Should have got this one.   dp[i][j] denotes the maximum number of strings that can be included in the subset given only i 0's and j 1's are available. 从后向前因为不能覆盖之前的结果。</p>
+<h1 id="font-colorred-475-heaters-mediumfont"><font color='red'> 475. Heaters （Medium）</font></h1>
+<p>Winter is coming! During the contest, your first job is to design a standard heater with a fixed warm radius to warm all the houses.<br>
+Every house can be warmed, as long as the house is within the heater's warm radius range.<br>
+Given the positions of houses and heaters on a horizontal line, return the minimum radius standard of heaters so that those heaters could cover all houses.</p>
+<pre><code class="language-python">
+#TLE
+class Solution:
+    def findRadius(self, houses: List[int], heaters: List[int]) -&gt; int:
+        #bfs
+        visited=set()
+        houses=set(houses)-set(heaters)
+        dis=0
+        while visited!=houses:
+            #print(visited,houses)
+            dis+=1
+            for cur in heaters: 
+                if cur+dis in houses and cur+dis not in visited:
+                    visited.add(cur+dis)    
+                if cur-dis in houses  and cur-dis not in visited:
+                    visited.add(cur-dis)
+        return dis
+            
+#ANSWER
+class Solution:
+    def findRadius(self, houses: List[int], heaters: List[int]) -&gt; int:
+        
+         
+               
+        def binsearch(nums, target) :
+            l, r = 0, len(nums)
+            while l &lt; r:
+                m = (l + r) // 2
+                if nums[m] &lt; target :
+                    l = m + 1
+                else:
+                    r = m
+            return l
+            
+        heaters.sort()
+        
+        result = float('-inf')
+        
+        for house in houses :
+            index = binsearch(heaters, house)
+            leftHeaterDistance = house - heaters[index - 1] if index &gt; 0 else float('inf')
+            rightHeaterDistance = heaters[index] - house if index &lt; len(heaters) else float('inf')
+            result = max(result , min(leftHeaterDistance, rightHeaterDistance))
+        
+        return result
+        
+</code></pre>
+<p>变种FBS 每次增加1 distance，TLE。看答案。max min + binary search</p>
+<h1 id="476-number-complement-easy">476. Number Complement (Easy)</h1>
+<p>The complement of an integer is the integer you get when you flip all the 0's to 1's and all the 1's to 0's in its binary representation.<br>
+For example, The integer 5 is &quot;101&quot; in binary and its complement is &quot;010&quot; which is the integer 2.<br>
+Given an integer num, return its complement.</p>
+<pre><code class="language-python">class Solution:
+    def findComplement(self, num: int) -&gt; int:
+        mask= 2**len(bin(num)[2:])-1
+        print(bin(mask),bin(num))
+        return mask^num
+#ANSWER
+from math import log2
+class Solution:
+    def findComplement(self, num):
+        # n is a length of num in binary representation
+        n = floor(log2(num)) + 1        
+        # bitmask has the same length as num and contains only ones 1...1
+        bitmask = (1 &lt;&lt; n) - 1
+        # flip all bits
+        return bitmask ^ num
+#ANSWER
+class Solution:
+    def findComplement(self, num):
+        todo, bit = num, 1
+        while todo:
+            # flip current bit
+            num = num ^ bit
+            # prepare for the next run
+            bit = bit &lt;&lt; 1
+            todo = todo &gt;&gt; 1
+        return num
+</code></pre>
+<h1 id="font-colorred477-total-hamming-distance-medium-font"><font color='red'>477. Total Hamming Distance (Medium) </font></h1>
+<p>The Hamming distance between two integers is the number of positions at which the corresponding bits are different.<br>
+Given an integer array nums, return the sum of Hamming distances between all the pairs of the integers in nums.</p>
+<pre><code class="language-python">#TLE
+class Solution:
+    def totalHammingDistance(self, nums: List[int]) -&gt; int:
+        nums.sort()
+        @lru_cache(None)
+        def cal(a,b):
+            val=a^b
+            c=0
+            while val:
+                if val%2==1:
+                    c+=1
+                val&gt;&gt;=1
+            return c
+        res=0
+        for i in range(len(nums)-1):
+            for j in range(i+1,len(nums)):
+                res+=cal(nums[i],nums[j])
+        return res
+
+
+#ANSWER
+class Solution:
+    def totalHammingDistance(self, nums: List[int]) -&gt; int:
+        if not nums: return 0
+        res=0
+        n=len(nums)
+        count = [0]*32
+        
+        for num in nums:
+            i=0
+            while num:
+                count[i]+= num &amp; 1
+                num &gt;&gt;=1
+                i+=1
+        
+        for k in count:
+            res+=k*(n-k)
+        
+        return res
+        
+         
+</code></pre>
+<p>初次尝试 TLE,应该按照bit loop。Say for any particular bit position, count the number of elements with this bit ON (i.e. this particular bit is 1). Let this count be k. Hence the number of elements with this bit OFF (i.e. 0) is (n−k)(n - k) (in an n element array).<br>
+Certainly unique pairs of elements exists where one element has this particular bit ON while the other element has this OFF (i.e. this particular bit differs for the two elements of this pair).</p>
+<h1 id="478-generate-random-point-in-a-circle-medium">478. Generate Random Point in a Circle （Medium）</h1>
+<p>Given the radius and the position of the center of a circle, implement the function randPoint which generates a uniform random point inside the circle.<br>
+Implement the Solution class:<br>
+Solution(double radius, double x_center, double y_center) initializes the object with the radius of the circle radius and the position of the center (x_center, y_center).<br>
+randPoint() returns a random point inside the circle. A point on the circumference of the circle is considered to be in the circle. The answer is returned as an array [x, y].</p>
+<pre><code class="language-python">from random import random
+class Solution:
+
+    def __init__(self, radius: float, x_center: float, y_center: float):
+        self.r = radius
+        self.x=x_center
+        self.y=y_center
+        
+
+    def randPoint(self) -&gt; List[float]:
+        r=self.r
+        x=r*(random()-0.5)*2
+        y=r*(random()-0.5)*2
+        while x*x+y*y&gt;r*r:
+            x=r*(random()-0.5)*2
+            y=r*(random()-0.5)*2
+            
+        
+        return [self.x+x,self.y+y]
+#ANSWER hard
+from random import random
+class Solution:
+
+    def __init__(self, radius: float, x_center: float, y_center: float):
+        self.r = radius
+        self.x=x_center
+        self.y=y_center
+        
+
+    def randPoint(self) -&gt; List[float]:
+        r=self.r*math.sqrt(random())
+        theta = 2*math.pi*random()
+        x=r*math.cos(theta)
+        y=r*math.sin(theta)
+     
+        return [self.x+x,self.y+y]
+#ANSWER
+import math
+import random
+class Solution:
+
+    def __init__(self, radius: float, x_center: float, y_center: float):
+        self.r = radius
+        self.x = x_center
+        self.y = y_center
+        self.area = math.pi * radius ** 2
+
+    def randPoint(self) -&gt; List[float]:
+        theta = 2 * math.pi * random.random()
+        R = math.sqrt(random.uniform(0, self.area) / math.pi)
+        return [self.x + R * math.cos(theta), self.y + R * math.sin(theta)]
+</code></pre>
+<p>The area under any probability density function curve must be 1 . Therefore, the equation must be f(x)=2x Using our probability density function f , we can compute the cumulative distribution function F , where F(x) is the probability of sampling a point within a distance of x from the origin.F(x)=∫f(x)=∫2x=x2<br>
+Lastly, we can use our cumulative distribution function F  to compute the inverse cumulative distribution function  F^{-1} , which accepts uniform random value between 0  and 1  and returns a random distance from origin in accordance with f</p>
+<h1 id="font-colorred-479-largest-palindrome-product-hard-font"><font color='red'> 479. Largest Palindrome Product (Hard) </font></h1>
+<p>Given an integer n, return the largest palindromic integer that can be represented as the product of two n-digits integers. Since the answer can be very large, return it modulo 1337.</p>
+<pre><code class="language-python">class Solution:
+    def largestPalindrome(self, n: int) -&gt; int:
+        max_=10**n-1
+        min_=max_//10
+        for h in range(max_,min_,-1):
+            left=h
+            right=0
+            #// construct the palindrome
+            i=h
+            while i:
+                right=right*10+i%10
+                left*=10
+                i//=10
+            
+            palindrom=left+right
+            #print(palindrom)
+            for i in range(max_,min_,-1):
+                j=palindrom//i
+                #// terminate if the other number is greater than current number
+                if j&gt;i: break
+                if  palindrom%i==0: return palindrom%1337
+        #// account for case n = 1
+        return 9
+</code></pre>
+<p>没思路。。。</p>
+<h1 id="480-sliding-window-median-hard">480. Sliding Window Median （Hard）</h1>
+<p>The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. So the median is the mean of the two middle values.<br>
+For examples, if arr = [2,3,4], the median is 3.<br>
+For examples, if arr = [1,2,3,4], the median is (2 + 3) / 2 = 2.5.<br>
+You are given an integer array nums and an integer k. There is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.<br>
+Return the median array for each window in the original array. Answers within 10-5 of the actual value will be accepted.</p>
+<pre><code class="language-python">class Solution:
+    def medianSlidingWindow(self, nums: List[int], k: int) -&gt; List[float]:
+        odd=False
+        pos1=0
+        pos2=0
+        if k%2==1:
+            odd=True
+            pos1=k//2
+        else:
+            pos1=k//2-1
+            pos2=k//2
+        
+        res = []
+        for i in range(k,len(nums)+1):
+            tmp = sorted(nums[i-k:i])
+            if odd: 
+                res.append(tmp[pos1])
+            else:
+                res.append( (tmp[pos1]+tmp[pos2])/2)
+        return res
+
+#ANSWER O(nk)
+class Solution:
+    def medianSlidingWindow(self, nums: List[int], k: int) -&gt; List[float]:
+        window = sorted(nums[:k])
+        medians = []
+        for a, b in zip(nums, nums[k:] + [0]):
+            if k&amp;1:
+                medians.append( window[k//2])
+            else:
+                medians.append( (window[k//2]+window[k//2-1])/2.0)
+            window.remove(a)
+            bisect.insort(window, b)
+        return medians
+
+#ANSWER O(nlogk)
+import heapq
+from collections import defaultdict
+class Solution:
+    def medianSlidingWindow(self, nums: List[int], k: int) -&gt; List[float]:
+        if not nums or not k:
+            return []
+        #lo  hi
+        lo = [] # max heap   
+        hi = [] # min heap
+        for i in range(k):
+            if len(lo) == len(hi):
+                heapq.heappush(hi, -heapq.heappushpop(lo, -nums[i]))
+            else:
+                heapq.heappush(lo, -heapq.heappushpop(hi, nums[i]))
+        ans = [float(hi[0])] if k &amp; 1 else [(hi[0] - lo[0]) / 2.0]
+        to_remove = defaultdict(int)
+        for i in range(k, len(nums)): # right bound of window
+            heapq.heappush(lo, -heapq.heappushpop(hi, nums[i])) # always push to lo
+            out_num = nums[i-k]
+            #out_num恰巧在lo的边界上，所以要更新边界
+            if out_num &gt; -lo[0]:
+                heapq.heappush(hi, -heapq.heappop(lo))
+            to_remove[out_num] += 1
+
+            #在lo边界上可以直接去掉
+            while lo and to_remove[-lo[0]]:
+                to_remove[-lo[0]] -= 1
+                heapq.heappop(lo)
+            #在hi边界上可以直接去掉
+            while to_remove[hi[0]]:
+                to_remove[hi[0]] -= 1
+                heapq.heappop(hi)
+            if k % 2:
+                ans.append(float(hi[0]))
+            else:
+                ans.append((hi[0] - lo[0]) / 2.0)
+        return ans
+</code></pre>
+<p>思路：维持small ，large 连个queue， 所有samll中元素都小于large， 所以median是 （max（small）+min（large））除以2，如果small ，large等长， 如果large长，则返回min（large）<br>
+所以用heap， small用的是maxheap， large用的是minheap。</p>
 
             </div>
             
@@ -661,7 +1017,7 @@ boolean DFS(int root, int target) {
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/leetcode-2021-11-14/" title="BFS DFS 模板总结">https://headhuanglan.github.io/post/leetcode-2021-11-14/</a>
+      <a href="https://headhuanglan.github.io/post/2022-03-08-leetcode/" title="2022-03-08 Leetcode">https://headhuanglan.github.io/post/2022-03-08-leetcode/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -670,21 +1026,21 @@ boolean DFS(int root, int target) {
   </ul>
   <div class="tags">
     
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/"># 算法总结</a>
+      <a href="https://headhuanglan.github.io/tag/8v2np0s07/"># leetcode</a>
     
   </div>
   <div class="nav">
     <div class="nav-prev">
       
         <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-13" href="https://headhuanglan.github.io/post/leetcode-2021-11-13/">Leetcode 2021-11-13</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-13" href="https://headhuanglan.github.io/post/leetcode-2021-11-13/">上一篇</a>
+        <a class="nav-pc-next" title="系统设计" href="https://headhuanglan.github.io/post/system-design/">系统设计</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="系统设计" href="https://headhuanglan.github.io/post/system-design/">上一篇</a>
       
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2021-11-12" href="https://headhuanglan.github.io/post/leetcode-2021-11-12/">Leetcode 2021-11-12</a>
-        <a class="nav-mobile-next" title="Leetcode 2021-11-12" href="https://headhuanglan.github.io/post/leetcode-2021-11-12/">下一篇</a>
+        <a class="nav-pc-next" title="2022-03-07 Leetcode" href="https://headhuanglan.github.io/post/2022-03-07-leetcode/">2022-03-07 Leetcode</a>
+        <a class="nav-mobile-next" title="2022-03-07 Leetcode" href="https://headhuanglan.github.io/post/2022-03-07-leetcode/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
