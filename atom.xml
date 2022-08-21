@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-08-21T20:46:44.688Z</updated>
+    <updated>2022-08-21T21:31:51.946Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -15,7 +15,7 @@
         <id>https://headhuanglan.github.io/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/</id>
         <link href="https://headhuanglan.github.io/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/">
         </link>
-        <updated>2022-08-18T02:24:39.000Z</updated>
+        <updated>2022-08-17T14:24:39.000Z</updated>
         <summary type="html"><![CDATA[<p>找到适合首把22LR定制枪的最佳子弹</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>找到适合首把22LR定制枪的最佳子弹</p>
@@ -73,6 +73,9 @@
 <li>每5发一个group射击5次</li>
 <li>每完成一种子弹射击用枪绳清理枪管2次，清理bolt和breechface 。等待枪管冷却。</li>
 </ul>
+<blockquote>
+<p>所有的射击实验的 Takedown Screw 10 inch lbs 遵照KIDD给出的推荐值.</p>
+</blockquote>
 <h2 id="分析软件">分析软件</h2>
 <ul>
 <li>（Android） Range Buddy</li>
