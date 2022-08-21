@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-08-20T04:54:08.582Z</updated>
+    <updated>2022-08-21T20:46:44.688Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -15,10 +15,10 @@
         <id>https://headhuanglan.github.io/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/</id>
         <link href="https://headhuanglan.github.io/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/">
         </link>
-        <updated>2022-08-19T02:24:39.000Z</updated>
-        <summary type="html"><![CDATA[<p>找到适合我首把定制枪的最佳子弹</p>
+        <updated>2022-08-18T02:24:39.000Z</updated>
+        <summary type="html"><![CDATA[<p>找到适合首把22LR定制枪的最佳子弹</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>找到适合我首把定制枪的最佳子弹</p>
+        <content type="html"><![CDATA[<p>找到适合首把22LR定制枪的最佳子弹</p>
 <!-- more -->
 <h1 id="器材">器材</h1>
 <h2 id="枪">枪</h2>
@@ -38,6 +38,9 @@
 <li>MIM Mfg S Lock for S Series Harris Bipod</li>
 </ul>
 <h2 id="弹药">弹药</h2>
+<blockquote>
+<p>Speed of Sound (30 Celsius) = 1145 fps</p>
+</blockquote>
 <ul>
 <li>CCI Standard Velocity  （1070fps）</li>
 <li>Eley Semi-Auto Benchrest Precision （1060 fps）</li>
@@ -48,8 +51,18 @@
 <li>Blazer Ammunition 22 Long Rifle 40 Grain Lead Round Nose （1235 fps）</li>
 <li>Lapua Pistol King （950 fps）</li>
 <li>Aguila Super Maximum （1750 fps）</li>
+<li>CCI MiniMag (1235 fps)</li>
+<li>Federal AutoMatch 325 (1200 fps)</li>
 </ul>
 <h1 id="实验">实验</h1>
+<h2 id="气温">气温</h2>
+<ul>
+<li>30度</li>
+</ul>
+<h2 id="风力风向">风力风向</h2>
+<ul>
+<li>微风</li>
+</ul>
 <h2 id="射击距离">射击距离</h2>
 <ul>
 <li>55码</li>
@@ -58,19 +71,25 @@
 <ul>
 <li>最左边的标定靶纸调整瞄准镜的高度和风向，20发。</li>
 <li>每5发一个group射击5次</li>
-<li>每完成一种子弹射击用枪绳清理枪管2次，清理bolt和breach face。等待枪管冷却。</li>
+<li>每完成一种子弹射击用枪绳清理枪管2次，清理bolt和breechface 。等待枪管冷却。</li>
 </ul>
 <h2 id="分析软件">分析软件</h2>
 <ul>
 <li>（Android） Range Buddy</li>
 </ul>
 <h1 id="结果">结果</h1>
-<figure data-type="image" tabindex="1"><img src="https://headhuanglan.github.io/post-images/KIDD.JPG" alt="" loading="lazy"></figure>
+<ul>
+<li>day1 shooting<br>
+<img src="https://headhuanglan.github.io/post-images/KIDD.JPG" alt="" loading="lazy"></li>
+<li>day2 shooting<br>
+<img src="https://headhuanglan.github.io/post-images/KIDD2.JPG" alt="" loading="lazy"></li>
+</ul>
 <h2 id="分析-moa">分析 （MOA）</h2>
 <table>
 <thead>
 <tr>
 <th>弹药</th>
+<th>50发价格</th>
 <th>Group1</th>
 <th>Group2</th>
 <th>Group3</th>
@@ -83,51 +102,8 @@
 </thead>
 <tbody>
 <tr>
-<td>CCI Standard Velocity</td>
-<td>0.89</td>
-<td>1.05</td>
-<td>1.05</td>
-<td>1.32</td>
-<td>0.95</td>
-<td>0.89</td>
-<td>1.32</td>
-<td>1.052</td>
-</tr>
-<tr>
-<td>Eley Semi-Auto Benchrest Precision</td>
-<td>0.53</td>
-<td>0.79</td>
-<td>0.74</td>
-<td>0.95</td>
-<td>1.0</td>
-<td>0.53</td>
-<td>1.0</td>
-<td>0.802</td>
-</tr>
-<tr>
-<td>Norma TAC-22</td>
-<td>0.74</td>
-<td>1.79</td>
-<td>1.63</td>
-<td>1.21</td>
-<td>1.26</td>
-<td>0.74</td>
-<td>1.79</td>
-<td>1.326</td>
-</tr>
-<tr>
-<td>Eley Match</td>
-<td>0.34</td>
-<td>0.68</td>
-<td>0.57</td>
-<td>0.74</td>
-<td>1.59</td>
-<td>0.34</td>
-<td>1.59</td>
-<td>0.784</td>
-</tr>
-<tr>
 <td><strong>SK Pistol Match Special</strong></td>
+<td>$11.99</td>
 <td>0.62</td>
 <td>0.62</td>
 <td>0.79</td>
@@ -138,18 +114,20 @@
 <td><strong>0.736</strong></td>
 </tr>
 <tr>
-<td>SK Rifle Match</td>
+<td>Eley Match</td>
+<td>$21.99</td>
+<td>0.34</td>
 <td>0.68</td>
-<td>0.68</td>
-<td>1.19</td>
-<td>0.91</td>
-<td>0.96</td>
-<td>0.68</td>
-<td>1.19</td>
-<td>0.884</td>
+<td>0.57</td>
+<td>0.74</td>
+<td>1.59</td>
+<td>0.34</td>
+<td>1.59</td>
+<td>0.784</td>
 </tr>
 <tr>
 <td>Lapua Pistol King</td>
+<td>$14.72</td>
 <td>1.09</td>
 <td>0.54</td>
 <td>0.6</td>
@@ -160,18 +138,44 @@
 <td>0.794</td>
 </tr>
 <tr>
-<td>Aguila Super Maximum</td>
-<td>5.48</td>
-<td>3.64</td>
-<td>6.84</td>
-<td>3.96</td>
-<td>6.3</td>
-<td>3.64</td>
-<td>6.84</td>
-<td>5.244</td>
+<td>Eley Semi-Auto Benchrest Precision</td>
+<td>$15.99</td>
+<td>0.53</td>
+<td>0.79</td>
+<td>0.74</td>
+<td>0.95</td>
+<td>1.0</td>
+<td>0.53</td>
+<td>1.0</td>
+<td>0.802</td>
+</tr>
+<tr>
+<td>SK Rifle Match</td>
+<td>$12.99</td>
+<td>0.68</td>
+<td>0.68</td>
+<td>1.19</td>
+<td>0.91</td>
+<td>0.96</td>
+<td>0.68</td>
+<td>1.19</td>
+<td>0.884</td>
+</tr>
+<tr>
+<td>CCI Standard Velocity</td>
+<td>$4.99</td>
+<td>0.89</td>
+<td>1.05</td>
+<td>1.05</td>
+<td>1.32</td>
+<td>0.95</td>
+<td>0.89</td>
+<td>1.32</td>
+<td>1.052</td>
 </tr>
 <tr>
 <td>Blazer</td>
+<td>$3.99</td>
 <td>1.24</td>
 <td>1.01</td>
 <td>2.07</td>
@@ -181,13 +185,62 @@
 <td>2.07</td>
 <td>1.232</td>
 </tr>
+<tr>
+<td>Norma TAC-22</td>
+<td>$4.29</td>
+<td>0.74</td>
+<td>1.79</td>
+<td>1.63</td>
+<td>1.21</td>
+<td>1.26</td>
+<td>0.74</td>
+<td>1.79</td>
+<td>1.326</td>
+</tr>
+<tr>
+<td>CCI MiniMag</td>
+<td>$6.0</td>
+<td>1.07</td>
+<td>1.28</td>
+<td>2.39</td>
+<td>1.24</td>
+<td>1.67</td>
+<td>1.07</td>
+<td>2.39</td>
+<td>1.53</td>
+</tr>
+<tr>
+<td>Federal AutoMatch 325</td>
+<td>$3.23</td>
+<td>1.54</td>
+<td>1.58</td>
+<td>2.91</td>
+<td>2.27</td>
+<td>2.1</td>
+<td>1.54</td>
+<td>2.91</td>
+<td>2.08</td>
+</tr>
+<tr>
+<td>Aguila Super Maximum</td>
+<td>$8.06</td>
+<td>5.48</td>
+<td>3.64</td>
+<td>6.84</td>
+<td>3.96</td>
+<td>6.3</td>
+<td>3.64</td>
+<td>6.84</td>
+<td>5.244</td>
+</tr>
 </tbody>
 </table>
 <h1 id="结论">结论</h1>
 <ul>
-<li>fps不能超过声速Group大到没法看</li>
+<li>枪的精度在1MOA以下</li>
+<li>fps不能超过声速Group大到没法看, impact target 时候存在超声速-声速转换区。</li>
 <li>SK Pistol Match Special 最好结果</li>
-<li>Eley Match应该是操作问题导致outliner比较大。</li>
+<li>Eley Match应该是操作问题导致outlier比较大，除去outlier Eley Match结果最好。</li>
 <li>性价比最高的CCI Standard Velocity</li>
 </ul>
 ]]></content>
