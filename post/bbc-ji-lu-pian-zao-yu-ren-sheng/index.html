@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>backtracking 总结 | Lan&#39;s Blog</title>
+<title>BBC 纪录片  躁郁人生 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1663544437816">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,8 @@
 
 
 
-  <meta name="description" content="backtracking 总结" />
-  <meta name="keywords" content="算法总结" />
+  <meta name="description" content="BBC 纪录片  躁郁人生" />
+  <meta name="keywords" content="" />
 </head>
 
 <body>
@@ -303,7 +303,7 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/backtracking-zong-jie/"> backtracking 总结 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/bbc-ji-lu-pian-zao-yu-ren-sheng/"> BBC 纪录片  躁郁人生 </a>
   </h1>
   <div class="post-meta">
     
@@ -316,25 +316,14 @@
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-06 01:53:56">2021-11-06</span>
+      <span class="publish-time" data-t="2022-09-18 07:39:21">2022-09-18</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
     <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">标签:</span>
-       
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/">
-        <span>算法总结</span>
-      </a>
-       
-    </span>
-    <span class="post-meta-divider">|</span>
-    
-    <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >3<span class="language" data-lan="minute"
+        >1<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -343,7 +332,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >455<span class="pc-show language" data-lan="words"
+        >16<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -353,124 +342,9 @@
 </section>
 
             <div class="post-body next-md-body" id="post_body">
-              <p>backtracking 不同题目不完全汇总</p>
-<!-- more -->
-<pre><code class="language-python">
-### Subsets
-        def backtrack(list, templist,nums,start):
-            list.append(templist[:])
-            for i in range(start,len(nums)):
-                templist.append(nums[i])
-                backtrack(list,templist,nums,i+1)
-                templist.pop()      
-
-        list=[]
-        nums.sort()
-        backtrack(list,[],nums,0)
-        return list
-### Subsets II
-    def subsetsWithDup(self, nums: List[int]) -&gt; List[List[int]]:
-        def backtrack(list, templist,nums,start):
-            list.append(templist[:])
-            for i in range(start,len(nums)):
-                if i &gt; start and nums[i] == nums[i-1]: continue
-                templist.append(nums[i])
-                backtrack(list,templist,nums,i+1)
-                templist.pop()      
-
-        list=[]
-        nums.sort()
-        backtrack(list,[],nums,0)
-        return list
-### Permutations
-    def permute(self, nums: List[int]) -&gt; List[List[int]]:
-        def backtrack(list, templist,nums):
-            
-            if len(templist)==len(nums): list.append(templist[:])
-            else:
-                for i in range(0,len(nums)):
-                    if nums[i] in templist: continue
-                    templist.append(nums[i])
-                    backtrack(list,templist,nums)
-                    templist.pop()      
-
-        list=[]
-        #nums.sort()
-        backtrack(list,[],nums)
-        return list
-### Permutations II
-    def permuteUnique(self, nums: List[int]) -&gt; List[List[int]]:
-             
-        def backtrack(list, templist,nums,used):
-            
-            if len(templist)==len(nums): list.append(templist[:])
-            else:
-                for i in range(0,len(nums)):
-                    if used[i] or (i &gt; 0 and nums[i] == nums[i-1] and (not used[i - 1])): continue
-                    used[i]=True
-                    templist.append(nums[i])
-                    backtrack(list,templist,nums,used)
-                    used[i] = False 
-                    templist.pop()      
-
-        list=[]
-        used=[False]*len(nums)
-        nums.sort()
-        backtrack(list,[],nums,used)
-        return list
-### combination sum
-    def combinationSum(self, candidates: List[int], target: int) -&gt; List[List[int]]:
-        
-        def backtrack(list, templist,nums,remain,start):
-            
-            if remain &lt; 0: return
-            elif remain == 0: list.append(templist[:])
-            else:
-                for i in range(start,len(nums)):
-                    
-                    templist.append(nums[i])
-                    backtrack(list,templist,nums,remain - nums[i], i)
-                    templist.pop()      
-        nums=candidates
-        list=[]
-        nums.sort()
-        backtrack(list,[],nums,target,0)
-        return list
-### combination sum II
-    def combinationSum2(self, candidates: List[int], target: int) -&gt; List[List[int]]:
-             
-        def backtrack(list, templist,nums,remain,start):
-            
-            if remain &lt; 0: return
-            elif remain == 0: list.append(templist[:])
-            else:
-                for i in range(start,len(nums)):
-                    if (i &gt; start) and (nums[i] == nums[i-1]): continue
-                    templist.append(nums[i])
-                    backtrack(list,templist,nums,remain - nums[i], i+1)
-                    templist.pop()      
-        nums=candidates
-        list=[]
-        nums.sort()
-        backtrack(list,[],nums,target,0)
-        return list
-### Palindrome Partitional 
-    def partition(self, s: str) -&gt; List[List[str]]:
-        
-        def backtrack(list, templist,s,start):
-            
-            if start==len(s): list.append(templist[:])  
-            else:
-                for i in range(start,len(s)):
-                    if s[start:i+1]==s[start:i+1][::-1]:
-                        templist.append(s[start:i+1])
-                        backtrack(list,templist,s, i+1)
-                        templist.pop()      
-
-        list=[]
-        backtrack(list,[],s,0)
-        return list
-</code></pre>
+              <!-- more -->
+<p>https://www.youtube.com/watch?v=FtImgnj5DN0</p>
+<p>https://www.youtube.com/watch?v=ECv-24Ruu-o</p>
 
             </div>
             
@@ -483,7 +357,7 @@
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/backtracking-zong-jie/" title="backtracking 总结">https://headhuanglan.github.io/post/backtracking-zong-jie/</a>
+      <a href="https://headhuanglan.github.io/post/bbc-ji-lu-pian-zao-yu-ren-sheng/" title="BBC 纪录片  躁郁人生">https://headhuanglan.github.io/post/bbc-ji-lu-pian-zao-yu-ren-sheng/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -492,21 +366,15 @@
   </ul>
   <div class="tags">
     
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/"># 算法总结</a>
-    
   </div>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-06" href="https://headhuanglan.github.io/post/leetcode-2021-11-06/">Leetcode 2021-11-06</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-06" href="https://headhuanglan.github.io/post/leetcode-2021-11-06/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2021-11-05" href="https://headhuanglan.github.io/post/leetcode-2021-11-05/">Leetcode 2021-11-05</a>
-        <a class="nav-mobile-next" title="Leetcode 2021-11-05" href="https://headhuanglan.github.io/post/leetcode-2021-11-05/">下一篇</a>
+        <a class="nav-pc-next" title="RandomText" href="https://headhuanglan.github.io/post/randomtext/">RandomText</a>
+        <a class="nav-mobile-next" title="RandomText" href="https://headhuanglan.github.io/post/randomtext/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
