@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>系统设计 | Lan&#39;s Blog</title>
+<title>RandomText | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1663527255877">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,8 @@
 
 
 
-  <meta name="description" content="系统设计" />
-  <meta name="keywords" content="算法总结" />
+  <meta name="description" content="RandomText" />
+  <meta name="keywords" content="" />
 </head>
 
 <body>
@@ -303,7 +303,7 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/system-design/"> 系统设计 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/randomtext/"> RandomText </a>
   </h1>
   <div class="post-meta">
     
@@ -316,25 +316,14 @@
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2022-03-27 19:23:07">2022-03-27</span>
+      <span class="publish-time" data-t="2022-09-18 02:39:53">2022-09-18</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
     <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">标签:</span>
-       
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/">
-        <span>算法总结</span>
-      </a>
-       
-    </span>
-    <span class="post-meta-divider">|</span>
-    
-    <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >3<span class="language" data-lan="minute"
+        >1<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -343,7 +332,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >452<span class="pc-show language" data-lan="words"
+        >108<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -353,94 +342,11 @@
 </section>
 
             <div class="post-body next-md-body" id="post_body">
-              <p>System Design 资源汇总</p>
+              <p>自己也算轴的人~</p>
 <!-- more -->
-<p><a href="https://www.youtube.com/watch?v=PdtlXdse7pw&amp;list=PL4KdJM8LzAMecwInbBK5GJ3Anz-ts75RQ">DDIA书视频总结</a></p>
-<p><a href="https://www.interviewbit.com/courses/system-design/">InterviewBit系统设计题汇总</a></p>
-<p><a href="https://github.com/donnemartin/system-design-primer">system design primer github repo</a></p>
-<p><a href="https://www.hiredintech.com/classrooms/system-design/lesson/52">system design class</a></p>
-<p><a href="https://www.educative.io/courses/grokking-the-system-design-interview">付费 grokking system design interview</a></p>
-<p><a href="https://luanjunyi.medium.com/the-table-of-contents-416d2240fa8e">大佬的medium文章</a></p>
-<p><a href="http://blog.gainlo.co/index.php/category/system-design-interview-questions/">已经解决的系统设计问题合集</a></p>
-<p><a href="http://highscalability.com/blog/2022/1/25/designing-uber.html/">Design Uber</a></p>
-<p><a href="http://highscalability.com/blog/2022/1/17/designing-tinder.html">Design Tinder</a></p>
-<p><a href="http://highscalability.com/blog/2022/1/11/designing-instagram.html">Design Instagram</a></p>
-<p><a href="http://highscalability.com/blog/2022/1/3/designing-whatsapp.html">Design Whatsapp</a></p>
-<p><a href="http://highscalability.com/blog/2021/12/13/designing-netflix.html">Design Netflix</a></p>
-<p>https://leetcode.com/company/facebook/discuss/229177/My-System-Design-Template<br>
-(1) FEATURE EXPECTATIONS [5 min]</p>
-<pre><code>    (1) Use cases
-    (2) Scenarios that will not be covered
-    (3) Who will use
-    (4) How many will use
-    (5) Usage patterns
-</code></pre>
-<p>(2) ESTIMATIONS [5 min]</p>
-<pre><code>    (1) Throughput (QPS for read and write queries)
-    (2) Latency expected from the system (for read and write queries)
-    (3) Read/Write ratio
-    (4) Traffic estimates
-            - Write (QPS, Volume of data)
-            - Read  (QPS, Volume of data)
-    (5) Storage estimates
-    (6) Memory estimates
-            - If we are using a cache, what is the kind of data we want to store in cache
-            - How much RAM and how many machines do we need for us to achieve this ?
-            - Amount of data you want to store in disk/ssd
-</code></pre>
-<p>(3) DESIGN GOALS [5 min]</p>
-<pre><code>    (1) Latency and Throughput requirements
-    (2) Consistency vs Availability  [Weak/strong/eventual =&gt; consistency | Failover/replication =&gt; availability]
-</code></pre>
-<p>(4) HIGH LEVEL DESIGN [5-10 min]</p>
-<pre><code>    (1) APIs for Read/Write scenarios for crucial components
-    (2) Database schema
-    (3) Basic algorithm
-    (4) High level design for Read/Write scenario
-</code></pre>
-<p>(5) DEEP DIVE [15-20 min]</p>
-<pre><code>    (1) Scaling the algorithm
-    (2) Scaling individual components: 
-            -&gt; Availability, Consistency and Scale story for each component
-            -&gt; Consistency and availability patterns
-    (3) Think about the following components, how they would fit in and how it would help
-            a) DNS
-            b) CDN [Push vs Pull]
-            c) Load Balancers [Active-Passive, Active-Active, Layer 4, Layer 7]
-            d) Reverse Proxy
-            e) Application layer scaling [Microservices, Service Discovery]
-            f) DB [RDBMS, NoSQL]
-                    &gt; RDBMS 
-                        &gt;&gt; Master-slave, Master-master, Federation, Sharding, Denormalization, SQL Tuning
-                    &gt; NoSQL
-                        &gt;&gt; Key-Value, Wide-Column, Graph, Document
-                            Fast-lookups:
-                            -------------
-                                &gt;&gt;&gt; RAM  [Bounded size] =&gt; Redis, Memcached
-                                &gt;&gt;&gt; AP [Unbounded size] =&gt; Cassandra, RIAK, Voldemort
-                                &gt;&gt;&gt; CP [Unbounded size] =&gt; HBase, MongoDB, Couchbase, DynamoDB
-            g) Caches
-                    &gt; Client caching, CDN caching, Webserver caching, Database caching, Application caching, Cache @Query level, Cache @Object level
-                    &gt; Eviction policies:
-                            &gt;&gt; Cache aside
-                            &gt;&gt; Write through
-                            &gt;&gt; Write behind
-                            &gt;&gt; Refresh ahead
-            h) Asynchronism
-                    &gt; Message queues
-                    &gt; Task queues
-                    &gt; Back pressure
-            i) Communication
-                    &gt; TCP
-                    &gt; UDP
-                    &gt; REST
-                    &gt; RPC
-</code></pre>
-<p>(6) JUSTIFY [5 min]</p>
-<pre><code>    (1) Throughput of each layer
-    (2) Latency caused between each layer
-    (3) Overall latency justification
-</code></pre>
+<p>所以，无论发生什么情况，都不会放弃， 上天派我来拯救你。现在只能默默在一旁希望你没事。 无论up or down 有我默默陪你。依旧24h通信畅通。<br>
+试着focus在自己的事情上，刷刷题，申请个专利，锻炼下身体。日程排满。<br>
+爱是共同的信念，死亡也是。还能爱就不会死亡。</p>
 
             </div>
             
@@ -453,7 +359,7 @@
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/system-design/" title="系统设计">https://headhuanglan.github.io/post/system-design/</a>
+      <a href="https://headhuanglan.github.io/post/randomtext/" title="RandomText">https://headhuanglan.github.io/post/randomtext/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -462,21 +368,15 @@
   </ul>
   <div class="tags">
     
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/"># 算法总结</a>
-    
   </div>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="自装KIDD-10/22不同品牌子弹Group分析 " href="https://headhuanglan.github.io/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/">自装KIDD-10/22不同品牌子弹Group分析 </a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="自装KIDD-10/22不同品牌子弹Group分析 " href="https://headhuanglan.github.io/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2022-03-09" href="https://headhuanglan.github.io/post/leetcode-2022-03-09/">Leetcode 2022-03-09</a>
-        <a class="nav-mobile-next" title="Leetcode 2022-03-09" href="https://headhuanglan.github.io/post/leetcode-2022-03-09/">下一篇</a>
+        <a class="nav-pc-next" title="自装KIDD-10/22不同品牌子弹Group分析 " href="https://headhuanglan.github.io/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/">自装KIDD-10/22不同品牌子弹Group分析 </a>
+        <a class="nav-mobile-next" title="自装KIDD-10/22不同品牌子弹Group分析 " href="https://headhuanglan.github.io/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
