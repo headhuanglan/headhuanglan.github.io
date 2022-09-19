@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://headhuanglan.github.io</id>
     <title>Lan&apos;s Blog</title>
-    <updated>2022-09-18T23:40:56.221Z</updated>
+    <updated>2022-09-19T03:24:47.078Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://headhuanglan.github.io"/>
     <link rel="self" href="https://headhuanglan.github.io/atom.xml"/>
@@ -10,17 +10,6 @@
     <logo>https://headhuanglan.github.io/images/avatar.png</logo>
     <icon>https://headhuanglan.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Lan&apos;s Blog</rights>
-    <entry>
-        <title type="html"><![CDATA[BBC 纪录片  躁郁人生]]></title>
-        <id>https://headhuanglan.github.io/post/bbc-ji-lu-pian-zao-yu-ren-sheng/</id>
-        <link href="https://headhuanglan.github.io/post/bbc-ji-lu-pian-zao-yu-ren-sheng/">
-        </link>
-        <updated>2022-09-18T11:39:21.000Z</updated>
-        <content type="html"><![CDATA[<!-- more -->
-<p>https://www.youtube.com/watch?v=FtImgnj5DN0</p>
-<p>https://www.youtube.com/watch?v=ECv-24Ruu-o</p>
-]]></content>
-    </entry>
     <entry>
         <title type="html"><![CDATA[RandomText]]></title>
         <id>https://headhuanglan.github.io/post/randomtext/</id>
@@ -34,6 +23,18 @@
 <p>所以，无论发生什么情况，都不会放弃， 上天派我来拯救你。现在只能默默在一旁希望你没事。 无论up or down 有我默默陪你。依旧24h通信畅通。<br>
 试着focus在自己的事情上，刷刷题，申请个专利，锻炼下身体。日程排满。<br>
 爱是共同的信念，死亡也是。还能爱就不会死亡。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[BBC 纪录片  躁郁人生]]></title>
+        <id>https://headhuanglan.github.io/post/bbc-ji-lu-pian-zao-yu-ren-sheng/</id>
+        <link href="https://headhuanglan.github.io/post/bbc-ji-lu-pian-zao-yu-ren-sheng/">
+        </link>
+        <updated>2022-09-17T23:39:21.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<p>https://www.youtube.com/watch?v=FtImgnj5DN0</p>
+<p>https://www.youtube.com/watch?v=ECv-24Ruu-o</p>
+<p>https://www.youtube.com/watch?v=9NJEA9t4vs0</p>
 ]]></content>
     </entry>
     <entry>
