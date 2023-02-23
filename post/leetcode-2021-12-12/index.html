@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Leetcode 2021-12-12 | Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1663557874229">
+<link rel="shortcut icon" href="/favicon.ico?v=1677178946314">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -196,7 +196,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">59</span>
+        <span class="site-item-stat-count">57</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1638,22 +1638,164 @@ class Solution:
     <div class="result" id="result">
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/randomtext/"" data-c="
-          &lt;p&gt;自己也算轴的人~&lt;/p&gt;
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2023-01-05/"" data-c="
+          &lt;p&gt;没想到都拖到2023年了 还没上500&lt;/p&gt;
 &lt;!-- more --&gt;
-&lt;p&gt;所以，无论发生什么情况，都不会放弃， 上天派我来拯救你。现在只能默默在一旁希望你没事。 无论up or down 有我默默陪你。依旧24h通信畅通。&lt;br&gt;
-试着focus在自己的事情上，刷刷题，申请个专利，锻炼下身体。日程排满。&lt;br&gt;
-爱是共同的信念，死亡也是。还能爱就不会死亡。&lt;/p&gt;
-">RandomText</a>
-      </div>
-      
-      <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/bbc-ji-lu-pian-zao-yu-ren-sheng/"" data-c="
-          &lt;!-- more --&gt;
-&lt;p&gt;https://www.youtube.com/watch?v=FtImgnj5DN0&lt;/p&gt;
-&lt;p&gt;https://www.youtube.com/watch?v=ECv-24Ruu-o&lt;/p&gt;
-&lt;p&gt;https://www.youtube.com/watch?v=9NJEA9t4vs0&lt;/p&gt;
-">BBC 纪录片  躁郁人生</a>
+&lt;h1 id=&#34;font-colorred-481-magical-string-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 481. Magical String （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;A magical string s consists of only &#39;1&#39; and &#39;2&#39; and obeys the following rules:&lt;br&gt;
+The string s is magical because concatenating the number of contiguous occurrences of characters &#39;1&#39; and &#39;2&#39; generates the string s itself.&lt;br&gt;
+The first few elements of s is s = &amp;quot;1221121221221121122……&amp;quot;. If we group the consecutive 1&#39;s and 2&#39;s in s, it will be &amp;quot;1 22 11 2 1 22 1 22 11 2 11 22 ......&amp;quot; and the occurrences of 1&#39;s or 2&#39;s in each group are &amp;quot;1 2 2 1 1 2 1 2 2 1 2 2 ......&amp;quot;. You can see that the occurrence sequence is s itself.&lt;br&gt;
+Given an integer n, return the number of 1&#39;s in the first n number in the magical string s.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def magicalString(self, n: int) -&amp;gt; int:
+        #          #
+        #     1 2  2
+        #            #
+     
+        if n &amp;lt;= 0: return 0
+        if n &amp;lt;= 3: return 1
+
+        nums = [0]*n
+        nums[0] = 1
+        nums[1] = 2
+        nums[2] = 2
+        countIdx = 2 #the count of next number
+        num = 1 # next number to fill
+        pos = 3 # empty position we will fill
+        res = 1 # the number of 1&#39;s
+
+        while pos &amp;lt; n:
+            count = nums[countIdx]
+            countIdx+=1
+            
+            while count &amp;gt; 0 and pos &amp;lt; n:
+                res += int(num == 1) 
+                nums[pos] = num
+                pos+=1
+                count-=1
+            
+            num = 3 - num
+        
+
+        return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;理解题目意思后，思路还是很清楚的。&lt;/p&gt;
+&lt;h1 id=&#34;482-license-key-formatting-easy&#34;&gt;482. License Key Formatting （Easy）&lt;/h1&gt;
+&lt;p&gt;You are given a license key represented as a string s that consists of only alphanumeric characters and dashes. The string is separated into n + 1 groups by n dashes. You are also given an integer k.&lt;br&gt;
+We want to reformat the string s such that each group contains exactly k characters, except for the first group, which could be shorter than k but still must contain at least one character. Furthermore, there must be a dash inserted between two groups, and you should convert all lowercase letters to uppercase.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def licenseKeyFormatting(self, s: str, k: int) -&amp;gt; str:
+        if set(s)=={&#39;-&#39;}: return &#39;&#39;
+        li=[]
+        for char in s:
+            if char!=&#39;-&#39; and (char.isalpha or char.isnumeric):
+                li.append(char.upper())
+        res=[]
+        c=0
+        while li:
+            res.append(li.pop())
+            c+=1
+            if c==k:
+                c=0
+                res.append(&#39;-&#39;)
+        
+        
+        return (&#39;&#39;.join(res[::-1])) if &#39;&#39;.join(res[::-1])[0]!=&#39;-&#39; else (&#39;&#39;.join(res[::-1]))[1:]
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;得到chars后从后往前填充。res.append(li.pop())&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-483-smallest-good-base-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 483. Smallest Good Base （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer n represented as a string, return the smallest good base of n.&lt;br&gt;
+We call k &amp;gt;= 2 a good base of n, if all digits of n base k are 1&#39;s.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import math
+class Solution(object):
+    def smallestGoodBase(self, n):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type n: str
+        :rtype: str
+        &amp;quot;&amp;quot;&amp;quot;
+        n = int(n)
+        max_m = int(math.log(n,2)) # Refer [7]
+        for m in range(max_m,1,-1):
+            k = int(n**m**-1)  # Refer [6]
+            if (k**(m+1)-1)//(k-1) == n:
+                # Refer [3]
+                return str(k)
+        
+        return str(n-1)  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;初始想法是写个function(base,order)但得binary search 2个参数。。感觉不可行。&lt;br&gt;
+答案很精彩 完全是数学问题&lt;br&gt;
+For a given m &amp;gt; 1:&lt;br&gt;
+From n = k^m + ... + k^0 &amp;gt; k^m you get k &amp;lt; m-th root of n&lt;br&gt;
+From n = k^m + ... + k^0 &amp;lt; (k+1)^m (see binomial theorem) you also get k+1 &amp;gt; m-th root of n.&lt;/p&gt;
+&lt;p&gt;So k &amp;lt; m-th root of n &amp;lt; k+1. Thus ⌊m-th root of n⌋ is the only candidate that needs to be tested. As&lt;/p&gt;
+&lt;p&gt;From given information, we can say one thing- Numbers will be of form-&lt;/p&gt;
+&lt;p&gt;n = k^m + k^(m-1) + ... + k + 1&lt;br&gt;
+=&amp;gt; n-1 = k^m + k^(m-1) + ... + k&lt;br&gt;
+=&amp;gt; n-1 = k (k^(m-1) + k^(m-2) + ... + k + 1) ...... [1]&lt;/p&gt;
+&lt;p&gt;Also, from n = k^m + k^(m-1) + ... + k + 1, we can say,&lt;br&gt;
+n-k^m = k^(m-1) + k^(m-2) + ... + k + 1 ...... [2]&lt;/p&gt;
+&lt;p&gt;from [1] and [2],&lt;/p&gt;
+&lt;p&gt;n-1 = k (n - k^m)&lt;br&gt;
+=&amp;gt;k^(m+1) = nk - n + 1&lt;/p&gt;
+&lt;p&gt;if you shuffle sides you will end up getting following form,&lt;/p&gt;
+&lt;p&gt;(k^(m+1) - 1)/(k - 1) = n .... [3]&lt;/p&gt;
+&lt;p&gt;Also from [1] note that, (n - 1) must be divisible by k.&lt;/p&gt;
+&lt;p&gt;We know that, n = k^m + k^(m-1) + ... + k + 1&lt;/p&gt;
+&lt;p&gt;=&amp;gt; n &amp;gt; k^m&lt;br&gt;
+=&amp;gt; m-th root of n &amp;gt; k .... [4]&lt;/p&gt;
+&lt;p&gt;With inputs from @StefanPochmann we can also say, from binomial thorem, n = k^m + ... + 1 &amp;lt; (k+1)^m .... [5]&lt;br&gt;
+Therefore, k+1 &amp;gt; m-th root of n &amp;gt; k. .... from [4] and [5]&lt;br&gt;
+Thus ⌊m-th root of n⌋ is the only candidate that needs to be tested. [6]&lt;br&gt;
+So our number should satisfy this equation where k will be our base and m will be (number of 1s - 1)&lt;br&gt;
+This brings us to the search problem where we need to find k and m.&lt;br&gt;
+Linear search from 1 to n does not work. it gives us TLE. So it leaves us with performing some optimization on search space.&lt;br&gt;
+From [6] we know that the only candidate that needs to be tested is, ⌊m-th root of n⌋&lt;br&gt;
+We also know that the smallest base is 2 so we can find our m must be between 2 and log2n else m is (n-1) [7]&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-484-find-permutation-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 484. Find Permutation （Medium）&lt;font&gt;&lt;/h1&gt;
+&lt;p&gt;A permutation perm of n integers of all the integers in the range [1, n] can be represented as a string s of length n - 1 where:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;s[i] == &#39;I&#39; if perm[i] &amp;lt; perm[i + 1], and
+s[i] == &#39;D&#39; if perm[i] &amp;gt; perm[i + 1].
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Given a string s, reconstruct the lexicographically smallest permutation perm and return it.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findPermutation(self, s: str) -&amp;gt; List[int]:
+        stack = []
+        res = []
+        n=len(s)+1
+       
+        for i,ch in enumerate(s):
+            idx = i+1
+            if ch== &#39;I&#39;:
+                stack.append(idx)
+                while stack:
+                    res.append(stack.pop())
+            else:
+                stack.append(idx)
+        
+        stack.append(n)
+        while stack:
+            res.append(stack.pop())
+        return res 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;two pointer 思路和答案是一样的  但就是写不出来。。。&lt;/p&gt;
+&lt;h1 id=&#34;485-max-consecutive-ones-easy&#34;&gt;485. Max Consecutive Ones （Easy）&lt;/h1&gt;
+&lt;p&gt;Given a binary array nums, return the maximum number of consecutive 1&#39;s in the array.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findMaxConsecutiveOnes(self, nums: List[int]) -&amp;gt; int:
+        c=0
+        res = 0
+        for n in nums:
+            if n==1:
+                c+=1
+            else:
+                c=0            
+            res = max(res,c)
+        return res
+
+&lt;/code&gt;&lt;/pre&gt;
+">Leetcode 2023-01-05</a>
       </div>
       
       <div class="item">
@@ -1983,21 +2125,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-09/"" data-c="
-          &lt;!-- more --&gt;
-&lt;h1 id=&#34;481-magical-string-medium&#34;&gt;481. Magical String （Medium）&lt;/h1&gt;
-&lt;p&gt;A magical string s consists of only &#39;1&#39; and &#39;2&#39; and obeys the following rules:&lt;br&gt;
-The string s is magical because concatenating the number of contiguous occurrences of characters &#39;1&#39; and &#39;2&#39; generates the string s itself.&lt;br&gt;
-The first few elements of s is s = &amp;quot;1221121221221121122……&amp;quot;. If we group the consecutive 1&#39;s and 2&#39;s in s, it will be &amp;quot;1 22 11 2 1 22 1 22 11 2 11 22 ......&amp;quot; and the occurrences of 1&#39;s or 2&#39;s in each group are &amp;quot;1 2 2 1 1 2 1 2 2 1 2 2 ......&amp;quot;. You can see that the occurrence sequence is s itself.&lt;br&gt;
-Given an integer n, return the number of 1&#39;s in the first n number in the magical string s.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-">Leetcode 2022-03-09</a>
-      </div>
-      
-      <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/2022-03-08-leetcode/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-08/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-471-encode-string-with-shortest-length-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 471. Encode String with Shortest Length （Hard）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given a string s, encode the string such that its encoded length is the shortest.&lt;br&gt;
@@ -2461,11 +2589,11 @@ class Solution:
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;思路：维持small ，large 连个queue， 所有samll中元素都小于large， 所以median是 （max（small）+min（large））除以2，如果small ，large等长， 如果large长，则返回min（large）&lt;br&gt;
 所以用heap， small用的是maxheap， large用的是minheap。&lt;/p&gt;
-">2022-03-08 Leetcode</a>
+">Leetcode 2022-03-08</a>
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/2022-03-07-leetcode/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-07/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;461-hamming-distance-easy&#34;&gt;461. Hamming Distance (Easy)&lt;/h1&gt;
 &lt;p&gt;The Hamming distance between two integers is the number of positions at which the corresponding bits are different.&lt;br&gt;
@@ -2856,7 +2984,7 @@ class Solution:
         return (n1+(n2-1)*7)%10 +1
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;(n2-1)乘7+n1&lt;/p&gt;
-">2022-03-07 Leetcode</a>
+">Leetcode 2022-03-07</a>
       </div>
       
       <div class="item">
@@ -14204,7 +14332,7 @@ class Solution:
         #    s
         #    m   f  
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;font-colorred235-lowest-common-ancestor-of-a-binary-search-tree-easyfont&#34;&gt;&amp;lt;/font color=&#39;red&#39;&amp;gt;235. Lowest Common Ancestor of a Binary Search Tree （Easy）&lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;font-colorred235-lowest-common-ancestor-of-a-binary-search-tree-easyfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;235. Lowest Common Ancestor of a Binary Search Tree （Easy）&lt;/font&gt;&lt;/h1&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
 # class TreeNode:
 #     def __init__(self, x):
@@ -17900,508 +18028,6 @@ class Solution:
         return max(map(len,dic.values()))
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h1 id=&#34;150-evaluate-reverse-polish-notation-medium&#34;&gt;150. Evaluate Reverse Polish Notation (Medium)&lt;/h1&gt;
-&lt;p&gt;Input: tokens = [&amp;quot;2&amp;quot;,&amp;quot;1&amp;quot;,&amp;quot;+&amp;quot;,&amp;quot;3&amp;quot;,&amp;quot;*&amp;quot;]&lt;br&gt;
-Output: 9&lt;br&gt;
-Explanation: ((2 + 1) * 3) = 9&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
-    def evalRPN(self, tokens: List[str]) -&amp;gt; int:
-        numstack = []
-        for t in tokens:
-            if t in &#39;+-*/&#39;:
-                #op
-            
-                num2=numstack.pop()
-                num1=numstack.pop()
-                print(t,num1,num2,end=&#39;  # &#39;)
-                if t==&#39;+&#39;:
-                    numstack.append(num1+num2)
-                elif t==&#39;-&#39;:
-                    numstack.append(num1-num2)
-                elif t==&#39;*&#39;:
-                    numstack.append(num1*num2)
-                elif t==&#39;/&#39;:
-                    numstack.append(int(num1/num2) )
-                else:
-                    print(error)
-                #print(numstack[-1])
-            else:
-                numstack.append(int(t))
-         
-        #print(numstack)
-        return numstack[0]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;注意 int(num1/num2)，  int(1.8)=1 int(-1.8)=-1  但是  -2/1.1=-1.8181818181818181     -2//1.1=-2  取整后会更偏小，但是对负数希望的是偏大。对正数希望的是抹去小数偏小。 所以只能取int。&lt;/p&gt;
-&lt;!-- more --&gt;
-&lt;h1 id=&#34;141-linked-list-cycle-easy-2&#34;&gt;141. Linked List Cycle (Easy)&lt;/h1&gt;
-&lt;p&gt;Given head, the head of a linked list, determine if the linked list has a cycle in it.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
-
-class Solution:
-    def hasCycle(self, head: Optional[ListNode]) -&amp;gt; bool:
-        if not head: return False
-        
-        slow=head
-        fast=head
-        
-        while fast and fast.next:
-            slow=slow.next
-            fast=fast.next.next
-            
-            if slow==fast:
-                return True
-        
-        return False
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;142-linked-list-cycle-ii-medium-2&#34;&gt;142. Linked List Cycle II (Medium)&lt;/h1&gt;
-&lt;p&gt;Given the head of a linked list, return the node where the cycle begins. If there is no cycle, return null.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
-
-class Solution:
-    def detectCycle(self, head: ListNode) -&amp;gt; ListNode:
-        if not head: return head
-        fast=slow=head
-        while fast and fast.next:
-            slow=slow.next
-            fast=fast.next.next
-            if fast==slow:
-                if fast==head: return head
-                fast = head
-                while fast:
-                    fast=fast.next
-                    slow=slow.next
-                    if fast==slow:
-                        return slow
-        return None
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;注意  if fast&lt;mark&gt;slow: 时候 if fast&lt;/mark&gt;head: return head 情况。&lt;/p&gt;
-&lt;h1 id=&#34;font-colorred143-reorder-list-medium-font-2&#34;&gt;&lt;font color=&#39;red&#39;&gt;143. Reorder List (Medium) &lt;/font&gt;&lt;/h1&gt;
-&lt;p&gt;You are given the head of a singly linked-list. The list can be represented as:0 1 2 3 4 ..n, reorder as 0 n 1 n-1 2 n-2 ...&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def reorderList(self, head: Optional[ListNode]) -&amp;gt; None:
-        &amp;quot;&amp;quot;&amp;quot;
-        Do not return anything, modify head in-place instead.
-        &amp;quot;&amp;quot;&amp;quot;
-        if not head: return None
-        if  head and head.next and not head.next.next   : return head
-        if head and not head.next: return head
-        
-        
-        cur=head
-        
-        tail_pre=None
-        while cur.next:
-            tail_pre=cur
-            cur=cur.next
-        tail=cur
-      
-        
-        headnext = head.next
-        tail_pre.next=None
-        head.next=tail
-        tail.next=self.reorderList(headnext)
-        
-        return head
-# answer 思路 writing
-# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def reorderList(self, head: Optional[ListNode]) -&amp;gt; None:
-        &amp;quot;&amp;quot;&amp;quot;
-        Do not return anything, modify head in-place instead.
-        &amp;quot;&amp;quot;&amp;quot;
- 
-
-        def rev(head):
-            pre=None
-            while head:
-                headnext=head.next
-                head.next=pre
-                pre=head
-                head=headnext
-            return pre
-        
- 
-        slow=fast=head
-        pre_slow=None
-        while fast and fast.next:
-            pre_slow=slow
-            slow=slow.next
-            fast=fast.next.next
-        
-        pre_mid = pre_slow
-        mid=slow
-         
-        odd_head = rev(mid)
-     
-        #merge two
-        first, second = head, odd_head
-        while second.next:
-            tmp=first.next
-            first.next=second
-            first=tmp
-            
-            tmp=second.next
-            second.next=first
-            second=tmp
-            
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;第一次尝试，time limit exceeded，base case： node为空，2个node，一个node情况。 然后暴力求解即可.T（n）= T（n-2）+1 所以时间复杂度 1+2+3.。。+n = O（n*n）&lt;br&gt;
-第二次尝试放弃了， 思路： 找到mid， rev（mid）， merge 2个list。&lt;/p&gt;
-&lt;h1 id=&#34;144-binary-tree-preorder-traversal-easy-2&#34;&gt;144. Binary Tree Preorder Traversal （Easy）&lt;/h1&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def preorderTraversal(self, root: Optional[TreeNode]) -&amp;gt; List[int]:
-        res=[]
-        def pre(root):
-            if not root: return
-            res.append(root.val)
-            pre(root.left)
-            pre(root.right)
-        pre(root)
-        return res
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def preorderTraversal(self, root: Optional[TreeNode]) -&amp;gt; List[int]:
-        res=[]
-        stack = []
-        while stack or root:
-            while root:
-                res.append(root.val)
-                stack.append(root)
-                root=root.left
-            
-            node=stack.pop()
-            root=node.right
-        return res
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;145-binary-tree-postorder-traversal-easy-2&#34;&gt;145. Binary Tree Postorder Traversal （Easy）&lt;/h1&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def postorderTraversal(self, root: Optional[TreeNode]) -&amp;gt; List[int]:
-        res=[]
-        def post(root):
-            if not root:return
-            post(root.left)
-            post(root.right)
-            res.append(root.val)
-        post(root)
-        return res
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-class Solution:
-    def postorderTraversal(self, root: Optional[TreeNode]) -&amp;gt; List[int]:
-        if not root:
-            return []
-        
-        stack=[]
-        result=[]
-        
-        stack.append(root)
-
-        while stack:
-            
-            cur=stack.pop()
-            result.append(cur.val)
-            
-            if cur.left:
-                stack.append(cur.left)
-                
-            if cur.right:
-                stack.append(cur.right)
-                
-        return result[::-1]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;左右子树颠倒的前序遍历取反向就是正常树的后序遍历。&lt;/p&gt;
-&lt;h1 id=&#34;146-lru-cache-medium-2&#34;&gt;146. LRU Cache （Medium）&lt;/h1&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Node:
-    def __init__(self,key,val,next=None,pre=None):
-        self.key=key
-        self.val=val
-        self.next=next
-        self.pre=pre
-        
-class LRUCache:
-
-    def __init__(self, capacity: int):
-        self.cap = capacity
-        self.n=0
-        self.map_key_node=dict()
-        self.head = Node(key=&#39;NULL&#39;,val=&#39;NULL&#39;)
-        self.tail = Node(key=&#39;NULL&#39;,val=&#39;NULL&#39;)
-        self.head.next = self.tail
-        self.tail.pre = self.head
-    
-    def debug(self,disable=True):
-        if not disable:
-            cur=self.head
-            tmp=[]
-            while cur:
-                tmp.append(&#39;(&#39;+str(cur.key)+&#39;,&#39;+str(cur.val)+&#39;)&#39;)
-                cur=cur.next
-            print(&#39;,&#39;.join(tmp))
-            cur=self.tail
-            tmp=[]
-            while cur:
-                tmp.append(&#39;(&#39;+str(cur.key)+&#39;,&#39;+str(cur.val)+&#39;)&#39;)
-                cur=cur.pre
-            print(&#39;,&#39;.join(tmp[::-1]))
-
-    def get(self, key: int) -&amp;gt; int:
-        print(&#39;get&#39;,key)
-        if key in self.map_key_node:
-            #pop from linked list
-            node = self.map_key_node[key]
-            node.pre.next=node.next
-            node.next.pre = node.pre
-            #add from head
-            headnext=self.head.next
-            node.pre= self.head
-            self.head.next=node
-            node.next=headnext
-            headnext.pre=node
-            
-            self.debug()
-            return self.map_key_node[key].val
-        else:
-            self.debug()
-            return -1
-        
-
-    def put(self, key: int, value: int) -&amp;gt; None:
-        print(&#39;put&#39;,key,value)
-        if key in self.map_key_node:
-            #if key in cache, update value &amp;amp; move to top of linked list
-            self.map_key_node[key].val=value
-            
-            self.get(key) 
-            
-        else:
-            #add key-val pair to cache
-            self.map_key_node[key]= Node(key=key,val=value)
-            self.n = self.n+1
-            if self.n &amp;gt; self.cap:
-                # evict least recently used key
-                # pop from tail
-                to_be_del = self.tail.pre
-                to_be_del.pre.next= self.tail
-                self.tail.pre= to_be_del.pre
-                del self.map_key_node[to_be_del.key]
-                #add from head
-                headnext = self.head.next
-                self.head.next=self.map_key_node[key]
-                self.map_key_node[key].pre=self.head
-                headnext.pre=self.map_key_node[key]
-                self.map_key_node[key].next=headnext
-                #update n
-                self.n = self.n-1
-            else:
-                #put &amp;lt;=cap append from head
-                headnext = self.head.next
-                self.head.next=self.map_key_node[key]
-                self.map_key_node[key].pre=self.head
-                
-                headnext.pre = self.map_key_node[key]
-                self.map_key_node[key].next=headnext
-                
-        self.debug()
-                
-        
-        
-        
-
-
-# Your LRUCache object will be instantiated and called as such:
-# obj = LRUCache(capacity)
-# param_1 = obj.get(key)
-# obj.put(key,value)
-
-# double directed linkedlist
-# dict   key-&amp;gt; Node   (put get update value)
-#  put 
-#  &amp;lt;= cap just append to linked from head.     head new old1 old2..
-# &amp;gt; cap pop from tail   put from head
-# get pop() then put to head
-
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;思路： double linked list + map     get：首先pop from linked list 然后 add 到head下一位。   put： 如果小于等于cap，从head开始append，如果大于cap， pop tail 然后add from head。&lt;/p&gt;
-&lt;h1 id=&#34;147-insertion-sort-list-medium-2&#34;&gt;147. Insertion Sort List （Medium）&lt;/h1&gt;
-&lt;p&gt;Given the head of a singly linked list, sort the list using insertion sort, and return the sorted list&#39;s head.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def insertionSortList(self, head: Optional[ListNode]) -&amp;gt; Optional[ListNode]:
-        
-       
-        
-        def insert(node):
-            
-            pre=None
-            cur=head_sorted.next
-            FLAG=False
-            while cur:
-                #    6 1
-                if (pre and node.val&amp;lt;=cur.val and node.val&amp;gt;=pre.val) or (pre is None and cur.val&amp;gt;=node.val):
-                    #do insert
-                    if pre is None:
-                        #insert after head_sorted
-                        head_sorted_next=head_sorted.next
-                        head_sorted.next=node
-                        node.next= head_sorted_next
-                    else:
-                        #normal insertion
-                        pre.next=node
-                        node.next=cur
-                    #after insertion break
-                    FLAG=True
-                    break
-                
-                pre=cur
-                cur=cur.next
-            
-            if not FLAG:
-                pre.next = node
-            
-        
-        cur=head.next
-        head.next=None
-        head_sorted = ListNode(val=&#39;NULL&#39;,next=head)
-        while cur:
-            curnext = cur.next
-            cur.next=None
-            insert(cur)
-            cur=curnext
-        
-        return head_sorted.next
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;没啥难的，就是细心。&lt;/p&gt;
-&lt;h1 id=&#34;148-sort-list-medium-2&#34;&gt;148. Sort List （Medium）&lt;/h1&gt;
-&lt;p&gt;Given the head of a linked list, return the list after sorting it in ascending order.&lt;br&gt;
-Follow up: Can you sort the linked list in O(n logn) time and O(1) memory (i.e. constant space)?&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution:
-    def sortList(self, head: Optional[ListNode]) -&amp;gt; Optional[ListNode]:
-        # nlogn compare method
-        # O(1) space
-        # merge sort
-        
-        def merge(l1,l2):
-            #print(&#39;l1&#39;)
-            #print(l1)
-            #print(&#39;l2&#39;)
-            #print(l2)
-            dummy_head = ListNode(val=&#39;NULL&#39;)
-            cur=dummy_head
-            while l1 and l2:
-                if l1.val&amp;lt;l2.val:
-                    cur.next=l1
-                    l1=l1.next if l1 else None
-                else:
-                    cur.next=l2
-                    l2=l2.next if l2 else None
-                
-                cur=cur.next
-                
-            if l1:
-                cur.next=l1
-            if l2:
-                cur.next=l2
-            #print(&#39;res&#39;)
-            #print(dummy_head.next)
-            return dummy_head.next
-        
-        def sort(head):
-            if (not head) or (not head.next): return head
-            slow=fast=head
-            pre=None
-            while fast and fast.next:
-                pre=slow
-                slow=slow.next
-                fast=fast.next.next
-                
-            
-            pre.next=None
-            mid =slow
-         
-            l1=sort(mid) 
-            l2=sort(head)
-          
-            return merge(l1,l2)
-        
-        return sort(head)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;149-max-points-on-a-line-hard-2&#34;&gt;149. Max Points on a Line (Hard)&lt;/h1&gt;
-&lt;p&gt;Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane, return the maximum number of points that lie on the same straight line.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
-    def maxPoints(self, points: List[List[int]]) -&amp;gt; int:
-        # p1 [x, ax+b]
-        # p2 [x&#39;,ax&#39;+b]     
-        # y1=ax1+b
-        # y2=ax2+b
-        #   y1-y2=a(x1-x2)
-        # a = y1-y2/x1-x2
-        # b = y-ax
-        dic = collections.defaultdict(set)
-        n = len(points)
-        if n==1: return 1
-        for i in range(n-1):
-            for j in range(i+1,n):
-                p1=points[i]
-                p2=points[j]
-                a=(p1[1]-p2[1])/(p1[0]-p2[0]) if p1[0]!=p2[0] else None
-                b = p1[1]-a*p1[0] if a is not None else None
-                if a is not None:
-                    key = str(a)+&#39;-&#39;+str(b)
-                else:
-                    key = &#39;x=constant&#39;+str(p1[0]) 
-                dic[key].add(i)
-                dic[key].add(j)
-        #print(dic)
-        return max(map(len,dic.values()))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;150-evaluate-reverse-polish-notation-medium-2&#34;&gt;150. Evaluate Reverse Polish Notation (Medium)&lt;/h1&gt;
 &lt;p&gt;Input: tokens = [&amp;quot;2&amp;quot;,&amp;quot;1&amp;quot;,&amp;quot;+&amp;quot;,&amp;quot;3&amp;quot;,&amp;quot;*&amp;quot;]&lt;br&gt;
 Output: 9&lt;br&gt;
 Explanation: ((2 + 1) * 3) = 9&lt;/p&gt;
