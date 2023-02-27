@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>Leetcode 2021-11-21 | Lan&#39;s Blog</title>
+<title>SUM相关数据结构总结 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1677468350039">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,8 @@
 
 
 
-  <meta name="description" content="Leetcode 2021-11-21" />
-  <meta name="keywords" content="leetcode" />
+  <meta name="description" content="SUM相关数据结构总结" />
+  <meta name="keywords" content="算法总结" />
 </head>
 
 <body>
@@ -223,16 +223,9 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#181-employees-earning-more-than-their-managers-easy-sql">181. Employees Earning More Than Their Managers (Easy) SQL</a></li>
-<li><a href="#182-duplicate-emails-easy-sql">182. Duplicate Emails (Easy) SQL</a></li>
-<li><a href="#183-customers-who-never-order-easy-sql">183. Customers Who Never Order (Easy) SQL</a></li>
-<li><a href="#184-department-highest-salary-medium-sql">184. Department Highest Salary (Medium) SQL</a></li>
-<li><a href="#185-department-top-three-salaries-hard-sql">185. Department Top Three Salaries (Hard) SQL</a></li>
-<li><a href="#186-reverse-words-in-a-string-ii-medium">186. Reverse Words in a String II (Medium)</a></li>
-<li><a href="#187-repeated-dna-sequences-medium">187. Repeated DNA Sequences (Medium)</a></li>
-<li><a href="#font-colorred188-best-time-to-buy-and-sell-stock-iv-hardfont"><font color='red'>188. Best Time to Buy and Sell Stock IV （Hard）</font></a></li>
-<li><a href="#189-rotate-array-medium">189. Rotate Array （Medium）</a></li>
-<li><a href="#190-reverse-bits-easy">190. Reverse Bits (Easy)</a></li>
+<li><a href="#binary-indexed-tree">Binary Indexed Tree</a></li>
+<li><a href="#segment-tree">Segment Tree</a></li>
+<li><a href="#unionfind">UnionFind</a></li>
 </ul>
 
   </div>
@@ -498,14 +491,20 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="http://localhost:4000/post/leetcode-2021-11-21/"> Leetcode 2021-11-21 </a>
+    <a class="post-title-link" href="http://localhost:4000/post/sum-xiang-guan-shu-ju-jie-gou-zong-jie/"> SUM相关数据结构总结 </a>
   </h1>
   <div class="post-meta">
+    
+    <span class="meta-item">
+      <i class="fa fa-thumb-tack"></i>
+      <span class="language" data-lan="top">置顶</span>
+      <span class="post-meta-divider">|</span>
+    </span>
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-19 22:29:00">2021-11-19</span>
+      <span class="publish-time" data-t="2023-02-25 09:59:08">2023-02-25</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -513,8 +512,8 @@
       <i class="fa fa-folder-o"></i>
       <span class="pc-show language" data-lan="category-in">标签:</span>
        
-      <a href="http://localhost:4000/tag/8v2np0s07/">
-        <span>leetcode</span>
+      <a href="http://localhost:4000/tag/71oNA0SHO/">
+        <span>算法总结</span>
       </a>
        
     </span>
@@ -523,7 +522,7 @@
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >7<span class="language" data-lan="minute"
+        >2<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -532,7 +531,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >979<span class="pc-show language" data-lan="words"
+        >273<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -543,213 +542,90 @@
 
             <div class="post-body next-md-body" id="post_body">
               <!-- more -->
-<h1 id="181-employees-earning-more-than-their-managers-easy-sql">181. Employees Earning More Than Their Managers (Easy) SQL</h1>
-<p>Write an SQL query to find the employees who earn more than their managers.</p>
-<pre><code class="language-SQL">SELECT
-    a.Name AS 'Employee'
-FROM
-    Employee AS a,
-    Employee AS b
-WHERE
-    a.ManagerId = b.Id
-        AND a.Salary &gt; b.Salary
-;
-
-SELECT
-     a.NAME AS Employee
-FROM Employee AS a JOIN Employee AS b
-     ON a.ManagerId = b.Id
-     AND a.Salary &gt; b.Salary
-;
+<h1 id="binary-indexed-tree">Binary Indexed Tree</h1>
+<pre><code class="language-python">class BIT:
+        def __init__(self,size):
+            self.size=size
+            self.tree=[0]*size
+            
+        def update(self,ind):
+            #index in BIT is 1 more than original index
+            while ind&lt;self.size:
+                self.tree[ind]+=1
+                ind+= ind&amp;-ind
+        def query(self,ind):
+            #index in BIT is 1 more than original index
+            res=0
+            while ind&gt;0:
+                res+=self.tree[ind]
+                ind-= ind&amp;-ind
+            return res
 </code></pre>
-<h1 id="182-duplicate-emails-easy-sql">182. Duplicate Emails (Easy) SQL</h1>
-<pre><code class="language-SQL">
-# Write your MySQL query statement below
+<h1 id="segment-tree">Segment Tree</h1>
+<pre><code class="language-python">tree=[0]*(2*size)   
+#####SEGMENT TREE
+#   1
+# 2   3
+#4 5 6 7
+# 1 2 3 4 5 6 7
+       
+def update(ind):
+    tree[ind]+=1
+    while ind&gt;0:
+        left=ind
+        right=ind
+        if ind%2==0:
+            right+=1
+        else:
+            left-=1
+        if ind//2&gt;0:
+            tree[ind//2]=tree[left]+tree[right]
+        ind//=2
+#####
+#   1
+# 2   3
+#4 5 6 7
+# 1 2 3 4 5 6 7      
+def query(left,right):
+    res=0
+    while left&lt;=right:
+        if right%2==0:
+            res+=tree[right]
+            right-=1
+        if left%2==1:
+            res+=tree[left]
+            left+=1
 
-select Email from
-(
-  select Email, count(Email) as num
-  from Person
-  group by Email
-) as statistic
-where num &gt; 1
-;
+        left//=2
+        right//=2
 
-select Email
-from Person
-group by Email
-having count(Email) &gt; 1;
-</code></pre>
-<h1 id="183-customers-who-never-order-easy-sql">183. Customers Who Never Order (Easy) SQL</h1>
-<pre><code class="language-SQL">select name as &quot;Customers&quot; from Customers as c left join Orders o on c.id=o.customerId where o.id is NULL;
-
-
-select customers.name as 'Customers'
-from customers
-where customers.id not in
-(
-    select customerid from orders
-);
-</code></pre>
-<h1 id="184-department-highest-salary-medium-sql">184. Department Highest Salary (Medium) SQL</h1>
-<pre><code class="language-SQL"># Write your MySQL query statement below
-select Department,Employee,Salary from (
-    select d.name as &quot;Department&quot;, 
-               e.name as &quot;Employee&quot;,  
-               e.salary as &quot;Salary&quot;,
-              rank()   OVER( partition by e.departmentId order by salary DESC) as &quot;r&quot;   
-    from Employee as e left join Department as d on e.departmentId=d.id )
-     as tmp where r=1
-
-
-#answer way of writting
-
-SELECT
-    Department.name AS 'Department',
-    Employee.name AS 'Employee',
-    Salary
-FROM
-    Employee
-        JOIN
-    Department ON Employee.DepartmentId = Department.Id
-WHERE
-    (Employee.DepartmentId , Salary) IN
-    (   SELECT
-            DepartmentId, MAX(Salary)
-        FROM
-            Employee
-        GROUP BY DepartmentId
-    )
-;
+    return res
 
 </code></pre>
-<h1 id="185-department-top-three-salaries-hard-sql">185. Department Top Three Salaries (Hard) SQL</h1>
-<pre><code class="language-SQL">select Department,Employee,Salary from (
-    select d.name as &quot;Department&quot;, 
-               e.name as &quot;Employee&quot;,  
-               e.salary as &quot;Salary&quot;,
-              dense_rank()   OVER( partition by e.departmentId order by salary DESC) as &quot;r&quot;   
-    from Employee as e left join Department as d on e.departmentId=d.id )
-as tmp where   r&lt;=3
-
-#answer way of writting
-SELECT
-    d.Name AS 'Department', e1.Name AS 'Employee', e1.Salary
-FROM
-    Employee e1
-        JOIN
-    Department d ON e1.DepartmentId = d.Id
-WHERE
-    3 &gt; (SELECT
-            COUNT(DISTINCT e2.Salary)
-        FROM
-            Employee e2
-        WHERE
-            e2.Salary &gt; e1.Salary
-                AND e1.DepartmentId = e2.DepartmentId
-        )
-;
-</code></pre>
-<h1 id="186-reverse-words-in-a-string-ii-medium">186. Reverse Words in a String II (Medium)</h1>
-<p>Given a character array s, reverse the order of the words.<br>
-A word is defined as a sequence of non-space characters. The words in s will be separated by a single space.<br>
-Your code must solve the problem in-place, i.e. without allocating extra space.</p>
-<pre><code class="language-python">class Solution:
-    def reverseWords(self, s: List[str]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify s in-place instead.
-        &quot;&quot;&quot;
-        def rev(s,i,j):
-            while i&gt;=0 and j&lt;len(s) and i&lt;j:
-                s[i],s[j]=s[j],s[i]
-                i+=1
-                j-=1
+<h1 id="unionfind">UnionFind</h1>
+<pre><code class="language-python">     class UnionFind:
+        def __init__(self,n):
+            self.parent=[i for i in range(n)]
+            self.rank=[0]*n
+            self.n=n
+        def find(self,x):
+            if x!=self.parent[x]:
+                self.parent[x]=self.find(self.parent[x])
+            return self.parent[x]
         
-        l=0
-        r=len(s)-1
-        rev(s,l,r)
-        start=0
-        for i in range(r):
-            if s[i]==' ':
-                rev(s,start,i-1)
-                start=i+1
-        rev(s,start,r)
-</code></pre>
-<h1 id="187-repeated-dna-sequences-medium">187. Repeated DNA Sequences (Medium)</h1>
-<p>The DNA sequence is composed of a series of nucleotides abbreviated as 'A', 'C', 'G', and 'T'.<br>
-For example, &quot;ACGAATTCCG&quot; is a DNA sequence.<br>
-When studying DNA, it is useful to identify repeated sequences within the DNA.<br>
-Given a string s that represents a DNA sequence, return all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule. You may return the answer in any order.</p>
-<pre><code class="language-python">class Solution:
-    def findRepeatedDnaSequences(self, s: str) -&gt; List[str]:
-        #sliding window s[i,i+10]  drop i add i+10, if in set, append to res
-        if len(s)&lt;=10: 
-            return []
-        set_ = set()
-        res = set()
-        for i in range(len(s)-10+1):
-            cur=s[i:i+10]
-            if cur in set_:
-                res.add(cur)
-            set_.add(cur)
-        return list(res)
-</code></pre>
-<h1 id="font-colorred188-best-time-to-buy-and-sell-stock-iv-hardfont"><font color='red'>188. Best Time to Buy and Sell Stock IV （Hard）</font></h1>
-<p>You are given an integer array prices where prices[i] is the price of a given stock on the ith day, and an integer k.<br>
-Find the maximum profit you can achieve. You may complete at most k transactions.</p>
-<pre><code class="language-python">class Solution:
-    def maxProfit(self, k: int, prices: List[int]) -&gt; int:
-        #  if k==1
-        if not prices: return 0
-        if k==0: return 0
-        min_ = [float('inf')]*k
-        p_ = [float('-inf')]*k
-        
-        for i,n in enumerate(prices):
-            min_[0] = min(min_[0],n)
-            p_[0] = max(p_[0],n-min_[0])
-            for j in range(1,k):
-                min_[j]=min(min_[j],n-p_[j-1])
-                p_[j]=max(p_[j],n-min_[j])
-                
+        def union(self,x,y):
+            px=self.find(x)
+            py=self.find(y)
+            if px!=py:
+                self.n-=1
+                if self.rank[px]&lt;self.rank[py]:
+                    self.parent[px]=py
+                elif self.rank[px]&gt;self.rank[py]:
+                    self.parent[py]=px
+                else:
+                    self.parent[py]=px
+                    self.rank[px]+=1
 
-        return p_[-1]
-</code></pre>
-<p>老老实实写出K=2的情况，然后改写为数组形式。但忘记了K=2怎么写。。。</p>
-<h1 id="189-rotate-array-medium">189. Rotate Array （Medium）</h1>
-<p>Given an array, rotate the array to the right by k steps, where k is non-negative.<br>
-Input: nums = [1,2,3,4,5,6,7], k = 3<br>
-Output: [5,6,7,1,2,3,4]<br>
-7654321<br>
-765|4321<br>
-657|1234</p>
-<pre><code class="language-python">class Solution:
-    def rotate(self, nums: List[int], k: int) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify nums in-place instead.
-        &quot;&quot;&quot;
-        l=len(nums)
-        k = k%l
-        def rev(nums,i,j):
-            while i&lt;j:
-                nums[i],nums[j]=nums[j],nums[i]
-                i+=1
-                j-=1
-        
-        rev(nums,0,l-1)
-        rev(nums,0,k-1)
-        rev(nums,k,l-1)
-</code></pre>
-<h1 id="190-reverse-bits-easy">190. Reverse Bits (Easy)</h1>
-<p>Reverse bits of a given 32 bits unsigned integer.</p>
-<pre><code class="language-python">class Solution:
-    def reverseBits(self, n: int) -&gt; int:
-        res = 0
-        for _ in range(32):
-            lastbit = n &amp; 1
-            n = n&gt;&gt;1
-            res = res&lt;&lt;1 | lastbit
-        return res  
 </code></pre>
 
             </div>
@@ -763,7 +639,7 @@ Output: [5,6,7,1,2,3,4]<br>
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="http://localhost:4000/post/leetcode-2021-11-21/" title="Leetcode 2021-11-21">http://localhost:4000/post/leetcode-2021-11-21/</a>
+      <a href="http://localhost:4000/post/sum-xiang-guan-shu-ju-jie-gou-zong-jie/" title="SUM相关数据结构总结">http://localhost:4000/post/sum-xiang-guan-shu-ju-jie-gou-zong-jie/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -772,21 +648,17 @@ Output: [5,6,7,1,2,3,4]<br>
   </ul>
   <div class="tags">
     
-      <a href="http://localhost:4000/tag/8v2np0s07/"># leetcode</a>
+      <a href="http://localhost:4000/tag/71oNA0SHO/"># 算法总结</a>
     
   </div>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-22" href="http://localhost:4000/post/leetcode-2021-11-22/">Leetcode 2021-11-22</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-22" href="http://localhost:4000/post/leetcode-2021-11-22/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2021-11-20" href="http://localhost:4000/post/leetcode-2021-11-20/">Leetcode 2021-11-20</a>
-        <a class="nav-mobile-next" title="Leetcode 2021-11-20" href="http://localhost:4000/post/leetcode-2021-11-20/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2023-01-06" href="http://localhost:4000/post/leetcode-2023-01-06/">Leetcode 2023-01-06</a>
+        <a class="nav-mobile-next" title="Leetcode 2023-01-06" href="http://localhost:4000/post/leetcode-2023-01-06/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>

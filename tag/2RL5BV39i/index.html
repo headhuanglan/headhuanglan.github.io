@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1677178946314">
+<link rel="shortcut icon" href="/favicon.ico?v=1677468350039">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -178,7 +178,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">57</span>
+        <span class="site-item-stat-count">59</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -336,7 +336,13 @@
       
       
       
-      <a href="https://headhuanglan.github.io/post/shu-dan/">
+      
+      
+      
+      
+      
+      
+      <a href="http://localhost:4000/post/shu-dan/">
         <div class="motion-warpper">
           <div class="tag-post-node">
             <h1>
@@ -771,7 +777,542 @@
     <div class="result" id="result">
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2023-01-05/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/sum-xiang-guan-shu-ju-jie-gou-zong-jie/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;binary-indexed-tree&#34;&gt;Binary Indexed Tree&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class BIT:
+        def __init__(self,size):
+            self.size=size
+            self.tree=[0]*size
+            
+        def update(self,ind):
+            #index in BIT is 1 more than original index
+            while ind&amp;lt;self.size:
+                self.tree[ind]+=1
+                ind+= ind&amp;amp;-ind
+        def query(self,ind):
+            #index in BIT is 1 more than original index
+            res=0
+            while ind&amp;gt;0:
+                res+=self.tree[ind]
+                ind-= ind&amp;amp;-ind
+            return res
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;segment-tree&#34;&gt;Segment Tree&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;tree=[0]*(2*size)   
+#####SEGMENT TREE
+#   1
+# 2   3
+#4 5 6 7
+# 1 2 3 4 5 6 7
+       
+def update(ind):
+    tree[ind]+=1
+    while ind&amp;gt;0:
+        left=ind
+        right=ind
+        if ind%2==0:
+            right+=1
+        else:
+            left-=1
+        if ind//2&amp;gt;0:
+            tree[ind//2]=tree[left]+tree[right]
+        ind//=2
+#####
+#   1
+# 2   3
+#4 5 6 7
+# 1 2 3 4 5 6 7      
+def query(left,right):
+    res=0
+    while left&amp;lt;=right:
+        if right%2==0:
+            res+=tree[right]
+            right-=1
+        if left%2==1:
+            res+=tree[left]
+            left+=1
+
+        left//=2
+        right//=2
+
+    return res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;unionfind&#34;&gt;UnionFind&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;     class UnionFind:
+        def __init__(self,n):
+            self.parent=[i for i in range(n)]
+            self.rank=[0]*n
+            self.n=n
+        def find(self,x):
+            if x!=self.parent[x]:
+                self.parent[x]=self.find(self.parent[x])
+            return self.parent[x]
+        
+        def union(self,x,y):
+            px=self.find(x)
+            py=self.find(y)
+            if px!=py:
+                self.n-=1
+                if self.rank[px]&amp;lt;self.rank[py]:
+                    self.parent[px]=py
+                elif self.rank[px]&amp;gt;self.rank[py]:
+                    self.parent[py]=px
+                else:
+                    self.parent[py]=px
+                    self.rank[px]+=1
+
+&lt;/code&gt;&lt;/pre&gt;
+">SUM相关数据结构总结</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2023-01-06/"" data-c="
+          &lt;!-- more --&gt;
+&lt;h1 id=&#34;491-non-decreasing-subsequences-medium&#34;&gt;491. Non-decreasing Subsequences （Medium）&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums, return all the different possible non-decreasing subsequences of the given array with at least two elements. You may return the answer in any order.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findSubsequences(self, nums: List[int]) -&amp;gt; List[List[int]]:
+        res = set()
+        def bt(start, tmp):
+            if len(tmp)&amp;gt;1:
+                res.add(tuple(tmp))
+            for i in range(start,len(nums)):
+                if i-1&amp;gt;= start and nums[i]==nums[i-1]: continue
+                if not tmp or nums[i]&amp;gt;=tmp[-1]:
+                    tmp.append(nums[i])
+                    bt(i+1,tmp)
+                    tmp.pop()
+    
+        bt(0,[])
+        return list(res)
+
+#ANSWER 
+class Solution:
+    def findSubsequences(self, nums: List[int]) -&amp;gt; List[List[int]]:
+        res = set()
+        def bt(start, tmp):
+            
+            if start==len(nums):
+                if len(tmp)&amp;gt;1:
+                    res.add(tuple(tmp))
+                return
+
+            
+            #add num[i]
+            if not tmp or nums[start]&amp;gt;=tmp[-1]:
+                tmp.append(nums[start])
+                bt(start+1,tmp)
+                tmp.pop()
+            #not add num[i]
+            bt(start+1,tmp)
+    
+        
+        bt(0,[])
+        return list(res)
+            
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;感觉是个backtracking问题， debug了一会解决了。。答案更好&lt;/p&gt;
+&lt;h1 id=&#34;492-construct-the-rectangle-easy&#34;&gt;492. Construct the Rectangle （Easy）&lt;/h1&gt;
+&lt;p&gt;A web developer needs to know how to design a web page&#39;s size. So, given a specific rectangular web page’s area, your job by now is to design a rectangular web page, whose length L and width W satisfy the following requirements:&lt;br&gt;
+The area of the rectangular web page you designed must equal to the given target area.&lt;br&gt;
+The width W should not be larger than the length L, which means L &amp;gt;= W.&lt;br&gt;
+The difference between length L and width W should be as small as possible.&lt;br&gt;
+Return an array [L, W] where L and W are the length and width of the web page you designed in sequence.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def constructRectangle(self, area: int) -&amp;gt; List[int]:
+        # L*W=area
+        # L&amp;gt;=W
+        # min(abs(L-W))
+
+        L=res_L=area
+        W=res_W=1
+        while L&amp;gt;=W:
+            W+=1
+            L=area//W
+            if L&amp;gt;=W and L*W==area:
+                res_L=L
+                res_W=W
+        return res_L,res_W
+#ANSWER
+
+class Solution:
+    def constructRectangle(self, area: int) -&amp;gt; List[int]:
+        # L*W=area
+        # L&amp;gt;=W
+        # min(abs(L-W))
+
+         
+        W=int(math.sqrt(area))
+        while area%W!=0:
+            W-=1
+        return area//W, W
+
+#ANSWER
+class Solution:
+    def constructRectangle(self, area: int) -&amp;gt; List[int]:
+        middle=int(sqrt(area))
+        for i in range(middle,0,-1):
+            if area%i==0:
+                return[int(area/i),i]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred-493-reverse-pairs-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 493. Reverse Pairs (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given an integer array nums, return the number of reverse pairs in the array.&lt;br&gt;
+A reverse pair is a pair (i, j) where:&lt;br&gt;
+0 &amp;lt;= i &amp;lt; j &amp;lt; nums.length and&lt;br&gt;
+nums[i] &amp;gt; 2 * nums[j].&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def reversePairs(self, nums: List[int]) -&amp;gt; int:
+        # I   J
+        # nI&amp;gt;2nJ
+        # scan through nums with B-I-Tree find 2*cur_val+1 ~ end   count sum
+        res = 0
+        size = len(nums)+1
+        bit = [0]*size
+
+        def insert(ind):
+            #bit ind from 1
+            while ind:
+                bit[ind]+=1
+                ind -= ind &amp;amp; -ind
+
+        def query(ind):
+            res=0
+            while ind&amp;lt;size:
+                res+=bit[ind]
+                ind+=ind&amp;amp;-ind
+            return res
+        
+        def index(arr,val):
+            l = bisect.bisect_left(arr,val)
+            return l+1 #plus one due to BIT index from 1
+
+        
+        copy = nums[:]
+        copy.sort()
+        res=0
+        for n in nums:
+            res+=query(index(copy,2*n+1))
+            insert(index(copy,n))
+        return res        
+
+#ANSWER 2 Merge SORT
+class Solution:
+    def reversePairs(self, nums: List[int]) -&amp;gt; int:
+
+        def ms(l, r):
+            if l &amp;gt;= r: return 0
+            mid = (l + r) // 2
+            count = ms(l, mid) + ms(mid + 1, r)
+
+            j = mid + 1
+            for i in range(l, mid+1):
+                while j &amp;lt;= r and nums[i] &amp;gt; 2 * nums[j]:
+                    j += 1
+                count += j - mid - 1
+
+            nums[l:r+1] = sorted(nums[l:r+1])
+            return count
+
+        return ms(0, len(nums) - 1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;初看像用stack做 但是做不出来。。。答案用了BIT。。。。但是不是通常意义的BIT。反了insert 和update function。&lt;br&gt;
+For our case, the running total is simply the number of elements encountered during the traversal process. If we stick to the convention above, the running total will be the number of elements smaller than the one at the given index, since the copy array is sorted in ascending order. However, we&#39;d actually like to find the number of elements greater than some value (i.e., twice of the element being scanned), therefore we need to flip the convention. This is what you see inside the search and insert functions: the former traversing towards the end of the bit while the latter towards the root.&lt;br&gt;
+MergeSort方法二 。。。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-494-target-sum-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 494. Target Sum (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an integer array nums and an integer target.&lt;/p&gt;
+&lt;p&gt;You want to build an expression out of nums by adding one of the symbols &#39;+&#39; and &#39;-&#39; before each integer in nums and then concatenate all the integers.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;For example, if nums = [2, 1], you can add a &#39;+&#39; before 2 and a &#39;-&#39; before 1 and concatenate them to build the expression &amp;quot;+2-1&amp;quot;.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Return the number of different expressions that you can build, which evaluates to target.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#TLE
+class Solution:
+    def findTargetSumWays(self, nums: List[int], target: int) -&amp;gt; int:
+        self.res = 0
+        def bt(start,target):
+            if start==len(nums):
+                if target==0:
+                    self.res+=1
+                return
+            
+            # +
+            bt(start+1,target-nums[start])
+            # - 
+            bt(start+1,target+nums[start])
+        
+        bt(0,target)
+        return self.res
+
+#ANSWER
+ def findTargetSumWays(self, nums, S):
+        if not nums:
+            return 0
+        dic = {nums[0]: 1, -nums[0]: 1} if nums[0] != 0 else {0: 2}
+        for i in range(1, len(nums)):
+            tdic = {}
+            for d in dic:
+                tdic[d + nums[i]] = tdic.get(d + nums[i], 0) + dic.get(d, 0)
+                tdic[d - nums[i]] = tdic.get(d - nums[i], 0) + dic.get(d, 0)
+            dic = tdic
+        return dic.get(S, 0)  
+
+#ANSWER
+class Solution:
+    def findTargetSumWays(self, nums: List[int], target: int) -&amp;gt; int:
+        # dp[i][t]   using upto ith number of target t
+        total=sum(nums)
+        if abs(target)&amp;gt;total:return 0
+        dp=[  [0]*(2*total+1)  for _ in range(len(nums))]
+        dp[0][nums[0]+total] = 1
+        dp[0][-nums[0]+total] +=1
+
+        for i in range(1,len(nums)):
+            for sum_ in range(-total,total+1):
+                if dp[i-1][sum_+total]&amp;gt;0:
+                    dp[i][sum_+nums[i]+total]+=dp[i-1][sum_+total]
+                    dp[i][sum_-nums[i]+total]+=dp[i-1][sum_+total]
+        
+        return dp[len(nums)-1][target+total]  
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;直接用BT会TLE。。。所以换思路， 试试DP。 因为数字和在-sum到sum之间，offset到0开始需要+sum。&lt;/p&gt;
+&lt;h1 id=&#34;495-teemo-attacking-easy&#34;&gt;495. Teemo Attacking （Easy）&lt;/h1&gt;
+&lt;p&gt;Our hero Teemo is attacking an enemy Ashe with poison attacks! When Teemo attacks Ashe, Ashe gets poisoned for a exactly duration seconds. More formally, an attack at second t will mean Ashe is poisoned during the inclusive time interval [t, t + duration - 1]. If Teemo attacks again before the poison effect ends, the timer for it is reset, and the poison effect will end duration seconds after the new attack.&lt;/p&gt;
+&lt;p&gt;You are given a non-decreasing integer array timeSeries, where timeSeries[i] denotes that Teemo attacks Ashe at second timeSeries[i], and an integer duration.&lt;/p&gt;
+&lt;p&gt;Return the total number of seconds that Ashe is poisoned.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findPoisonedDuration(self, timeSeries: List[int], duration: int) -&amp;gt; int:
+        # input:[1,2] 2
+        #     1        2
+        #    start     end
+        #           start2           new_end3
+
+          
+        start = timeSeries[0]
+        end = start+duration-1
+        res = end-start+1
+        for t in timeSeries[1:]:
+            new_end = t+duration-1
+            if new_end&amp;gt;end:
+                start = end+1 if t&amp;lt;=end else t
+                end = new_end
+                res+=end-start+1
+        return res
+
+
+#ANSER ORZ indeed EZ
+class Solution:
+    def findPoisonedDuration(self, timeSeries: List[int], duration: int) -&amp;gt; int:
+        n = len(timeSeries)
+        if n == 0:
+            return 0
+        
+        total = 0
+        for i in range(n - 1):
+            total += min(timeSeries[i + 1] - timeSeries[i], duration)
+        return total + duration
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;496-next-greater-element-i-easy&#34;&gt;496. Next Greater Element I (Easy)&lt;/h1&gt;
+&lt;p&gt;The next greater element of some element x in an array is the first greater element that is to the right of x in the same array.&lt;/p&gt;
+&lt;p&gt;You are given two distinct 0-indexed integer arrays nums1 and nums2, where nums1 is a subset of nums2.&lt;/p&gt;
+&lt;p&gt;For each 0 &amp;lt;= i &amp;lt; nums1.length, find the index j such that nums1[i] == nums2[j] and determine the next greater element of nums2[j] in nums2. If there is no next greater element, then the answer for this query is -1.&lt;/p&gt;
+&lt;p&gt;Return an array ans of length nums1.length such that ans[i] is the next greater element as described above.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -&amp;gt; List[int]:
+        minheap=[ ]
+        dic= dict()
+        for n in nums2:
+            while minheap and minheap[0]&amp;lt;n:
+                dic[heappop(minheap)] = n
+            heappush(minheap,n)
+        
+        return [dic.get(n,-1) for n in nums1]
+
+class Solution:
+    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -&amp;gt; List[int]:
+        
+        dic = dict()
+        
+        stack = []
+        
+        while nums2:
+            cur = nums2.pop(0)
+            if not stack:
+                stack.append(cur)
+            else:
+                while stack and cur&amp;gt;stack[-1]:
+                    dic[stack[-1]] = cur
+                    stack.pop()
+                stack.append(cur)
+        
+        return [dic.get(e,-1) for e in nums1]
+             
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用不着用minheap 直接用stack就好，因为插入时候顺序已经是从左到右满足条件了。&lt;/p&gt;
+&lt;h1 id=&#34;497-random-point-in-non-overlapping-rectangles-medium&#34;&gt;497. Random Point in Non-overlapping Rectangles （Medium）&lt;/h1&gt;
+&lt;p&gt;You are given an array of non-overlapping axis-aligned rectangles rects where rects[i] = [ai, bi, xi, yi] indicates that (ai, bi) is the bottom-left corner point of the ith rectangle and (xi, yi) is the top-right corner point of the ith rectangle. Design an algorithm to pick a random integer point inside the space covered by one of the given rectangles. A point on the perimeter of a rectangle is included in the space covered by the rectangle.&lt;br&gt;
+Any integer point inside the space covered by one of the given rectangles should be equally likely to be returned.&lt;br&gt;
+Note that an integer point is a point that has integer coordinates.&lt;br&gt;
+Implement the Solution class:&lt;br&gt;
+Solution(int[][] rects) Initializes the object with the given rectangles rects.&lt;br&gt;
+int[] pick() Returns a random integer point [u, v] inside the space covered by one of the given rectangles.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+
+    def __init__(self, rects: List[List[int]]):
+        self.rects = rects
+        self.area = [ (p[2]-p[0]+1)*(p[3]-p[1]+1) for p in self.rects]
+        
+
+    def pick(self) -&amp;gt; List[int]:
+        #pick rect based on area
+        pick_rect = random.random()*sum(self.area)
+        now = 0
+        ind = -1
+        while now&amp;lt;pick_rect:
+            ind+=1
+            now+=self.area[ind]
+        rect = self.rects[ind]
+        return [random.randint(rect[0], rect[2]),random.randint(rect[1], rect[3])]
+       
+        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这题有个tricky地方，area为0的rect也是有点包含在里面的，要想包含边上的点需要 （width+1）*（height+1）&lt;/p&gt;
+&lt;h1 id=&#34;498-diagonal-traverse-medium&#34;&gt;498. Diagonal Traverse （Medium）&lt;/h1&gt;
+&lt;p&gt;iven an m x n matrix mat, return an array of all the elements of the array in a diagonal order.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#TLE
+class Solution:
+    def findDiagonalOrder(self, mat: List[List[int]]) -&amp;gt; List[int]:        
+        m=len(mat)
+        n=len(mat[0])
+        res = []
+        ij_sum=0
+        for level in range(m+n-1):
+            tmp=[]
+            for i in range(level+1):
+                j = ij_sum-i
+                if i&amp;gt;=0 and i&amp;lt;m and j&amp;gt;=0 and j&amp;lt;n:
+                    tmp.append(mat[i][j])
+            if level%2==0:
+                tmp=tmp[::-1]
+            res.extend(tmp)
+            ij_sum+=1
+        return res
+
+class Solution:
+    def findDiagonalOrder(self, mat: List[List[int]]) -&amp;gt; List[int]:        
+        dic = defaultdict(list)
+        res = []
+        for i in range(len(mat)):
+            for j in range(len(mat[0])):
+                key=i+j
+                dic[key].append(mat[i][j])
+        
+
+        for key in range(len(mat)-1+len(mat[0])):
+            if key%2==0:
+                res.extend(dic[key][::-1])
+            else:
+                res.extend(dic[key])
+        return res
+
+#ANSWER
+class Solution:
+    
+    def findDiagonalOrder(self, matrix: List[List[int]]) -&amp;gt; List[int]:
+        
+        # Check for empty matrices
+        if not matrix or not matrix[0]:
+            return []
+        
+        # Variables to track the size of the matrix
+        N, M = len(matrix), len(matrix[0])
+        
+        # The two arrays as explained in the algorithm
+        result, intermediate = [], []
+        
+        # We have to go over all the elements in the first
+        # row and the last column to cover all possible diagonals
+        for d in range(N + M - 1):
+            
+            # Clear the intermediate array everytime we start
+            # to process another diagonal
+            intermediate.clear()
+            
+            # We need to figure out the &amp;quot;head&amp;quot; of this diagonal
+            # The elements in the first row and the last column
+            # are the respective heads.
+            r, c = 0 if d &amp;lt; M else d - M + 1, d if d &amp;lt; M else M - 1
+            
+            # Iterate until one of the indices goes out of scope
+            # Take note of the index math to go down the diagonal
+            while r &amp;lt; N and c &amp;gt; -1:
+                intermediate.append(matrix[r][c])
+                r += 1
+                c -= 1
+            
+            # Reverse even numbered diagonals. The
+            # article says we have to reverse odd 
+            # numbered articles but here, the numbering
+            # is starting from 0 :P
+            if d % 2 == 0:
+                result.extend(intermediate[::-1])
+            else:
+                result.extend(intermediate)
+        return result        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;初次尝试TLE，用dic后满足条件。。。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-499-the-maze-iii-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 499. The Maze III （Hard） &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;There is a ball in a maze with empty spaces (represented as 0) and walls (represented as 1). The ball can go through the empty spaces by rolling up, down, left or right, but it won&#39;t stop rolling until hitting a wall. When the ball stops, it could choose the next direction. There is also a hole in this maze. The ball will drop into the hole if it rolls onto the hole.&lt;/p&gt;
+&lt;p&gt;Given the m x n maze, the ball&#39;s position ball and the hole&#39;s position hole, where ball = [ballrow, ballcol] and hole = [holerow, holecol], return a string instructions of all the instructions that the ball should follow to drop in the hole with the shortest distance possible. If there are multiple valid instructions, return the lexicographically minimum one. If the ball can&#39;t drop in the hole, return &amp;quot;impossible&amp;quot;.&lt;/p&gt;
+&lt;p&gt;If there is a way for the ball to drop in the hole, the answer instructions should contain the characters &#39;u&#39; (i.e., up), &#39;d&#39; (i.e., down), &#39;l&#39; (i.e., left), and &#39;r&#39; (i.e., right).&lt;/p&gt;
+&lt;p&gt;The distance is the number of empty spaces traveled by the ball from the start position (excluded) to the destination (included).&lt;/p&gt;
+&lt;p&gt;You may assume that the borders of the maze are all walls&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+#ANSWER
+class Solution:
+    def findShortestWay(self, maze, ball, hole):
+        m, n, q, stopped = len(maze), len(maze[0]), [(0, &amp;quot;&amp;quot;, ball[0], ball[1])], {(ball[0], ball[1]): [0, &amp;quot;&amp;quot;]}
+        while q:
+            dist, pattern, x, y = heapq.heappop(q)
+            if [x, y] == hole:
+                return pattern
+            for i, j, p in ((-1, 0, &amp;quot;u&amp;quot;), (1, 0, &amp;quot;d&amp;quot;), (0, -1, &amp;quot;l&amp;quot;), (0, 1, &amp;quot;r&amp;quot;)):
+                newX, newY, d = x, y, 0
+                while 0 &amp;lt;= newX + i &amp;lt; m and 0 &amp;lt;= newY + j &amp;lt; n and maze[newX + i][newY + j] != 1:
+                    newX += i
+                    newY += j
+                    d += 1
+                    if [newX, newY] == hole:
+                        break
+                if (newX, newY) not in stopped or [dist + d, pattern + p] &amp;lt; stopped[(newX, newY)]:
+                    stopped[(newX, newY)] = [dist + d, pattern + p]
+                    heapq.heappush(q, (dist + d, pattern + p, newX, newY))
+        return &amp;quot;impossible&amp;quot;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;BFS 写了答案能过60/64 个test case。。。不知道哪里还有BUG。看答案。难点在，循环queue时候，这个queue不是普通的queue，是minheap。 这样就能取出距离最小的而且lexcially最小的next node做计算。&lt;/p&gt;
+&lt;h1 id=&#34;500-keyboard-row-easy&#34;&gt;500. Keyboard Row （Easy）&lt;/h1&gt;
+&lt;p&gt;Given an array of strings words, return the words that can be typed using letters of the alphabet on only one row of American keyboard like the image below.&lt;br&gt;
+In the American keyboard:&lt;br&gt;
+the first row consists of the characters &amp;quot;qwertyuiop&amp;quot;,&lt;br&gt;
+the second row consists of the characters &amp;quot;asdfghjkl&amp;quot;, and&lt;br&gt;
+the third row consists of the characters &amp;quot;zxcvbnm&amp;quot;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findWords(self, words: List[str]) -&amp;gt; List[str]:
+        s1 = set(&amp;quot;qwertyuiopQWERTYUIOP&amp;quot;)
+        s2=set(&amp;quot;asdfghjklASDFGHJKL&amp;quot;)
+        s3=set(&amp;quot;zxcvbnmZXCVBNM&amp;quot;)
+        
+        return [w for w in words if any(set(w)&amp;amp;s==set(w) for s in [s1,s2,s3]  )  ]
+
+&lt;/code&gt;&lt;/pre&gt;
+">Leetcode 2023-01-06</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2023-01-05/"" data-c="
           &lt;p&gt;没想到都拖到2023年了 还没上500&lt;/p&gt;
 &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-481-magical-string-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 481. Magical String （Medium）&lt;/font&gt;&lt;/h1&gt;
@@ -886,7 +1427,7 @@ This brings us to the search problem where we need to find k and m.&lt;br&gt;
 Linear search from 1 to n does not work. it gives us TLE. So it leaves us with performing some optimization on search space.&lt;br&gt;
 From [6] we know that the only candidate that needs to be tested is, ⌊m-th root of n⌋&lt;br&gt;
 We also know that the smallest base is 2 so we can find our m must be between 2 and log2n else m is (n-1) [7]&lt;/p&gt;
-&lt;h1 id=&#34;font-colorred-484-find-permutation-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 484. Find Permutation （Medium）&lt;font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;font-colorred-484-find-permutation-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 484. Find Permutation （Medium）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;A permutation perm of n integers of all the integers in the range [1, n] can be represented as a string s of length n - 1 where:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;s[i] == &#39;I&#39; if perm[i] &amp;lt; perm[i + 1], and
 s[i] == &#39;D&#39; if perm[i] &amp;gt; perm[i + 1].
@@ -928,11 +1469,325 @@ s[i] == &#39;D&#39; if perm[i] &amp;gt; perm[i + 1].
         return res
 
 &lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred-486-predict-the-winner-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 486. Predict the Winner （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are given an integer array nums. Two players are playing a game with this array: player 1 and player 2.&lt;/p&gt;
+&lt;p&gt;Player 1 and player 2 take turns, with player 1 starting first. Both players start the game with a score of 0. At each turn, the player takes one of the numbers from either end of the array (i.e., nums[0] or nums[nums.length - 1]) which reduces the size of the array by 1. The player adds the chosen number to their score. The game ends when there are no more elements in the array.&lt;/p&gt;
+&lt;p&gt;Return true if Player 1 can win the game. If the scores of both players are equal, then player 1 is still the winner, and you should also return true. You may assume that both players are playing optimally.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def PredictTheWinner(self, nums: List[int]) -&amp;gt; bool:
+        #[a b c d]   
+        # 0 0 0 0
+        # 0 0 0 0                      
+        # 0 0 0 0                         
+        # 0 0 0 0
+
+        # dp[i,j] is i to j score.
+        # dp[i,j] = max(nums[i]-dp[i+1,j]  , nums[j]-dp[i,j-1]   )
+
+        n=len(nums)
+       
+        @lru_cache(None)
+        def score(i,j):
+            if i==j: return nums[i]
+            left = nums[i]-score(i+1,j)  
+            right = nums[j]-score(i,j-1)  
+            return max(left,right)
+        
+        return score(0,n-1) &amp;gt;=0
+        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;dp can be tricky to write&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public boolean PredictTheWinner(int[] nums) {
+    int n = nums.length;
+    int[][] dp = new int[n][n];
+    for (int i = 0; i &amp;lt; n; i++) { 
+             dp[i][i] = nums[i]; 
+             }
+    for (int len = 1; len &amp;lt; n; len++) {
+        for (int i = 0; i &amp;lt; n - len; i++) {
+            int j = i + len;
+            dp[i][j] = Math.max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1]);
+        }
+    }
+    return dp[0][n - 1] &amp;gt;= 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;font-colorred-487-max-consecutive-ones-ii-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 487. Max Consecutive Ones II (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;Given a binary array nums, return the maximum number of consecutive 1&#39;s in the array if you can flip at most one 0.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution(object):
+    def findMaxConsecutiveOnes(self, nums):
+        # previous and current length of consecutive 1 
+        pre, curr, maxlen = -1, 0, 0
+        for n in nums:
+            if n == 0:
+                pre, curr = curr, 0
+            else:
+                curr += 1
+            maxlen = max(maxlen, pre + 1 + curr )
+        
+        return maxlen
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;知道是sliding window但写不出来。。。store the length of previous and current consecutive 1&#39;s (separated by the last 0) as pre and curr , respectively.&lt;br&gt;
+Whenever we get a new number, update these two variables accordingly. The consecutive length would be pre + 1 + curr, where the 1 is a zero that got flipped to 1. (note that pre is initialized to -1, meaning that we haven&#39;t seen any 0 yet)&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public int findMaxConsecutiveOnes(int[] nums) {
+        int max = 0, zero = 0, k = 1; // flip at most k zero
+        for (int l = 0, h = 0; h &amp;lt; nums.length; h++) {
+            if (nums[h] == 0)                                           
+                zero++;
+            while (zero &amp;gt; k)
+                if (nums[l++] == 0)
+                    zero--;                                     
+            max = Math.max(max, h - l + 1);
+        }                                                               
+        return max;             
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;flip k 的通解&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-488-zuma-game-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 488. Zuma Game （Hard）&lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;You are playing a variation of the game Zuma.&lt;br&gt;
+In this variation of Zuma, there is a single row of colored balls on a board, where each ball can be colored red &#39;R&#39;, yellow &#39;Y&#39;, blue &#39;B&#39;, green &#39;G&#39;, or white &#39;W&#39;. You also have several colored balls in your hand.&lt;br&gt;
+Your goal is to clear all of the balls from the board. On each turn:&lt;br&gt;
+Pick any ball from your hand and insert it in between two balls in the row or on either end of the row.&lt;br&gt;
+If there is a group of three or more consecutive balls of the same color, remove the group of balls from the board.&lt;br&gt;
+If this removal causes more groups of three or more of the same color to form, then continue removing each group until there are none left.&lt;br&gt;
+If there are no more balls on the board, then you win the game.&lt;br&gt;
+Repeat this process until you either win or do not have any more balls in your hand.&lt;br&gt;
+Given a string board, representing the row of balls on the board, and a string hand, representing the balls in your hand, return the minimum number of balls you have to insert to clear all the balls from the board. If you cannot clear all the balls from the board using the balls in your hand, return -1.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findMinStep(self, board: str, hand: str) -&amp;gt; int:
+
+        @lru_cache(None)
+        def clean(board):
+            stack = []
+            for b in board:
+                if stack and stack[-1][0] != b and stack[-1][1] &amp;gt;= 3:
+                    stack.pop()
+                if not stack or stack[-1][0] != b:
+                    stack += [b, 1],
+                else:
+                    stack[-1][1] += 1
+            if stack and stack[-1][1] &amp;gt;= 3:
+                stack.pop()
+            return &#39;&#39;.join([a*b for a,b in stack])
+
+        @lru_cache(None)
+        def dfs(board, hand):
+            if not board:
+                return 0
+            if not hand:
+                return float(&#39;inf&#39;)
+            m = len(board)
+            ans = float(&#39;inf&#39;)
+            for j, b in enumerate(hand):
+                new_hand = hand[:j] + hand[j+1:]
+                for i in range(m + 1):
+                    new_board = clean(board[:i] + b + board[i:])
+                    ans = min(ans, 1 + dfs(new_board, new_hand))
+            return ans
+        
+        ans = dfs(board, hand)
+        return ans if ans &amp;lt; float(&#39;inf&#39;) else -1
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;TLE backtracking dfs, bfs with optimize pass&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def findMinStep(self, board: str, hand: str) -&amp;gt; int:
+        
+        # start from i and remove continues ball
+        def remove_same(s, i):
+            if i &amp;lt; 0:
+                return s
+            
+            left = right = i
+            while left &amp;gt; 0 and s[left-1] == s[i]:
+                left -= 1
+            while right+1 &amp;lt; len(s) and s[right+1] == s[i]:
+                right += 1
+            
+            length = right - left + 1
+            if length &amp;gt;= 3:
+                new_s = s[:left] + s[right+1:]
+                return remove_same(new_s, left-1)
+            else:
+                return s
+
+
+
+        hand = &amp;quot;&amp;quot;.join(sorted(hand))
+
+        # board, hand and step
+        q = collections.deque([(board, hand, 0)])
+        visited = set([(board, hand)])
+
+        while q:
+            curr_board, curr_hand, step = q.popleft()
+            for i in range(len(curr_board)+1):
+                for j in range(len(curr_hand)):
+                    # skip the continue balls in hand
+                    if j &amp;gt; 0 and curr_hand[j] == curr_hand[j-1]:
+                        continue
+                    
+                    # only insert at the begin of continue balls in board
+                    if i &amp;gt; 0 and curr_board[i-1] == curr_hand[j]: # left side same color
+                        continue
+                    
+                    pick = False
+                    # 1. same color with right
+                    # 2. left and right are same but pick is different
+                    if i &amp;lt; len(curr_board) and curr_board[i] == curr_hand[j]:
+                        pick = True
+                    if 0&amp;lt;i&amp;lt;len(curr_board) and curr_board[i-1] == curr_board[i] and curr_board[i] != curr_hand[j]:
+                        pick = True
+                    
+                    if pick:
+                        new_board = remove_same(curr_board[:i] + curr_hand[j] + curr_board[i:], i)
+                        new_hand = curr_hand[:j] + curr_hand[j+1:]
+                        if not new_board:
+                            return step + 1
+                        if (new_board, new_hand) not in visited:
+                            q.append((new_board, new_hand, step+1))
+                            visited.add((new_board, new_hand))
+
+        return -1
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;bfs 优化有意思，1）board 过到i位置相同情况下，ball之间见过的直接skip， 2）在board 【i-1】==ball时候skip，相当于不在末尾放ball。 3）board【i】=hand【j】放置ball容易理解 4）发现之前boad 已经连续2个了board【i-1】==board【i】，可以随便放置ball碰运气。但是不要放置和i一样的ball这样违背了rule2不在末尾放球的规定.&lt;/p&gt;
+&lt;h1 id=&#34;489-robot-room-cleaner-hard&#34;&gt;489. Robot Room Cleaner (hard)&lt;/h1&gt;
+&lt;p&gt;You are controlling a robot that is located somewhere in a room. The room is modeled as an m x n binary grid where 0 represents a wall and 1 represents an empty slot.&lt;/p&gt;
+&lt;p&gt;The robot starts at an unknown location in the room that is guaranteed to be empty, and you do not have access to the grid, but you can move the robot using the given API Robot.&lt;/p&gt;
+&lt;p&gt;You are tasked to use the robot to clean the entire room (i.e., clean every empty cell in the room). The robot with the four given APIs can move forward, turn left, or turn right. Each turn is 90 degrees.&lt;/p&gt;
+&lt;p&gt;When the robot tries to move into a wall cell, its bumper sensor detects the obstacle, and it stays on the current cell.&lt;/p&gt;
+&lt;p&gt;Design an algorithm to clean the entire room using the following APIs:&lt;/p&gt;
+&lt;p&gt;interface Robot {&lt;br&gt;
+// returns true if next cell is open and robot moves into the cell.&lt;br&gt;
+// returns false if next cell is obstacle and robot stays on the current cell.&lt;br&gt;
+boolean move();&lt;/p&gt;
+&lt;p&gt;// Robot will stay on the same cell after calling turnLeft/turnRight.&lt;br&gt;
+// Each turn will be 90 degrees.&lt;br&gt;
+void turnLeft();&lt;br&gt;
+void turnRight();&lt;/p&gt;
+&lt;p&gt;// Clean the current cell.&lt;br&gt;
+void clean();&lt;br&gt;
+}&lt;/p&gt;
+&lt;p&gt;Note that the initial direction of the robot will be facing up. You can assume all four edges of the grid are all surrounded by a wall.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# &amp;quot;&amp;quot;&amp;quot;
+# This is the robot&#39;s control interface.
+# You should not implement it, or speculate about its implementation
+# &amp;quot;&amp;quot;&amp;quot;
+#class Robot:
+#    def move(self):
+#        &amp;quot;&amp;quot;&amp;quot;
+#        Returns true if the cell in front is open and robot moves into the cell.
+#        Returns false if the cell in front is blocked and robot stays in the current cell.
+#        :rtype bool
+#        &amp;quot;&amp;quot;&amp;quot;
+#
+#    def turnLeft(self):
+#        &amp;quot;&amp;quot;&amp;quot;
+#        Robot will stay in the same cell after calling turnLeft/turnRight.
+#        Each turn will be 90 degrees.
+#        :rtype void
+#        &amp;quot;&amp;quot;&amp;quot;
+#
+#    def turnRight(self):
+#        &amp;quot;&amp;quot;&amp;quot;
+#        Robot will stay in the same cell after calling turnLeft/turnRight.
+#        Each turn will be 90 degrees.
+#        :rtype void
+#        &amp;quot;&amp;quot;&amp;quot;
+#
+#    def clean(self):
+#        &amp;quot;&amp;quot;&amp;quot;
+#        Clean the current cell.
+#        :rtype void
+#        &amp;quot;&amp;quot;&amp;quot;
+
+class Solution:
+    def cleanRoom(self, robot):
+        &amp;quot;&amp;quot;&amp;quot;
+        :type robot: Robot
+        :rtype: None
+        &amp;quot;&amp;quot;&amp;quot;
+        
+        visited=set()
+        degree = 90
+        #degree direction dic
+        dic = {&#39;u&#39;:90,&#39;r&#39;:0,&#39;l&#39;:180,&#39;d&#39;:270}
+        dix = {&#39;u&#39;:0,&#39;r&#39;:1,&#39;l&#39;:-1,&#39;d&#39;:0}
+        diy = {&#39;u&#39;:1,&#39;r&#39;:0,&#39;l&#39;:0,&#39;d&#39;:-1}
+        drev = {&#39;u&#39;:&#39;d&#39;,&#39;d&#39;:&#39;u&#39;,&#39;l&#39;:&#39;r&#39;,&#39;r&#39;:&#39;l&#39;}
+        #assume init is up
+        def move(dir):
+            nonlocal degree
+            delta = degree - dic[dir]
+            if delta&amp;gt;0:
+                for _ in range(delta//90):
+                    robot.turnRight()
+            if delta&amp;lt;0:
+                for _ in range(-delta//90):
+                    robot.turnLeft()
+            degree = dic[dir]
+            return robot.move()
+        
+        def dfs(x,y):
+            if (x,y) in visited: return
+            visited.add((x,y))
+            robot.clean()
+            for dir in [&#39;u&#39;,&#39;d&#39;,&#39;l&#39;,&#39;r&#39;]:
+                new_x = x+dix[dir]
+                new_y = y+diy[dir]
+                if (new_x,new_y) not in visited:
+                    if move(dir):
+                        dfs(new_x,new_y)
+                        move(drev[dir])
+                        
+        
+        dfs(0,0)
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;backtracking... nothing hard&lt;/p&gt;
+&lt;h1 id=&#34;490-the-maze-medium&#34;&gt;490. The Maze (Medium)&lt;/h1&gt;
+&lt;p&gt;There is a ball in a maze with empty spaces (represented as 0) and walls (represented as 1). The ball can go through the empty spaces by rolling up, down, left or right, but it won&#39;t stop rolling until hitting a wall. When the ball stops, it could choose the next direction.&lt;br&gt;
+Given the m x n maze, the ball&#39;s start position and the destination, where start = [startrow, startcol] and destination = [destinationrow, destinationcol], return true if the ball can stop at the destination, otherwise return false.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def hasPath(self, maze: List[List[int]], start: List[int], destination: List[int]) -&amp;gt; bool:
+        #    d  r l  u
+        dx = [0,1,-1,0]
+        dy = [1,0,0,-1]
+        m=len(maze)
+        n=len(maze[0])
+        if start==destination: return True
+        visited = set()
+        self.res = False
+        def dfs(x,y):
+            visited.add((x,y))
+            if [x,y]==destination:
+                self.res = True
+            
+            for i in range(4):
+                new_x = x+dx[i]
+                new_y = y+dy[i]
+                while new_x&amp;gt;=0 and new_x&amp;lt;m and new_y&amp;gt;=0 and new_y&amp;lt;n and maze[new_x][new_y]==0:
+                    new_x+=dx[i]
+                    new_y+=dy[i]
+                
+                new_x -= dx[i]
+                new_y -= dy[i]
+                if (new_x,new_y) not in visited:
+                    dfs(new_x,new_y) 
+            
+        dfs(*start)
+        return self.res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;有点卡，卡在了dfs 不能直接return true or false， 设置了个self.res捕捉结果。还能用BFS。。&lt;/p&gt;
 ">Leetcode 2023-01-05</a>
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/"" data-c="
           &lt;p&gt;找到适合首把22LR定制枪的最佳子弹&lt;/p&gt;
 &lt;!-- more --&gt;
 &lt;h1 id=&#34;器材&#34;&gt;器材&lt;/h1&gt;
@@ -998,9 +1853,9 @@ s[i] == &#39;D&#39; if perm[i] &amp;gt; perm[i + 1].
 &lt;h1 id=&#34;结果&#34;&gt;结果&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;day1 shooting&lt;br&gt;
-&lt;img src=&#34;https://headhuanglan.github.io/post-images/KIDD.JPG&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/li&gt;
+&lt;img src=&#34;http://localhost:4000/post-images/KIDD.JPG&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/li&gt;
 &lt;li&gt;day2 shooting&lt;br&gt;
-&lt;img src=&#34;https://headhuanglan.github.io/post-images/KIDD2.JPG&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/li&gt;
+&lt;img src=&#34;http://localhost:4000/post-images/KIDD2.JPG&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;分析-moa&#34;&gt;分析 （MOA）&lt;/h2&gt;
 &lt;table&gt;
@@ -1165,7 +2020,7 @@ s[i] == &#39;D&#39; if perm[i] &amp;gt; perm[i + 1].
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/system-design/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/system-design/"" data-c="
           &lt;p&gt;System Design 资源汇总&lt;/p&gt;
 &lt;!-- more --&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=PdtlXdse7pw&amp;amp;list=PL4KdJM8LzAMecwInbBK5GJ3Anz-ts75RQ&#34;&gt;DDIA书视频总结&lt;/a&gt;&lt;/p&gt;
@@ -1258,7 +2113,7 @@ s[i] == &#39;D&#39; if perm[i] &amp;gt; perm[i + 1].
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-08/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2022-03-08/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-471-encode-string-with-shortest-length-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 471. Encode String with Shortest Length （Hard）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given a string s, encode the string such that its encoded length is the shortest.&lt;br&gt;
@@ -1726,7 +2581,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-07/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2022-03-07/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;461-hamming-distance-easy&#34;&gt;461. Hamming Distance (Easy)&lt;/h1&gt;
 &lt;p&gt;The Hamming distance between two integers is the number of positions at which the corresponding bits are different.&lt;br&gt;
@@ -2121,7 +2976,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-06/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2022-03-06/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;451-sort-characters-by-frequency-medium&#34;&gt;451. Sort Characters By Frequency （Medium）&lt;/h1&gt;
 &lt;p&gt;Given a string s, sort it in decreasing order based on the frequency of the characters. The frequency of a character is the number of times it appears in the string.&lt;br&gt;
@@ -2640,7 +3495,7 @@ Otherwise:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-05/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2022-03-05/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;441-arranging-coins-easy&#34;&gt;441. Arranging Coins （Easy）&lt;/h1&gt;
 &lt;p&gt;You have n coins and you want to build a staircase with these coins. The staircase consists of k rows where the ith row has exactly i coins. The last row of the staircase may be incomplete.&lt;br&gt;
@@ -3201,7 +4056,7 @@ If the node is found, delete the node.&lt;/p&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-04/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2022-03-04/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;431-encode-n-ary-tree-to-binary-tree-hard&#34;&gt;431. Encode N-ary Tree to Binary Tree （Hard）&lt;/h1&gt;
 &lt;p&gt;Design an algorithm to encode an N-ary tree into a binary tree and decode the binary tree to get the original N-ary tree. An N-ary tree is a rooted tree in which each node has no more than N children. Similarly, a binary tree is a rooted tree in which each node has no more than 2 children. There is no restriction on how your encode/decode algorithm should work. You just need to ensure that an N-ary tree can be encoded to a binary tree and this binary tree can be decoded to the original N-nary tree structure.&lt;/p&gt;
@@ -3983,7 +4838,7 @@ return steps;&lt;br&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-03/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2022-03-03/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-421-maximum-xor-of-two-numbers-in-an-array-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 421. Maximum XOR of Two Numbers in an Array （Medium）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given an integer array nums, return the maximum result of nums[i] XOR nums[j], where 0 &amp;lt;= i &amp;lt;= j &amp;lt; n.&lt;/p&gt;
@@ -4619,7 +5474,7 @@ class Solution(object):
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-02/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2022-03-02/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-411-minimum-unique-word-abbreviation-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 411. Minimum Unique Word Abbreviation （Hard）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;A string can be abbreviated by replacing any number of non-adjacent substrings with their lengths. For example, a string such as &amp;quot;substitution&amp;quot; could be abbreviated as (but not limited to):&lt;br&gt;
@@ -5098,7 +5953,7 @@ Replace one character of password with another character.&lt;/p&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-01/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2022-03-01/"" data-c="
           &lt;!-- more --&gt;
 &lt;p&gt;中间搞laser project浪费了不少时间~~~ 争取3月刷300到700. system design 也该看了。&lt;/p&gt;
 &lt;h1 id=&#34;font-colorred-401-binary-watch-easy-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 401. Binary Watch (Easy) &lt;/font&gt;&lt;/h1&gt;
@@ -5567,7 +6422,7 @@ DP很好， bianry search是最优解法。&lt;/p&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-12/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-12/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred391-perfect-rectangle-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;391. Perfect Rectangle （Hard）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given an array rectangles where rectangles[i] = [xi, yi, ai, bi] represents an axis-aligned rectangle. The bottom-left point of the rectangle is (xi, yi) and the top-right point of it is (ai, bi).&lt;br&gt;
@@ -6080,7 +6935,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-11/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-11/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-381-insert-delete-getrandom-o1-duplicates-allowed-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 381. Insert Delete GetRandom O(1) - Duplicates allowed （Hard）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;RandomizedCollection is a data structure that contains a collection of numbers, possibly duplicates (i.e., a multiset). It should support inserting and removing specific elements and also removing a random element.&lt;br&gt;
@@ -6565,7 +7420,7 @@ like 2 4 6 8 10 12, we move from 12, we will take out 12, 8, 4, head is still re
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-10/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-10/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-371-sum-of-two-integers-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 371. Sum of Two Integers （Medium） &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given two integers a and b, return the sum of the two integers without using the operators + and -.&lt;/p&gt;
@@ -7049,7 +7904,7 @@ class RandomizedSet():
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-09/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-09/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;361-bomb-enemy-medium&#34;&gt;361. Bomb Enemy （Medium）&lt;/h1&gt;
 &lt;p&gt;Given an m x n matrix grid where each cell is either a wall &#39;W&#39;, an enemy &#39;E&#39; or empty &#39;0&#39;, return the maximum enemies you can kill using one bomb. You can only place the bomb in an empty cell.&lt;/p&gt;
@@ -7813,7 +8668,7 @@ def query(left,right):
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-08/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-08/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred351-android-unlock-patterns-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;351. Android Unlock Patterns (Medium) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Android devices have a special lock screen with a 3 x 3 grid of dots. Users can set an &amp;quot;unlock pattern&amp;quot; by connecting the dots in a specific sequence, forming a series of joined line segments where each segment&#39;s endpoints are two consecutive dots in the sequence. A sequence of k dots is a valid unlock pattern if both of the following are true:&lt;br&gt;
@@ -8228,7 +9083,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-07/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-07/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred341-flatten-nested-list-iterator-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;341. Flatten Nested List Iterator （Medium）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists. Implement an iterator to flatten it.&lt;/p&gt;
@@ -8669,7 +9524,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-06/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-06/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorblue331-verify-preorder-serialization-of-a-binary-tree-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt;331. Verify Preorder Serialization of a Binary Tree &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;One way to serialize a binary tree is to use preorder traversal. When we encounter a non-null node, we record the node&#39;s value. If it is a null node, we record using a sentinel value such as &#39;#&#39;.&lt;/p&gt;
@@ -9165,7 +10020,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-05/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-05/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred321-create-maximum-number-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;321. Create Maximum Number (Hard) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;You are given two integer arrays nums1 and nums2 of lengths m and n respectively. nums1 and nums2 represent the digits of two numbers. You are also given an integer k.&lt;br&gt;
@@ -9606,7 +10461,7 @@ Return the minimum number of patches required.&lt;/p&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-04/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-04/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;311-sparse-matrix-multiplication-medium&#34;&gt;311. Sparse Matrix Multiplication (Medium)&lt;/h1&gt;
 &lt;p&gt;Given two sparse matrices mat1 of size m x k and mat2 of size k x n, return the result of mat1 x mat2. You may assume that multiplication is always possible.&lt;/p&gt;
@@ -10144,7 +10999,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-03/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-03/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred301-remove-invalid-parentheses-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;301. Remove Invalid Parentheses (Hard) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.&lt;br&gt;
@@ -10882,7 +11737,7 @@ After you sell your stock, you cannot buy stock on the next day (i.e., cooldown 
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-02/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-02/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;291-word-pattern-ii-medium&#34;&gt;291. Word Pattern II （Medium）&lt;/h1&gt;
 &lt;p&gt;Given a pattern and a string s, return true if s matches the pattern.&lt;br&gt;
@@ -11190,7 +12045,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-01/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-12-01/"" data-c="
           &lt;p&gt;依然在补进度，而且没有复习之前刷的题目， 12月底补12月初进度。 立个flag，明年一月结束要刷到900. 二月全面复习二刷。&lt;/p&gt;
 &lt;!-- more --&gt;
 &lt;h1 id=&#34;281-zigzag-iterator-medium&#34;&gt;281. Zigzag Iterator （Medium）&lt;/h1&gt;
@@ -11729,7 +12584,7 @@ def gameOfLife(self, board):
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-30/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-30/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;271-encode-and-decode-strings-medium&#34;&gt;271. Encode and Decode Strings (Medium)&lt;/h1&gt;
 &lt;p&gt;Design an algorithm to encode a list of strings to a string. The encoded string is then sent over the network and is decoded back to the original list of strings.&lt;/p&gt;
@@ -12296,7 +13151,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-29/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-29/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorblue261-graph-valid-tree-mediumfont&#34;&gt;&lt;font color=&#39;blue&#39;&gt;261. Graph Valid Tree （Medium）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;You have a graph of n nodes labeled from 0 to n - 1. You are given an integer n and a list of edges where edges[i] = [ai, bi] indicates that there is an undirected edge between nodes ai and bi in the graph.&lt;br&gt;
@@ -12698,7 +13553,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-28/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-28/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;251-flatten-2d-vector-medium&#34;&gt;251. Flatten 2D Vector (Medium)&lt;/h1&gt;
 &lt;p&gt;Design an iterator to flatten a 2D vector. It should support the next and hasNext operations.&lt;br&gt;
@@ -13000,7 +13855,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-27/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-27/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-241-different-ways-to-add-parentheses-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 241. Different Ways to Add Parentheses （Medium）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given a string expression of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. You may return the answer in any order.&lt;/p&gt;
@@ -13274,7 +14129,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/shu-dan/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/shu-dan/"" data-c="
           &lt;p&gt;半小时漫画系列经济和历史不错，虽然历史从来没学好，但也可能是吸收姿势不对。 侵权删。&lt;br&gt;
 ADHD系列图书以及心理学~&lt;/p&gt;
 &lt;!-- more --&gt;
@@ -13302,7 +14157,7 @@ ADHD系列图书以及心理学~&lt;/p&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-26/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-26/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;231-power-of-two-easy&#34;&gt;231. Power of Two (Easy)&lt;/h1&gt;
 &lt;p&gt;Given an integer n, return true if it is a power of two. Otherwise, return false.An integer n is a power of two, if there exists an integer x such that n == 2^x.&lt;/p&gt;
@@ -13743,7 +14598,7 @@ class Solution(object):
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-25/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-25/"" data-c="
           &lt;p&gt;感恩节假期中断了刷题，沉迷于半小时漫画系列... 补上月25进度。&lt;/p&gt;
 &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-221-maximal-square-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 221. Maximal Square （Medium）&lt;/font&gt;&lt;/h1&gt;
@@ -14325,7 +15180,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-24/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-24/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;211-design-add-and-search-words-data-structure-medium&#34;&gt;211. Design Add and Search Words Data Structure （Medium）&lt;/h1&gt;
 &lt;p&gt;Design Add and Search Words Data Structure&lt;/p&gt;
@@ -14798,7 +15653,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-23/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-23/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred201-bitwise-and-of-numbers-range-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt;201. Bitwise AND of Numbers Range （Medium）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given two integers left and right that represent the range [left, right], return the bitwise AND of all numbers in this range, inclusive.&lt;/p&gt;
@@ -15173,7 +16028,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-22/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-22/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;191-number-of-1-bits-easy&#34;&gt;191. Number of 1 Bits (Easy)&lt;/h1&gt;
 &lt;p&gt;Write a function that takes an unsigned integer and returns the number of &#39;1&#39; bits it has (also known as the Hamming weight).&lt;/p&gt;
@@ -15360,7 +16215,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-21/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-21/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;181-employees-earning-more-than-their-managers-easy-sql&#34;&gt;181. Employees Earning More Than Their Managers (Easy) SQL&lt;/h1&gt;
 &lt;p&gt;Write an SQL query to find the employees who earn more than their managers.&lt;/p&gt;
@@ -15574,7 +16429,7 @@ Output: [5,6,7,1,2,3,4]&lt;br&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-20/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-20/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;171-excel-sheet-column-number-easy&#34;&gt;171. Excel Sheet Column Number (Easy)&lt;/h1&gt;
 &lt;p&gt;convert excel sheet column chars to number&lt;/p&gt;
@@ -15786,7 +16641,7 @@ WHERE
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-19/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-19/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;161-one-edit-distance-medium&#34;&gt;161. One Edit Distance (Medium)&lt;/h1&gt;
 &lt;p&gt;Given two strings s and t, return true if they are both one edit distance apart, otherwise return false.&lt;/p&gt;
@@ -16268,7 +17123,7 @@ return res
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-18/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-18/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;151-reverse-words-in-a-string-medium&#34;&gt;151. Reverse Words in a String （Medium）&lt;/h1&gt;
 &lt;p&gt;Given an input string s, reverse the order of the words.&lt;/p&gt;
@@ -16689,7 +17544,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-17/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-17/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;141-linked-list-cycle-easy&#34;&gt;141. Linked List Cycle (Easy)&lt;/h1&gt;
 &lt;p&gt;Given head, the head of a linked list, determine if the linked list has a cycle in it.&lt;/p&gt;
@@ -17196,7 +18051,7 @@ Explanation: ((2 + 1) * 3) = 9&lt;/p&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-16/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-16/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;131-palindrome-partitioning-medium&#34;&gt;131. Palindrome Partitioning (Medium)&lt;/h1&gt;
 &lt;p&gt;Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of s.&lt;br&gt;
@@ -17649,7 +18504,7 @@ Output: [&amp;quot;cats and dog&amp;quot;,&amp;quot;cat sand dog&amp;quot;]&lt;/
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-15/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-15/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;121-best-time-to-buy-and-sell-stock-easy&#34;&gt;121. Best Time to Buy and Sell Stock (Easy)&lt;/h1&gt;
 &lt;p&gt;You are given an array prices where prices[i] is the price of a given stock on the ith day.&lt;br&gt;
@@ -18130,7 +18985,7 @@ class Solution(object):
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-13/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-13/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;111-minimum-depth-of-binary-tree-easy&#34;&gt;111. Minimum Depth of Binary Tree (Easy)&lt;/h1&gt;
 &lt;p&gt;Given a binary tree, find its minimum depth.&lt;/p&gt;
@@ -18435,7 +19290,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-14/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-14/"" data-c="
           &lt;p&gt;BFS DFS 模板总结&lt;/p&gt;
 &lt;!-- more --&gt;
 &lt;h1 id=&#34;bfs-template&#34;&gt;BFS - Template&lt;/h1&gt;
@@ -18539,7 +19394,7 @@ boolean DFS(int root, int target) {
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-12/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-12/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;101-symmetric-tree-easy&#34;&gt;101. Symmetric Tree (Easy)&lt;/h1&gt;
 &lt;p&gt;Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).&lt;/p&gt;
@@ -18821,7 +19676,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-11/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-11/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-91-decode-ways-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 91. Decode Ways (Medium) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;A message containing letters from A-Z can be encoded into numbers using the following mapping:&lt;/p&gt;
@@ -19169,7 +20024,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-10/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-10/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorblue-81-search-in-rotated-sorted-array-ii-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 81. Search in Rotated Sorted Array II (Medium) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;There is an integer array nums sorted in non-decreasing order (not necessarily with distinct values).&lt;/p&gt;
@@ -19581,7 +20436,7 @@ The solution set must not contain duplicate subsets. Return the solution in any 
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-09/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-09/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;71-simplify-path-medium&#34;&gt;71. Simplify Path （Medium）&lt;/h1&gt;
 &lt;p&gt;Given a string path, which is an absolute path (starting with a slash &#39;/&#39;) to a file or directory in a Unix-style file system, convert it to the simplified canonical path.&lt;/p&gt;
@@ -20033,7 +20888,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-07/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-07/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;61-rotate-list-medium&#34;&gt;61. Rotate List （Medium）&lt;/h1&gt;
 &lt;p&gt;Given the head of a linked list, rotate the list to the right by k places.&lt;/p&gt;
@@ -20392,7 +21247,7 @@ Each time you can either climb 1 or 2 steps. In how many distinct ways can you c
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-06/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-06/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;font-colorred-51-n-queens-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 51. N-Queens (Hard) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other.&lt;/p&gt;
@@ -20791,7 +21646,7 @@ k的最大位阶乘计数对应的值为 index=k//bignumber[i]   i~n-1:0。知�
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/backtracking-zong-jie/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/backtracking-zong-jie/"" data-c="
           &lt;p&gt;backtracking 不同题目不完全汇总&lt;/p&gt;
 &lt;!-- more --&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
@@ -20914,7 +21769,7 @@ k的最大位阶乘计数对应的值为 index=k//bignumber[i]   i~n-1:0。知�
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-05/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-05/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;41-first-missing-positive-hard&#34;&gt;41. First Missing Positive （Hard）&lt;/h1&gt;
 &lt;p&gt;Given an unsorted integer array nums, return the smallest missing positive integer.&lt;br&gt;
@@ -21308,7 +22163,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-04/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-04/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;31-next-permutation-medium&#34;&gt;31. Next Permutation （Medium）&lt;/h1&gt;
 &lt;p&gt;Implement next permutation, which rearranges numbers into the lexicographically next greater permutation of numbers.&lt;br&gt;
@@ -21624,7 +22479,7 @@ what if 是 下一个更小的位置？？ drop=&amp;gt;increase,   大=&amp;gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-03/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-03/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;21-merge-two-sorted-lists-easy&#34;&gt;21. Merge Two Sorted Lists （Easy）&lt;/h1&gt;
 &lt;p&gt;Merge two sorted linked lists and return it as a sorted list. The list should be made by splicing together the nodes of the first two lists.&lt;/p&gt;
@@ -21949,7 +22804,7 @@ two pointer + counter dict 应用。&lt;/p&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-02/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-02/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;11-container-with-most-water-medium&#34;&gt;11. Container With Most Water (Medium)&lt;/h1&gt;
 &lt;p&gt;Given n non-negative integers a1, a2, ..., an , where each represents a point at coordinate (i, ai). n vertical lines are drawn such that the two endpoints of the line i is at (i, ai) and (i, 0). Find two lines, which, together with the x-axis forms a container, such that the container contains the most water.&lt;/p&gt;
@@ -22296,7 +23151,7 @@ class Solution:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-11-01/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/leetcode-2021-11-01/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;1-two-sum-easy&#34;&gt;1. Two Sum （Easy）&lt;/h1&gt;
 &lt;p&gt;Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.&lt;/p&gt;
@@ -22648,7 +23503,7 @@ Y   I   R&lt;/p&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/er-fen-fa-mo-ban/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/er-fen-fa-mo-ban/"" data-c="
           &lt;p&gt;Binary Search 模板总结&lt;/p&gt;
 &lt;!-- more --&gt;
 &lt;h1 id=&#34;1&#34;&gt;1&lt;/h1&gt;
@@ -22731,10 +23586,10 @@ Y   I   R&lt;/p&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/da-jia-lai-zhao-chi-wen-zi-ban/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/da-jia-lai-zhao-chi-wen-zi-ban/"" data-c="
           &lt;p&gt;&lt;a href=&#34;/zhaocha&#34;&gt;点击PLAY大家来找茬&lt;/a&gt;&lt;/p&gt;
 &lt;!-- more --&gt;
-&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://headhuanglan.github.io/post-images/1635790537514.PNG&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;http://localhost:4000/post-images/1635790537514.PNG&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
 &lt;h2 id=&#34;思路&#34;&gt;思路&lt;/h2&gt;
 &lt;p&gt;准备写个大家来找茬的文字版，需要找出所有中文的形状相似字符对，已知GBK下33088-65278为中文编码。找个字库文件比如FZLanTingHei-R-GBK.TTF，把字符黑白矩阵转成一个向量，然后算所有文字对的COS相似度就可以了，算法很简单。 开搞！&lt;/p&gt;
 &lt;h2 id=&#34;代码&#34;&gt;代码&lt;/h2&gt;
@@ -22798,7 +23653,7 @@ if __name__ == &#39;__main__&#39;:
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/about/"" data-c="
+        <a class="result-title" style="opacity: 0;" href="http://localhost:4000/post/about/"" data-c="
           &lt;p&gt;记录下刷题过程以及一些随机想法~~&lt;/p&gt;
 &lt;!-- more --&gt;
 ">关于</a>

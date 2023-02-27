@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>Leetcode 2021-11-21 | Lan&#39;s Blog</title>
+<title>Leetcode 2023-01-06 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1677468350039">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,8 @@
 
 
 
-  <meta name="description" content="Leetcode 2021-11-21" />
-  <meta name="keywords" content="leetcode" />
+  <meta name="description" content="Leetcode 2023-01-06" />
+  <meta name="keywords" content="" />
 </head>
 
 <body>
@@ -223,16 +223,16 @@
   <div class="toc-wrapper  auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#181-employees-earning-more-than-their-managers-easy-sql">181. Employees Earning More Than Their Managers (Easy) SQL</a></li>
-<li><a href="#182-duplicate-emails-easy-sql">182. Duplicate Emails (Easy) SQL</a></li>
-<li><a href="#183-customers-who-never-order-easy-sql">183. Customers Who Never Order (Easy) SQL</a></li>
-<li><a href="#184-department-highest-salary-medium-sql">184. Department Highest Salary (Medium) SQL</a></li>
-<li><a href="#185-department-top-three-salaries-hard-sql">185. Department Top Three Salaries (Hard) SQL</a></li>
-<li><a href="#186-reverse-words-in-a-string-ii-medium">186. Reverse Words in a String II (Medium)</a></li>
-<li><a href="#187-repeated-dna-sequences-medium">187. Repeated DNA Sequences (Medium)</a></li>
-<li><a href="#font-colorred188-best-time-to-buy-and-sell-stock-iv-hardfont"><font color='red'>188. Best Time to Buy and Sell Stock IV （Hard）</font></a></li>
-<li><a href="#189-rotate-array-medium">189. Rotate Array （Medium）</a></li>
-<li><a href="#190-reverse-bits-easy">190. Reverse Bits (Easy)</a></li>
+<li><a href="#491-non-decreasing-subsequences-medium">491. Non-decreasing Subsequences （Medium）</a></li>
+<li><a href="#492-construct-the-rectangle-easy">492. Construct the Rectangle （Easy）</a></li>
+<li><a href="#font-colorred-493-reverse-pairs-hard-font"><font color='red'> 493. Reverse Pairs (Hard) </font></a></li>
+<li><a href="#font-colorred-494-target-sum-medium-font"><font color='red'> 494. Target Sum (Medium) </font></a></li>
+<li><a href="#495-teemo-attacking-easy">495. Teemo Attacking （Easy）</a></li>
+<li><a href="#496-next-greater-element-i-easy">496. Next Greater Element I (Easy)</a></li>
+<li><a href="#497-random-point-in-non-overlapping-rectangles-medium">497. Random Point in Non-overlapping Rectangles （Medium）</a></li>
+<li><a href="#498-diagonal-traverse-medium">498. Diagonal Traverse （Medium）</a></li>
+<li><a href="#font-colorred-499-the-maze-iii-hard-font"><font color='red'> 499. The Maze III （Hard） </font></a></li>
+<li><a href="#500-keyboard-row-easy">500. Keyboard Row （Easy）</a></li>
 </ul>
 
   </div>
@@ -498,32 +498,21 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="http://localhost:4000/post/leetcode-2021-11-21/"> Leetcode 2021-11-21 </a>
+    <a class="post-title-link" href="http://localhost:4000/post/leetcode-2023-01-06/"> Leetcode 2023-01-06 </a>
   </h1>
   <div class="post-meta">
     
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2021-11-19 22:29:00">2021-11-19</span>
+      <span class="publish-time" data-t="2023-02-22 21:39:49">2023-02-22</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
     <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">标签:</span>
-       
-      <a href="http://localhost:4000/tag/8v2np0s07/">
-        <span>leetcode</span>
-      </a>
-       
-    </span>
-    <span class="post-meta-divider">|</span>
-    
-    <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >7<span class="language" data-lan="minute"
+        >17<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -532,7 +521,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >979<span class="pc-show language" data-lan="words"
+        >2804<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -543,213 +532,443 @@
 
             <div class="post-body next-md-body" id="post_body">
               <!-- more -->
-<h1 id="181-employees-earning-more-than-their-managers-easy-sql">181. Employees Earning More Than Their Managers (Easy) SQL</h1>
-<p>Write an SQL query to find the employees who earn more than their managers.</p>
-<pre><code class="language-SQL">SELECT
-    a.Name AS 'Employee'
-FROM
-    Employee AS a,
-    Employee AS b
-WHERE
-    a.ManagerId = b.Id
-        AND a.Salary &gt; b.Salary
-;
-
-SELECT
-     a.NAME AS Employee
-FROM Employee AS a JOIN Employee AS b
-     ON a.ManagerId = b.Id
-     AND a.Salary &gt; b.Salary
-;
-</code></pre>
-<h1 id="182-duplicate-emails-easy-sql">182. Duplicate Emails (Easy) SQL</h1>
-<pre><code class="language-SQL">
-# Write your MySQL query statement below
-
-select Email from
-(
-  select Email, count(Email) as num
-  from Person
-  group by Email
-) as statistic
-where num &gt; 1
-;
-
-select Email
-from Person
-group by Email
-having count(Email) &gt; 1;
-</code></pre>
-<h1 id="183-customers-who-never-order-easy-sql">183. Customers Who Never Order (Easy) SQL</h1>
-<pre><code class="language-SQL">select name as &quot;Customers&quot; from Customers as c left join Orders o on c.id=o.customerId where o.id is NULL;
-
-
-select customers.name as 'Customers'
-from customers
-where customers.id not in
-(
-    select customerid from orders
-);
-</code></pre>
-<h1 id="184-department-highest-salary-medium-sql">184. Department Highest Salary (Medium) SQL</h1>
-<pre><code class="language-SQL"># Write your MySQL query statement below
-select Department,Employee,Salary from (
-    select d.name as &quot;Department&quot;, 
-               e.name as &quot;Employee&quot;,  
-               e.salary as &quot;Salary&quot;,
-              rank()   OVER( partition by e.departmentId order by salary DESC) as &quot;r&quot;   
-    from Employee as e left join Department as d on e.departmentId=d.id )
-     as tmp where r=1
-
-
-#answer way of writting
-
-SELECT
-    Department.name AS 'Department',
-    Employee.name AS 'Employee',
-    Salary
-FROM
-    Employee
-        JOIN
-    Department ON Employee.DepartmentId = Department.Id
-WHERE
-    (Employee.DepartmentId , Salary) IN
-    (   SELECT
-            DepartmentId, MAX(Salary)
-        FROM
-            Employee
-        GROUP BY DepartmentId
-    )
-;
-
-</code></pre>
-<h1 id="185-department-top-three-salaries-hard-sql">185. Department Top Three Salaries (Hard) SQL</h1>
-<pre><code class="language-SQL">select Department,Employee,Salary from (
-    select d.name as &quot;Department&quot;, 
-               e.name as &quot;Employee&quot;,  
-               e.salary as &quot;Salary&quot;,
-              dense_rank()   OVER( partition by e.departmentId order by salary DESC) as &quot;r&quot;   
-    from Employee as e left join Department as d on e.departmentId=d.id )
-as tmp where   r&lt;=3
-
-#answer way of writting
-SELECT
-    d.Name AS 'Department', e1.Name AS 'Employee', e1.Salary
-FROM
-    Employee e1
-        JOIN
-    Department d ON e1.DepartmentId = d.Id
-WHERE
-    3 &gt; (SELECT
-            COUNT(DISTINCT e2.Salary)
-        FROM
-            Employee e2
-        WHERE
-            e2.Salary &gt; e1.Salary
-                AND e1.DepartmentId = e2.DepartmentId
-        )
-;
-</code></pre>
-<h1 id="186-reverse-words-in-a-string-ii-medium">186. Reverse Words in a String II (Medium)</h1>
-<p>Given a character array s, reverse the order of the words.<br>
-A word is defined as a sequence of non-space characters. The words in s will be separated by a single space.<br>
-Your code must solve the problem in-place, i.e. without allocating extra space.</p>
+<h1 id="491-non-decreasing-subsequences-medium">491. Non-decreasing Subsequences （Medium）</h1>
+<p>Given an integer array nums, return all the different possible non-decreasing subsequences of the given array with at least two elements. You may return the answer in any order.</p>
 <pre><code class="language-python">class Solution:
-    def reverseWords(self, s: List[str]) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify s in-place instead.
-        &quot;&quot;&quot;
-        def rev(s,i,j):
-            while i&gt;=0 and j&lt;len(s) and i&lt;j:
-                s[i],s[j]=s[j],s[i]
-                i+=1
-                j-=1
-        
-        l=0
-        r=len(s)-1
-        rev(s,l,r)
-        start=0
-        for i in range(r):
-            if s[i]==' ':
-                rev(s,start,i-1)
-                start=i+1
-        rev(s,start,r)
-</code></pre>
-<h1 id="187-repeated-dna-sequences-medium">187. Repeated DNA Sequences (Medium)</h1>
-<p>The DNA sequence is composed of a series of nucleotides abbreviated as 'A', 'C', 'G', and 'T'.<br>
-For example, &quot;ACGAATTCCG&quot; is a DNA sequence.<br>
-When studying DNA, it is useful to identify repeated sequences within the DNA.<br>
-Given a string s that represents a DNA sequence, return all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule. You may return the answer in any order.</p>
-<pre><code class="language-python">class Solution:
-    def findRepeatedDnaSequences(self, s: str) -&gt; List[str]:
-        #sliding window s[i,i+10]  drop i add i+10, if in set, append to res
-        if len(s)&lt;=10: 
-            return []
-        set_ = set()
+    def findSubsequences(self, nums: List[int]) -&gt; List[List[int]]:
         res = set()
-        for i in range(len(s)-10+1):
-            cur=s[i:i+10]
-            if cur in set_:
-                res.add(cur)
-            set_.add(cur)
+        def bt(start, tmp):
+            if len(tmp)&gt;1:
+                res.add(tuple(tmp))
+            for i in range(start,len(nums)):
+                if i-1&gt;= start and nums[i]==nums[i-1]: continue
+                if not tmp or nums[i]&gt;=tmp[-1]:
+                    tmp.append(nums[i])
+                    bt(i+1,tmp)
+                    tmp.pop()
+    
+        bt(0,[])
         return list(res)
-</code></pre>
-<h1 id="font-colorred188-best-time-to-buy-and-sell-stock-iv-hardfont"><font color='red'>188. Best Time to Buy and Sell Stock IV （Hard）</font></h1>
-<p>You are given an integer array prices where prices[i] is the price of a given stock on the ith day, and an integer k.<br>
-Find the maximum profit you can achieve. You may complete at most k transactions.</p>
-<pre><code class="language-python">class Solution:
-    def maxProfit(self, k: int, prices: List[int]) -&gt; int:
-        #  if k==1
-        if not prices: return 0
-        if k==0: return 0
-        min_ = [float('inf')]*k
-        p_ = [float('-inf')]*k
-        
-        for i,n in enumerate(prices):
-            min_[0] = min(min_[0],n)
-            p_[0] = max(p_[0],n-min_[0])
-            for j in range(1,k):
-                min_[j]=min(min_[j],n-p_[j-1])
-                p_[j]=max(p_[j],n-min_[j])
-                
 
-        return p_[-1]
-</code></pre>
-<p>老老实实写出K=2的情况，然后改写为数组形式。但忘记了K=2怎么写。。。</p>
-<h1 id="189-rotate-array-medium">189. Rotate Array （Medium）</h1>
-<p>Given an array, rotate the array to the right by k steps, where k is non-negative.<br>
-Input: nums = [1,2,3,4,5,6,7], k = 3<br>
-Output: [5,6,7,1,2,3,4]<br>
-7654321<br>
-765|4321<br>
-657|1234</p>
-<pre><code class="language-python">class Solution:
-    def rotate(self, nums: List[int], k: int) -&gt; None:
-        &quot;&quot;&quot;
-        Do not return anything, modify nums in-place instead.
-        &quot;&quot;&quot;
-        l=len(nums)
-        k = k%l
-        def rev(nums,i,j):
-            while i&lt;j:
-                nums[i],nums[j]=nums[j],nums[i]
-                i+=1
-                j-=1
+#ANSWER 
+class Solution:
+    def findSubsequences(self, nums: List[int]) -&gt; List[List[int]]:
+        res = set()
+        def bt(start, tmp):
+            
+            if start==len(nums):
+                if len(tmp)&gt;1:
+                    res.add(tuple(tmp))
+                return
+
+            
+            #add num[i]
+            if not tmp or nums[start]&gt;=tmp[-1]:
+                tmp.append(nums[start])
+                bt(start+1,tmp)
+                tmp.pop()
+            #not add num[i]
+            bt(start+1,tmp)
+    
         
-        rev(nums,0,l-1)
-        rev(nums,0,k-1)
-        rev(nums,k,l-1)
+        bt(0,[])
+        return list(res)
+            
 </code></pre>
-<h1 id="190-reverse-bits-easy">190. Reverse Bits (Easy)</h1>
-<p>Reverse bits of a given 32 bits unsigned integer.</p>
+<p>感觉是个backtracking问题， debug了一会解决了。。答案更好</p>
+<h1 id="492-construct-the-rectangle-easy">492. Construct the Rectangle （Easy）</h1>
+<p>A web developer needs to know how to design a web page's size. So, given a specific rectangular web page’s area, your job by now is to design a rectangular web page, whose length L and width W satisfy the following requirements:<br>
+The area of the rectangular web page you designed must equal to the given target area.<br>
+The width W should not be larger than the length L, which means L &gt;= W.<br>
+The difference between length L and width W should be as small as possible.<br>
+Return an array [L, W] where L and W are the length and width of the web page you designed in sequence.</p>
 <pre><code class="language-python">class Solution:
-    def reverseBits(self, n: int) -&gt; int:
+    def constructRectangle(self, area: int) -&gt; List[int]:
+        # L*W=area
+        # L&gt;=W
+        # min(abs(L-W))
+
+        L=res_L=area
+        W=res_W=1
+        while L&gt;=W:
+            W+=1
+            L=area//W
+            if L&gt;=W and L*W==area:
+                res_L=L
+                res_W=W
+        return res_L,res_W
+#ANSWER
+
+class Solution:
+    def constructRectangle(self, area: int) -&gt; List[int]:
+        # L*W=area
+        # L&gt;=W
+        # min(abs(L-W))
+
+         
+        W=int(math.sqrt(area))
+        while area%W!=0:
+            W-=1
+        return area//W, W
+
+#ANSWER
+class Solution:
+    def constructRectangle(self, area: int) -&gt; List[int]:
+        middle=int(sqrt(area))
+        for i in range(middle,0,-1):
+            if area%i==0:
+                return[int(area/i),i]
+</code></pre>
+<h1 id="font-colorred-493-reverse-pairs-hard-font"><font color='red'> 493. Reverse Pairs (Hard) </font></h1>
+<p>Given an integer array nums, return the number of reverse pairs in the array.<br>
+A reverse pair is a pair (i, j) where:<br>
+0 &lt;= i &lt; j &lt; nums.length and<br>
+nums[i] &gt; 2 * nums[j].</p>
+<pre><code class="language-python">class Solution:
+    def reversePairs(self, nums: List[int]) -&gt; int:
+        # I   J
+        # nI&gt;2nJ
+        # scan through nums with B-I-Tree find 2*cur_val+1 ~ end   count sum
         res = 0
-        for _ in range(32):
-            lastbit = n &amp; 1
-            n = n&gt;&gt;1
-            res = res&lt;&lt;1 | lastbit
-        return res  
+        size = len(nums)+1
+        bit = [0]*size
+
+        def insert(ind):
+            #bit ind from 1
+            while ind:
+                bit[ind]+=1
+                ind -= ind &amp; -ind
+
+        def query(ind):
+            res=0
+            while ind&lt;size:
+                res+=bit[ind]
+                ind+=ind&amp;-ind
+            return res
+        
+        def index(arr,val):
+            l = bisect.bisect_left(arr,val)
+            return l+1 #plus one due to BIT index from 1
+
+        
+        copy = nums[:]
+        copy.sort()
+        res=0
+        for n in nums:
+            res+=query(index(copy,2*n+1))
+            insert(index(copy,n))
+        return res        
+
+#ANSWER 2 Merge SORT
+class Solution:
+    def reversePairs(self, nums: List[int]) -&gt; int:
+
+        def ms(l, r):
+            if l &gt;= r: return 0
+            mid = (l + r) // 2
+            count = ms(l, mid) + ms(mid + 1, r)
+
+            j = mid + 1
+            for i in range(l, mid+1):
+                while j &lt;= r and nums[i] &gt; 2 * nums[j]:
+                    j += 1
+                count += j - mid - 1
+
+            nums[l:r+1] = sorted(nums[l:r+1])
+            return count
+
+        return ms(0, len(nums) - 1)
+</code></pre>
+<p>初看像用stack做 但是做不出来。。。答案用了BIT。。。。但是不是通常意义的BIT。反了insert 和update function。<br>
+For our case, the running total is simply the number of elements encountered during the traversal process. If we stick to the convention above, the running total will be the number of elements smaller than the one at the given index, since the copy array is sorted in ascending order. However, we'd actually like to find the number of elements greater than some value (i.e., twice of the element being scanned), therefore we need to flip the convention. This is what you see inside the search and insert functions: the former traversing towards the end of the bit while the latter towards the root.<br>
+MergeSort方法二 。。。</p>
+<h1 id="font-colorred-494-target-sum-medium-font"><font color='red'> 494. Target Sum (Medium) </font></h1>
+<p>You are given an integer array nums and an integer target.</p>
+<p>You want to build an expression out of nums by adding one of the symbols '+' and '-' before each integer in nums and then concatenate all the integers.</p>
+<pre><code>For example, if nums = [2, 1], you can add a '+' before 2 and a '-' before 1 and concatenate them to build the expression &quot;+2-1&quot;.
+</code></pre>
+<p>Return the number of different expressions that you can build, which evaluates to target.</p>
+<pre><code class="language-python">#TLE
+class Solution:
+    def findTargetSumWays(self, nums: List[int], target: int) -&gt; int:
+        self.res = 0
+        def bt(start,target):
+            if start==len(nums):
+                if target==0:
+                    self.res+=1
+                return
+            
+            # +
+            bt(start+1,target-nums[start])
+            # - 
+            bt(start+1,target+nums[start])
+        
+        bt(0,target)
+        return self.res
+
+#ANSWER
+ def findTargetSumWays(self, nums, S):
+        if not nums:
+            return 0
+        dic = {nums[0]: 1, -nums[0]: 1} if nums[0] != 0 else {0: 2}
+        for i in range(1, len(nums)):
+            tdic = {}
+            for d in dic:
+                tdic[d + nums[i]] = tdic.get(d + nums[i], 0) + dic.get(d, 0)
+                tdic[d - nums[i]] = tdic.get(d - nums[i], 0) + dic.get(d, 0)
+            dic = tdic
+        return dic.get(S, 0)  
+
+#ANSWER
+class Solution:
+    def findTargetSumWays(self, nums: List[int], target: int) -&gt; int:
+        # dp[i][t]   using upto ith number of target t
+        total=sum(nums)
+        if abs(target)&gt;total:return 0
+        dp=[  [0]*(2*total+1)  for _ in range(len(nums))]
+        dp[0][nums[0]+total] = 1
+        dp[0][-nums[0]+total] +=1
+
+        for i in range(1,len(nums)):
+            for sum_ in range(-total,total+1):
+                if dp[i-1][sum_+total]&gt;0:
+                    dp[i][sum_+nums[i]+total]+=dp[i-1][sum_+total]
+                    dp[i][sum_-nums[i]+total]+=dp[i-1][sum_+total]
+        
+        return dp[len(nums)-1][target+total]  
+
+</code></pre>
+<p>直接用BT会TLE。。。所以换思路， 试试DP。 因为数字和在-sum到sum之间，offset到0开始需要+sum。</p>
+<h1 id="495-teemo-attacking-easy">495. Teemo Attacking （Easy）</h1>
+<p>Our hero Teemo is attacking an enemy Ashe with poison attacks! When Teemo attacks Ashe, Ashe gets poisoned for a exactly duration seconds. More formally, an attack at second t will mean Ashe is poisoned during the inclusive time interval [t, t + duration - 1]. If Teemo attacks again before the poison effect ends, the timer for it is reset, and the poison effect will end duration seconds after the new attack.</p>
+<p>You are given a non-decreasing integer array timeSeries, where timeSeries[i] denotes that Teemo attacks Ashe at second timeSeries[i], and an integer duration.</p>
+<p>Return the total number of seconds that Ashe is poisoned.</p>
+<pre><code class="language-python">class Solution:
+    def findPoisonedDuration(self, timeSeries: List[int], duration: int) -&gt; int:
+        # input:[1,2] 2
+        #     1        2
+        #    start     end
+        #           start2           new_end3
+
+          
+        start = timeSeries[0]
+        end = start+duration-1
+        res = end-start+1
+        for t in timeSeries[1:]:
+            new_end = t+duration-1
+            if new_end&gt;end:
+                start = end+1 if t&lt;=end else t
+                end = new_end
+                res+=end-start+1
+        return res
+
+
+#ANSER ORZ indeed EZ
+class Solution:
+    def findPoisonedDuration(self, timeSeries: List[int], duration: int) -&gt; int:
+        n = len(timeSeries)
+        if n == 0:
+            return 0
+        
+        total = 0
+        for i in range(n - 1):
+            total += min(timeSeries[i + 1] - timeSeries[i], duration)
+        return total + duration
+</code></pre>
+<h1 id="496-next-greater-element-i-easy">496. Next Greater Element I (Easy)</h1>
+<p>The next greater element of some element x in an array is the first greater element that is to the right of x in the same array.</p>
+<p>You are given two distinct 0-indexed integer arrays nums1 and nums2, where nums1 is a subset of nums2.</p>
+<p>For each 0 &lt;= i &lt; nums1.length, find the index j such that nums1[i] == nums2[j] and determine the next greater element of nums2[j] in nums2. If there is no next greater element, then the answer for this query is -1.</p>
+<p>Return an array ans of length nums1.length such that ans[i] is the next greater element as described above.</p>
+<pre><code class="language-python">class Solution:
+    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -&gt; List[int]:
+        minheap=[ ]
+        dic= dict()
+        for n in nums2:
+            while minheap and minheap[0]&lt;n:
+                dic[heappop(minheap)] = n
+            heappush(minheap,n)
+        
+        return [dic.get(n,-1) for n in nums1]
+
+class Solution:
+    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -&gt; List[int]:
+        
+        dic = dict()
+        
+        stack = []
+        
+        while nums2:
+            cur = nums2.pop(0)
+            if not stack:
+                stack.append(cur)
+            else:
+                while stack and cur&gt;stack[-1]:
+                    dic[stack[-1]] = cur
+                    stack.pop()
+                stack.append(cur)
+        
+        return [dic.get(e,-1) for e in nums1]
+             
+
+</code></pre>
+<p>用不着用minheap 直接用stack就好，因为插入时候顺序已经是从左到右满足条件了。</p>
+<h1 id="497-random-point-in-non-overlapping-rectangles-medium">497. Random Point in Non-overlapping Rectangles （Medium）</h1>
+<p>You are given an array of non-overlapping axis-aligned rectangles rects where rects[i] = [ai, bi, xi, yi] indicates that (ai, bi) is the bottom-left corner point of the ith rectangle and (xi, yi) is the top-right corner point of the ith rectangle. Design an algorithm to pick a random integer point inside the space covered by one of the given rectangles. A point on the perimeter of a rectangle is included in the space covered by the rectangle.<br>
+Any integer point inside the space covered by one of the given rectangles should be equally likely to be returned.<br>
+Note that an integer point is a point that has integer coordinates.<br>
+Implement the Solution class:<br>
+Solution(int[][] rects) Initializes the object with the given rectangles rects.<br>
+int[] pick() Returns a random integer point [u, v] inside the space covered by one of the given rectangles.</p>
+<pre><code class="language-python">class Solution:
+
+    def __init__(self, rects: List[List[int]]):
+        self.rects = rects
+        self.area = [ (p[2]-p[0]+1)*(p[3]-p[1]+1) for p in self.rects]
+        
+
+    def pick(self) -&gt; List[int]:
+        #pick rect based on area
+        pick_rect = random.random()*sum(self.area)
+        now = 0
+        ind = -1
+        while now&lt;pick_rect:
+            ind+=1
+            now+=self.area[ind]
+        rect = self.rects[ind]
+        return [random.randint(rect[0], rect[2]),random.randint(rect[1], rect[3])]
+       
+        
+</code></pre>
+<p>这题有个tricky地方，area为0的rect也是有点包含在里面的，要想包含边上的点需要 （width+1）*（height+1）</p>
+<h1 id="498-diagonal-traverse-medium">498. Diagonal Traverse （Medium）</h1>
+<p>iven an m x n matrix mat, return an array of all the elements of the array in a diagonal order.</p>
+<pre><code class="language-python">#TLE
+class Solution:
+    def findDiagonalOrder(self, mat: List[List[int]]) -&gt; List[int]:        
+        m=len(mat)
+        n=len(mat[0])
+        res = []
+        ij_sum=0
+        for level in range(m+n-1):
+            tmp=[]
+            for i in range(level+1):
+                j = ij_sum-i
+                if i&gt;=0 and i&lt;m and j&gt;=0 and j&lt;n:
+                    tmp.append(mat[i][j])
+            if level%2==0:
+                tmp=tmp[::-1]
+            res.extend(tmp)
+            ij_sum+=1
+        return res
+
+class Solution:
+    def findDiagonalOrder(self, mat: List[List[int]]) -&gt; List[int]:        
+        dic = defaultdict(list)
+        res = []
+        for i in range(len(mat)):
+            for j in range(len(mat[0])):
+                key=i+j
+                dic[key].append(mat[i][j])
+        
+
+        for key in range(len(mat)-1+len(mat[0])):
+            if key%2==0:
+                res.extend(dic[key][::-1])
+            else:
+                res.extend(dic[key])
+        return res
+
+#ANSWER
+class Solution:
+    
+    def findDiagonalOrder(self, matrix: List[List[int]]) -&gt; List[int]:
+        
+        # Check for empty matrices
+        if not matrix or not matrix[0]:
+            return []
+        
+        # Variables to track the size of the matrix
+        N, M = len(matrix), len(matrix[0])
+        
+        # The two arrays as explained in the algorithm
+        result, intermediate = [], []
+        
+        # We have to go over all the elements in the first
+        # row and the last column to cover all possible diagonals
+        for d in range(N + M - 1):
+            
+            # Clear the intermediate array everytime we start
+            # to process another diagonal
+            intermediate.clear()
+            
+            # We need to figure out the &quot;head&quot; of this diagonal
+            # The elements in the first row and the last column
+            # are the respective heads.
+            r, c = 0 if d &lt; M else d - M + 1, d if d &lt; M else M - 1
+            
+            # Iterate until one of the indices goes out of scope
+            # Take note of the index math to go down the diagonal
+            while r &lt; N and c &gt; -1:
+                intermediate.append(matrix[r][c])
+                r += 1
+                c -= 1
+            
+            # Reverse even numbered diagonals. The
+            # article says we have to reverse odd 
+            # numbered articles but here, the numbering
+            # is starting from 0 :P
+            if d % 2 == 0:
+                result.extend(intermediate[::-1])
+            else:
+                result.extend(intermediate)
+        return result        
+</code></pre>
+<p>初次尝试TLE，用dic后满足条件。。。</p>
+<h1 id="font-colorred-499-the-maze-iii-hard-font"><font color='red'> 499. The Maze III （Hard） </font></h1>
+<p>There is a ball in a maze with empty spaces (represented as 0) and walls (represented as 1). The ball can go through the empty spaces by rolling up, down, left or right, but it won't stop rolling until hitting a wall. When the ball stops, it could choose the next direction. There is also a hole in this maze. The ball will drop into the hole if it rolls onto the hole.</p>
+<p>Given the m x n maze, the ball's position ball and the hole's position hole, where ball = [ballrow, ballcol] and hole = [holerow, holecol], return a string instructions of all the instructions that the ball should follow to drop in the hole with the shortest distance possible. If there are multiple valid instructions, return the lexicographically minimum one. If the ball can't drop in the hole, return &quot;impossible&quot;.</p>
+<p>If there is a way for the ball to drop in the hole, the answer instructions should contain the characters 'u' (i.e., up), 'd' (i.e., down), 'l' (i.e., left), and 'r' (i.e., right).</p>
+<p>The distance is the number of empty spaces traveled by the ball from the start position (excluded) to the destination (included).</p>
+<p>You may assume that the borders of the maze are all walls</p>
+<pre><code class="language-python">
+#ANSWER
+class Solution:
+    def findShortestWay(self, maze, ball, hole):
+        m, n, q, stopped = len(maze), len(maze[0]), [(0, &quot;&quot;, ball[0], ball[1])], {(ball[0], ball[1]): [0, &quot;&quot;]}
+        while q:
+            dist, pattern, x, y = heapq.heappop(q)
+            if [x, y] == hole:
+                return pattern
+            for i, j, p in ((-1, 0, &quot;u&quot;), (1, 0, &quot;d&quot;), (0, -1, &quot;l&quot;), (0, 1, &quot;r&quot;)):
+                newX, newY, d = x, y, 0
+                while 0 &lt;= newX + i &lt; m and 0 &lt;= newY + j &lt; n and maze[newX + i][newY + j] != 1:
+                    newX += i
+                    newY += j
+                    d += 1
+                    if [newX, newY] == hole:
+                        break
+                if (newX, newY) not in stopped or [dist + d, pattern + p] &lt; stopped[(newX, newY)]:
+                    stopped[(newX, newY)] = [dist + d, pattern + p]
+                    heapq.heappush(q, (dist + d, pattern + p, newX, newY))
+        return &quot;impossible&quot;
+
+</code></pre>
+<p>BFS 写了答案能过60/64 个test case。。。不知道哪里还有BUG。看答案。难点在，循环queue时候，这个queue不是普通的queue，是minheap。 这样就能取出距离最小的而且lexcially最小的next node做计算。</p>
+<h1 id="500-keyboard-row-easy">500. Keyboard Row （Easy）</h1>
+<p>Given an array of strings words, return the words that can be typed using letters of the alphabet on only one row of American keyboard like the image below.<br>
+In the American keyboard:<br>
+the first row consists of the characters &quot;qwertyuiop&quot;,<br>
+the second row consists of the characters &quot;asdfghjkl&quot;, and<br>
+the third row consists of the characters &quot;zxcvbnm&quot;</p>
+<pre><code class="language-python">class Solution:
+    def findWords(self, words: List[str]) -&gt; List[str]:
+        s1 = set(&quot;qwertyuiopQWERTYUIOP&quot;)
+        s2=set(&quot;asdfghjklASDFGHJKL&quot;)
+        s3=set(&quot;zxcvbnmZXCVBNM&quot;)
+        
+        return [w for w in words if any(set(w)&amp;s==set(w) for s in [s1,s2,s3]  )  ]
+
 </code></pre>
 
             </div>
@@ -763,7 +982,7 @@ Output: [5,6,7,1,2,3,4]<br>
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="http://localhost:4000/post/leetcode-2021-11-21/" title="Leetcode 2021-11-21">http://localhost:4000/post/leetcode-2021-11-21/</a>
+      <a href="http://localhost:4000/post/leetcode-2023-01-06/" title="Leetcode 2023-01-06">http://localhost:4000/post/leetcode-2023-01-06/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -772,21 +991,19 @@ Output: [5,6,7,1,2,3,4]<br>
   </ul>
   <div class="tags">
     
-      <a href="http://localhost:4000/tag/8v2np0s07/"># leetcode</a>
-    
   </div>
   <div class="nav">
     <div class="nav-prev">
       
         <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="Leetcode 2021-11-22" href="http://localhost:4000/post/leetcode-2021-11-22/">Leetcode 2021-11-22</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="Leetcode 2021-11-22" href="http://localhost:4000/post/leetcode-2021-11-22/">上一篇</a>
+        <a class="nav-pc-next" title="SUM相关数据结构总结" href="http://localhost:4000/post/sum-xiang-guan-shu-ju-jie-gou-zong-jie/">SUM相关数据结构总结</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="SUM相关数据结构总结" href="http://localhost:4000/post/sum-xiang-guan-shu-ju-jie-gou-zong-jie/">上一篇</a>
       
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2021-11-20" href="http://localhost:4000/post/leetcode-2021-11-20/">Leetcode 2021-11-20</a>
-        <a class="nav-mobile-next" title="Leetcode 2021-11-20" href="http://localhost:4000/post/leetcode-2021-11-20/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2023-01-05" href="http://localhost:4000/post/leetcode-2023-01-05/">Leetcode 2023-01-05</a>
+        <a class="nav-mobile-next" title="Leetcode 2023-01-05" href="http://localhost:4000/post/leetcode-2023-01-05/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
