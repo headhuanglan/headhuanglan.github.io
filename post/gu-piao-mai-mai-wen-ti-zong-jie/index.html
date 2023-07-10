@@ -8,7 +8,7 @@
 <meta name="keywords" content="L&#39;s Tech Blog">
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
-<title>系统设计 | Lan&#39;s Blog</title>
+<title>股票买卖问题总结 | Lan&#39;s Blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1688971234485">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -41,8 +41,8 @@
 
 
 
-  <meta name="description" content="系统设计" />
-  <meta name="keywords" content="算法总结" />
+  <meta name="description" content="股票买卖问题总结" />
+  <meta name="keywords" content="" />
 </head>
 
 <body>
@@ -175,7 +175,8 @@
       <div class="sidebar-body gemini" id="sidebar_body">
         
           
-            
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -216,6 +217,201 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper  auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li><a href="#%E9%80%9A%E8%A7%A3">通解</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8">应用</a>
+<ul>
+<li><a href="#k1">K=1</a></li>
+<li><a href="#kinf">K=INF</a></li>
+<li><a href="#k2">K=2</a></li>
+<li><a href="#k-%E6%98%AF%E4%BB%BB%E4%BD%95%E6%95%B0">K 是任何数</a></li>
+<li><a href="#kinf-with-cooldown">K=INF with Cooldown</a></li>
+<li><a href="#kinf-with-transaction-fee">K=INF with Transaction Fee</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</div>
+
+<script>
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
+      }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0] && elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
+    });
+  }
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
           
         
       </div>
@@ -303,7 +499,7 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://headhuanglan.github.io/post/system-design/"> 系统设计 </a>
+    <a class="post-title-link" href="https://headhuanglan.github.io/post/gu-piao-mai-mai-wen-ti-zong-jie/"> 股票买卖问题总结 </a>
   </h1>
   <div class="post-meta">
     
@@ -316,25 +512,14 @@
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2022-03-27 19:23:07">2022-03-27</span>
+      <span class="publish-time" data-t="2023-07-02 12:32:44">2023-07-02</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
     <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">标签:</span>
-       
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/">
-        <span>算法总结</span>
-      </a>
-       
-    </span>
-    <span class="post-meta-divider">|</span>
-    
-    <span class="meta-item">
       <i class="fa fa-clock-o"></i>
       <span
-        >3<span class="language" data-lan="minute"
+        >7<span class="language" data-lan="minute"
           >分钟</span
         ></span
       >
@@ -343,7 +528,7 @@
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
       <span
-        >452<span class="pc-show language" data-lan="words"
+        >1097<span class="pc-show language" data-lan="words"
           >字数</span
         ></span
       >
@@ -353,93 +538,158 @@
 </section>
 
             <div class="post-body next-md-body" id="post_body">
-              <p>System Design 资源汇总</p>
+              <p>总结股票买卖问题，所有case都化简为DP处理。</p>
 <!-- more -->
-<p><a href="https://www.youtube.com/watch?v=PdtlXdse7pw&amp;list=PL4KdJM8LzAMecwInbBK5GJ3Anz-ts75RQ">DDIA书视频总结</a></p>
-<p><a href="https://www.interviewbit.com/courses/system-design/">InterviewBit系统设计题汇总</a></p>
-<p><a href="https://github.com/donnemartin/system-design-primer">system design primer github repo</a></p>
-<p><a href="https://www.hiredintech.com/classrooms/system-design/lesson/52">system design class</a></p>
-<p><a href="https://www.educative.io/courses/grokking-the-system-design-interview">付费 grokking system design interview</a></p>
-<p><a href="https://luanjunyi.medium.com/the-table-of-contents-416d2240fa8e">大佬的medium文章</a></p>
-<p><a href="http://blog.gainlo.co/index.php/category/system-design-interview-questions/">已经解决的系统设计问题合集</a></p>
-<p><a href="http://highscalability.com/blog/2022/1/25/designing-uber.html/">Design Uber</a></p>
-<p><a href="http://highscalability.com/blog/2022/1/17/designing-tinder.html">Design Tinder</a></p>
-<p><a href="http://highscalability.com/blog/2022/1/11/designing-instagram.html">Design Instagram</a></p>
-<p><a href="http://highscalability.com/blog/2022/1/3/designing-whatsapp.html">Design Whatsapp</a></p>
-<p><a href="http://highscalability.com/blog/2021/12/13/designing-netflix.html">Design Netflix</a></p>
-<p>https://leetcode.com/company/facebook/discuss/229177/My-System-Design-Template<br>
-(1) FEATURE EXPECTATIONS [5 min]</p>
-<pre><code>    (1) Use cases
-    (2) Scenarios that will not be covered
-    (3) Who will use
-    (4) How many will use
-    (5) Usage patterns
+<h1 id="通解">通解</h1>
+<p>i 代表 ith day<br>
+k 代表最大交易次数<br>
+0/1 代表手中是否持有股票</p>
+<p>T【i】【k】【0】 代表 在ith day 最多k次交易，ith day结束后不持有股票的 profit<br>
+T【i】【k】【1】 代表 在ith day 最多k次交易，ith day结束后持有股票的 profit</p>
+<p>那么base case<br>
+T【-1】【k】【0】 = 0   （1）<br>
+T【-1】【k】【1】 = -INF （2）<br>
+T【i】【0】【0】 = 0 （3）<br>
+T【i】【0】【1】= -INF （4）<br>
+递推关系<br>
+T【i】【k】【0】 = max（T【i-1】【k】【0】，T【i-1】【k】【1】+prices【i】） #卖出<br>
+T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-1】【k-1】【0】- prices【i】）#买入</p>
+<p>（只有买入操作消耗交易次数）</p>
+<h1 id="应用">应用</h1>
+<h2 id="k1">K=1</h2>
+<p>T【i】【1】【0】=max（T【i-1】【1】【0】，T【i-1】【1】【1】+prices【i】）<br>
+T【i】【1】【1】=max（T【i-1】【1】【1】，T【i-1】【0】【0】-prices【i】）<br>
+因为（3）<br>
+所以<br>
+T【i】【1】【0】=max（T【i-1】【1】【0】，T【i-1】【1】【1】+prices【i】）<br>
+T【i】【1】【1】=max（T【i-1】【1】【1】，-prices【i】）</p>
+<pre><code class="language-java">public int maxProfit(int[] prices) {
+    int T_i10 = 0, T_i11 = Integer.MIN_VALUE;
+        
+    for (int price : prices) {
+        T_i10 = Math.max(T_i10, T_i11 + price);
+        T_i11 = Math.max(T_i11, -price);
+    }
+        
+    return T_i10;
+}
 </code></pre>
-<p>(2) ESTIMATIONS [5 min]</p>
-<pre><code>    (1) Throughput (QPS for read and write queries)
-    (2) Latency expected from the system (for read and write queries)
-    (3) Read/Write ratio
-    (4) Traffic estimates
-            - Write (QPS, Volume of data)
-            - Read  (QPS, Volume of data)
-    (5) Storage estimates
-    (6) Memory estimates
-            - If we are using a cache, what is the kind of data we want to store in cache
-            - How much RAM and how many machines do we need for us to achieve this ?
-            - Amount of data you want to store in disk/ssd
+<h2 id="kinf">K=INF</h2>
+<p>K无穷大时候，K和K-1 没区别<br>
+T【i】【k】【0】 = max（T【i-1】【k】【0】，T【i-1】【k】【1】+prices【i】） #卖出<br>
+T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-1】【k-1】【0】- prices【i】）#买入<br>
+变成<br>
+T【i】【k】【0】 = max（T【i-1】【k】【0】，T【i-1】【k】【1】+prices【i】） #卖出<br>
+T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-1】【k】【0】- prices【i】）#买入</p>
+<pre><code class="language-java">public int maxProfit(int[] prices) {
+    int T_ik0 = 0, T_ik1 = Integer.MIN_VALUE;
+    
+    for (int price : prices) {
+        int T_ik0_old = T_ik0;
+        T_ik0 = Math.max(T_ik0, T_ik1 + price);
+        T_ik1 = Math.max(T_ik1, T_ik0_old - price);
+    }
+    
+    return T_ik0;
+}
 </code></pre>
-<p>(3) DESIGN GOALS [5 min]</p>
-<pre><code>    (1) Latency and Throughput requirements
-    (2) Consistency vs Availability  [Weak/strong/eventual =&gt; consistency | Failover/replication =&gt; availability]
+<h2 id="k2">K=2</h2>
+<p>T【i】【k】【0】 = max（T【i-1】【k】【0】，T【i-1】【k】【1】+prices【i】） #卖出<br>
+T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-1】【k-1】【0】- prices【i】）#买入<br>
+变成<br>
+T【i】【2】【0】 = max（T【i-1】【2】【0】，T【i-1】【2】【1】+prices【i】）<br>
+T【i】【2】【1】 = max（T【i-1】【2】【1】，T【i-1】【1】【0】- prices【i】）<br>
+T【i】【1】【0】 = max（T【i-1】【1】【0】，T【i-1】【1】【1】+prices【i】）<br>
+T【i】【1】【1】 = max（T【i-1】【1】【1】，- prices【i】）</p>
+<pre><code class="language-java">public int maxProfit(int[] prices) {
+    int T_i10 = 0, T_i11 = Integer.MIN_VALUE, T_i20 = 0, T_i21 = Integer.MIN_VALUE;
+        
+    for (int price : prices) {
+        T_i20 = Math.max(T_i20, T_i21 + price);
+        T_i21 = Math.max(T_i21, T_i10 - price);
+        T_i10 = Math.max(T_i10, T_i11 + price);
+        T_i11 = Math.max(T_i11, -price);
+    }
+        
+    return T_i20;
+}
+
 </code></pre>
-<p>(4) HIGH LEVEL DESIGN [5-10 min]</p>
-<pre><code>    (1) APIs for Read/Write scenarios for crucial components
-    (2) Database schema
-    (3) Basic algorithm
-    (4) High level design for Read/Write scenario
+<h2 id="k-是任何数">K 是任何数</h2>
+<p>T【i】【k】【0】 = max（T【i-1】【k】【0】，T【i-1】【k】【1】+prices【i】） #卖出<br>
+T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-1】【k-1】【0】- prices【i】）#买入</p>
+<pre><code class="language-java">public int maxProfit(int k, int[] prices) {
+    //如果K 大于等于Prices长度的一半，那么相当于K=INF的情况
+    if (k &gt;= prices.length &gt;&gt;&gt; 1) {
+        int T_ik0 = 0, T_ik1 = Integer.MIN_VALUE;
+    
+        for (int price : prices) {
+            int T_ik0_old = T_ik0;
+            T_ik0 = Math.max(T_ik0, T_ik1 + price);
+            T_ik1 = Math.max(T_ik1, T_ik0_old - price);
+        }
+    
+        return T_ik0;
+    }
+        
+    int[] T_ik0 = new int[k + 1];
+    int[] T_ik1 = new int[k + 1];
+    Arrays.fill(T_ik1, Integer.MIN_VALUE);
+        
+    for (int price : prices) {
+        for (int j = k; j &gt; 0; j--) {
+            T_ik0[j] = Math.max(T_ik0[j], T_ik1[j] + price);
+            T_ik1[j] = Math.max(T_ik1[j], T_ik0[j - 1] - price);
+        }
+    }
+        
+    return T_ik0[k];
+}
 </code></pre>
-<p>(5) DEEP DIVE [15-20 min]</p>
-<pre><code>    (1) Scaling the algorithm
-    (2) Scaling individual components: 
-            -&gt; Availability, Consistency and Scale story for each component
-            -&gt; Consistency and availability patterns
-    (3) Think about the following components, how they would fit in and how it would help
-            a) DNS
-            b) CDN [Push vs Pull]
-            c) Load Balancers [Active-Passive, Active-Active, Layer 4, Layer 7]
-            d) Reverse Proxy
-            e) Application layer scaling [Microservices, Service Discovery]
-            f) DB [RDBMS, NoSQL]
-                    &gt; RDBMS 
-                        &gt;&gt; Master-slave, Master-master, Federation, Sharding, Denormalization, SQL Tuning
-                    &gt; NoSQL
-                        &gt;&gt; Key-Value, Wide-Column, Graph, Document
-                            Fast-lookups:
-                            -------------
-                                &gt;&gt;&gt; RAM  [Bounded size] =&gt; Redis, Memcached
-                                &gt;&gt;&gt; AP [Unbounded size] =&gt; Cassandra, RIAK, Voldemort
-                                &gt;&gt;&gt; CP [Unbounded size] =&gt; HBase, MongoDB, Couchbase, DynamoDB
-            g) Caches
-                    &gt; Client caching, CDN caching, Webserver caching, Database caching, Application caching, Cache @Query level, Cache @Object level
-                    &gt; Eviction policies:
-                            &gt;&gt; Cache aside
-                            &gt;&gt; Write through
-                            &gt;&gt; Write behind
-                            &gt;&gt; Refresh ahead
-            h) Asynchronism
-                    &gt; Message queues
-                    &gt; Task queues
-                    &gt; Back pressure
-            i) Communication
-                    &gt; TCP
-                    &gt; UDP
-                    &gt; REST
-                    &gt; RPC
+<h2 id="kinf-with-cooldown">K=INF with Cooldown</h2>
+<p>T【i】【k】【0】 = max（T【i-1】【k】【0】，T【i-1】【k】【1】+prices【i】） #卖出<br>
+T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-1】【k-1】【0】- prices【i】）#买入<br>
+当K=INF变为<br>
+T【i】【k】【0】 = max（T【i-1】【k】【0】，T【i-1】【k】【1】+prices【i】） #卖出<br>
+T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-1】【k】【0】- prices【i】）#买入<br>
+但是有cooldown时候，变为<br>
+T【i】【k】【0】 = max（T【i-1】【k】【0】，T【i-1】【k】【1】+prices【i】） #卖出<br>
+T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-2】【k】【0】- prices【i】）#买入<br>
+因为不能在i天买入如果股票是在i-1天卖出的，所以只能用T【i-2】【k】【0】</p>
+<pre><code class="language-java">public int maxProfit(int[] prices) {
+    int T_ik0_pre = 0, T_ik0 = 0, T_ik1 = Integer.MIN_VALUE;
+    
+    for (int price : prices) {
+        int T_ik0_old = T_ik0;
+        T_ik0 = Math.max(T_ik0, T_ik1 + price);
+        T_ik1 = Math.max(T_ik1, T_ik0_pre - price);
+        T_ik0_pre = T_ik0_old;
+    }
+    
+    return T_ik0;
+}
 </code></pre>
-<p>(6) JUSTIFY [5 min]</p>
-<pre><code>    (1) Throughput of each layer
-    (2) Latency caused between each layer
-    (3) Overall latency justification
+<h2 id="kinf-with-transaction-fee">K=INF with Transaction Fee</h2>
+<p>T【i】【k】【0】 = max（T【i-1】【k】【0】，T【i-1】【k】【1】+prices【i】） #卖出<br>
+T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-1】【k-1】【0】- prices【i】）#买入<br>
+当K=INF变为<br>
+T【i】【k】【0】 = max（T【i-1】【k】【0】，T【i-1】【k】【1】+prices【i】） #卖出<br>
+T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-1】【k】【0】- prices【i】）#买入<br>
+但是有Fee时候，变为因为fee只在卖出时候付清<br>
+T【i】【k】【0】 = max（T【i-1】【k】【0】，T【i-1】【k】【1】+prices【i】-fee） #卖出<br>
+T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-1】【k】【0】- prices【i】）#买入</p>
+<pre><code class="language-java">public int maxProfit(int[] prices, int fee) {
+    long T_ik0 = 0, T_ik1 = Integer.MIN_VALUE;
+    
+    for (int price : prices) {
+        long T_ik0_old = T_ik0;
+        T_ik0 = Math.max(T_ik0, T_ik1 + price - fee);
+        T_ik1 = Math.max(T_ik1, T_ik0_old - price);
+    }
+        
+    return (int)T_ik0;
+}
+
 </code></pre>
 
             </div>
@@ -453,7 +703,7 @@
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://headhuanglan.github.io/post/system-design/" title="系统设计">https://headhuanglan.github.io/post/system-design/</a>
+      <a href="https://headhuanglan.github.io/post/gu-piao-mai-mai-wen-ti-zong-jie/" title="股票买卖问题总结">https://headhuanglan.github.io/post/gu-piao-mai-mai-wen-ti-zong-jie/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -462,21 +712,15 @@
   </ul>
   <div class="tags">
     
-      <a href="https://headhuanglan.github.io/tag/71oNA0SHO/"># 算法总结</a>
-    
   </div>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="自装KIDD-10/22不同品牌子弹Group分析 " href="https://headhuanglan.github.io/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/">自装KIDD-10/22不同品牌子弹Group分析 </a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="自装KIDD-10/22不同品牌子弹Group分析 " href="https://headhuanglan.github.io/post/zi-zhuang-kidd-1022-bu-tong-pin-pai-zi-dan-group-fen-xi/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="Leetcode 2022-03-08" href="https://headhuanglan.github.io/post/leetcode-2022-03-08/">Leetcode 2022-03-08</a>
-        <a class="nav-mobile-next" title="Leetcode 2022-03-08" href="https://headhuanglan.github.io/post/leetcode-2022-03-08/">下一篇</a>
+        <a class="nav-pc-next" title="Leetcode 2023-01-06" href="https://headhuanglan.github.io/post/leetcode-2023-01-06/">Leetcode 2023-01-06</a>
+        <a class="nav-mobile-next" title="Leetcode 2023-01-06" href="https://headhuanglan.github.io/post/leetcode-2023-01-06/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
