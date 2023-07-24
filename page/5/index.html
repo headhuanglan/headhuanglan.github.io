@@ -9,7 +9,7 @@
 <meta name="description" content="回忆未来">
 <meta name="theme-color" content="#dee2e6">
 <title>Lan&#39;s Blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1688971234485">
+<link rel="shortcut icon" href="/favicon.ico?v=1690150919624">
 <link rel="stylesheet" href="/media/css/gemini.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -1611,6 +1611,132 @@ T【i】【k】【1】 = max（T【i-1】【k】【1】，T【i-1】【k】【0�
       </div>
       
       <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/sum-xiang-guan-shu-ju-jie-gou-zong-jie/"" data-c="
+          &lt;p&gt;BIT ， SEGMENT TREE， UnionFind&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;h1 id=&#34;binary-indexed-tree&#34;&gt;Binary Indexed Tree&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class BIT:
+    def __init__(self,n):
+        self.size = n
+        self.bit = [0]*(self.size+1)
+    
+    def update(self,index,val):
+         #index in BIT is 1 more than original index
+        while index&amp;lt;=self.size:
+            self.bit[index]+=val
+            index += index&amp;amp;-index
+    def query(self,index):
+         #index in BIT is 1 more than original index
+        res = 0 
+        while index&amp;gt;0:
+            res+=self.bit[index]
+            index-= index&amp;amp;-index
+        return res
+
+#2D
+class BIT:
+    def __init__(self,m,n):
+        self.m= m
+        self.n = n
+        self.bit = [[0]*(self.n+1) for _ in range(self.m+1)]
+    
+    def update(self,r,c,val):
+        i = r
+        while i&amp;lt;=self.m:
+            j = c
+            while j&amp;lt;=self.n:
+                self.bit[i][j]+=val
+                j+= j&amp;amp;-j
+            i+= i&amp;amp;-i
+
+    def query(self,r,c):
+        res = 0
+        i=r
+        while i&amp;gt;0:
+            j = c
+            while j&amp;gt;0:
+                res+=self.bit[i][j]
+                j-= j&amp;amp;-j
+            i-= i&amp;amp;-i
+        return res
+        
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;update / \ query 注意index from 1&lt;/p&gt;
+&lt;h1 id=&#34;segment-tree&#34;&gt;Segment Tree&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class ST:
+    def __init__(self,n):
+        self.size = n
+        self.tree = [0]*(2*self.size)
+    
+    def update(self,ind,val):
+        #       1
+        #     2   3
+        #    4 5 6 7
+        #  self.tree is:
+        #  @ 1 2 3 4 5 6 7
+        
+        #offset index by size, the leave save value node save summation
+        ind+=self.size
+        self.tree[ind] += val
+        while ind&amp;gt;0:
+            left=ind
+            right=ind
+            if ind%2==0:
+                right+=1
+            else:
+                left-=1
+            if ind//2&amp;gt;0:
+                self.tree[ind//2]=self.tree[left]+self.tree[right]
+            ind //=2
+
+
+    def query(self,left,right):
+        left+=self.size
+        right+=self.size
+        res=0
+        while left&amp;lt;=right:
+            if right%2==0:
+                res+=self.tree[right]
+                right-=1
+            if left%2==1:
+                res+=self.tree[left]
+                left+=1
+            left//=2
+            right//=2
+        return res
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;原始值保存在叶子节点中，所以ind是要加slef.size的&lt;/p&gt;
+&lt;h1 id=&#34;unionfind&#34;&gt;UnionFind&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;     class UnionFind:
+        def __init__(self,n):
+            self.parent=[i for i in range(n)]
+            self.rank=[0]*n
+            self.n=n
+        def find(self,x):
+            if x!=self.parent[x]:
+                self.parent[x]=self.find(self.parent[x])
+            return self.parent[x]
+        
+        def union(self,x,y):
+            px=self.find(x)
+            py=self.find(y)
+            if px!=py:
+                self.n-=1
+                if self.rank[px]&amp;lt;self.rank[py]:
+                    self.parent[px]=py
+                elif self.rank[px]&amp;gt;self.rank[py]:
+                    self.parent[py]=px
+                else:
+                    self.parent[py]=px
+                    self.rank[px]+=1
+
+&lt;/code&gt;&lt;/pre&gt;
+">SUM相关数据结构总结</a>
+      </div>
+      
+      <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2023-01-06/"" data-c="
           &lt;!-- more --&gt;
 &lt;h1 id=&#34;491-non-decreasing-subsequences-medium&#34;&gt;491. Non-decreasing Subsequences （Medium）&lt;/h1&gt;
@@ -1654,6 +1780,17 @@ class Solution:
         
         bt(0,[])
         return list(res)
+
+#BIT MASK 方法
+class Solution:
+    def findSubsequences(self, nums: List[int]) -&amp;gt; List[List[int]]:
+        n=len(nums)
+        res = set()
+        for mask in range(1, 1&amp;lt;&amp;lt;n):
+            tmp = [nums[i] for i in range(n) if (mask&amp;gt;&amp;gt;i)&amp;amp;1  ]
+            if len(tmp)&amp;gt;=2 and all([tmp[i]&amp;lt;=tmp[i+1] for i in range(len(tmp)-1)]):
+                res.add(tuple(tmp))
+        return res
             
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;感觉是个backtracking问题， debug了一会解决了。。答案更好&lt;/p&gt;
@@ -1707,58 +1844,61 @@ A reverse pair is a pair (i, j) where:&lt;br&gt;
 nums[i] &amp;gt; 2 * nums[j].&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def reversePairs(self, nums: List[int]) -&amp;gt; int:
-        # I   J
-        # nI&amp;gt;2nJ
-        # scan through nums with B-I-Tree find 2*cur_val+1 ~ end   count sum
-        res = 0
-        size = len(nums)+1
-        bit = [0]*size
+        # i&amp;lt;j
+        #  nums[i]&amp;gt; 2*nums[j]
 
-        def insert(ind):
-            #bit ind from 1
-            while ind:
-                bit[ind]+=1
-                ind -= ind &amp;amp; -ind
-
-        def query(ind):
-            res=0
-            while ind&amp;lt;size:
-                res+=bit[ind]
-                ind+=ind&amp;amp;-ind
-            return res
+        class BIT:
+            def __init__(self,n):
+                self.n = n
+                self.bits = [0]*(n+1)
+            
+            def insert(self,idx):
+                idx+=1
+                while idx&amp;gt;0:
+                    self.bits[idx]+=1
+                    idx-=idx&amp;amp;-idx
+            
+            def query(self,idx):
+                idx+=1
+                res = 0 
+                while idx&amp;lt;=self.n:
+                    res+=self.bits[idx]
+                    idx+=idx&amp;amp;-idx
+                return res
         
-        def index(arr,val):
-            l = bisect.bisect_left(arr,val)
-            return l+1 #plus one due to BIT index from 1
 
-        
-        copy = nums[:]
-        copy.sort()
-        res=0
+        bit = BIT(len(nums))
+        tmp = nums[:]
+        tmp.sort()
+        res =0 
         for n in nums:
-            res+=query(index(copy,2*n+1))
-            insert(index(copy,n))
-        return res        
+            #n是nums[j]要找到有多少nums[i]&amp;gt;2nums[j]
+            #query 2n+1 ~ end
+            #由于bit一般是从0还是，加到idx，反向需要把insert 和 query反向
+            idx = bisect.bisect_left(tmp,2*n+1)
+            res+= bit.query(idx)
+            idx = bisect.bisect_left(tmp,n)
+            bit.insert(idx)
+        return res    
 
 #ANSWER 2 Merge SORT
 class Solution:
     def reversePairs(self, nums: List[int]) -&amp;gt; int:
 
-        def ms(l, r):
-            if l &amp;gt;= r: return 0
-            mid = (l + r) // 2
-            count = ms(l, mid) + ms(mid + 1, r)
+        def ms(l,r):
+            if l&amp;gt;=r: return 0
+            m = (l+r)//2
+            count = ms(l,m)+ms(m+1,r)
 
-            j = mid + 1
-            for i in range(l, mid+1):
-                while j &amp;lt;= r and nums[i] &amp;gt; 2 * nums[j]:
-                    j += 1
-                count += j - mid - 1
-
+            j=m+1
+            for i in range(l,m+1):
+                while j&amp;lt;=r and nums[i]&amp;gt;2*nums[j]:
+                    j+=1
+                count+=(j-1)-m
+            
             nums[l:r+1] = sorted(nums[l:r+1])
             return count
-
-        return ms(0, len(nums) - 1)
+        return ms(0,len(nums)-1)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;初看像用stack做 但是做不出来。。。答案用了BIT。。。。但是不是通常意义的BIT。反了insert 和update function。&lt;br&gt;
 For our case, the running total is simply the number of elements encountered during the traversal process. If we stick to the convention above, the running total will be the number of elements smaller than the one at the given index, since the copy array is sorted in ascending order. However, we&#39;d actually like to find the number of elements greater than some value (i.e., twice of the element being scanned), therefore we need to flip the convention. This is what you see inside the search and insert functions: the former traversing towards the end of the bit while the latter towards the root.&lt;br&gt;
@@ -1769,24 +1909,19 @@ MergeSort方法二 。。。&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;For example, if nums = [2, 1], you can add a &#39;+&#39; before 2 and a &#39;-&#39; before 1 and concatenate them to build the expression &amp;quot;+2-1&amp;quot;.
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Return the number of different expressions that you can build, which evaluates to target.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#TLE
-class Solution:
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def findTargetSumWays(self, nums: List[int], target: int) -&amp;gt; int:
-        self.res = 0
+        @lru_cache(None)
         def bt(start,target):
-            if start==len(nums):
-                if target==0:
-                    self.res+=1
-                return
+            if start==len(nums) and target==0: return 1
+            if start&amp;gt;=len(nums): return 0
             
             # +
-            bt(start+1,target-nums[start])
+            res1 = bt(start+1,target-nums[start])
             # - 
-            bt(start+1,target+nums[start])
-        
-        bt(0,target)
-        return self.res
-
+            res2 = bt(start+1,target+nums[start])
+            return res1+res2
+        return bt(0,target)
 #ANSWER
  def findTargetSumWays(self, nums, S):
         if not nums:
@@ -1819,7 +1954,7 @@ class Solution:
         return dp[len(nums)-1][target+total]  
 
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;直接用BT会TLE。。。所以换思路， 试试DP。 因为数字和在-sum到sum之间，offset到0开始需要+sum。&lt;/p&gt;
+&lt;p&gt;DP。 因为数字和在-sum到sum之间，offset到0开始需要+sum。&lt;/p&gt;
 &lt;h1 id=&#34;495-teemo-attacking-easy&#34;&gt;495. Teemo Attacking （Easy）&lt;/h1&gt;
 &lt;p&gt;Our hero Teemo is attacking an enemy Ashe with poison attacks! When Teemo attacks Ashe, Ashe gets poisoned for a exactly duration seconds. More formally, an attack at second t will mean Ashe is poisoned during the inclusive time interval [t, t + duration - 1]. If Teemo attacks again before the poison effect ends, the timer for it is reset, and the poison effect will end duration seconds after the new attack.&lt;/p&gt;
 &lt;p&gt;You are given a non-decreasing integer array timeSeries, where timeSeries[i] denotes that Teemo attacks Ashe at second timeSeries[i], and an integer duration.&lt;/p&gt;
@@ -1841,6 +1976,20 @@ class Solution:
                 start = end+1 if t&amp;lt;=end else t
                 end = new_end
                 res+=end-start+1
+        return res
+
+#MY ANSWER
+class Solution:
+    def findPoisonedDuration(self, timeSeries: List[int], duration: int) -&amp;gt; int:
+        res = 0
+        right = 0
+        for i,t in enumerate(timeSeries):
+            if t &amp;gt;= right:
+                res+= min(duration, timeSeries[i+1]-t) if i+1&amp;lt;len(timeSeries) else duration
+            
+            right = min(t+duration-1,  timeSeries[i+1] ) if i+1&amp;lt;len(timeSeries) else t+duration-1
+
+          
         return res
 
 
@@ -1891,7 +2040,22 @@ class Solution:
         
         return [dic.get(e,-1) for e in nums1]
              
+#MY ANSWER
+class Solution:
+    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -&amp;gt; List[int]:
 
+        dic = dict()
+        stack = []
+        for n in nums2:
+            if not stack or stack and n&amp;lt;stack[-1]:
+                stack.append(n)
+            else:
+                while stack and  n&amp;gt;stack[-1]:
+                    dic[stack.pop()] = n
+                stack.append(n)
+        
+        return [dic.get(n,-1) for n in nums1]
+        
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;用不着用minheap 直接用stack就好，因为插入时候顺序已经是从左到右满足条件了。&lt;/p&gt;
 &lt;h1 id=&#34;497-random-point-in-non-overlapping-rectangles-medium&#34;&gt;497. Random Point in Non-overlapping Rectangles （Medium）&lt;/h1&gt;
@@ -2055,132 +2219,6 @@ the third row consists of the characters &amp;quot;zxcvbnm&amp;quot;&lt;/p&gt;
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/sum-xiang-guan-shu-ju-jie-gou-zong-jie/"" data-c="
-          &lt;p&gt;BIT ， SEGMENT TREE， UnionFind&lt;/p&gt;
-&lt;!-- more --&gt;
-&lt;h1 id=&#34;binary-indexed-tree&#34;&gt;Binary Indexed Tree&lt;/h1&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class BIT:
-    def __init__(self,n):
-        self.size = n
-        self.bit = [0]*(self.size+1)
-    
-    def update(self,index,val):
-         #index in BIT is 1 more than original index
-        while index&amp;lt;=self.size:
-            self.bit[index]+=val
-            index += index&amp;amp;-index
-    def query(self,index):
-         #index in BIT is 1 more than original index
-        res = 0 
-        while index&amp;gt;0:
-            res+=self.bit[index]
-            index-= index&amp;amp;-index
-        return res
-
-#2D
-class BIT:
-    def __init__(self,m,n):
-        self.m= m
-        self.n = n
-        self.bit = [[0]*(self.n+1) for _ in range(self.m+1)]
-    
-    def update(self,r,c,val):
-        i = r
-        while i&amp;lt;=self.m:
-            j = c
-            while j&amp;lt;=self.n:
-                self.bit[i][j]+=val
-                j+= j&amp;amp;-j
-            i+= i&amp;amp;-i
-
-    def query(self,r,c):
-        res = 0
-        i=r
-        while i&amp;gt;0:
-            j = c
-            while j&amp;gt;0:
-                res+=self.bit[i][j]
-                j-= j&amp;amp;-j
-            i-= i&amp;amp;-i
-        return res
-        
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;update / \ query 注意index from 1&lt;/p&gt;
-&lt;h1 id=&#34;segment-tree&#34;&gt;Segment Tree&lt;/h1&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class ST:
-    def __init__(self,n):
-        self.size = n
-        self.tree = [0]*(2*self.size)
-    
-    def update(self,ind,val):
-        #       1
-        #     2   3
-        #    4 5 6 7
-        #  self.tree is:
-        #  @ 1 2 3 4 5 6 7
-        
-        #offset index by size, the leave save value node save summation
-        ind+=self.size
-        self.tree[ind] += val
-        while ind&amp;gt;0:
-            left=ind
-            right=ind
-            if ind%2==0:
-                right+=1
-            else:
-                left-=1
-            if ind//2&amp;gt;0:
-                self.tree[ind//2]=self.tree[left]+self.tree[right]
-            ind //=2
-
-
-    def query(self,left,right):
-        left+=self.size
-        right+=self.size
-        res=0
-        while left&amp;lt;=right:
-            if right%2==0:
-                res+=self.tree[right]
-                right-=1
-            if left%2==1:
-                res+=self.tree[left]
-                left+=1
-            left//=2
-            right//=2
-        return res
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;原始值保存在叶子节点中，所以ind是要加slef.size的&lt;/p&gt;
-&lt;h1 id=&#34;unionfind&#34;&gt;UnionFind&lt;/h1&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;     class UnionFind:
-        def __init__(self,n):
-            self.parent=[i for i in range(n)]
-            self.rank=[0]*n
-            self.n=n
-        def find(self,x):
-            if x!=self.parent[x]:
-                self.parent[x]=self.find(self.parent[x])
-            return self.parent[x]
-        
-        def union(self,x,y):
-            px=self.find(x)
-            py=self.find(y)
-            if px!=py:
-                self.n-=1
-                if self.rank[px]&amp;lt;self.rank[py]:
-                    self.parent[px]=py
-                elif self.rank[px]&amp;gt;self.rank[py]:
-                    self.parent[py]=px
-                else:
-                    self.parent[py]=px
-                    self.rank[px]+=1
-
-&lt;/code&gt;&lt;/pre&gt;
-">SUM相关数据结构总结</a>
-      </div>
-      
-      <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2023-01-05/"" data-c="
           &lt;p&gt;没想到都拖到2023年了 还没上500&lt;/p&gt;
 &lt;!-- more --&gt;
@@ -2189,7 +2227,52 @@ class BIT:
 The string s is magical because concatenating the number of contiguous occurrences of characters &#39;1&#39; and &#39;2&#39; generates the string s itself.&lt;br&gt;
 The first few elements of s is s = &amp;quot;1221121221221121122……&amp;quot;. If we group the consecutive 1&#39;s and 2&#39;s in s, it will be &amp;quot;1 22 11 2 1 22 1 22 11 2 11 22 ......&amp;quot; and the occurrences of 1&#39;s or 2&#39;s in each group are &amp;quot;1 2 2 1 1 2 1 2 2 1 2 2 ......&amp;quot;. You can see that the occurrence sequence is s itself.&lt;br&gt;
 Given an integer n, return the number of 1&#39;s in the first n number in the magical string s.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#MY ANSWER   死扣出来的，。。。 不如答案
+class Solution:
+    def magicalString(self, n: int) -&amp;gt; int:
+        if n&amp;lt;=3: return 1
+        l=2
+        s= [1,2]
+        c = 0
+        res = 1
+        while s:
+            c+=1
+            num=s.pop(0)
+            if c &amp;amp; 1:
+                
+                if c==1:
+                     continue
+                else:
+                    s.extend([1]*num)
+                    l+=num
+         
+                if l&amp;lt;n:
+                    #print(&#39;@&#39;,l,c,res+num)
+                    res+=num 
+                elif l==n:
+                    #print(&#39;#&#39;,l,c,res+num)
+                    res+=num
+                    break 
+                else:
+                    #print(&#39;&amp;amp;&#39;,l,c,res+num-(l-n))
+                    res+= num-(l-n) 
+                    break
+
+            else:
+                if c==2:
+                    s.append(2)
+                    l+=1
+                else:
+                    s.extend([2]*num)
+                    l+=num
+                
+                if l&amp;gt;=n: break
+                
+        return res
+        ###
+
+
+class Solution:
     def magicalString(self, n: int) -&amp;gt; int:
         #          #
         #     1 2  2
@@ -2228,6 +2311,25 @@ Given an integer n, return the number of 1&#39;s in the first n number in the ma
 We want to reformat the string s such that each group contains exactly k characters, except for the first group, which could be shorter than k but still must contain at least one character. Furthermore, there must be a dash inserted between two groups, and you should convert all lowercase letters to uppercase.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def licenseKeyFormatting(self, s: str, k: int) -&amp;gt; str:
+
+        s = s.replace(&#39;-&#39;,&#39;&#39;).upper()
+        first = len(s)%k
+        res = []
+        while s:
+            if first:
+                res.append(s[:first])
+                s = s[first:]
+                first = 0
+            else:
+                res.append(s[:k])
+                s= s[k:]
+
+
+        return &#39;-&#39;.join(res)
+
+#
+class Solution:
+    def licenseKeyFormatting(self, s: str, k: int) -&amp;gt; str:
         if set(s)=={&#39;-&#39;}: return &#39;&#39;
         li=[]
         for char in s:
@@ -2246,7 +2348,7 @@ We want to reformat the string s such that each group contains exactly k charact
         return (&#39;&#39;.join(res[::-1])) if &#39;&#39;.join(res[::-1])[0]!=&#39;-&#39; else (&#39;&#39;.join(res[::-1]))[1:]
 
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;得到chars后从后往前填充。res.append(li.pop())&lt;/p&gt;
+&lt;p&gt;计算头的长度，或者，得到chars后从后往前填充。res.append(li.pop())&lt;/p&gt;
 &lt;h1 id=&#34;font-colorred-483-smallest-good-base-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 483. Smallest Good Base （Hard）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given an integer n represented as a string, return the smallest good base of n.&lt;br&gt;
 We call k &amp;gt;= 2 a good base of n, if all digits of n base k are 1&#39;s.&lt;/p&gt;
@@ -2321,6 +2423,31 @@ s[i] == &#39;D&#39; if perm[i] &amp;gt; perm[i + 1].
         while stack:
             res.append(stack.pop())
         return res 
+
+
+#ANSWER
+class Solution:
+    def findPermutation(self, s: str) -&amp;gt; List[int]:
+        # 1 2 3 4 5 6
+        # d d d I I
+        # 4 3 2 1 5 6
+        n = len(s)+1
+        res  = list(range(1,n+1))
+        def rev(l,r):
+            while l&amp;lt;r:
+                res[l],res[r]=res[r],res[l]
+                r-=1
+                l+=1
+        i = 0
+        while i&amp;lt;len(s):
+            j = i
+            while j&amp;lt;len(s) and s[j]==&#39;D&#39;:
+                j+=1
+            rev(i,j)
+            i=j+1
+        return res
+        
+
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;two pointer 思路和答案是一样的  但就是写不出来。。。&lt;/p&gt;
 &lt;h1 id=&#34;485-max-consecutive-ones-easy&#34;&gt;485. Max Consecutive Ones （Easy）&lt;/h1&gt;
@@ -2363,7 +2490,32 @@ s[i] == &#39;D&#39; if perm[i] &amp;gt; perm[i + 1].
             return max(left,right)
         
         return score(0,n-1) &amp;gt;=0
+ #MY ANSWER
+ class Solution:
+    def PredictTheWinner(self, nums: List[int]) -&amp;gt; bool:
+        @lru_cache(None)
+        def score(l,r):
+            #opp will make sure I get a min score
+            if l&amp;gt;r: return 0
+            if l==r: return nums[l]
+
+            # if I choose l
+            # opp score
+            #score(l+1,r)
+
+            myscore1 = nums[l]+ min(score(l+2,r),score(l+1,r-1))
+
+            # if I choose r
+            # opp score
+            #score(l,r-1)
+            myscore2 =  nums[r] + min(score(l+1,r-1),score(l,r-2))
+            return max(myscore1,myscore2)
+
         
+        l=0
+        r=len(nums)-1
+        
+        return score(l,r)&amp;gt;=score(l+1,r) or score(l,r)&amp;gt;=score(l,r-1)       
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;dp can be tricky to write&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public boolean PredictTheWinner(int[] nums) {
@@ -2396,6 +2548,27 @@ s[i] == &#39;D&#39; if perm[i] &amp;gt; perm[i + 1].
         
         return maxlen
 
+
+#通解
+class Solution:
+    def findMaxConsecutiveOnes(self, nums: List[int]) -&amp;gt; int:
+        
+        res = 0
+        zero = 0
+        k=1
+        start = 0
+        for i,n in enumerate(nums):
+            if n==0:
+                zero+=1
+            
+            while zero&amp;gt;k:
+                if nums[start]==0:
+                    zero-=1
+                start+=1
+                
+
+            res = max(res,i-start+1)
+        return res 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;知道是sliding window但写不出来。。。store the length of previous and current consecutive 1&#39;s (separated by the last 0) as pre and curr , respectively.&lt;br&gt;
 Whenever we get a new number, update these two variables accordingly. The consecutive length would be pre + 1 + curr, where the 1 is a zero that got flipped to 1. (note that pre is initialized to -1, meaning that we haven&#39;t seen any 0 yet)&lt;/p&gt;
@@ -2521,7 +2694,7 @@ Given a string board, representing the row of balls on the board, and a string h
         return -1
 
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;bfs 优化有意思，1）board 过到i位置相同情况下，ball之间见过的直接skip， 2）在board 【i-1】==ball时候skip，相当于不在末尾放ball。 3）board【i】=hand【j】放置ball容易理解 4）发现之前boad 已经连续2个了board【i-1】==board【i】，可以随便放置ball碰运气。但是不要放置和i一样的ball这样违背了rule2不在末尾放球的规定.&lt;/p&gt;
+&lt;p&gt;bfs 优化有意思，1）board 过到i位置相同情况下，ball之前见过的直接skip， 2）在board 【i-1】==ball时候skip，相当于不在末尾放ball。 3）board【i】=hand【j】放置ball容易理解 4）发现之前boad 已经连续2个了board【i-1】==board【i】，可以随便放置ball碰运气。但是不要放置和i一样的ball这样违背了rule2不在末尾放球的规定.&lt;/p&gt;
 &lt;h1 id=&#34;489-robot-room-cleaner-hard&#34;&gt;489. Robot Room Cleaner (hard)&lt;/h1&gt;
 &lt;p&gt;You are controlling a robot that is located somewhere in a room. The room is modeled as an m x n binary grid where 0 represents a wall and 1 represents an empty slot.&lt;/p&gt;
 &lt;p&gt;The robot starts at an unknown location in the room that is guaranteed to be empty, and you do not have access to the grid, but you can move the robot using the given API Robot.&lt;/p&gt;
@@ -2634,6 +2807,7 @@ Given the m x n maze, the ball&#39;s start position and the destination, where s
             visited.add((x,y))
             if [x,y]==destination:
                 self.res = True
+                return
             
             for i in range(4):
                 new_x = x+dx[i]
@@ -3009,7 +3183,48 @@ For #2, you can use LeetCode 459: Repeated Substring Pattern to find out whether
 &lt;h1 id=&#34;font-colorred-472-concatenated-words-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 472. Concatenated Words （Hard）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given an array of strings words (without duplicates), return all the concatenated words in the given list of words.&lt;br&gt;
 A concatenated word is defined as a string that is comprised entirely of at least two shorter words in the given array.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+#TLE TRIE
+class Solution:
+    def findAllConcatenatedWordsInADict(self, words: List[str]) -&amp;gt; List[str]:
+
+        class T:
+            def __init__(self):
+                self.data = collections.defaultdict(T)
+                self.isword = False
+            
+            def insert(self,word):
+                cur = self
+                for ch in word:
+                    cur = cur.data[ch]
+                cur.isword = True
+            
+            def search(self,word,start,root, count):
+                
+                n = len(word)
+                cur = root
+                for i in range(start,n):
+                    cur= cur.data[word[i]]
+                    if cur.isword:
+                        if i==n-1:
+                            return count&amp;gt;=1
+                        elif self.search(word,i+1,root,count+1):
+                            return True
+                return False
+            
+        tire = T()
+        for w in words:
+            tire.insert(w)
+        
+        res =[]
+        for w in words:
+            if tire.search(w,0,tire,0):
+                res.append(w)
+        
+        return res
+
+###
+class Solution:
     def findAllConcatenatedWordsInADict(self, words: List[str]) -&amp;gt; List[str]:
         d = set(words)
         @lru_cache(None)
@@ -3061,7 +3276,30 @@ class Solution:
         bt(0)
         
         return self.result
+#MY ANSWER
+class Solution:
+    def makesquare(self, matchsticks: List[int]) -&amp;gt; bool:
+        matchsticks.sort(key=lambda x:-x)
+        L=sum(matchsticks)//4
+        if sum(matchsticks)%4!=0: return False
+        sums  = [0]*4
+        def dfs(i):
+            if i==len(matchsticks): 
+                if len(set(sums))==1 and sums[0]==L:
+                    return True
+                return False
 
+            for j in range(4):
+                if sums[j]+matchsticks[i]&amp;lt;=L:
+                    sums[j]+=matchsticks[i]
+                    if dfs(i+1):
+                        return True
+                    sums[j]-=matchsticks[i]
+                    #after recursion we can not put any stick ，so a fail。
+                    if sums[j]==0: return False
+            return False
+        
+        return dfs(0)
 #ANSWER
 class Solution:
     def makesquare(self, nums):
@@ -3173,30 +3411,15 @@ class Solution:
 #ANSWER
 class Solution:
     def findRadius(self, houses: List[int], heaters: List[int]) -&amp;gt; int:
-        
-         
-               
-        def binsearch(nums, target) :
-            l, r = 0, len(nums)
-            while l &amp;lt; r:
-                m = (l + r) // 2
-                if nums[m] &amp;lt; target :
-                    l = m + 1
-                else:
-                    r = m
-            return l
-            
+        #   h1    h2     h3
         heaters.sort()
-        
-        result = float(&#39;-inf&#39;)
-        
-        for house in houses :
-            index = binsearch(heaters, house)
-            leftHeaterDistance = house - heaters[index - 1] if index &amp;gt; 0 else float(&#39;inf&#39;)
-            rightHeaterDistance = heaters[index] - house if index &amp;lt; len(heaters) else float(&#39;inf&#39;)
-            result = max(result , min(leftHeaterDistance, rightHeaterDistance))
-        
-        return result
+        res = float(&#39;-inf&#39;)
+        for h in houses:
+            idx = bisect.bisect_left(heaters,h)
+            leftHeaterDistance = h - heaters[idx - 1] if idx &amp;gt; 0 else float(&#39;inf&#39;)
+            rightHeaterDistance = heaters[idx] - h if idx &amp;lt; len(heaters) else float(&#39;inf&#39;)
+            res = max(res,min(leftHeaterDistance,rightHeaterDistance))
+        return res
         
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;变种FBS 每次增加1 distance，TLE。看答案。max min + binary search&lt;/p&gt;
@@ -3231,7 +3454,7 @@ class Solution:
             todo = todo &amp;gt;&amp;gt; 1
         return num
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;font-colorred477-total-hamming-distance-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt;477. Total Hamming Distance (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;477-total-hamming-distance-medium&#34;&gt;477. Total Hamming Distance (Medium)&lt;/h1&gt;
 &lt;p&gt;The Hamming distance between two integers is the number of positions at which the corresponding bits are different.&lt;br&gt;
 Given an integer array nums, return the sum of Hamming distances between all the pairs of the integers in nums.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#TLE
@@ -3254,30 +3477,25 @@ class Solution:
         return res
 
 
-#ANSWER
+ 
+
+#MY ANSWER        
 class Solution:
     def totalHammingDistance(self, nums: List[int]) -&amp;gt; int:
-        if not nums: return 0
-        res=0
-        n=len(nums)
-        count = [0]*32
-        
-        for num in nums:
-            i=0
-            while num:
-                count[i]+= num &amp;amp; 1
-                num &amp;gt;&amp;gt;=1
-                i+=1
-        
-        for k in count:
-            res+=k*(n-k)
-        
-        return res
-        
-         
+
+        nbits = len(bin(max(nums))[2:])
+        res =0
+        for i in range(nbits):
+            one = 0
+            mask = 1&amp;lt;&amp;lt;i
+            for n in nums:
+                if n&amp;amp;mask:
+                    one+=1
+            zero = len(nums)-one
+            res +=  one*zero
+        return res         
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;初次尝试 TLE,应该按照bit loop。Say for any particular bit position, count the number of elements with this bit ON (i.e. this particular bit is 1). Let this count be k. Hence the number of elements with this bit OFF (i.e. 0) is (n−k)(n - k) (in an n element array).&lt;br&gt;
-Certainly unique pairs of elements exists where one element has this particular bit ON while the other element has this OFF (i.e. this particular bit differs for the two elements of this pair).&lt;/p&gt;
+&lt;p&gt;按照每一位计算hamming distance， one位置有m个 zero位置有n个，则distance += mn&lt;/p&gt;
 &lt;h1 id=&#34;478-generate-random-point-in-a-circle-medium&#34;&gt;478. Generate Random Point in a Circle （Medium）&lt;/h1&gt;
 &lt;p&gt;Given the radius and the position of the center of a circle, implement the function randPoint which generates a uniform random point inside the circle.&lt;br&gt;
 Implement the Solution class:&lt;br&gt;
@@ -3363,8 +3581,8 @@ Lastly, we can use our cumulative distribution function F  to compute the invers
         #// account for case n = 1
         return 9
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;没思路。。。&lt;/p&gt;
-&lt;h1 id=&#34;480-sliding-window-median-hard&#34;&gt;480. Sliding Window Median （Hard）&lt;/h1&gt;
+&lt;p&gt;没思路。。。先生成palin，再验证能否拆分成乘的形式。&lt;/p&gt;
+&lt;h1 id=&#34;font-colorred-480-sliding-window-median-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 480. Sliding Window Median （Hard）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. So the median is the mean of the two middle values.&lt;br&gt;
 For examples, if arr = [2,3,4], the median is 3.&lt;br&gt;
 For examples, if arr = [1,2,3,4], the median is (2 + 3) / 2 = 2.5.&lt;br&gt;
@@ -3501,6 +3719,42 @@ Test cases are designed so that the answer will fit in a 32-bit integer.&lt;/p&g
         nums.sort()
         mid= nums[len(nums)//2]
         return sum([abs(val-mid) for val in nums])
+
+#O（n） use quickselect
+class Solution:
+    def minMoves2(self, nums: List[int]) -&amp;gt; int:
+        n = len(nums)
+        
+        def partition(idx,left,right):
+            pval = nums[idx]
+            nums[idx],nums[right] = nums[right],nums[idx]
+            store_idx  = left
+            for i in range(left,right):
+                if nums[i]&amp;lt;pval:
+                    nums[store_idx],nums[i] = nums[i],nums[store_idx]
+                    store_idx+=1
+            
+            nums[right],nums[store_idx] = nums[store_idx],nums[right]
+
+            return store_idx
+        
+        def select(l,r,k):
+            
+            idx = random.randint(l,r)
+            idx = partition(idx,l,r)
+            
+            if idx==k:
+                return nums[k]
+            elif idx&amp;lt;k:
+                return select(idx+1,r,k)
+            else:
+                return select(l,idx-1,k)
+        
+        mid = select(0,n-1,n//2)
+        res =0 
+        for n in nums:
+            res+=abs(n-mid)
+        return res
 #JAVA ANSWER good to know
 public class Solution {
     public int minMoves2(int[] nums) {
@@ -3531,14 +3785,14 @@ The island doesn&#39;t have &amp;quot;lakes&amp;quot;, meaning the water inside 
                 neis.append((ii,jj))
             return neis
         
-        res = [0]
+        self.res = 0
         
         def dfs(i,j):
             if (i,j) in visited: return
-            res[0]+=4
-            neis = nei(i,j)
-            res[0]-=len(neis)
             visited.add((i,j))
+            self.res+=4
+            neis = nei(i,j)
+            self.res-=len(neis)
             for ne in neis:
                 if ne not in visited:
                     dfs(*ne)
@@ -3548,7 +3802,47 @@ The island doesn&#39;t have &amp;quot;lakes&amp;quot;, meaning the water inside 
                 if grid[i][j]==1:
                     dfs(i,j)
                     break
-        return res[0]
+        return self.res
+
+#MY ANSWER
+class Solution:
+    def islandPerimeter(self, grid: List[List[int]]) -&amp;gt; int:
+        
+        matrix = []
+        ncols = len(grid[0])
+        row0 = [0]*(ncols+2)
+        matrix.append(row0)
+        for row in grid:
+            matrix.append([0]+row+[0])
+        matrix.append(row0[:])
+        
+        m,n = len(matrix),len(matrix[0])
+        res = 0
+
+        for i in range(1,m):
+            for j in range(1,n):
+                if  matrix[i][j]==1 and matrix[i][j-1]==0 and matrix[i-1][j]==0:
+                    res+=2
+                elif matrix[i][j]==0 and matrix[i][j-1]==1 and matrix[i-1][j]==0:
+                    res+=1
+
+                elif matrix[i][j]==1 and matrix[i][j-1]==0 and matrix[i-1][j]==1:
+                    res+=1
+                elif matrix[i][j]==0 and matrix[i][j-1]==1 and matrix[i-1][j]==1:
+                    res+=2
+                
+                elif matrix[i][j]==0 and matrix[i][j-1]==0 and matrix[i-1][j]==1:
+                    res+=1
+                elif matrix[i][j]==0 and matrix[i][j-1]==0 and matrix[i-1][j]==0:
+                    res+=0
+                
+                elif matrix[i][j]==1 and matrix[i][j-1]==1 and matrix[i-1][j]==1:
+                    res+=0
+                elif matrix[i][j]==1 and matrix[i][j-1]==1 and matrix[i-1][j]==0:
+                    res+=1
+
+
+        return res
             
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h1 id=&#34;font-colorred-464-can-i-win-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 464. Can I Win (Medium) &lt;/font&gt;&lt;/h1&gt;
@@ -3558,91 +3852,98 @@ For example, two players might take turns drawing from a common pool of numbers 
 Given two integers maxChoosableInteger and desiredTotal, return true if the first player to move can force a win, otherwise, return false. Assume both players play optimally.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def canIWin(self, maxChoosableInteger: int, desiredTotal: int) -&amp;gt; bool:
-        @lru_cache(None)
-        def check(nums, t):
-            if nums[-1] &amp;gt;= t: return True
-            res = any(not check(tuple(nums[:i]+nums[i+1:]),t-nums[i]) for i in range(len(nums)))
-            return res
-            
-        if maxChoosableInteger * (1 + maxChoosableInteger) // 2 &amp;lt; desiredTotal: return False
-        nums = tuple(range(1, maxChoosableInteger + 1))
-        return check(nums, desiredTotal)
+        if desiredTotal &amp;lt;= 0: return True
+        if maxChoosableInteger * (maxChoosableInteger + 1) // 2 &amp;lt; desiredTotal: return False
+        memo = {}
 
-#ANSWER 2 TLE
-class Solution:
-    def canIWin(self, maxChoosableInteger: int, desiredTotal: int) -&amp;gt; bool:
-        dic = dict()
-        used = [False]*(maxChoosableInteger+1)
-        
-        sum_=(1+maxChoosableInteger)*maxChoosableInteger//2
-        if sum_&amp;lt;desiredTotal: return False
-        if desiredTotal&amp;lt;=0: return True
-        
-        def formatkey(used):
-            n=0
-            for bl in used:
-                n&amp;lt;&amp;lt;=1
-                if bl:
-                    n |=1
-            return n
-            
-        def helper(desiredTotal):
+        def helper(nums, desiredTotal):
+            hash = str(nums)
+            if hash in memo:
+                return memo[hash]
+            #if nums[-1] &amp;gt;= desiredTotal:
+            #    return True
             if desiredTotal&amp;lt;=0: return False
-            key = formatkey(used)
-            if key not in dic:
-                for i in range(1,len(used)):
-                    if not used[i]:
-                        used[i]=True
-                        #check whether this lead to a win (i.e. the other player lose)
-                        if not helper(desiredTotal-i):
-                            dic[key]=True
-                            used[i]=False
-                            return True
-                        used[i]=False
-                dic[key]=False
-            
-            return dic[key]
-        
-        return helper(desiredTotal)
+            for i in range(len(nums) - 1, -1, -1):
+                if not helper(nums[:i] + nums[i+1:], desiredTotal - nums[i]):
+                    memo[hash] = True
+                    return True
+            memo[hash] = False
+            return False
+         
+
+        return helper(list(range(1, maxChoosableInteger + 1)), desiredTotal)
+ 
+ #ANSWER
+ class Solution:
+    def canIWin(self, maxChoosableInteger, desiredTotal):
+        total_sum = (1 + maxChoosableInteger) * maxChoosableInteger / 2
+        if total_sum &amp;lt; desiredTotal:
+            return False
+        if desiredTotal &amp;lt;= 0:
+            return True
+
+        self.map = {}
+        self.used = [False] * (maxChoosableInteger + 1)
+        return self.helper(desiredTotal)
+
+    def helper(self, desiredTotal):
+        if desiredTotal &amp;lt;= 0:
+            return False
+        key = self.format(self.used)
+        if key not in self.map:
+            # try every unchosen number as the next step
+            for i in range(1, len(self.used)):
+                if not self.used[i]:
+                    self.used[i] = True
+                    # check whether this leads to a win (i.e. the other player loses)
+                    if not self.helper(desiredTotal - i):
+                        self.map[key] = True
+                        self.used[i] = False
+                        return True
+                    self.used[i] = False
+            self.map[key] = False
+        return self.map[key]
+
+    # transfer boolean[] to an Integer
+    def format(self, used):
+        num = 0
+        for b in used:
+            num &amp;lt;&amp;lt;= 1
+            if b:
+                num |= 1
+        return num
+
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;can not reuse integer， 答案 pythonic写法。&lt;/p&gt;
+&lt;p&gt;can not reuse integer， Force Win return True.&lt;/p&gt;
 &lt;h1 id=&#34;font-colorred-465-optimal-account-balancing-hardfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 465. Optimal Account Balancing （Hard）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;You are given an array of transactions transactions where transactions[i] = [fromi, toi, amounti] indicates that the person with ID = fromi gave amounti $ to the person with ID = toi.&lt;br&gt;
 Return the minimum number of transactions required to settle the debt.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;    def minTransfers(self, transactions):
-        &amp;quot;&amp;quot;&amp;quot;
-        :type transactions: List[List[int]]
-        :rtype: int
-        &amp;quot;&amp;quot;&amp;quot;
-        m = collections.defaultdict(int)
-        
-        for t in transactions:
-            m[t[0]]-=t[2]
-            m[t[1]]+=t[2]
-        
-        debt = m.values()
-        
-        def dfs(s):
-            while(s&amp;lt;len(debt) and debt[s]==0):
-                s+=1
-            if s==len(debt): return 0
-            
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+    def minTransfers(self, transactions: List[List[int]]) -&amp;gt; int:
+        dic = defaultdict(int)
+        for a,b,val in transactions:
+            dic[a]-=val
+            dic[b]+=val
+    
+        debt = [d for d in dic.values() ]
+    
+        def dfs(i):
+            if i==len(debt): return 0 
+            if debt[i]==0: return dfs(i+1)
             r = float(&#39;inf&#39;)
-            for i in range(s+1,len(debt)):
-                if debt[i]*debt[s]&amp;lt;0:
-                    # settle s with i
-                    debt[i]+=debt[s]
-                    r=min(r,1+dfs(s+1))
-                    # backtrack
-                    debt[i]-=debt[s]
-            return r
-        
+            for j in range(i+1,len(debt)):
+                if debt[i]*debt[j]&amp;lt;0:
+                    #j will be total responsable for i&#39;s debt
+                    debt[j]+=debt[i]
+                    r = min(r,1+dfs(i+1))
+                    debt[j]-=debt[i]
+            return r 
         return dfs(0)
 
 
 
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;idea is tricky...  person index s have debt[s] for other person from s+1, if other person have neg sign then person s. update debt[i] with debt[s] (so person i will take full responsiblity of person s). r=min(r,1+dfs(s+1))&lt;/p&gt;
+&lt;p&gt;idea is tricky...  person index i have debt[i] for other person j , if other person have neg sign then person s. update debt[i] with debt[j] (so person j will take full responsiblity of person i). r=min(r,1+dfs(i+1))&lt;/p&gt;
 &lt;h1 id=&#34;font-colorred-466-count-the-repetitions-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 466. Count The Repetitions (Hard) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;We define str = [s, n] as the string str which consists of the string s concatenated n times.&lt;br&gt;
 For example, str == [&amp;quot;abc&amp;quot;, 3] ==&amp;quot;abcabcabc&amp;quot;.&lt;br&gt;
@@ -3671,8 +3972,42 @@ class Solution:
             i1 += 1
         return i2 // l2 // n2
 
+#TLE BINARY SEARCH
+class Solution:
+    def getMaxRepetitions(self, s1: str, n1: int, s2: str, n2: int) -&amp;gt; int:
+        # s1 acbacbacbacb s2 = abab
+        l=1
+        r=len(s1)*n1//len(s2)//n2+1
+
+        def GCD(a,b):
+            while b:
+                a, b = b, a%b
+            return a
+
+        def s2ins1(s2,s1):
+            ls2 = len(s2)
+            ls1 = len(s1)
+            start = 0
+            for i in range(ls1):
+                if s1[i] == s2[start]:
+                    start+=1
+                    if start==ls2:
+                        break
+            return start == ls2
+
+        while l&amp;lt;=r:
+            m = (l+r)//2
+            tmp = GCD(m*n2,n1)
+            #print(tmp,m*n2,n1)
+            if s2ins1(s2*(m*n2//tmp) , s1*(n1//tmp)):
+                # m is large:
+                l = m+1
+            else:
+                r = m-1
+        
+        return l-1 
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;直接数出现的次数算重复不行，因为还有字母出现次序问题。。。 得找重复pattern。 答案厉害。&lt;/p&gt;
+&lt;p&gt;直接数出现的次数算重复不行，因为还有字母出现次序问题。。。 得找重复pattern。 答案厉害。BINARY SEARCH TLE&lt;/p&gt;
 &lt;h1 id=&#34;font-colorred-467-unique-substrings-in-wraparound-string-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 467. Unique Substrings in Wraparound String (Medium) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;We define the string s to be the infinite wraparound string of &amp;quot;abcdefghijklmnopqrstuvwxyz&amp;quot;, so s will look like this:&lt;br&gt;
 &amp;quot;...zabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd....&amp;quot;.&lt;br&gt;
@@ -3684,26 +4019,6 @@ Given a string p, return the number of unique non-empty substrings of p are pres
             l = l + 1 if (ord(j) - ord(i)) % 26 == 1 else 1
             res[j] = max(res[j], l)
         return sum(res.values())
-#
-class Solution:
-    def findSubstringInWraproundString(self, p: str) -&amp;gt; int:
-        if not p: return 0
-        count = [0]*26
-        #initally, count is 1 for each unique char
-        for char in p:
-            count[ord(char)-ord(&#39;a&#39;)]=1
-        
-        res=1
-        #for each sub sequence ending in char2, if it is connected, res+=1 else res=1
-        for char1,char2 in zip(p,p[1:]):
-            if (ord(char2)-ord(char1))%26==1:
-                res+=1
-            else:
-                res=1
-            #prevent duplicate char2
-            count[ord(char2)-ord(&#39;a&#39;)] = max(count[ord(char2)-ord(&#39;a&#39;)], res)
-                
-        return sum(count)
 
 #ANSWER DP 思路：若字符连续，当前可形成的substring个数+1，若不连续substring个数=1，更新count 为防止重复字符overwrite，更新时候取max。 
 class Solution:
@@ -3720,8 +4035,27 @@ class Solution:
             count[index]=max(count[index],cur_maxlen)
         
         return sum(count)
+
+#
+class Solution:
+    def findSubstringInWraproundString(self, s: str) -&amp;gt; int:
+         
+        dp = [0]*26
+        cur_maxlen = 0
+
+    
+        for i,n in enumerate(s):
+            if i&amp;gt;0 and (ord(n) - ord(s[i-1])) % 26==1:
+                cur_maxlen+=1
+            else:
+                cur_maxlen = 1
+            
+            idx = ord(n)-ord(&#39;a&#39;)
+            dp[idx] = max(dp[idx],cur_maxlen)
+             
+        return sum(dp)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;看答案了。。。&lt;br&gt;
+&lt;p&gt;DP[i] 意思是以s【i】为结尾的substring的个数。 注意取max&lt;br&gt;
 Each single charecter contribution is initialized to 1&lt;br&gt;
 if the order is continued, the contribution is increased by 1 from previous character contribution&lt;/p&gt;
 &lt;p&gt;example string zabce&lt;/p&gt;
@@ -3788,7 +4122,7 @@ For example, &amp;quot;2001:0db8:85a3:0000:0000:8a2e:0370:7334&amp;quot; and &am
 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;只需要细心的题目&lt;/p&gt;
-&lt;h1 id=&#34;font-colorred-469-convex-polygon-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 469. Convex Polygon （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;469-convex-polygon-medium&#34;&gt;469. Convex Polygon （Medium）&lt;/h1&gt;
 &lt;p&gt;You are given an array of points on the X-Y plane points where points[i] = [xi, yi]. The points form a polygon when joined sequentially.&lt;br&gt;
 Return true if this polygon is convex and false otherwise.&lt;br&gt;
 You may assume the polygon formed by given points is always a simple polygon. In other words, we ensure that exactly two edges intersect at each vertex and that edges otherwise don&#39;t intersect each other.&lt;/p&gt;
@@ -3798,6 +4132,28 @@ You may assume the polygon formed by given points is always a simple polygon. In
         return (b[0] - a[0])*(c[1] - a[1]) - (b[1] - a[1])*(c[0] - a[0]) 
     res = [ccw(p[i-2], p[i-1], p[i]) for i in range(len(p))]
     return abs(sum(res)) == sum(abs(i) for i in res)
+
+#MY ANSWER
+class Solution:
+    def isConvex(self, points: List[List[int]]) -&amp;gt; bool:
+        #  x X y = ad-bc  
+        #  i j k
+        #  a b 0 
+        #  c d 0
+
+        vects = []
+        for i in range(len(points)):
+            a = points[i]
+            b = points[i-1]
+            vects.append([a[0]-b[0],a[1]-b[1]])
+        
+        aXb = []
+        for i in range(len(vects)):
+            a = vects[i]
+            b = vects[i-1]
+            aXb.append(a[0]*b[1]-a[1]*b[0])
+        print(aXb)
+        return all(map(lambda x:x&amp;gt;=0 ,aXb)) or  all(map(lambda x:x&amp;lt;=0 ,aXb)) 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;convex...beyond my knowledge  CCW算法。。。Note: |Σxi| = Σ|xi| is only true when all xi are the same sign.&lt;/p&gt;
 &lt;h1 id=&#34;470-implement-rand10-using-rand7-medium&#34;&gt;470. Implement Rand10() Using Rand7() (Medium)&lt;/h1&gt;
@@ -3840,7 +4196,8 @@ class Solution:
             n2=rand7()
         return (n1+(n2-1)*7)%10 +1
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;(n2-1)乘7+n1&lt;/p&gt;
+&lt;p&gt;(n2-1)乘7+n1&lt;br&gt;
+&amp;quot;(randN - 1)*N + randN&amp;quot; is the uniform random variable rand{N^2}.&lt;/p&gt;
 ">Leetcode 2022-03-07</a>
       </div>
       
@@ -3882,25 +4239,20 @@ Arrows can be shot up directly vertically (in the positive y-direction) from dif
 Given the array points, return the minimum number of arrows that must be shot to burst all balloons.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def findMinArrowShots(self, points: List[List[int]]) -&amp;gt; int:
-        #merge points by &amp;amp; return how many distinct points
-        
-        points=sorted(points,key=lambda x:x[0])
-        res=[]
-        for p in points:
-            if res:
-                # 1    1
-                #    2   2 
-                if res[-1][1]&amp;gt;=p[0]:
-                    res[-1][0]=max(res[-1][0],p[0])
-                    res[-1][1]=min(res[-1][1],p[1])
-                    
-                else:
-                    res.append(p)
+        #merge range by min range calculate len
+
+        points.sort()
+        res = []
+        for a,b in points:
+            #         a   b
+            # res  a&#39;  b&#39;
+            if res and a&amp;lt;=res[-1][1]  :
+                res[-1][1] = min(res[-1][1],b)
+               
             else:
-                res.append(p)
-        #print(res)
+                res.append([a,b])
+               
         return len(res)
-                
 #ANSWER WAY OF WRITTING
 class Solution:
     def findMinArrowShots(self, points: List[List[int]]) -&amp;gt; int:
@@ -3922,7 +4274,7 @@ class Solution:
         return arrows
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;我的思路是找到相交的区间，看总共多少个就行。。。答案思路是track球右边位置，让碰到新气球左边大于cur end位置+1，更新end位置的greedy算法。&lt;/p&gt;
-&lt;h1 id=&#34;font-colorred-453-minimum-moves-to-equal-array-elements-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 453. Minimum Moves to Equal Array Elements （Medium）&lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;453-minimum-moves-to-equal-array-elements-medium&#34;&gt;453. Minimum Moves to Equal Array Elements （Medium）&lt;/h1&gt;
 &lt;p&gt;Given an integer array nums of size n, return the minimum number of moves required to make all array elements equal.&lt;br&gt;
 In one move, you can increment n - 1 elements of the array by 1.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#TLE naive solution
@@ -3954,6 +4306,16 @@ class Solution:
             moves+=nums[i]
             min_=min(min_,nums[i])
         return moves-min_*len(nums)
+
+#MY ANSWER
+class Solution:
+    # 除了一个位置，其余位置同时加1。 等效于这个位置减去1。 
+    def minMoves(self, nums: List[int]) -&amp;gt; int:
+        me=min(nums)
+        res = 0
+        for n in nums:
+            res+= n-me
+        return res
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;答案很巧妙，如果是答案1） 思路先sort，那么每次需要move是nums【i】-nums【0】，这样move后nums【i】和nums【0】相等，然后其余数字都加上了move次，再次move时候，求nums【i-1】-nums【0】，这样nums【0】就和nums【i-1】相等，自然也和nums【i】相等。 以此类推，可求出总共move数目。 如果是答案2）所有加1除了1个不加，和只有一个减去1是等效的。 所以就是减多少次能使所有数平衡，sum（all）-min（all）乘n。&lt;/p&gt;
 &lt;h1 id=&#34;454-4sum-ii-medium&#34;&gt;454. 4Sum II （Medium）&lt;/h1&gt;
@@ -3974,7 +4336,27 @@ nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0&lt;/p&gt;
                     res+=dic2sum[-k-l]
         return res
 
+#
+class Solution:
+    def fourSumCount(self, nums1: List[int], nums2: List[int], nums3: List[int], nums4: List[int]) -&amp;gt; int:
 
+        d1 = collections.defaultdict(int)
+        d2 = collections.defaultdict(int)
+
+        for a in nums1:
+            for b in nums2:
+                d1[a+b]+=1
+        
+        for c in nums3:
+            for d in nums4:
+                d2[c+d]+=1
+        
+        res = 0
+        for k1,v1 in d1.items():
+            for k2,v2 in d2.items():
+                if k1+k2==0:
+                    res+=v1*v2
+        return res
 
 #ANSWER GENERALIZED 
 class Solution:
@@ -4008,17 +4390,20 @@ class Solution:
 Each child i has a greed factor g[i], which is the minimum size of a cookie that the child will be content with; and each cookie j has a size s[j]. If s[j] &amp;gt;= g[i], we can assign the cookie j to the child i, and the child i will be content. Your goal is to maximize the number of your content children and output the maximum number.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def findContentChildren(self, g: List[int], s: List[int]) -&amp;gt; int:
+
         g.sort()
         s.sort()
-        c=0
+        res = 0
         while g:
-            cur=g.pop(0)
-            while s and s[0]&amp;lt;cur:
+            need = g.pop(0)
+            while s and s[0]&amp;lt;need:
                 s.pop(0)
+            
             if s:
                 s.pop(0)
-                c+=1
-        return c
+                res+=1
+        return res
+        
 #
 # 先对g, s两个数组进行排序
 # 贪心算法
@@ -4061,6 +4446,7 @@ Return true if there is a 132 pattern in nums, otherwise, return false.&lt;/p&gt
                 continue
             while stack and stack[-1] &amp;lt;= min_array[j]:
                 stack.pop()
+            #到此 确保了stack[-1] 大于 min_array[j]，只需要确保下一步了
             if stack and stack[-1] &amp;lt; nums[j]:
                 return True
             stack.append(nums[j])
@@ -4111,10 +4497,50 @@ Return true if there is a cycle in nums, or false otherwise.&lt;/p&gt;
 
         return False
         
+#MY ANSWER DFS
+class Solution:
+    def circularArrayLoop(self, nums: List[int]) -&amp;gt; bool:
 
+        n = len(nums)
+
+        visited = set()
+        
+        self.res =False
+        def dfs(i,visited):
+            if i in visited:
+                if (i+nums[i])%n!=i :
+                    #no self loop
+                    start = i
+                    sign = [ ]
+                    while (start+nums[start])%n!=i:
+                        sign.append(nums[start]&amp;gt;0)
+                        start = (start+nums[start])%n
+                    sign.append(nums[start]&amp;gt;0)
+                    if len(sign)&amp;gt;1 and (all(sign) or not any(sign)):
+                       self.res = True
+                return 
+
+            visited.add(i)
+            dfs( (i+nums[i])%n, visited)
+
+        for i in range(n):
+            dfs(i,set())
+        return self.res
+
+#ANSWER PYTHONIC
+class Solution:
+    def circularArrayLoop(self, nums: List[int]) -&amp;gt; bool:
+ 
+        t = {i: (i + v) % len(nums) for i, v in enumerate(nums)}
+        inc = {k: v for k, v in t.items() if k != v}
+
+        while inc:
+            if any(k == v for k, v in inc.items()): return True
+            inc = {k: t[v] for k, v in inc.items() if nums[k] * nums[v] &amp;gt; 0 and v in inc} 
+        return False
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;two pointer, but tricky ....if we meet element with different directions, then the search fail, we set all elements along the way to 0. Because 0 is fail for sure so when later search meet 0 we know the search will fail.&lt;/p&gt;
-&lt;h1 id=&#34;458-poor-pigs-hard&#34;&gt;458. Poor Pigs (Hard)&lt;/h1&gt;
+&lt;h1 id=&#34;font-colorred-458-poor-pigs-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 458. Poor Pigs (Hard) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;There are buckets buckets of liquid, where exactly one of the buckets is poisonous. To figure out which one is poisonous, you feed some number of (poor) pigs the liquid to see whether they will die or not. Unfortunately, you only have minutesToTest minutes to determine which bucket is poisonous.&lt;br&gt;
 You can feed the pigs according to these steps:&lt;br&gt;
 Choose some live pigs to feed.&lt;br&gt;
@@ -4126,6 +4552,31 @@ Given buckets, minutesToDie, and minutesToTest, return the minimum number of pig
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def poorPigs(self, buckets: int, minutesToDie: int, minutesToTest: int) -&amp;gt; int:
         return int(math.ceil(math.log(buckets, 2) / math.log(minutesToTest / minutesToDie + 1, 2)))
+
+
+#MY ANSWER
+class Solution:
+    def poorPigs(self, buckets: int, minutesToDie: int, minutesToTest: int) -&amp;gt; int:
+        if buckets == 1: return 0
+        
+        round = minutesToTest//minutesToDie
+        # 1pig is 1 bit has 2 state only when round == 1
+        # 2**pig &amp;gt;= buckets
+        round =  minutesToTest//minutesToDie 
+        states  = round+1
+        l=1
+        r = buckets
+   
+        while l&amp;lt;=r:
+            m = (l+r)//2
+            if states**m&amp;lt;buckets:
+                #pig too small
+                l=m+1
+            else:
+                #pig too large
+                r=m-1
+        
+        return l
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;good to knwo but not algorithm..&lt;/p&gt;
 &lt;h1 id=&#34;459-repeated-substring-pattern-easy&#34;&gt;459. Repeated Substring Pattern （Easy）&lt;/h1&gt;
@@ -4167,175 +4618,121 @@ void put(int key, int value) Update the value of the key if present, or inserts 
 To determine the least frequently used key, a use counter is maintained for each key in the cache. The key with the smallest use counter is the least frequently used key.&lt;br&gt;
 When a key is first inserted into the cache, its use counter is set to 1 (due to the put operation). The use counter for a key in the cache is incremented either a get or put operation is called on it.&lt;br&gt;
 The functions get and put must each run in O(1) average time complexity.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import collections
-
-class Node:
-    def __init__(self, key, val):
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Node:
+    def __init__(self,key,val):
         self.key = key
         self.val = val
         self.freq = 1
-        self.prev = self.next = None
+        self.pre = None
+        self.next = None
 
-class DLinkedList:
-    &amp;quot;&amp;quot;&amp;quot; An implementation of doubly linked list.
-	
-	Two APIs provided:
-    
-    append(node): append the node to the head of the linked list.
-    pop(node=None): remove the referenced node. 
-                    If None is given, remove the one from tail, which is the least recently used.
-                    
-    Both operation, apparently, are in O(1) complexity.
-    &amp;quot;&amp;quot;&amp;quot;
+
+class DLL:
     def __init__(self):
-        self._sentinel = Node(None, None) # dummy node
-        self._sentinel.next = self._sentinel.prev = self._sentinel
-        self._size = 0
+        self.head = Node(&#39;H&#39;,&#39;H&#39;)
+        self.tail = Node(&#39;T&#39;,&#39;T&#39;)
+        self.head.next =self.tail
+        self.tail.pre = self.head
+        self.size = 0
     
-    def __len__(self):
-        return self._size
-    
-    def append(self, node):
-        node.next = self._sentinel.next
-        node.prev = self._sentinel
-        node.next.prev = node
-        self._sentinel.next = node
-        self._size += 1
+    def append(self,node):
+        self.tail.pre.next = node
+        node.pre = self.tail.pre
+        node.next =self.tail
+        self.tail.pre = node
+        self.size+=1
     
     def pop(self, node=None):
-        if self._size == 0:
-            return
-        
+        #pop from head
+        if self.size == 0: return None
         if not node:
-            node = self._sentinel.prev
-
-        node.prev.next = node.next
-        node.next.prev = node.prev
-        self._size -= 1
-        
+            node = self.head.next
+        node.pre.next =node.next
+        node.next.pre = node.pre
+        self.size-=1
         return node
-        
-class LFUCache:
-    def __init__(self, capacity):
-        &amp;quot;&amp;quot;&amp;quot;
-        :type capacity: int
-        
-        Three things to maintain:
-        
-        1. a dict, named as `self._node`, for the reference of all nodes given key.
-           That is, O(1) time to retrieve node given a key.
-           
-        2. Each frequency has a doubly linked list, store in `self._freq`, where key
-           is the frequency, and value is an object of `DLinkedList`
-        
-        3. The min frequency through all nodes. We can maintain this in O(1) time, taking
-           advantage of the fact that the frequency can only increment by 1. Use the following
-		   two rules:
-           
-           Rule 1: Whenever we see the size of the DLinkedList of current min frequency is 0,
-                   the min frequency must increment by 1.
-           
-           Rule 2: Whenever put in a new (key, value), the min frequency must 1 (the new node)
-           
-        &amp;quot;&amp;quot;&amp;quot;
-        self._size = 0
-        self._capacity = capacity
-        
-        self._node = dict() # key: Node
-        self._freq = collections.defaultdict(DLinkedList)
-        self._minfreq = 0
-        
-        
-    def _update(self, node):
-        &amp;quot;&amp;quot;&amp;quot; 
-        This is a helper function that used in the following two cases:
-        
-            1. when `get(key)` is called; and
-            2. when `put(key, value)` is called and the key exists.
-         
-        The common point of these two cases is that:
-        
-            1. no new node comes in, and
-            2. the node is visited one more times -&amp;gt; node.freq changed -&amp;gt; 
-               thus the place of this node will change
-        
-        The logic of this function is:
-        
-            1. pop the node from the old DLinkedList (with freq `f`)
-            2. append the node to new DLinkedList (with freq `f+1`)
-            3. if old DlinkedList has size 0 and self._minfreq is `f`,
-               update self._minfreq to `f+1`
-        
-        All of the above opeartions took O(1) time.
-        &amp;quot;&amp;quot;&amp;quot;
-        freq = node.freq
-        
-        self._freq[freq].pop(node)
-        if self._minfreq == freq and not self._freq[freq]:
-            self._minfreq += 1
-        
-        node.freq += 1
-        freq = node.freq
-        self._freq[freq].append(node)
     
-    def get(self, key):
-        &amp;quot;&amp;quot;&amp;quot;
-        Through checking self._node[key], we can get the node in O(1) time.
-        Just performs self._update, then we can return the value of node.
-        
-        :type key: int
-        :rtype: int
-        &amp;quot;&amp;quot;&amp;quot;
-        if key not in self._node:
-            return -1
-        
-        node = self._node[key]
-        self._update(node)
-        return node.val
+    def __len__(self):
+        return self.size
 
-    def put(self, key, value):
-        &amp;quot;&amp;quot;&amp;quot;
-        If `key` already exists in self._node, we do the same operations as `get`, except
-        updating the node.val to new value.
+    def __repr__(self):
+        res = []
+        cur = self.head
+        while cur:
+            res.append( &#39;-&#39;.join(map(str,[cur.freq,cur.key,cur.val]))  )
+            cur = cur.next
+        return &#39;,&#39;.join(res)
+    
+    
+class LFUCache:
+    #
+    #   freq1             freq2 .
+    #   H  1 2 T        H  3 4  T
+    
+    def __init__(self, capacity: int):
+        self.size = 0
+        self.cap = capacity
+        self.key2node = dict()
+        self.freq2dll = defaultdict(DLL)
+        self.minfreq = 0
+    
+    def debug(self,flag=False):
+        if flag:
+            print(&#39;#&#39;*10)
+            for f, dll in  self.freq2dll.items():
+                print(f)
+                print(dll)
+            print(&#39;#&#39;*10)
         
-        Otherwise, the following logic will be performed
+    def _update(self,node):
+        freq = node.freq
+        self.freq2dll[freq].pop(node)
         
-        1. if the cache reaches its capacity, pop the least frequently used item. (*)
-        2. add new node to self._node
-        3. add new node to the DLinkedList with frequency 1
-        4. reset self._minfreq to 1
+        if self.minfreq==freq and len(self.freq2dll[freq])==0:
+            self.minfreq+=1
         
-        (*) How to pop the least frequently used item? Two facts:
+        node.freq+=1
+        freq = node.freq
+        self.freq2dll[freq].append(node)
         
-        1. we maintain the self._minfreq, the minimum possible frequency in cache.
-        2. All cache with the same frequency are stored as a DLinkedList, with
-           recently used order (Always append at head)
-          
-        Consequence? ==&amp;gt; The tail of the DLinkedList with self._minfreq is the least
-                         recently used one, pop it...
+
+    def get(self, key: int) -&amp;gt; int:
+        #print(&#39;get&#39;,key)
+        if key not in self.key2node: return -1
+        node = self.key2node[key]
+        self._update(node)
+        self.debug()
+        return node.val
         
-        :type key: int
-        :type value: int
-        :rtype: void
-        &amp;quot;&amp;quot;&amp;quot;
-        if self._capacity == 0:
-            return
-        
-        if key in self._node:
-            node = self._node[key]
+
+    def put(self, key: int, value: int) -&amp;gt; None:
+        if self.cap == 0: return 
+
+        if key in self.key2node:
+            node = self.key2node[key]
             self._update(node)
             node.val = value
         else:
-            if self._size == self._capacity:
-                node = self._freq[self._minfreq].pop()
-                del self._node[node.key]
-                self._size -= 1
-                
-            node = Node(key, value)
-            self._node[key] = node
-            self._freq[1].append(node)
-            self._minfreq = 1
-            self._size += 1
+            if self.size==self.cap:
+                node = self.freq2dll[self.minfreq].pop()
+                del self.key2node[node.key]
+                self.size-=1
+                #if not len(self.freq2dll[self.minfreq]):
+                #    self.minfreq+=1
+            
+            node = Node(key,value)
+            self.key2node[key] = node
+            self.freq2dll[1].append(node)
+            self.minfreq = 1
+            self.size+=1
+        self.debug()
+        
+
+
+# Your LFUCache object will be instantiated and called as such:
+# obj = LFUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
 
 
 &lt;/code&gt;&lt;/pre&gt;
@@ -4360,6 +4757,162 @@ Otherwise:
     reset self._minfreq to 1
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;(*) The least frequently used element is the tail element in the DLinkedList with frequency self._minfreq&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#MY ANSWER
+#   freq1    freq 2       freq3
+#  H 1   T   H  2  T   H 3   T
+debug_flag  = False
+
+class Node:
+    def __init__(self,key,value):
+        self.key = key
+        self.val = value
+        self.pre = None
+        self.next = None
+
+class DLL:
+    def __init__(self):
+        self.size = 0
+        self.head = Node(&#39;H&#39;,&#39;H&#39;)
+        self.tail = Node(&#39;T&#39;,&#39;T&#39;)
+        self.head.next = self.tail
+        self.tail.pre = self.head
+        self.key2node = dict()
+
+    def append(self,node):
+        key = node.key
+        self.key2node[key] = node
+        self.size+=1
+        #append before tail
+        self.tail.pre.next = node
+        node.pre =self.tail.pre
+        node.next = self.tail
+        self.tail.pre = node
+
+    def pop0(self, node = None):
+        if not node:
+            node = self.head.next
+        self.size-=1
+        key = node.key
+        node = self.key2node[key]
+        del self.key2node[key]
+        #remove node
+        node.pre.next = node.next
+        node.next.pre = node.pre
+        return node
+
+    def get_node(self,key):
+        if key in self.key2node:
+            return self.key2node[key]
+        return None
+
+    def __len__(self):
+        return self.size
+
+    
+    def __repr__(self):
+        res = []
+        cur = self.head
+        while cur:
+            res.append(&#39;-&#39;.join([str(cur.key),str(cur.val)]))
+            cur =cur.next
+        return &#39;,&#39;.join(res)
+
+
+
+class LFUCache:
+
+    def __init__(self, capacity: int):
+        self.cap = capacity
+        self.c = 0
+        self.freq2dll = collections.defaultdict(DLL)
+        self.key2freq = collections.defaultdict(int)
+        self.minfreq = None
+
+        self.debugcounter = -1
+    
+    def debug(self):
+        if debug_flag:
+            print(&#39;#&#39;*10)
+            for f in sorted(self.freq2dll):
+                dll = self.freq2dll[f]    
+                print(f)
+                print(dll)
+            print(&#39;#&#39;*10)
+
+    def get(self, key: int) -&amp;gt; int:
+        self.debugcounter+=1
+        
+        if debug_flag:print(self.debugcounter  , &#39;get&#39;,key)
+        if key not in self.key2freq: return -1
+
+        old_freq = self.key2freq[key]
+        new_freq = self.key2freq[key]+1
+        self.key2freq[key] = new_freq
+
+        node = self.freq2dll[old_freq].get_node(key)
+        self.freq2dll[old_freq].pop0(node)
+        if old_freq==self.minfreq and not self.freq2dll[old_freq]:
+            del self.freq2dll[old_freq]
+            self.minfreq = new_freq
+        
+        if new_freq not in self.freq2dll:
+            self.freq2dll[new_freq] = DLL()
+        self.freq2dll[new_freq].append(node)
+        self.debug()
+        return node.val
+
+
+        
+    def put(self, key: int, value: int) -&amp;gt; None:
+        self.debugcounter+=1
+        if debug_flag:print(self.debugcounter,&#39;put&#39;,key,value)
+        
+        if key not in self.key2freq:
+            self.c+=1
+            if self.c&amp;gt;self.cap:
+                #remove least frequent
+                node = self.freq2dll[self.minfreq].pop0()
+                del self.key2freq[node.key]
+                if not self.freq2dll[self.minfreq]:
+                    del self.freq2dll[self.minfreq]
+                self.c-=1
+
+            self.key2freq[key] = 1
+            if 1 not in self.freq2dll:
+                self.freq2dll[1] = DLL()
+            node = Node(key,value)
+            self.freq2dll[1].append(node)
+            self.minfreq = 1
+           
+        else:
+            #key in key2freq
+            self.key2freq[key] += 1
+            old_freq = self.key2freq[key]-1
+            new_freq = self.key2freq[key]
+            
+            #update old_freq dll
+            node = self.freq2dll[old_freq].get_node(key)
+            self.freq2dll[old_freq].pop0(node)
+            if not  self.freq2dll[old_freq]:
+                del self.freq2dll[old_freq]
+            node.val = value
+
+            # update minfreq 
+            if old_freq == self.minfreq and not self.freq2dll[old_freq]:
+                self.minfreq = new_freq 
+
+            #node ready to insert to new_freq dll 
+            if new_freq not in self.freq2dll:
+                self.freq2dll[new_freq] = DLL()
+            self.freq2dll[new_freq].append(node)
+
+       
+        self.debug()
+            
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;要特别注意  update minfreq，&lt;br&gt;
+if old_freq == self.minfreq and not self.freq2dll[old_freq]:&lt;br&gt;
+self.minfreq = new_freq&lt;/p&gt;
 ">Leetcode 2022-03-06</a>
       </div>
       
@@ -4397,7 +4950,7 @@ class Solution:
                 l = m + 1
             else:
                 r = m - 1
-                
+    
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;答案是binary  search啊。。&lt;/p&gt;
 &lt;h1 id=&#34;442-find-all-duplicates-in-an-array-medium&#34;&gt;442. Find All Duplicates in an Array （Medium）&lt;/h1&gt;
@@ -4423,7 +4976,7 @@ You must write an algorithm that runs in O(n) time and uses only constant extra 
                 res.append(i+1)
         return res
 
-#ANSWER
+#ANSWER BEST
 class Solution:
     def findDuplicates(self, nums: List[int]) -&amp;gt; List[int]:
         res=[]
@@ -4434,9 +4987,27 @@ class Solution:
             nums[abs(n)-1]*=-1
         
         return res
+
+#MY ANSWER
+class Solution:
+    def findDuplicates(self, nums: List[int]) -&amp;gt; List[int]:
+
+        # nums from 1 to n, length is n
+        # nums index from 0 to n-1
+        res = []
+        s = set(nums)
+        for i in range(len(nums)):
+            idx = abs(nums[i])-1
+            nums[idx] *= -1
+
+        for i in range(len(nums)):
+            if nums[i]&amp;gt;0:
+                if i+1 in s:
+                    res.append(i+1)
+        return res 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;特殊的bookkeeping。 答案写的更好&lt;/p&gt;
-&lt;h1 id=&#34;font-colorblue-443-string-compression-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 443. String Compression （Medium） &lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;443-string-compression-medium&#34;&gt;443. String Compression （Medium）&lt;/h1&gt;
 &lt;p&gt;Given an array of characters chars, compress it using the following algorithm:&lt;br&gt;
 Begin with an empty string s. For each group of consecutive repeating characters in chars:&lt;br&gt;
 If the group&#39;s length is 1, append the character to s.&lt;br&gt;
@@ -4446,37 +5017,33 @@ After you are done modifying the input array, return the new length of the array
 You must write an algorithm that uses only constant extra space.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def compress(self, chars: List[str]) -&amp;gt; int:
-        #two pointer
-        l=0
-        lchar=0
-        r=0
-        while r&amp;lt;len(chars):
-            c=0
-            while r&amp;lt;len(chars) and chars[r]==chars[l]:
+
+        pos = 0
+        pre = None
+        c=0
+        chars.append(&#39; &#39;)# for reduce corner case  ch != pre
+        for i,ch in enumerate(chars):
+            if i!=0 and ch!=pre:
+                #add to result
+                if c==1:
+                    chars[pos]=pre
+                    pos+=1
+                else:
+                    chars[pos]=pre
+                    pos+=1
+                    for char in str(c):
+                        chars[pos] = char
+                        pos+=1
+
+                c=1
+            else:
                 c+=1
-                r+=1
             
-            if c&amp;gt;0:r-=1
-            
-            if c==1:
-                chars[lchar]=chars[l]
-                l+=1
-                lchar=lchar+1
-            elif c&amp;gt;1 and c&amp;lt;10:
-                chars[lchar]=chars[l]
-                chars[lchar+1]=str(c)
-                l=l+c
-                lchar=lchar+2
-            elif c&amp;gt;=10:
-                chars[lchar]=chars[l]
-                l=l+c
-                for j,cc in enumerate(str(c)):
-                    chars[lchar+1+j]=cc
-                 
-                lchar=lchar+len(str(c))+1
-            r+=1    
-            
-        return lchar 
+            pre = ch
+        
+
+        print(chars[:pos])
+        return pos
 #ANSWER 更简单
  
 class Solution:
@@ -4503,7 +5070,7 @@ class Solution:
 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;two pointer 写出来了，但是cornercase很多边test边写的。。。。答案很简单。。。。&lt;/p&gt;
-&lt;h1 id=&#34;font-colorred-444-sequence-reconstruction-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 444. Sequence Reconstruction (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;font-colorblue-444-sequence-reconstruction-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 444. Sequence Reconstruction (Medium) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;You are given an integer array nums of length n where nums is a permutation of the integers in the range [1, n]. You are also given a 2D integer array sequences where sequences[i] is a subsequence of nums.&lt;br&gt;
 Check if nums is the shortest possible and the only supersequence. The shortest supersequence is a sequence with the shortest length and has all sequences[i] as subsequences. There could be multiple valid supersequences for the given array sequences.&lt;br&gt;
 For example, for sequences = [[1,2],[1,3]], there are two shortest supersequences, [1,2,3] and [1,3,2].&lt;br&gt;
@@ -4537,16 +5104,49 @@ A subsequence is a sequence that can be derived from another sequence by deletin
                     queue.append(target)
         return len(res) == len(values) and res == nums
 
+#MY ANSWER
+class Solution:
+    def sequenceReconstruction(self, nums: List[int], sequences: List[List[int]]) -&amp;gt; bool:
+        # a&amp;lt;-b
+        # topo sort dependency
+        # nums is topo sort
+        
+        if len(nums)==1: return sequences==[[nums[0]]]
+        dic = collections.defaultdict(set)
+        indegree = collections.defaultdict(int)
+        visited = set()
+        for seq in sequences:
+            for a, b in zip(seq,seq[1:]):
+                if (a,b) not in visited:
+                    visited.add((a,b))
+                    indegree[a]+=1
+                    dic[b].add((a,b))
+        
+        while nums:
+            val = nums.pop()
+            if val not in dic:
+                return False
+            c=0
+            for aa,bb in  dic[val]:
+                indegree[aa]-=1
+                if indegree[aa]==0:
+                    c+=1
+                    del indegree[aa]
+            del dic[val]
+            if c!=1: return False
+            if len(nums)==1: return True
+        
+        return True
 
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;感觉题就没读懂。。。。topological sort... 第一步建立dependency graph， 第二部toposort，每一步检查是否只有一个node的可能性，如果比一个多，return False。 第三步，在得到toposortlist 后，检查长度是否和sequence中所有unique 元素个数一样而且 是input nums。&lt;br&gt;
+&lt;p&gt;。。。topological sort... 第一步建立dependency graph， 第二部toposort，每一步检查是否只有一个node的可能性，如果比一个多，return False。 第三步，在得到toposortlist 后，检查长度是否和sequence中所有unique 元素个数一样而且 是input nums。&lt;br&gt;
 解释：&lt;br&gt;
 TopSort order exists&lt;br&gt;
 Whether the TopSort order is the only one (Uniqueness of Topological sort, Hamilton path, see https://en.wikipedia.org/wiki/Topological_sorting#Uniqueness).如果不是，那么说明有些pair只有偏序关系，没有全序关系，这样不能完全确定元素之间的顺序&lt;br&gt;
 the only top sort order constructed should be equal to the org.&lt;/p&gt;
 &lt;p&gt;index == org.length (check condition 3) &amp;amp;&amp;amp; index == map.size() (check all the vertex in the graph has been visited, so the top sort order exists, check condition 1)&lt;/p&gt;
 &lt;p&gt;How to check only one order? queue.size() should always be one, then only one element at a time has indegree to be 0, so you only have one choice (check condition 2)&lt;/p&gt;
-&lt;h1 id=&#34;font-colorblue-445-add-two-numbers-ii-medium-font&#34;&gt;&lt;font color=&#39;blue&#39;&gt; 445. Add Two Numbers II （Medium） &lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;445-add-two-numbers-ii-medium&#34;&gt;445. Add Two Numbers II （Medium）&lt;/h1&gt;
 &lt;p&gt;You are given two non-empty linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.&lt;br&gt;
 You may assume the two numbers do not contain any leading zero, except the number 0 itself.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Definition for singly-linked list.
@@ -4663,7 +5263,7 @@ class Solution:
         return head
                
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;followup 是不revlist能否。。。&lt;/p&gt;
+&lt;p&gt;followup 是不revlist能否。。。那就用stack。&lt;/p&gt;
 &lt;h1 id=&#34;font-colorred-446-arithmetic-slices-ii-subsequence-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 446. Arithmetic Slices II - Subsequence (Hard) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given an integer array nums, return the number of all the arithmetic subsequences of nums.&lt;br&gt;
 A sequence of numbers is called arithmetic if it consists of at least three elements and if the difference between any two consecutive elements is the same.&lt;br&gt;
@@ -4697,6 +5297,23 @@ The test cases are generated so that the answer fits in 32-bit integer.&lt;/p&gt
                 origin=cnt[i].get(diff,0)
                 cnt[i][diff]=origin+sum_+1
                 res+=sum_
+        return res
+
+
+#MY ANSWER
+#cnt[i][d] denotes the number of weak arithmetic subsequences that ends with A[i] and its common difference is d.
+class Solution:
+    def numberOfArithmeticSlices(self, nums: List[int]) -&amp;gt; int:
+        n = len(nums)
+        res = 0
+        cnt =dict()
+        # j  i #
+        for i in range(n):
+            cnt[i] = defaultdict(int)
+            for j in range(i):
+                diff = nums[i]-nums[j]
+                cnt[i][diff] +=  cnt[j][diff]  +1
+                res+=cnt[j][diff]
         return res
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;是应该用DP但看答案。。。答案这个DP解法不是一般的DP。。。先dp【i】【diff】是以ith nums为最终位置的weak arithmetic subsequences的个数，这个weak值2个元素也能形成subsequence。 要想得到真正的3个元素的arithmetic subsequences个数，每次可以把nums【i】添加到dp【j】【diff】时候这个dp【j】【diff】个数就是arithmetic subsequences个数。很难想到这个方法啊。。。&lt;br&gt;
@@ -4776,6 +5393,33 @@ class Solution:
             for k in cmap:
                 res += cmap[k] * (cmap[k] -1)
         return res
+
+
+#MY ANSWER
+class Solution:
+    def numberOfBoomerangs(self, points: List[List[int]]) -&amp;gt; int:
+
+        #dp[i][dist] 以i为顶点的长度为diff的 个数 i-j i-k  （i，j，k） 也可以是 i k j
+        
+        def distance(i,j):
+            a,b = points[i]
+            x,y = points[j]
+            return (a-x)**2+(b-y)**2
+        
+        n = len(points)
+        res = 0
+        #   j ... i  #
+        for i in range(n):
+            dic = defaultdict(int)
+            for j in range(n):
+                if i!=j:
+                    dist = distance(i,j)
+                    dic[dist]+=1
+            #以i为顶点的，第一个边有n种选择，第二个边有n-1 种选择
+            for dist in dic:
+                res+=  dic[dist]*(dic[dist]-1)  
+        
+        return res
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;pass了 hashmap先按照距离分类， 然后每个距离下按照起始点分类，比如距离为1下 其实点为0的edge总共有n个，那么组成三角形能组成n*n-1个。&lt;/p&gt;
 &lt;h1 id=&#34;448-find-all-numbers-disappeared-in-an-array-easy&#34;&gt;448. Find All Numbers Disappeared in an Array (Easy)&lt;/h1&gt;
@@ -4840,7 +5484,35 @@ class Codec:
                 root.right=pre(data)
             return root
         return pre(data)
-            
+#MY ANSWER
+class Codec:
+
+    def serialize(self, root: Optional[TreeNode]) -&amp;gt; str:
+        &amp;quot;&amp;quot;&amp;quot;Encodes a tree to a single string.
+        &amp;quot;&amp;quot;&amp;quot;
+        if not root: return &#39;#&#39;
+        rootval = str(root.val)
+        l = self.serialize(root.left)
+        r = self.serialize(root.right)
+        return &#39;,&#39;.join([rootval,l,r])
+
+    def deserialize(self, data: str) -&amp;gt; Optional[TreeNode]:
+        &amp;quot;&amp;quot;&amp;quot;Decodes your encoded data to tree.
+        &amp;quot;&amp;quot;&amp;quot;
+        if data==&#39;#&#39;: return None
+        data = data.split(&#39;,&#39;)
+        print(data)
+        def decode(data):
+            val = data.pop(0)
+            if val==&#39;#&#39;: return None
+            root = TreeNode(int(val))
+            root.left = decode(data)
+            root.right = decode(data)
+            return root
+        #print(data)
+        
+        return decode(data)
+
 #答案用postorder compressed string 更好
 class Codec:
     def serialize(self, root):
@@ -4868,7 +5540,6 @@ class Codec:
         data = [int(x) for x in data.split(&#39; &#39;) if x]
         return helper()
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;用的pre order encode没想到写出来了。。。&lt;/p&gt;
 &lt;h1 id=&#34;font-colorred-450-delete-node-in-a-bst-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 450. Delete Node in a BST （Medium）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the root node reference (possibly updated) of the BST.&lt;br&gt;
 Basically, the deletion can be divided into two stages:&lt;br&gt;
@@ -4919,6 +5590,45 @@ If the node is found, delete the node.&lt;/p&gt;
                         
         return root
 
+#MY SOLUTION
+class Solution:
+    def deleteNode(self, root: Optional[TreeNode], key: int) -&amp;gt; Optional[TreeNode]:
+
+        def successor(root):
+            root =root.right
+            while root.left:
+                root = root.left
+            return root.val
+        
+        def predecessor(root):
+            root = root.left
+            while root.right:
+                root =root.right
+            return root.val
+        
+
+        if not root: return None
+        
+        # del from right
+        if key&amp;gt;root.val:
+            root.right = self.deleteNode(root.right,key)
+        elif key&amp;lt;root.val:
+            root.left = self.deleteNode(root.left,key)
+        else:
+            #key==root.val
+
+            if not  root.left and not root.right:
+                root = None
+            
+            elif root.right:
+                # the node is not a leaf and has a right child
+                root.val = successor(root)
+                root.right = self.deleteNode(root.right,root.val)
+            else:
+                root.val = predecessor(root)
+                root.left = self.deleteNode(root.left,root.val)
+        
+        return root
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;这个是很经典的一个题目。recursion方法很经典。&lt;/p&gt;
 ">Leetcode 2022-03-05</a>
@@ -5029,129 +5739,120 @@ inc(String key) Increments the count of the string key by 1. If key does not exi
 dec(String key) Decrements the count of the string key by 1. If the count of key is 0 after the decrement, remove it from the data structure. It is guaranteed that key exists in the data structure before the decrement.&lt;br&gt;
 getMaxKey() Returns one of the keys with the maximal count. If no element exists, return an empty string &amp;quot;&amp;quot;.&lt;br&gt;
 getMinKey() Returns one of the keys with the minimum count. If no element exists, return an empty string &amp;quot;&amp;quot;.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from collections import defaultdict
-class Node(object):
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Node:
     def __init__(self):
-        self.key_set = set([])
-        self.prev, self.nxt = None, None 
-
-    def add_key(self, key):
-        self.key_set.add(key)
-
-    def remove_key(self, key):
-        self.key_set.remove(key)        
-
-    def get_any_key(self):
-        if self.key_set:
-            result = self.key_set.pop()
-            self.add_key(result)
-            return result
-        else:
-            return None
+        self.keys = set()
+        self.pre =None
+        self.next= None
     
+    def add_key(self,key):
+        self.keys.add(key)
+    def remove_key(self,key):
+        self.keys.remove(key)
+    def get_any_key(self):
+        if self.keys:
+            val = self.keys.pop()
+            self.keys.add(val)
+            return val
+        else:
+            None
     def count(self):
-        return len(self.key_set)
-
+        return len(self.keys)
     def is_empty(self):
-        return len(self.key_set) == 0
+        return not bool(self.keys)
 
-
-class DoubleLinkedList(object):
+class DLL:
     def __init__(self):
-        self.head_node, self.tail_node = Node(), Node()
-        self.head_node.nxt, self.tail_node.prev = self.tail_node, self.head_node
-        return
-
-    def insert_after(self, x):
-        node, temp = Node(), x.nxt
-        x.nxt, node.prev = node, x
-        node.nxt, temp.prev = temp, node
+        self.head = Node()
+        self.tail = Node()
+        self.head.next = self.tail
+        self.tail.pre = self.head
+    
+    def insert_after(self,x):
+        #  x - &amp;gt; N
+        node = Node()
+        x_next = x.next
+        x.next = node
+        node.pre  = x
+        node.next = x_next
+        x_next.pre = node
         return node
     
-    def insert_before(self, x):
-        return self.insert_after(x.prev)
+    def insert_before(self,x):
+        return self.insert_after(x.pre)
 
-    def remove(self, x):
-        prev_node = x.prev
-        prev_node.nxt, x.nxt.prev = x.nxt, prev_node
-        return
-
-    def get_head(self):
-        return self.head_node.nxt
+    def remove(self,x):
+        x.pre.next = x.next
+        x.next.pre = x.pre
     
-    def get_tail(self):
-        return self.tail_node.prev
+    def __repr__(self):
+        cur = self.head
+        res = []
+        c= 0
+        while cur:
+            c+=1
+            res.append(&#39;@&#39;.join(cur.keys))
+            cur = cur.next
+        res = str(c)+&#39;#&#39;.join(res)
+        return res
 
-    def get_sentinel_head(self):
-        return self.head_node
+class AllOne:
+    #    head  1 &amp;lt;-&amp;gt;2 tail 
 
-    def get_sentinel_tail(self):
-        return self.tail_node
-    
-class AllOne(object):
     def __init__(self):
-        &amp;quot;&amp;quot;&amp;quot;
-        Initialize your data structure here.
-        &amp;quot;&amp;quot;&amp;quot;
-        self.dll, self.key_counter = DoubleLinkedList(), defaultdict(int)
-        self.node_freq = {0:self.dll.get_sentinel_head()}
+        #key freq mapping
+        self.key2freq = defaultdict(int)
+        self.dll = DLL()
+        self.freq2node = {0: self.dll.head}
 
-    def _rmv_key_pf_node(self, pf, key):
-        node = self.node_freq[pf]
+    def _remove_key_preval_node(self,pre_val,key):
+        node = self.freq2node[pre_val]
         node.remove_key(key)
         if node.is_empty():
             self.dll.remove(node)
-            self.node_freq.pop(pf)
-        return
+            del self.freq2node[pre_val]
 
-    def inc(self, key):
-        &amp;quot;&amp;quot;&amp;quot;
-        Inserts a new key &amp;lt;Key&amp;gt; with value 1. Or increments an existing key by 1.
-        :type key: str
-        :rtype: void
-        &amp;quot;&amp;quot;&amp;quot;
-        self.key_counter[key] += 1
-        cf, pf = self.key_counter[key], self.key_counter[key]-1
-        if cf not in self.node_freq:
-            # No need to test if pf = 0 since frequency zero points to sentinel node
-            self.node_freq[cf] = self.dll.insert_after(self.node_freq[pf])
-        self.node_freq[cf].add_key(key)
-        if pf &amp;gt; 0:
-            self._rmv_key_pf_node(pf, key)
+    def inc(self, key: str) -&amp;gt; None:
+        self.key2freq[key]+=1
 
-    def dec(self, key):
-        &amp;quot;&amp;quot;&amp;quot;
-        Decrements an existing key by 1. If Key&#39;s value is 1, remove it from the data structure.
-        :type key: str
-        :rtype: void
-        &amp;quot;&amp;quot;&amp;quot;
-        if key in self.key_counter:
-            self.key_counter[key] -= 1
-            cf, pf = self.key_counter[key], self.key_counter[key]+1
-            if self.key_counter[key] == 0:
-                self.key_counter.pop(key)
-            if cf != 0:
-                if cf not in self.node_freq:
-                    self.node_freq[cf] = self.dll.insert_before(self.node_freq[pf])
-                self.node_freq[cf].add_key(key)
-            self._rmv_key_pf_node(pf, key)
+        pre_val = self.key2freq[key]-1
+        cur_val = self.key2freq[key]
+        
+        if cur_val not in self.freq2node:
+            self.freq2node[cur_val] = self.dll.insert_after(self.freq2node[pre_val])
+        
+        self.freq2node[cur_val].add_key(key)
 
-    def getMaxKey(self):
-        &amp;quot;&amp;quot;&amp;quot;
-        Returns one of the keys with maximal value.
-        :rtype: str
-        &amp;quot;&amp;quot;&amp;quot;
-        return self.dll.get_tail().get_any_key() if self.dll.get_tail().count() &amp;gt; 0 else &amp;quot;&amp;quot;
+        if pre_val&amp;gt;0:
+            self._remove_key_preval_node(pre_val,key)
+        
+        #print(self.dll)
+  
+        
+    def dec(self, key: str) -&amp;gt; None:
+        self.key2freq[key]-=1
 
-    def getMinKey(self):
-        &amp;quot;&amp;quot;&amp;quot;
-        Returns one of the keys with Minimal value.
-        :rtype: str
-        &amp;quot;&amp;quot;&amp;quot;
-        return self.dll.get_head().get_any_key() if self.dll.get_tail().count() &amp;gt; 0 else &amp;quot;&amp;quot;
+        cur_val = self.key2freq[key]
+        pre_val = self.key2freq[key]+1
 
+        if cur_val == 0: del self.key2freq[key]
 
+        if cur_val!=0:
+            if cur_val not in self.freq2node:
+                self.freq2node[cur_val] = self.dll.insert_before(self.freq2node[pre_val])
+            self.freq2node[cur_val].add_key(key)
+        
+        self._remove_key_preval_node(pre_val,key)
+        #print(self.dll)
+ 
 
+    def getMaxKey(self) -&amp;gt; str:
+        return self.dll.tail.pre.get_any_key() or &#39;&#39;
+         
+
+    def getMinKey(self) -&amp;gt; str:
+        return self.dll.head.next.get_any_key() or &#39;&#39;
+ 
 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;感觉是个maxheap minheap。。。但不是all o（1）。。。 看答案了。。。答案果然完美&lt;/p&gt;
@@ -5162,44 +5863,7 @@ For example, &amp;quot;AACCGGTT&amp;quot; --&amp;gt; &amp;quot;AACCGGTA&amp;quot
 There is also a gene bank bank that records all the valid gene mutations. A gene must be in bank to make it a valid gene string.&lt;br&gt;
 Given the two gene strings start and end and the gene bank bank, return the minimum number of mutations needed to mutate from start to end. If there is no such a mutation, return -1.&lt;br&gt;
 Note that the starting point is assumed to be valid, so it might not be included in the bank.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
-    def minMutation(self, start: str, end: str, bank: List[str]) -&amp;gt; int:
-        #BFS search neighbor
-        # neighor is 1 char off current also in bank
-        if   end not in bank: return -1
-        if not bank and start!=end: return -1
-        bank=set(bank)
-        bank.add(end)
-        q=[]
-        visited=set()
-        def nei(me):
-            neighbors=[]
-            for other in bank:
-                if other not in visited:
-                    valid=0
-                    for a,b in zip(me,other):
-                        valid+=bool(ord(a)^ord(b))
-                    if valid==1:
-                        neighbors.append(other)
-            return neighbors
-        
-        
-        q.append(start)
-        visited.add(start)
-        level=0
-        while q:
-            level+=1
-            for _ in range(len(q)):
-                cur=q.pop(0)
-                print(cur,nei(cur))
-                for ne in nei(cur):
-                    if ne==end: return level
-                    visited.add(ne)
-                    q.append(ne)
-        
-        return  -1
-        
-#ANSWER
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#ANSWER
 class Solution:
     def minMutation(self, start: str, end: str, bank: List[str]) -&amp;gt; int:
         &amp;quot;&amp;quot;&amp;quot;
@@ -5224,29 +5888,37 @@ class Solution:
                         queue.append((mutation,step+1))
                         
         return -1
-        
+
+ #MY ANSWER
+ class Solution:
+    def minMutation(self, startGene: str, endGene: str, bank: List[str]) -&amp;gt; int:
+        if endGene not in bank: return -1
+        bank = set(bank)
+        visited =set()
+        visited.add(startGene)
+        q = [startGene]
+
+        res = 0
+        while q:
+            res+=1
+            for _ in range(len(q)):
+                cur = q.pop(0)
+                for i in range(len(cur)):
+                    for ch in &#39;ATGC&#39;:
+                        if ch!= cur[i]:
+                            key = cur[:i]+ch+cur[i+1:]
+                            print(key)
+                            if key == endGene: return res
+                            if key in bank and key not in visited:
+                                q.append(key)
+                                visited.add(key)
+        return -1       
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;bfs注意corner case，end必须in bank。 答案用remove mutaton方式避免用visited set，而且mutaion是直接算的，不是从bank中找的。&lt;/p&gt;
 &lt;h1 id=&#34;434-number-of-segments-in-a-string-easy&#34;&gt;434. Number of Segments in a String （Easy）&lt;/h1&gt;
 &lt;p&gt;Given a string s, return the number of segments in the string.&lt;br&gt;
 A segment is defined to be a contiguous sequence of non-space characters.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
-    def countSegments(self, s: str) -&amp;gt; int:
-        beforeisspace=True
-        c=0
-        while s:
-            if s[0]==&#39; &#39;:
-                s=s[1:]
-                beforeisspace=True
-            else:
-                if beforeisspace:
-                    c+=1
-                    beforeisspace=False
-                
-                s=s[1:]
-        return c
-
-class Solution:
     def countSegments(self, s: str) -&amp;gt; int:
         return len(s.split())
 
@@ -5260,9 +5932,31 @@ class Solution:
 
         return segment_count
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;font-colorred-435-non-overlapping-intervals-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 435. Non-overlapping Intervals (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;435-non-overlapping-intervals-medium&#34;&gt;435. Non-overlapping Intervals (Medium)&lt;/h1&gt;
 &lt;p&gt;Given an array of intervals intervals where intervals[i] = [starti, endi], return the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+class Solution:
+    def eraseOverlapIntervals(self, intervals: List[List[int]]) -&amp;gt; int:
+        # min number of interval need to remove
+        # max number of interval I can keep
+
+        intervals = sorted(intervals)
+
+        #  a, b
+        # a&#39;b&#39;
+
+        res = []
+
+        for a, b in intervals:
+            if res and res[-1][1]&amp;gt;a:
+                res[-1][1] = min(res[-1][1],b)
+            else:
+                res.append([a,b])
+        #print(res)
+        return len(intervals)-len(res)
+
+
+class Solution:
     def eraseOverlapIntervals(self, intervals: List[List[int]]) -&amp;gt; int:
         #sort by start
         # [1,2] [1,3] [2,3],[3,4]
@@ -5284,30 +5978,8 @@ class Solution:
             ans=max(ans,dp[i])
         return len(intervals)-ans
 
-#PASS ANSWER
-class Solution:
-    def eraseOverlapIntervals(self, intervals: List[List[int]]) -&amp;gt; int:
- 
-        intervals=sorted(intervals,key=lambda x:x[0])
-        end=intervals[0][1]
-        prev=0
-        c=0
-        for i in range(1,len(intervals)):
-            if intervals[prev][1]&amp;gt;intervals[i][0]:
-                #overlap
-                if intervals[prev][1]&amp;gt;intervals[i][1]:
-                    #include,bust del prev so c+=1 prev renew to i
-                    prev=i
-                
-                #if pure overlap do greedy, prev still the same, del i, c+=1
-                c+=1
-            else:
-                #case 1 two interval non overlapping
-                prev=i
-                
-        return c
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;没想出来如何处理~~ DP可以n^2， greedy也可以，Greedy nlogn&lt;/p&gt;
+&lt;p&gt;DP可以n^2， greedy也可以，Greedy nlogn&lt;/p&gt;
 &lt;h1 id=&#34;font-colorred-436-find-right-interval-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 436. Find Right Interval (Medium) &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;You are given an array of intervals, where intervals[i] = [starti, endi] and each starti is unique.&lt;br&gt;
 The right interval for an interval i is an interval j such that startj &amp;gt;= endi and startj is minimized. Note that i may equal j.&lt;br&gt;
@@ -5372,25 +6044,28 @@ class Solution:
     def pathSum(self, root: Optional[TreeNode], targetSum: int) -&amp;gt; int:
         #post order  botoom up save node val
         
-        c=[0]
-        def post(root):
-            if not root: return 
-            post(root.left)
-            post(root.right)
-            root.vals=defaultdict(int)
-            if root.left:
-                for v in root.left.vals:
-                    root.vals[v+root.val]+=root.left.vals[v]
-            if root.right:
-                for v in root.right.vals:
-                    root.vals[v+root.val]+=root.right.vals[v]
-            root.vals[root.val]+=1
-            if targetSum in root.vals:
-                #print(root.val,root.vals)
-                c[0]+=root.vals[targetSum]
-       
+class Solution:
+    def pathSum(self, root: Optional[TreeNode], targetSum: int) -&amp;gt; int:
+        #post order bottom up
+        self.res = 0
+        def post(node):
+            if not node: return
+            post(node.left)
+            post(node.right)
+            node.vals = defaultdict(int)
+            if node.left:
+                for  v in node.left.vals:
+                    node.vals[v+node.val]+=node.left.vals[v]
+            if node.right:
+                for v in node.right.vals:
+                    node.vals[v+node.val]+=node.right.vals[v]
+            
+            node.vals[node.val]+=1
+            if targetSum in node.vals:
+                self.res+=node.vals[targetSum]
+        
         post(root)
-        return c[0]  
+        return self.res
 #ANSWER PREFIX SUM in tree
 class Solution:
     def pathSum(self, root: TreeNode, sum: int) -&amp;gt; int:
@@ -5456,6 +6131,36 @@ class Solution:
             h[curr_sum] += 1
                 
         return count
+
+# PREORDER MY
+#         self.right = right
+class Solution:
+    def pathSum(self, root: Optional[TreeNode], targetSum: int) -&amp;gt; int:
+        # pre order
+    
+        self.res = 0
+        dic = defaultdict(int)
+        def pre(node,val):
+            if not node: return
+
+            new_val = val+node.val
+
+            if new_val == targetSum:
+                self.res+=1
+            
+            self.res+= dic[new_val-targetSum]
+
+            dic[new_val]+=1
+
+            pre(node.left,new_val)
+            pre(node.right,new_val)
+
+            dic[new_val]-=1
+
+             
+        pre(root,0)
+        return self.res
+            
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;我的解决方案是post order bottom up 扫，每个node存可以生成的pathsum值。答案是prefixsum。。&lt;/p&gt;
 &lt;h1 id=&#34;438-find-all-anagrams-in-a-string-medium&#34;&gt;438. Find All Anagrams in a String （Medium）&lt;/h1&gt;
@@ -5468,85 +6173,23 @@ The substring with start index = 0 is &amp;quot;cba&amp;quot;, which is an anagr
 The substring with start index = 6 is &amp;quot;bac&amp;quot;, which is an anagram of &amp;quot;abc&amp;quot;.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def findAnagrams(self, s: str, p: str) -&amp;gt; List[int]:
-        if len(s)&amp;lt;len(p): return []
-        dicp=collections.Counter(p)
-        lp=len(p)
-        dic=dict()
-        for i in range(lp):
-            dic[s[i]]=dic.get(s[i],0)+1
-        res=[]
-        if dic==dicp: res.append(0)
-        for i in range(lp,len(s)):
-            #remove first
-            dic[s[i-lp]]-=1
-            if dic[s[i-lp]]==0:
-                del  dic[s[i-lp]]
-            #add last
-            dic[s[i]]=dic.get(s[i],0)+1
-            #
-            if dic==dicp:
+        res =[]
+        lp = len(p)
+        cp = Counter(p)
+        dic =defaultdict(int)
+        for i in range(len(s)):
+            dic[s[i]]+=1
+            if i-lp&amp;gt;=0:
+                dic[s[i-lp]]-=1
+                if dic[s[i-lp]]==0:
+                    del dic[s[i-lp]]
+            
+            if dic==cp:
                 res.append(i-lp+1)
+        
         return res
             
-#ANSWER 写的更简单
-from collections import Counter
-class Solution:
-    def findAnagrams(self, s: str, p: str) -&amp;gt; List[int]:
-        ns, np = len(s), len(p)
-        if ns &amp;lt; np:
-            return []
-
-        p_count = Counter(p)
-        s_count = Counter()
-        
-        output = []
-        # sliding window on the string s
-        for i in range(ns):
-            # add one more letter 
-            # on the right side of the window
-            s_count[s[i]] += 1
-            # remove one letter 
-            # from the left side of the window
-            if i &amp;gt;= np:
-                if s_count[s[i - np]] == 1:
-                    del s_count[s[i - np]]
-                else:
-                    s_count[s[i - np]] -= 1
-            # compare array in the sliding window
-            # with the reference array
-            if p_count == s_count:
-                output.append(i - np + 1)
-        
-        return output
-
-#ANSWER
-class Solution:
-    def findAnagrams(self, s: str, p: str) -&amp;gt; List[int]:
-        ns, np = len(s), len(p)
-        if ns &amp;lt; np:
-            return []
-
-        p_count, s_count = [0] * 26, [0] * 26
-        # build reference array using string p
-        for ch in p:
-            p_count[ord(ch) - ord(&#39;a&#39;)] += 1
-        
-        output = []
-        # sliding window on the string s
-        for i in range(ns):
-            # add one more letter 
-            # on the right side of the window
-            s_count[ord(s[i]) - ord(&#39;a&#39;)] += 1
-            # remove one letter 
-            # from the left side of the window
-            if i &amp;gt;= np:
-                s_count[ord(s[i - np]) - ord(&#39;a&#39;)] -= 1
-            # compare array in the sliding window
-            # with the reference array
-            if p_count == s_count:
-                output.append(i - np + 1)
-        
-        return output
+  
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;sliding window保持counter dict和p一样就可以。。。&lt;/p&gt;
 &lt;h1 id=&#34;font-colorred-439-ternary-expression-parser-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 439. Ternary Expression Parser （Medium） &lt;/font&gt;&lt;/h1&gt;
@@ -5582,7 +6225,59 @@ Example 1:&lt;br&gt;
 Input: n = 13, k = 2&lt;br&gt;
 Output: 10&lt;br&gt;
 Explanation: The lexicographical order is [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9], so the second smallest number is 10.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+#TLE TIRE
+class Solution:
+    def findKthNumber(self, n: int, k: int) -&amp;gt; int:
+
+        class T:
+            def __init__(self):
+                self.c = 0
+                self.children = defaultdict(T)
+        
+            def insert(self,val):
+                val = str(val)
+                head = val[0]
+                tail = val[1:]
+                if head not in self.children:
+                    self.children[head] = T()
+                self.children[head].c+=1
+                if tail:
+                    self.children[head].insert(tail)
+            
+            def search(self,id, tmp):
+                keys = [k for k in sorted(self.children.keys())]
+                vals = [self.children[k].c for k in keys]
+                 
+                #   1 2 3 4 5
+                # 0 1 3 6 10 15
+
+                cum_vals = [0]
+                for val in vals:
+                    cum_vals.append(cum_vals[-1]+val)
+                
+                
+                new_id  = bisect.bisect_left(cum_vals[1:],id) 
+                if new_id &amp;gt;= len(cum_vals):   new_id = len(cum_vals)-1
+                
+                #print(&#39;keys&#39;,keys)
+                #print(&#39;cvls&#39;,cum_vals)
+                #print(&#39;id&#39;,id,&#39;nid&#39;,new_id,&#39;keys[new_id]&#39;,keys[new_id],&#39;tmp&#39;,tmp)
+                
+                if id-cum_vals[new_id]-1==0:
+                    return tmp+keys[new_id]
+                
+                if not self.children[keys[new_id]].children: return tmp+keys[new_id]
+                return self.children[keys[new_id]].search(id-cum_vals[new_id]-1, tmp+keys[new_id])
+        
+        t = T()
+
+        for  i in range(1,n +1):
+            t.insert(i)
+        
+        return int(t.search(k,&#39;&#39;))
+ #TLE TRIE#####################
+class Solution:
     def findKthNumber(self, n: int, k: int) -&amp;gt; int:
         class Trie:
             def __init__(self):
@@ -5656,8 +6351,41 @@ def findKthNumber(self, n, k):
             n1 *= 10
             n2 *= 10
         return steps
+
+
+
+#ANSWER
+class Solution:
+    def findKthNumber(self, n: int, k: int) -&amp;gt; int:
+        def cal(cur):
+            #I am at cur, what the steps to cur+1
+            steps = 0
+            me = cur
+            next = cur+1
+            while me&amp;lt;=n:
+                if next&amp;gt;n:
+                    steps+= n+1-me
+                else:
+                    steps+=next-me
+                me = me*10
+                next = next*10
+            return steps
+
+        
+        cur = 1
+        k = k-1
+        while k&amp;gt;0:
+            steps=cal(cur)
+            if k&amp;gt;=steps:
+                cur+=1
+                k-=steps
+            else:
+                cur*=10
+                k-=1
+        return cur
+
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;根据提示用了trie，思路是对的，但是写seasrch func时候卡住了，given k，what is the node positon of kth node。就算写出来也是TLE。。。看答案。&lt;/p&gt;
+&lt;p&gt;根据提示用了trie，思路是对的，，given k，what is the node positon of kth node。就算写出来也是TLE。。。看答案。&lt;/p&gt;
 &lt;p&gt;Main function&lt;br&gt;
 Firstly, calculate how many steps curr need to move to curr + 1.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;if the steps &amp;lt;= k, we know we can move to curr + 1, and narrow down k to k - steps.
@@ -5750,18 +6478,12 @@ class Solution:
 A sequence of strings forms a valid word square if the kth row and column read the same string, where 0 &amp;lt;= k &amp;lt; max(numRows, numColumns).&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def validWordSquare(self, words: List[str]) -&amp;gt; bool:
-        rows=len(words)
-        cols=max(map(len,words))
-        for i,w in enumerate(words):
-            if len(w)!=cols:
-                words[i]=w+&#39;#&#39;*(cols-len(w))
-        if rows!=cols: return False   
-        
-        for row in range(rows):
-            for col in range(cols):
-                if row&amp;gt;col:
-                    if words[row][col]!=words[col][row]:
-                        return False
+        L = max([len(word) for word in words])
+        words = [w if len(w)==L else w+&#39; &#39;*(L-len(w)) for w in words]
+        for i,w in enumerate(zip(*words)):
+            #print(i,&#39;&#39;.join(w),words[i])
+            if &#39;&#39;.join(w)!=words[i]:
+                return False
         return True
 
 
@@ -5782,7 +6504,7 @@ public class Solution {
 }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;有corner case。。。Java 答案更正确&lt;/p&gt;
-&lt;h1 id=&#34;font-colorred-423-reconstruct-original-digits-from-english-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 423. Reconstruct Original Digits from English （Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;423-reconstruct-original-digits-from-english-medium&#34;&gt;423. Reconstruct Original Digits from English （Medium)&lt;/h1&gt;
 &lt;p&gt;Given a string s containing an out-of-order English representation of digits 0-9, return the digits in ascending order.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def originalDigits(self, s: &#39;str&#39;) -&amp;gt; &#39;str&#39;:
@@ -5815,6 +6537,93 @@ public class Solution {
         # building output string
         output = [key * out[key] for key in sorted(out.keys())]
         return &amp;quot;&amp;quot;.join(output)
+
+
+#MY ANSWER
+class Solution:
+    def originalDigits(self, s: str) -&amp;gt; str:
+        # zero      00）Z确定0个数
+        # one
+        # two       11） w知道 2 个数
+        # three     5） r - 4中r 0中r 知道 3 个数
+        # four      4） f - 5中f 确定 4 个数， 知道4中 r个数
+        # five      3） V- seven 个数 确定 5  个数
+        # six       33）  X 确定6 的个数
+        # seven     2）  S-X 确定 7 个数
+        # eight     22) g 确定 8 个数
+        # nine      44） i he 33 确定9
+       
+
+        res = {str(i):0 for i in range(10)}
+        C = Counter(s)
+        
+        # 0 
+        res[&#39;0&#39;] = C[&#39;z&#39;]
+        C[&#39;z&#39;]-=res[&#39;0&#39;]
+        C[&#39;e&#39;]-=res[&#39;0&#39;]
+        C[&#39;r&#39;]-=res[&#39;0&#39;]
+        C[&#39;o&#39;]-=res[&#39;0&#39;]
+        # 2
+        res[&#39;2&#39;] = C[&#39;w&#39;]
+        C[&#39;t&#39;]-=res[&#39;2&#39;]
+        C[&#39;w&#39;]-=res[&#39;2&#39;]
+        C[&#39;o&#39;]-=res[&#39;2&#39;]
+        # 6 
+        res[&#39;6&#39;] = C[&#39;x&#39;]
+        C[&#39;s&#39;]-=res[&#39;6&#39;]
+        C[&#39;i&#39;]-=res[&#39;6&#39;]
+        C[&#39;x&#39;]-=res[&#39;6&#39;]
+        # 8 
+        res[&#39;8&#39;] = C[&#39;g&#39;]
+        C[&#39;e&#39;] -= res[&#39;8&#39;]
+        C[&#39;i&#39;] -= res[&#39;8&#39;]
+        C[&#39;g&#39;] -= res[&#39;8&#39;]
+        C[&#39;h&#39;] -= res[&#39;8&#39;]
+        C[&#39;t&#39;] -= res[&#39;8&#39;]
+        # 7
+        res[&#39;7&#39;] = C[&#39;s&#39;]
+        C[&#39;s&#39;]-=res[&#39;7&#39;] 
+        C[&#39;e&#39;]-=res[&#39;7&#39;] 
+        C[&#39;v&#39;]-=res[&#39;7&#39;] 
+        C[&#39;e&#39;]-=res[&#39;7&#39;] 
+        C[&#39;n&#39;]-=res[&#39;7&#39;] 
+        # 3
+        res[&#39;3&#39;] = C[&#39;t&#39;]
+        C[&#39;t&#39;]-=res[&#39;3&#39;] 
+        C[&#39;h&#39;]-=res[&#39;3&#39;] 
+        C[&#39;r&#39;]-=res[&#39;3&#39;] 
+        C[&#39;e&#39;]-=res[&#39;3&#39;] 
+        C[&#39;e&#39;]-=res[&#39;3&#39;]
+        # 4
+        res[&#39;4&#39;] = C[&#39;r&#39;]
+        C[&#39;f&#39;] -= res[&#39;4&#39;]
+        C[&#39;o&#39;] -= res[&#39;4&#39;]
+        C[&#39;u&#39;] -= res[&#39;4&#39;]
+        C[&#39;r&#39;] -= res[&#39;4&#39;]
+        # 5
+        res[&#39;5&#39;] = C[&#39;f&#39;]
+        C[&#39;f&#39;] -= res[&#39;5&#39;]
+        C[&#39;i&#39;] -= res[&#39;5&#39;]
+        C[&#39;v&#39;] -= res[&#39;5&#39;]
+        C[&#39;e&#39;] -= res[&#39;5&#39;]
+        # 1
+        res[&#39;1&#39;] = C[&#39;o&#39;]
+        C[&#39;o&#39;]-=res[&#39;1&#39;]
+        C[&#39;n&#39;]-=res[&#39;1&#39;]
+        C[&#39;e&#39;]-=res[&#39;1&#39;]
+        # 9 
+        res[&#39;9&#39;] = C[&#39;i&#39;]
+        C[&#39;n&#39;]-=res[&#39;9&#39;] 
+        C[&#39;i&#39;]-=res[&#39;9&#39;] 
+        C[&#39;n&#39;]-=res[&#39;9&#39;] 
+        C[&#39;e&#39;]-=res[&#39;9&#39;] 
+
+
+        r = &#39;&#39;
+        for key in sorted(res):
+            if res[key]!=0:
+                r+= key*res[key]
+        return r
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;直接做会出现是否要再次使用当前数字然后继续，或者直接使用下个数字，当前数字不重复使用的问题。&lt;br&gt;
 解决方法。。。醉了&lt;/p&gt;
@@ -5838,33 +6647,118 @@ Letter &amp;quot;n&amp;quot; is present in &amp;quot;one&amp;quot;, &amp;quot;se
 &lt;h1 id=&#34;font-colorred-424-longest-repeating-character-replacement-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 424. Longest Repeating Character Replacement （Medium）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;You are given a string s and an integer k. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most k times.&lt;br&gt;
 Return the length of the longest substring containing the same letter you can get after performing the above operations.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+#BINARY SEARCH + Sliding Window
+class Solution:
     def characterReplacement(self, s: str, k: int) -&amp;gt; int:
-        #   p
-        # AABCBBA  k=2
-        #       p
-        #
-        l = len(s)
-        count = [0]*26
+        l = 1
+        r = len(s)-1
+        
+
+        def valid_length(m):
+            start = 0
+            freq = defaultdict(int)
+            maxfreq = 0
+            for end in range(len(s)):
+                freq[s[end]]+=1
+                if end -start+ 1&amp;gt;m:
+                    freq[s[start]]-=1 
+                    start+=1
+
+                maxfreq = max(maxfreq,freq[s[end]])
+                if m-maxfreq&amp;lt;=k:
+                    return True
+            return False
+
+        while l&amp;lt;=r:
+            m = (l+r)//2
+            #print(l,r,m,valid_length(m))
+
+            if valid_length(m):
+                l=m+1
+            else:
+                r=m-1
+        
+        return l if valid_length(l) else l-1
+
+#方法2 For loop + sliding window 
+class Solution:
+    def characterReplacement(self, s: str, k: int) -&amp;gt; int:
+        set_s = set(s)
+        res = 0
+
+        def is_window_valid(start,end,count,k):
+            return end-start+1-count&amp;lt;=k
+
+        for ch in set_s:
+            start = 0
+            count = 0
+
+            for end in range(len(s)):
+                if s[end]==ch:
+                    count+=1
+                
+                while not is_window_valid(start, end, count, k):
+                    if s[start]==ch:
+                        count-=1
+                    start+=1
+                
+                res = max(res, end-start+1)
+        return res
+
+#方法三
+
+class Solution:
+    def characterReplacement(self, s: str, k: int) -&amp;gt; int:
+        
+        res = 0
         start = 0
-        maxCount = 0
-        maxLength = 0
-        for end in range(l):
-            count[ord(s[end]) - ord(&#39;A&#39;)]+=1
-            maxCount = max(maxCount, count[ord(s[end]) - ord(&#39;A&#39;)])
-            while end - start + 1 - maxCount &amp;gt; k:
-                count[ord(s[start]) - ord(&#39;A&#39;)]-=1
+        freq = defaultdict(int)
+        max_freq = 0
+        for end in range(len(s)):
+            #expand window
+            freq[s[end]]+=1
+            max_freq = max(max_freq,freq[s[end]])
+
+            is_valid = end-start+1-max_freq&amp;lt;=k
+            if not is_valid:
+                #shrink
+                freq[s[start]]-=1
                 start+=1
             
-            maxLength = max(maxLength, end - start + 1);
+            res = end-start+1
+        return res
+
+#。。。。
+class Solution:
+    def characterReplacement(self, s: str, k: int) -&amp;gt; int:
         
-        return maxLength
+        l=len(s)
+        count = defaultdict(int)
+        maxcount = 0
+        res = 0
+        start = 0
+        for end in range(l):
+            #expand
+            count[s[end]]+=1
+            maxcount = max(maxcount,count[s[end]])
+            while end-start+1-maxcount&amp;gt;k:
+                #srink
+                count[s[start]]-=1
+                start+=1
+
+            res = max(res, end-start+1)
+
+        return res
+
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;感觉用dp的。。 感觉不对好像，提示是用two pointer sliding window， 不死磕看答案。&lt;br&gt;
-end-start+1 = size of the current window&lt;br&gt;
-maxCount = largest count of a single, unique character in the current window&lt;br&gt;
-The main equation is: end-start+1-maxCount&lt;/p&gt;
-&lt;h1 id=&#34;font-colorblue-425-word-squares-hard-font&#34;&gt;&lt;font  color=&#39;blue&#39;&gt; 425. Word Squares (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;p&gt;方法一，binary search+ sliding window， 最小1， 最大len（s）做binary seach 看 m长度是不是一个valid length， valid 是指 m长度的sliding window中，存在能变成同一个字符的substring，找出sliding window中的最freq的频率，m-频率 就是杂char的个数，如果小于等于k说明m长度是valid。&lt;br&gt;
+方法二： 对每一个unique char， 做for loop， 判断是不是valid window，如果不是就要缩小窗口，start+1.&lt;br&gt;
+方法三：&lt;br&gt;
+two pointer， expand更新最大频率，check是不是valid，如果不valid，减去一个必定又valid，所以start+1，更新freq。 然后计算result。&lt;br&gt;
+方法四：&lt;br&gt;
+expand end 更新最大freq， 然后发现不满足条件就shrink， start更新，然后计算结果。&lt;/p&gt;
+&lt;h1 id=&#34;425-word-squares-hard&#34;&gt;425. Word Squares (Hard)&lt;/h1&gt;
 &lt;p&gt;Given an array of unique strings words, return all the word squares you can build from words. The same word from words can be used multiple times. You can return the answer in any order.&lt;br&gt;
 A sequence of strings forms a valid word square if the kth row and column read the same string, where 0 &amp;lt;= k &amp;lt; max(numRows, numColumns).&lt;br&gt;
 For example, the word sequence [&amp;quot;ball&amp;quot;,&amp;quot;area&amp;quot;,&amp;quot;lead&amp;quot;,&amp;quot;lady&amp;quot;] forms a word square because each word reads the same both horizontally and vertically.&lt;/p&gt;
@@ -5972,8 +6866,44 @@ class Solution:
             build([word])
         
         return res
+
+#MY ANSWER
+class Solution:
+    def wordSquares(self, words: List[str]) -&amp;gt; List[List[str]]:
+        #A B C D
+        #B E F G
+        #C F J I
+        
+        l = len(words[0])
+        
+        prefix = defaultdict(list)
+        
+        for i in range(1,l):
+            for w in words:
+                prefix[w[:i]].append(w)
+        
+  
+        res = []
+        def bt(row_id,tmp):
+            if row_id==l:
+                res.append(tmp[:])
+                return
+
+            if row_id ==0:
+                for w in words:
+                    bt(row_id+1, tmp+[w]) 
+            else:
+                key = &#39;&#39;
+                for row in tmp:
+                    key+=row[row_id]
+                if key in prefix:
+                    for w in prefix[key]:
+                        bt(row_id+1,tmp+[w])
+        
+        bt(0,[])
+        return res
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;很明显backtracking问题。。。unbelievable 做出来了。。。&lt;/p&gt;
+&lt;p&gt;很明显backtracking问题。。。&lt;/p&gt;
 &lt;h1 id=&#34;426-convert-binary-search-tree-to-sorted-doubly-linked-list-medium&#34;&gt;426. Convert Binary Search Tree to Sorted Doubly Linked List (Medium)&lt;/h1&gt;
 &lt;p&gt;Convert a Binary Search Tree to a sorted Circular Doubly-Linked List in place.&lt;br&gt;
 You can think of the left and right pointers as synonymous to the predecessor and successor pointers in a doubly-linked list. For a circular doubly linked list, the predecessor of the first element is the last element, and the successor of the last element is the first element.&lt;br&gt;
@@ -5989,32 +6919,33 @@ class Node:
 
 class Solution:
     def treeToDoublyList(self, root: &#39;Optional[Node]&#39;) -&amp;gt; &#39;Optional[Node]&#39;:
+        #inorder
+        # pre &amp;gt;   &amp;lt;cur
+
         if not root: return root
-        stack=[]
-        head=None
-        pre=None
+
+        head = None
+        stack = []
+        pre =None
         while stack or root:
             while root:
                 stack.append(root)
                 root=root.left
             
-            cur=stack.pop()
-            if head is None: head=cur
-            cur.left=pre
-            if pre:
-                pre.right=cur 
-            pre=cur
-            
-            root=cur.right
-        
-        
-        #print(head.val, pre.val)
-        
-        head.left=pre
-        pre.right=head
-        
-        return head
+            root = stack.pop()
+            if not head: head = root
 
+            if pre:
+                pre.right = root
+                root.left = pre
+
+            pre = root
+            root = root.right
+        
+        pre.right = head
+        head.left = pre
+
+        return head
 
 #ANSER RECURSION METHOD
 class Solution:
@@ -6090,8 +7021,9 @@ class Solution:
             bottomRight=self.construct([row[size//2:] for row in grid[size//2:]])
             return Node(val,isLeaf,topLeft,topRight,bottomLeft,bottomRight)
 
+
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;font-colorred-428-serialize-and-deserialize-n-ary-tree-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 428. Serialize and Deserialize N-ary Tree (Hard) &lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;428-serialize-and-deserialize-n-ary-tree-hard&#34;&gt;428. Serialize and Deserialize N-ary Tree (Hard)&lt;/h1&gt;
 &lt;p&gt;Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.&lt;br&gt;
 Design an algorithm to serialize and deserialize an N-ary tree. An N-ary tree is a rooted tree in which each node has no more than N children. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that an N-ary tree can be serialized to a string and this string can be deserialized to the original tree structure.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;quot;&amp;quot;&amp;quot;
@@ -6157,8 +7089,69 @@ class Codec:
 # Your Codec object will be instantiated and called as such:
 # codec = Codec()
 # codec.deserialize(codec.serialize(root))
+
+
+#BFS MY ANSWER
+
+class Codec:
+    def serialize(self, root: &#39;Node&#39;) -&amp;gt; str:
+        &amp;quot;&amp;quot;&amp;quot;Encodes a tree to a single string.
+        
+        :type root: Node
+        :rtype: str
+        &amp;quot;&amp;quot;&amp;quot;
+        if not root: return &#39;&#39;
+        
+        code=lambda node: str(node.val)+&#39;+&#39;+str(len(node.children))
+        
+        res = []
+        q = [root]
+        while q:
+            for _ in range(len(q)):
+                cur = q.pop(0)
+                res.append(code(cur))
+                for node in cur.children:
+                    q.append(node)
+
+        return &#39;,&#39;.join(res)
+        
+        
+	
+    def deserialize(self, data: str) -&amp;gt; &#39;Node&#39;:
+        &amp;quot;&amp;quot;&amp;quot;Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: Node
+        &amp;quot;&amp;quot;&amp;quot;
+        #print(data)
+        if not data: return None
+        dic = dict()
+        data = data.split(&#39;,&#39;)
+        root = None
+        q = []
+        c = 0
+        while data:
+            #print(data)
+            val,n = data.pop(0).split(&#39;+&#39;)
+            val = int(val)
+            n = int(n)
+            node = Node(val)
+            dic[node] = n
+            if not root: root = node
+            
+            if q :
+                #print(&#39;me&#39;,q[0].val,&#39;nc&#39;,dic[q[0]],&#39;child&#39;,node.val)
+                q[0].children.append(node)
+                dic[q[0]]-=1
+                if dic[q[0]]==0:
+                    q.pop(0)
+            
+            if n:
+                q.append(node)
+
+        return root 
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;first try failed， 若val可以重复，以val为key找parent的方法不再适用。 看答案。&lt;/p&gt;
+&lt;p&gt;第一种 答案写的更简洁&lt;/p&gt;
 &lt;h1 id=&#34;429-n-ary-tree-level-order-traversal-medium&#34;&gt;429. N-ary Tree Level Order Traversal (Medium)&lt;/h1&gt;
 &lt;p&gt;Given an n-ary tree, return the level order traversal of its nodes&#39; values.&lt;br&gt;
 Nary-Tree input serialization is represented in their level order traversal, each group of children is separated by the null value (See examples).&lt;/p&gt;
@@ -6337,8 +7330,46 @@ class Solution(object):
         # detach the pseudo head node from the result.
         pseudoHead.next.prev = None
         return pseudoHead.next
+
+
+###USING STACK
+class Solution:
+    def flatten(self, head: &#39;Optional[Node]&#39;) -&amp;gt; &#39;Optional[Node]&#39;:
+        if not head: return head
+        res = head
+        stack = []
+        pre = None
+        while head:
+            if head.child:
+                next = head.child
+                stack.append(head.next)
+                if head.next:
+                    head.next.prev = None
+                
+                head.next = head.child
+                head.child.prev = head
+                head.child = None
+            else:
+                next = head.next
+            
+            pre = head
+            head = next
+        
+        cur = pre
+        while stack:
+            cur.next = stack.pop()
+            if cur.next:
+                cur.next.prev =cur
+            while cur.next:
+                cur = cur.next
+            
+        #cur = res
+        #while cur:
+        #    print(cur.val,cur.prev.val if cur.prev else &#39;,&#39;, cur.next.val if cur.next else &#39;,&#39;)
+        #    cur = cur.next
+
+        return res
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;差点没做出来 写的比答案复杂&lt;/p&gt;
 ">Leetcode 2022-03-03</a>
       </div>
       
@@ -6355,51 +7386,98 @@ class Solution(object):
 Note that &amp;quot;s55n&amp;quot; (&amp;quot;s ubsti tutio n&amp;quot;) is not a valid abbreviation of &amp;quot;substitution&amp;quot; because the replaced substrings are adjacent.&lt;br&gt;
 The length of an abbreviation is the number of letters that were not replaced plus the number of substrings that were replaced. For example, the abbreviation &amp;quot;s10n&amp;quot; has a length of 3 (2 letters + 1 substring) and &amp;quot;su3i1u2on&amp;quot; has a length of 9 (6 letters + 3 substrings).&lt;br&gt;
 Given a target string target and an array of strings dictionary, return an abbreviation of target with the shortest possible length such that it is not an abbreviation of any string in dictionary. If there are multiple shortest abbreviations, return any of them.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+#TLE 暴力解法
+class Solution:
+    def minAbbreviation(self, target: str, dictionary: List[str]) -&amp;gt; str:
+        
+        def abbr(w):
+            if not w: return []
+            if len(w)==1:
+                return [(1,w),(1,&amp;quot;1&amp;quot;)]
+            res = set()
+            for p in range(1,len(w)):
+                head = w[:p]
+                tail = w[p:]
+                for l in abbr(head):
+                    for r in abbr(tail):
+                        lw1 = l[0]
+                        lw2 = r[0]
+                        w1 = l[1]
+                        w2 = r[1]
+                        if w1[-1].isdigit() and w2[0].isdigit():
+                         
+                            i=-1
+                            while -i&amp;lt;len(w1) and w1[i].isdigit():
+                                i-=1
+                            j=0
+                            while j&amp;lt;len(w2) and w2[j].isdigit():
+                                j+=1
+                            word = w1[:i+1]+ str(int(w1[i+1:])+int(w2[:j]))+ w2[j:]
+                            lword = lw1+lw2 -1
+                            
+                        else:
+                            word = w1+w2
+                            lword = lw1+lw2
+                        res.add((lword,word))
+            res.add( (1,str(len(w)) ))
+            return list(res)
+        
+        fobidden = {  r for  w in dictionary for r in abbr(w)}
+
+        for res in sorted(abbr(target)):
+            if res not in fobidden:
+                return res[1]
+
+#ANSWER
+class Solution:
     def minAbbreviation(self, target: str, dictionary: List[str]) -&amp;gt; str:
 
-        def abbr(target, num):
-            word, count = &#39;&#39;, 0
-            for w in target:
-                if num &amp;amp; 1 == 1:
-                    if count:
-                        word += str(count)
-                        count = 0
-                    word += w
-                else:
-                    count += 1
+        masks = []
 
-                num &amp;gt;&amp;gt;= 1
-            if count:
-                word += str(count)
-            return word
-
-        m = len(target)
-
-        # Figure out the different bits for a same length word in the dictionary
-        diffs = []
         for word in dictionary:
-            if len(word) != m:
-                continue
+            if len(word)==len(target):
+                #mask is bit representation of word-target char differ
+                #mask bit set true will hold that char
+                mask = 0
+                i = len(word)
+                for a,b in zip(word, target):
+                    i-=1
+                    if a!=b:
+                        #bit diff
+                        mask |=   1 &amp;lt;&amp;lt;i
+                masks.append(mask)
+        
+        if not masks:
+            # no len word== len target:
+            return str(len(target))
+        
+        res = []
+        for val in range(2**len(target)):
+            if all([val &amp;amp; mask for mask in masks]):
+                # val &#39;s binary is potential valid abbr
+                count = 0
+                tmp = []
+                length = 0
+                for bit, ch in zip(bin(val)[2:].zfill(len(target)), target):
+                    if bit==&#39;1&#39;:
+                        if count:
+                            tmp.append(str(count))
+                            length+=1
+                        count = 0
+                        tmp.append(ch)
+                        length+=1
+                    else:
+                        count+=1
+                if count:
+                    tmp.append(str(count))
+                    length+=1
+                
 
-            # The encoding is opposite
-            bits = 0
-            for i, char in enumerate(word):
-                if char != target[i]:
-                    bits += 2 ** i
-            diffs.append(bits)
-
-        # No word in dictionary has same length, return the shortest
-        if not diffs:
-            return str(m)        
-
-        abbrs = []
-        for i in range(2 ** m):
-            # This abbreviation at least has one word different to every words in the dictionary
-            if all(d &amp;amp; i for d in diffs):
-                abbrs.append(abbr(target, i))
-
-        return min(abbrs, key=lambda x: len(x))
+                res.append( (length,&#39;&#39;.join(tmp)))
+        
+        return sorted(res)[0][1]
+        
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;思路是bit manipulation。 1）找出在字典里同长度但字符和target不同的bit。 然后所有的encoding是0到2^m， 所以  all（encoding&amp;amp;dif for dif in diffs）  encoding的bit能和所有dif bits有交集则是个可能的候选，把 encoding bit转换为string然后加入到abbrs中，最后找出长度最小的abbrs就可以了。&lt;/p&gt;
 &lt;h1 id=&#34;412-fizz-buzz-easy&#34;&gt;412. Fizz Buzz （Easy）&lt;/h1&gt;
@@ -6456,8 +7534,34 @@ class Solution:
             else:
                 dp=0
         return res        
+
+
+#MY ANSWER
+class Solution:
+    def numberOfArithmeticSlices(self, nums: List[int]) -&amp;gt; int:
+        #calculate diff
+        #   1 2 3  6  7 8 9 10
+        #    1 1  3 1  1 1  1
+        #     0 1  0 0  1 2  3 
+        
+        diffs = []
+        for i in range(1,len(nums)):
+            diff = nums[i]-nums[i-1]
+            diffs.append(diff)
+        
+        res = 0
+        c=0
+        pre =None
+        for cur in diffs:
+            if pre is not None and cur!=pre:
+                c =0
+            elif cur==pre:
+                c+=1
+                res+=c
+            pre = cur
+        return res
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;思路和答案一致，DP解决。&lt;/p&gt;
+&lt;p&gt;思路和答案一致，DP解决。自己思路是用diff rence重新组成的数组计算， 和dp异曲同工。&lt;/p&gt;
 &lt;h1 id=&#34;414-third-maximum-number-easy&#34;&gt;414. Third Maximum Number （Easy）&lt;/h1&gt;
 &lt;p&gt;Given an integer array nums, return the third distinct maximum number in this array. If the third maximum does not exist, return the maximum number.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
@@ -6523,6 +7627,53 @@ class Solution:
             s.add(n)
          
         return max3 if len(s)&amp;gt;=3 else max
+
+
+
+#MY ANSWER 最优O（n） quick select
+class Solution:
+    def thirdMax(self, nums: List[int]) -&amp;gt; int:
+        
+        #remove dup
+        res = []
+        s =set()
+        for n in nums:
+            if n not in s:
+                res.append(n)
+            s.add(n)
+        nums = res
+        #conercase
+        if len(nums)&amp;lt;=2: return max(nums)
+
+        def partition(idx, left,right):
+            pval = nums[idx]
+            #swap idx right
+            nums[idx],nums[right] = nums[right],nums[idx]
+
+            stored_idx = left
+            for i in range(left,right):
+                if nums[i]&amp;lt;pval:
+                    nums[i],nums[stored_idx] = nums[stored_idx],nums[i]
+                    stored_idx+=1
+            
+            nums[right],nums[stored_idx] = nums[stored_idx],nums[right]
+            
+            return stored_idx
+        
+        def select(left,right, k):
+            if left==right:
+                return nums[left]
+            p_idx = random.randint(left,right)
+            p_idx = partition(p_idx,left,right)
+
+            if p_idx == k:
+                return nums[p_idx]
+            elif p_idx&amp;gt;k:
+                return select(left,p_idx-1,k)
+            else:
+                return select(p_idx+1,right,k)
+        #quick select
+        return select(0,len(nums)-1,len(nums)-3)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h1 id=&#34;415-add-strings-easy&#34;&gt;415. Add Strings (Easy)&lt;/h1&gt;
 &lt;p&gt;Given two non-negative integers, num1 and num2 represented as string, return the sum of num1 and num2 as a string.&lt;br&gt;
@@ -6546,7 +7697,7 @@ You must solve the problem without using any built-in library for handling large
         return &#39;&#39;.join(map(str,res[::-1]))
 
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;font-colorred-416-partition-equal-subset-sum-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 416. Partition Equal Subset Sum (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;416-partition-equal-subset-sum-medium&#34;&gt;416. Partition Equal Subset Sum (Medium)&lt;/h1&gt;
 &lt;p&gt;Given a non-empty array nums containing only positive integers, find if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def canPartition(self, nums: List[int]) -&amp;gt; bool:
@@ -6610,49 +7761,67 @@ class Solution:
                 dp[j] = dp[j] or dp[j - curr]
 
         return dp[subset_sum]
+
+#MY ANSWER
+class Solution:
+    def canPartition(self, nums: List[int]) -&amp;gt; bool:
+        if sum(nums)%2==1: return False
+        target=sum(nums)//2
+        #find subset sum is target
+        @functools.lru_cache(None)
+        def dfs(i,remaining):
+            if i&amp;gt;=len(nums) or remaining&amp;lt;0: return False
+            if remaining==0: return True
+            res = False
+            #select i
+            res = res or dfs(i+1,remaining-nums[i])
+            #skip i
+            res  =res or dfs(i+1,remaining)
+            return res
+        
+        return dfs(0, target)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;没思路。。。 有两种情况，1) num in subset_sum  2) num not in subset_sum 所以dfs&lt;/p&gt;
+&lt;p&gt;有两种情况，1) num in subset_sum  2) num not in subset_sum 所以dfs&lt;/p&gt;
 &lt;h1 id=&#34;417-pacific-atlantic-water-flow-medium&#34;&gt;417. Pacific Atlantic Water Flow （Medium）&lt;/h1&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def pacificAtlantic(self, heights: List[List[int]]) -&amp;gt; List[List[int]]:
+        m , n  = len(heights), len(heights[0])
+        def bfs(q,visited):
+            
+            for i,j in q:
+                visited.add((i,j))
+            
+            while q:
+                l=len(q)
+                for _ in range(l):
+                    i,j =q.pop(0)
+                    for x,y in [(i+1,j),(i,j+1),(i-1,j),(i,j-1)]:
+                        if m&amp;gt;x&amp;gt;=0 and n&amp;gt;y&amp;gt;=0 and (x,y) not in visited and heights[i][j]&amp;lt;=heights[x][y]:
+                            visited.add((x,y))
+                            q.append([x,y])
+            
+            return visited
+
         
-        #two bfs from boundy if hight is higher..
-        
-        visited=set()
-        q=[]
-        m=len(heights)
-        n=len(heights[0])
-        for row in range(m):
-            visited.add((row,0))
-            q.append((row,0))
-        for col in range(1,n):
-            visited.add((0,col))
-            q.append((0,col))
-        
-        while q:
-            r,c = q.pop()
-            for row,col in [(r+1,c),(r-1,c),(r,c+1),(r,c-1)]:
-                if m&amp;gt;row&amp;gt;=0  and n&amp;gt;col&amp;gt;=0 and (row,col) not in visited and heights[row][col]&amp;gt;=heights[r][c]:
-                    visited.add((row,col))
-                    q.append((row,col))
-        
-        
-        visited2=set()
-        q=[]
-        for row in range(m):
-            visited2.add((row,n-1))
-            q.append((row,n-1))
-        for col in range(n-1):
-            visited2.add((m-1,col))
-            q.append((m-1,col))
-        while q:
-            r,c = q.pop()
-            for row,col in [(r+1,c),(r-1,c),(r,c+1),(r,c-1)]:
-                if m&amp;gt;row&amp;gt;=0  and n&amp;gt;col&amp;gt;=0 and (row,col) not in visited2 and heights[row][col]&amp;gt;=heights[r][c]:
-                    visited2.add((row,col))
-                    q.append((row,col))
-        
-        return visited&amp;amp;visited2
+        #pacifit
+        q = []
+        for i in range(n):
+            q.append([0,i]) 
+        for j in range(1,m):
+            q.append([j,0])
+        visited_pacifit = bfs(q,set())
+
+        #atalantic
+        q = []
+        for i in range(n):
+            q.append([m-1,i])
+        for j in range(m-1):
+            q.append([j,n-1])
+        visited_atalantic = bfs(q,set())
+
+
+        res = visited_pacifit &amp;amp; visited_atalantic
+        return [list(e) for e in res]
 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;思路，从边界处做两次BFS，相交地方就是结果。&lt;/p&gt;
@@ -6662,35 +7831,36 @@ The order of words in the sentence must remain unchanged, and a word cannot be s
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#TIME LIMIT EXCEEDED
 class Solution:
     def wordsTyping(self, sentence: List[str], rows: int, cols: int) -&amp;gt; int:
-        sentence=[len(w) for w in sentence]
-        r=0
-        c_row=0
-        res=0
-        i=0
-        while r&amp;lt;rows:
-            
-            l=sentence[i]
-            #print(r,c_row,l)
-            if c_row+l&amp;lt;cols:
-                c_row = c_row+l+1
-                if c_row==cols:
-                    c_row=0
-                    r+=1
-                    if r&amp;gt;=rows:
-                        if i==len(sentence)-1: res+=1
+
+        i = 0
+        l = len(sentence)
+        counter = 0
+        row = 0
+        col = 0
+        while row&amp;lt;rows:
+            cur = 0
+            while cur&amp;lt;=cols:
+                cur+=len(sentence[i])+1
+               
+                if cur&amp;gt;cols:
+                    if cur-1==cols:
+                        if i==l-1:counter+=1
+                        #next i
+                        i = (i+1)%l
+                        
+                    else:
+                        #i is next going to place ,stay the same
                         break
-            elif c_row+l==cols:
-                c_row=0
-                r+=1
-            elif c_row+l&amp;gt;cols:
-                c_row=l+1
-                r+=1
-                if r&amp;gt;=rows:
-                    break
-                #print(&#39;#&#39;,c_row,r)
-            if i==len(sentence)-1: res+=1
-            i=(i+1)%len(sentence)
-        return res
+                else:
+                    if i==l-1:counter+=1
+                    #next i
+                    i = (i+1)%l
+                
+            row+=1
+         
+        
+        return counter
+
 
 #ANSWER
 #case 1: sentence_ptr at the end of the screen falls on space in the sentence. Go to the next letter sentence_ptr+1 in the next row of the screen.
@@ -6715,6 +7885,27 @@ class Solution:
                 while sentence_ptr &amp;gt; 0 and s[(sentence_ptr - 1) % len(s)] != &#39; &#39;:
                     sentence_ptr -= 1
         return sentence_ptr // len(s)
+####
+class Solution:
+    def wordsTyping(self, sentence: List[str], rows: int, cols: int) -&amp;gt; int:
+
+        s = &#39; &#39;.join(sentence)+&#39; &#39;
+        p = 0
+        for _ in range(rows):
+            p += cols-1
+            #1) p at end of column is space
+            if s[p%len(s)]==&#39; &#39;:
+                p+=1
+            #2)p is last letter of word, next is space
+            elif s[(p+1)%len(s)] == &#39; &#39;:
+                p+=2
+            #3): p is in the middle of word need shrink
+            else:
+                while p&amp;gt;0 and  s[(p - 1) % len(s)] != &#39; &#39;:
+                    p-=1
+            
+        return p//len(s)
+
 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;初次尝试是TLE。。。 直接暴力解即使考虑全了cornercase也还是过不了。&lt;br&gt;
@@ -6724,31 +7915,23 @@ class Solution:
 Battleships can only be placed horizontally or vertically on board. In other words, they can only be made of the shape 1 x k (1 row, k columns) or k x 1 (k rows, 1 column), where k can be of any size. At least one horizontal or vertical cell separates between two battleships (i.e., there are no adjacent battleships).&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def countBattleships(self, board: List[List[str]]) -&amp;gt; int:
+        m,n = len(board),len(board[0])
+        visited = set()
+        res = 0
         
-        m=len(board)
-        n=len(board[0])
+        def dfs(i,j):
+            if m&amp;gt;i&amp;gt;=0 and n&amp;gt;j&amp;gt;=0 and board[i][j]==&#39;X&#39; and (i,j) not in visited:
+                visited.add((i,j))
+                dfs(i+1,j)
+                dfs(i-1,j)
+                dfs(i,j+1)
+                dfs(i,j-1)
         
-        visited=set()
-        
-        
-        def dfs(row,col):
-            #print(row,col)
-            if row&amp;lt;0 or col&amp;lt;0 or row&amp;gt;=m or col&amp;gt;=n or (row,col) in visited: return
-            visited.add((row,col))
-            if board[row][col]==&#39;X&#39;:
-                board[row][col]=&#39;.&#39;
-                dfs(row+1,col)
-                dfs(row-1,col)
-                dfs(row,col+1)
-                dfs(row,col-1)
-
-        res=0
         for i in range(m):
             for j in range(n):
-                if board[i][j]==&#39;X&#39;:
+                if board[i][j]==&#39;X&#39; and (i,j) not in visited:
                     res+=1
                     dfs(i,j)
-                    
         
         return res
 #ANSWER
@@ -6777,41 +7960,49 @@ Insert one character to password,&lt;br&gt;
 Delete one character from password, or&lt;br&gt;
 Replace one character of password with another character.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
-    def strongPasswordChecker(self,s: str) -&amp;gt; int:
-        
-        missing_type = 3
-        if any(&#39;a&#39; &amp;lt;= c &amp;lt;= &#39;z&#39; for c in s): missing_type -= 1
-        if any(&#39;A&#39; &amp;lt;= c &amp;lt;= &#39;Z&#39; for c in s): missing_type -= 1
-        if any(c.isdigit() for c in s): missing_type -= 1
+    def strongPasswordChecker(self, s: str) -&amp;gt; int:
+        missingtype = 3
+        if any([ &#39;z&#39;&amp;gt;=ch&amp;gt;=&#39;a&#39; for ch in s]): missingtype-=1
+        if any([ &#39;Z&#39;&amp;gt;=ch&amp;gt;=&#39;A&#39; for ch in s]): missingtype-=1
+        if any([ ch.isdigit() for ch in s]): missingtype-=1
 
         change = 0
-        one = two = 0
-        p = 2
-        while p &amp;lt; len(s):
-            if s[p] == s[p-1] == s[p-2]:
+        one = two = 0 #deleting one/two in aaa ... for change
+        p=2
+        while p&amp;lt;len(s):
+            if s[p-1]==s[p-2]==s[p]:
                 length = 2
-                while p &amp;lt; len(s) and s[p] == s[p-1]:
-                    length += 1
-                    p += 1
-                    
-                change += length // 3
-                if length % 3 == 0: one += 1
-                elif length % 3 == 1: two += 1
-            else:
-                p += 1
-        
-        if len(s) &amp;lt; 6:
-            return max(missing_type, 6 - len(s))
-        elif len(s) &amp;lt;= 20:
-            return max(missing_type, change)
-        else:
-            delete = len(s) - 20
-            
-            change -= min(delete, one)
-            change -= min(max(delete - one, 0), two * 2) // 2
-            change -= max(delete - one - 2 * two, 0) // 3
+                while p&amp;lt;len(s) and s[p]==s[p-1]:
+                    p+=1
+                    length+=1
                 
-            return delete + max(missing_type, change)
+                change+= length//3
+                if length%3==0: one+=1
+                #we need to make len/3 replacements and we can reduce the number of replacements len/3 by one by deleting one character
+                # aaa aaa
+                elif length%3==1: two+=1
+                #we can reduce one replacement by deleting two characters.
+                # aaaa 
+            else:
+                p+=1
+        
+        if len(s)&amp;lt;6:
+            return max(6-len(s), missingtype)
+        elif len(s)&amp;lt;=20:
+            return max(change, missingtype) #max because both change and missing type condition must statifsy
+        else:
+            delete = len(s)-20
+
+            change -=  min(delete, one) 
+            # one delete can reduce one change, but one can not exeeds delete
+            change -=  min(two*2, max(delete-one,0))//2 
+            # two delete can reduce one change, the upper bond of two delete  is delete-one
+            change -=  max(delete-one-two*2, 0)//3 
+            # 3 delete can reduce one change
+
+            return delete + max(missingtype,change) # missing type and change condition must both satisifed.
+            
+
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;看到这题就头疼~，直接看答案了。&lt;br&gt;
 当有20+chars，必须delete=len（s）-20.但是我们能用这些delete中的一部分来处理3char rule violation。&lt;br&gt;
@@ -6825,7 +8016,7 @@ Replace one character of password with another character.&lt;/p&gt;
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2022-03-01/"" data-c="
           &lt;!-- more --&gt;
 &lt;p&gt;中间搞laser project浪费了不少时间~~~&lt;/p&gt;
-&lt;h1 id=&#34;font-colorred-401-binary-watch-easy-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 401. Binary Watch (Easy) &lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;401-binary-watch-easy&#34;&gt;401. Binary Watch (Easy)&lt;/h1&gt;
 &lt;p&gt;A binary watch has 4 LEDs on the top which represent the hours (0-11), and the 6 LEDs on the bottom represent the minutes (0-59). Each LED represents a zero or one, with the least significant bit on the right.&lt;br&gt;
 Given an integer turnedOn which represents the number of LEDs that are currently on, return all possible times the watch could represent. You may return the answer in any order.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
@@ -6860,9 +8051,84 @@ class Solution:
                     if num2&amp;gt;=60: continue
                     res.add(&#39;{}:{}&#39;.format(num1,str(num2).zfill(2)))
         return res
+
+
+#MY ANSWER
+class Solution:
+    def readBinaryWatch(self, turnedOn: int) -&amp;gt; List[str]:
+      
+        res = []
+
+
+        def process(tmp):
+            #print(&#39;R&#39;,tmp)
+            r=&#39;&#39;
+            h,m = tmp
+            if not h:
+                r+=&#39;0:&#39;
+            else:
+                r+=str(h)+&#39;:&#39;
+            
+            if not m:
+                r+=&#39;00&#39;
+            else:
+                r+= str(m).zfill(2)
+            return r
+        
+        def bt(on_remain,tmp,i,j,v_h,v_m,bebug=&#39;&#39;):
+            if on_remain&amp;lt;0: return 
+            #print(bebug, i,j)
+            h = [1,2,4,8]
+            m = [1,2,4,8,16,32]
+     
+            if on_remain == 0:
+                res.append(process(tmp))
+                return
+            if i&amp;gt;=4 and  j&amp;gt;=6: return 
+            
+            hour = h[i] if i&amp;lt;4 else None
+            mini = m[j]  if j&amp;lt;6 else None
+            if hour and mini:
+                #slect ith hour, j the min
+                if hour not in v_h and mini not in v_m:
+                    if not (tmp[0]+hour&amp;gt;=12 or tmp[1]+mini&amp;gt;=60): 
+                        
+                        v_h.add(hour)
+                        v_m.add(mini)
+                        bt(on_remain-2,[tmp[0]+hour,mini+tmp[1]],i+1,j+1,v_h,v_m,bebug+&#39;H{}M{} &#39;.format(i,j))
+                        v_h.remove(hour)
+                        v_m.remove(mini)
+            
+            #select jth min
+            if mini:
+                #print(&#39;m&#39; ,mini,&#39;j&#39;,j ,&#39;h&#39;,tmp[0])
+                if mini not in v_m:
+                    if not tmp[1]+mini&amp;gt;=60:  
+                        #print(&#39;@&#39;,mini,on_remain,tmp)
+                        v_m.add(mini)
+                        bt(on_remain-1,[tmp[0],mini+tmp[1]],i,j+1,v_h,v_m,bebug+&#39;M{} &#39;.format(j))
+                        v_m.remove(mini)
+
+            #selet ith hour 
+            if hour:
+                if hour not in v_h:
+                    if not tmp[0]+hour&amp;gt;=12: 
+                        v_h.add(hour)
+                        bt(on_remain-1,[tmp[0]+hour, tmp[1]],i+1,j,v_h,v_m,bebug+&#39;H{} &#39;.format(i))
+                        v_h.remove(hour)
+            #skip
+            bt(on_remain,tmp.copy(), i+1,j+1,v_h,v_m,bebug+&#39;SKIP{}{} &#39;.format(i,j))
+
+           
+        
+        bt(turnedOn,[0,0],0,0,set(), set())
+        
+         
+        return list(set(res))
+
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;是一个backtracking问题， 写起来难度很大，然而是一个easy问题。。。直接暴力解即可。&lt;br&gt;
-但用backtracking就是一个比较难的问题了。&lt;/p&gt;
+但用backtracking就是一个比较难的问题了。注意的是i，j终止条件，  if i&amp;gt;=4  or  j&amp;gt;=6: return 这个是错的，当i 已经violate时候，j还是能继续+的，eg i=4， j还可以是1，2，3.。。。所以终止条件应该是 if i&amp;gt;=4  and  j&amp;gt;=6:  return。&lt;/p&gt;
 &lt;h1 id=&#34;font-colorred-402-remove-k-digits-mediumfont&#34;&gt;&lt;font color=&#39;red&#39;&gt; 402. Remove K Digits （Medium）&lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given string num representing a non-negative integer num, and an integer k, return the smallest possible integer after removing k digits from num.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
@@ -6953,6 +8219,31 @@ class Solution:
                     if loc + i in stoneSet:
                         stack.append((loc+i, i))
         return False
+
+#MY ANSWER
+class Solution:
+    def canCross(self, stones: List[int]) -&amp;gt; bool:
+        if len(stones)==0: return True
+        if len(stones)&amp;gt;1 and stones[1]-stones[0]!=1: return False
+ 
+        target = stones[-1]
+        s = set(stones)
+
+        @lru_cache(None)
+        def dfs(cur_pos,k):
+            if cur_pos==target:
+                return True
+         
+            res = False
+            if cur_pos+k in s:
+                res = res or dfs(cur_pos + k, k)
+            if cur_pos+k+1 in s:
+                res = res or dfs(cur_pos + k+1,k+1)
+            if k-1&amp;gt;0 and cur_pos+k-1 in s:
+                res =res or dfs(cur_pos+k-1,k-1)
+            return res
+
+        return dfs(1,1)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;没想到做出来了。。。。。dp  with mem。。。&lt;br&gt;
 答案更好。答案3思路： each node has 3 children. The goal is to check if we can reach to the end along the edges. We can do it with a Depth First Search with a Hashtable(to avoid redundant calculation)&lt;/p&gt;
@@ -6970,18 +8261,19 @@ class Solution:
 All the letters in the answer string should be lowercase characters, and there should not be any leading zeros in the answer except for the zero itself.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
     def toHex(self, num: int) -&amp;gt; str:
-        if num&amp;lt;0:
-            num=4294967295 +num+1
-        map=[&#39;0&#39;,&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;,&#39;7&#39;,&#39;8&#39;,&#39;9&#39;,&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;f&#39;]
-        res=&#39;&#39;
-        while num:
-            ind=num%16
-            res+=map[ind]
-            num=num//16
-        #26=1a  16 11
-        return res[::-1]   if res else &#39;0&#39;  
+
+        li16 = [&#39;0&#39;,&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;,&#39;7&#39;,&#39;8&#39;,&#39;9&#39;,&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;f&#39;]
+        stack = []
+        if num&amp;lt;0: 
+            num+=0xffffffff+1
+        while num&amp;gt;0:
+            lastdig = num%16
+            stack.append(li16[lastdig])
+            num//=16
+        
+        return &#39;&#39;.join(stack[::-1]) or &#39;0&#39;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;font-colorred-406-queue-reconstruction-by-height-medium-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 406. Queue Reconstruction by Height (Medium) &lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;406-queue-reconstruction-by-height-medium&#34;&gt;406. Queue Reconstruction by Height (Medium)&lt;/h1&gt;
 &lt;p&gt;You are given an array of people, people, which are the attributes of some people in a queue (not necessarily in order). Each people[i] = [hi, ki] represents the ith person of height hi with exactly ki other people in front who have a height greater than or equal to hi.&lt;br&gt;
 Reconstruct and return the queue that is represented by the input array people. The returned queue should be formatted as an array queue, where queue[j] = [hj, kj] is the attributes of the jth person in the queue (queue[0] is the person at the front of the queue).&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
@@ -7115,8 +8407,30 @@ A substring is a contiguous non-empty sequence of characters within a string.&lt
         return not abbr and not word
 
 
+#MY ANSWER
+class Solution:
+    def validWordAbbreviation(self, word: str, abbr: str) -&amp;gt; bool:
+
+        while word and abbr:
+            dig = &#39;&#39;
+            while abbr and abbr[0].isdigit():
+                dig+=abbr[0]
+                abbr =abbr[1:]
+            
+            if not dig:
+                head = abbr[0]
+                if head!=word[0]: return False
+                abbr= abbr[1:]
+                word =word[1:]
+            else:
+                if dig[0]==&#39;0&#39;: return False
+                dig = int(dig)
+                if dig&amp;gt;len(word): return False
+                word = word[dig:]
+        
+        return not word and not abbr
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;font-colorred-409-longest-palindrome-easy-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 409. Longest Palindrome (Easy) &lt;/font&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;409-longest-palindrome-easy&#34;&gt;409. Longest Palindrome (Easy)&lt;/h1&gt;
 &lt;p&gt;Given a string s which consists of lowercase or uppercase letters, return the length of the longest palindrome that can be built with those letters.&lt;br&gt;
 Letters are case sensitive, for example, &amp;quot;Aa&amp;quot; is not considered a palindrome here.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
@@ -7128,72 +8442,97 @@ Letters are case sensitive, for example, &amp;quot;Aa&amp;quot; is not considere
             if res%2==0 and v%2==1:
                 res+=1
         return res
+
+
+class Solution:
+    def longestPalindrome(self, s: str) -&amp;gt; int:
+        c =Counter(s)
+        odd = 0
+        res = 0
+        for k,v in c.items():
+            if v%2==0:
+                res+=v
+            else:
+                res+=v-1
+                odd = max(v,odd)
+        return res+1 if odd else res
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;找到能组成palindrom的最长组合方式，如果是奇数个，可以变成偶数个，比如bbb只用bb。 但当res%2==0时候，遇到奇数情况可以加1.&lt;/p&gt;
+&lt;p&gt;odd全变成偶数，但是最大的odd是可以完整加入的， 因为对odd是v-1，所以但凡odd有值，就应该+1.&lt;/p&gt;
 &lt;h1 id=&#34;font-colorred-410-split-array-largest-sum-hard-font&#34;&gt;&lt;font color=&#39;red&#39;&gt; 410. Split Array Largest Sum （Hard） &lt;/font&gt;&lt;/h1&gt;
 &lt;p&gt;Given an array nums which consists of non-negative integers and an integer m, you can split the array into m non-empty continuous subarrays.&lt;br&gt;
 Write an algorithm to minimize the largest sum among these m subarrays.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
-    def splitArray(self, nums: List[int], m: int) -&amp;gt; int:
-        # F[currIndex, subarrayCount] = 
-        #  min(max(sum[currIndex, i], F[i + 1, subarrayCount - 1]))
-        #        For all i in range [currIndex, n - subarrayCount]
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#DFS TLE
+class Solution:
+    def splitArray(self, nums: List[int], k: int) -&amp;gt; int:
+        self.res = float(&#39;inf&#39;)
+        def dfs(i,j,cur,max_):
+            # i is pointer for nums
+            # j is the counter for k
+            if i==len(nums):
+                if j==k:
+                    self.res = min(self.res,max_)
+                return
+            if i&amp;gt;0:
+                dfs(i+1,j,cur+nums[i],max(max_,cur+nums[i]))
+            if j&amp;lt;k:
+                dfs(i+1,j+1,nums[i],max(max_,nums[i]))
         
+        dfs(0,0,0,0)
+        return self.res
+
+ 
+ # TOP DOWN DP
+
+class Solution:
+    def splitArray(self, nums: List[int], k: int) -&amp;gt; int:
         n=len(nums)
-        prefix_sum=nums[:]
-        for i in range(1,len(prefix_sum)):
-            prefix_sum[i]+=prefix_sum[i-1]
-        prefix_sum=[0]+prefix_sum
+        prefix_sum = [0]
+        for num in nums:
+            prefix_sum.append(prefix_sum[-1]+num)
         
         @lru_cache(None)
-        def get_min_largest_split_sum(cur_ind, m):
-            if m==1:
-                return prefix_sum[n]-prefix_sum[cur_ind]
+        def get_min_largest_split_sum(cur_idx, k):
+            #we have processd sum before cur_idx
+            if k==1:
+                return prefix_sum[n]-prefix_sum[cur_idx]
             
-            minimum_largest_split_sum=prefix_sum[n]
-            for i in range(cur_ind,n-m+1):
-                # Store the sum of the first subarray.
-                first_split_sum=prefix_sum[i+1]-prefix_sum[cur_ind]
-                # find the maxinum subaray sum ffor current frist split
-                largest_split_sum=max(first_split_sum,get_min_largest_split_sum(i+1,m-1))
-                #find the minum among all possible combinations
-                minimum_largest_split_sum=min(minimum_largest_split_sum,largest_split_sum)
-                
-                if first_split_sum &amp;gt;= minimum_largest_split_sum: break
-            
-            return minimum_largest_split_sum
+            res = prefix_sum[n]
+            for split_spot in range(cur_idx, n-k+1):
+                # cur_idx, split_spot
+                head_sum = prefix_sum[split_spot+1]-prefix_sum[cur_idx]
+                tmp = max(head_sum, get_min_largest_split_sum(split_spot+1,k-1))
+                res = min(res,tmp)
+
+                if head_sum&amp;gt;=res:
+                    break
+            return res
         
-        return get_min_largest_split_sum(0,m)
+        return get_min_largest_split_sum(0,k)
 
-
-#。。。。
+#DP  BOTTOM UP
 class Solution:
-    def splitArray(self, nums: List[int], m: int) -&amp;gt; int:
+    def splitArray(self, nums: List[int], k: int) -&amp;gt; int:
         n = len(nums)
-        memo = [[0] * (m + 1) for _ in range(n)]
+        memo = [[0] * (k + 1) for _ in range(n)]
+        prefix_sum = [0]
+        for num in nums:
+            prefix_sum.append(prefix_sum[-1]+num)
         
-        # Create a prefix sum array of nums.
-        prefix_sum = [0] + list(itertools.accumulate(nums))
-        
-        for subarray_count in range(1, m + 1):
+        for subarray_count in range(1, k + 1):
             for curr_index in range(n):
-                # Base Case: If there is only one subarray left, then all of the remaining numbers
-                # must go in the current subarray. So return the sum of the remaining numbers.
                 if subarray_count == 1:
                     memo[curr_index][subarray_count] = prefix_sum[n] - prefix_sum[curr_index]
-                    continue
-
-                # Otherwise, use the recurrence relation to determine the minimum largest subarray sum
-                # between curr_index and the end of the array with subarray_count subarrays remaining.
+                    continue 
                 minimum_largest_split_sum = prefix_sum[n]
                 for i in range(curr_index, n - subarray_count + 1):
-                    # Store the sum of the first subarray.
+                     
                     first_split_sum = prefix_sum[i + 1] - prefix_sum[curr_index]
 
-                    # Find the maximum subarray sum for the current first split.
+                   
                     largest_split_sum = max(first_split_sum, memo[i + 1][subarray_count - 1])
 
-                    # Find the minimum among all possible combinations.
+                     
                     minimum_largest_split_sum = min(minimum_largest_split_sum, largest_split_sum)
 
                     if first_split_sum &amp;gt;= minimum_largest_split_sum:
@@ -7201,9 +8540,9 @@ class Solution:
             
                 memo[curr_index][subarray_count] = minimum_largest_split_sum
         
-        return memo[0][m]
+        return memo[0][k]
 
-#。。。。。。。。。。。。。。。。。
+#Binary Seasrch THIS IS THE BEST METHOD
 class Solution:
     def splitArray(self, nums: List[int], m: int) -&amp;gt; int:
         
@@ -7284,6 +8623,34 @@ class Solution(object):
                 l = mid + 1
             
         return l
+
+
+#MY ANSWER
+class Solution:
+    def splitArray(self, nums: List[int], k: int) -&amp;gt; int:
+        l =max(nums)
+        r =res = sum(nums)
+        
+        def allowed(m):
+            sum = 0
+            split = 0
+            for n in nums:
+                sum+=n
+                if sum&amp;gt;m:
+                    sum = n
+                    split+=1
+            return split+1
+
+        while l&amp;lt;=r:
+            m =(l+r)//2
+
+            if allowed(m) &amp;lt;=k:
+                # m is larger, that split NO. is small, need shrink
+                res = min(res,m)
+                r = m-1        
+            else:
+                l = m+1
+        return  res
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;无思路。。。m=2时候很容易，sort然后找到左右平衡点。m=3，4？&lt;br&gt;
 DP很好， bianry search是最优解法。&lt;/p&gt;
@@ -7293,7 +8660,7 @@ DP很好， bianry search是最优解法。&lt;/p&gt;
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://headhuanglan.github.io/post/leetcode-2021-12-12/"" data-c="
           &lt;!-- more --&gt;
-&lt;h1 id=&#34;91-perfect-rectangle-hard&#34;&gt;91. Perfect Rectangle （Hard）&lt;/h1&gt;
+&lt;h1 id=&#34;391-perfect-rectangle-hard&#34;&gt;391. Perfect Rectangle （Hard）&lt;/h1&gt;
 &lt;p&gt;Given an array rectangles where rectangles[i] = [xi, yi, ai, bi] represents an axis-aligned rectangle. The bottom-left point of the rectangle is (xi, yi) and the top-right point of it is (ai, bi).&lt;br&gt;
 Return true if all the rectangles together form an exact cover of a rectangular region.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Solution:
